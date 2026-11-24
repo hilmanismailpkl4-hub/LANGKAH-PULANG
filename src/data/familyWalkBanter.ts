@@ -248,4 +248,8 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'TINGGI BANGET, AYAH!! Layangannya hampir menyentuh awan senja!! Tarik lagi benangnya!' },
     { speaker: 'nadia', text: 'Keren banget, Mas! Dulu kamu jago main layangan waktu kecil ya?' },
   ],
+  activity_bus_stop: [
+    { speaker: 'nadia', text: 'Duduk berteduh di halte sambil lihat lampu mobil lewat itu ada tenangnya sendiri ya, Mas.' },
+    { speaker: 'kira', text: 'Kira hitung ada berapa mobil warna merah yang lewat depan halte kita!' },
+  ],
 };

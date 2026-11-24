@@ -10,7 +10,7 @@ import {
   SPOT_FAMILY_BANTERS,
   WEATHER_FAMILY_BANTERS,
 } from '../../data/familyWalkBanter';
-import { ELEVATOR_PORTALS, isPositionIndoors, resolveCompanionMovement } from '../../data/worldLocations';
+import { ELEVATOR_PORTALS, isPositionSheltered, resolveCompanionMovement } from '../../data/worldLocations';
 import { playerRuntime, setRuntimePosition } from '../../store/playerRuntime';
 import { useGameStore } from '../../store/useGameStore';
 import { CharacterId, InteractableTarget, TimeOfDay } from '../../types/game';
@@ -238,13 +238,13 @@ const NpcFigure: React.FC<{
         colEntry.z = posRef.current[2];
       }
 
-      // Cek apakah pendamping di dalam ruangan (untuk melipat payung hujan secara alami di semua 4 bangunan!)
+      // Cek apakah pendamping berada di dalam ruangan / atap halte / kanopi stasiun untuk melipat payung!
       indoorsCheckRef.current += dt;
       if (indoorsCheckRef.current > 0.25) {
         indoorsCheckRef.current = 0;
         const [rx, ry, rz] = posRef.current;
-        const indoorsNow = isPositionIndoors(rx, ry, rz);
-        setCompIndoors((prev) => (prev === indoorsNow ? prev : indoorsNow));
+        const shelteredNow = isPositionSheltered(rx, ry, rz);
+        setCompIndoors((prev) => (prev === shelteredNow ? prev : shelteredNow));
       }
     } else {
       // Kembali ke titik asal di rumah saat tidak sedang jalan bersama
@@ -690,6 +690,7 @@ export const WorldInteractables: React.FC = () => {
       store.isGuitarOpen ||
       store.isBagOpen ||
       Boolean(store.activeCulinarySpot) ||
+      store.isWardrobeOpen ||
       store.isRidingScooter ||
       store.isSitting ||
       store.isFlyingKite
@@ -976,7 +977,88 @@ export const WorldInteractables: React.FC = () => {
       2.8,
     );
 
-    // === INTERAKSI INTERIOR BARU: SUDUT KIRA, TOKO MUSIK NADA LAMA & KIOS 24 JAM HARMONI ===
+    // === INTERAKSI INTERIOR BARU: SUDUT KIRA, LEMARI, TV RUANG TAMU, HALTE BUS, NADA LAMA & KIOS HARMONI ===
+    consider(
+      {
+        id: 'interior_damar_wardrobe',
+        kind: 'story_object',
+        label: 'Buka Lemari & Ganti Pakaian Damar',
+        sublabel: 'Rumah Jl. Melati No. 14 · 4 Gaya Pakaian',
+        position: [-25.4, 0.08, 69.25],
+        onInteract: () => {
+          store.setWardrobeOpen(true);
+        },
+      },
+      2.4,
+    );
+
+    consider(
+      {
+        id: 'interior_living_tv',
+        kind: 'story_object',
+        label:
+          store.livingRoomTvChannel === 0
+            ? 'Nyalakan TV Ruang Tamu'
+            : `Ganti Saluran / Matikan TV (Saluran ${store.livingRoomTvChannel})`,
+        sublabel: 'Ruang Tamu · Rumah Jl. Melati No. 14',
+        position: [-14.5, 0.08, 68.9],
+        onInteract: () => {
+          store.cycleLivingRoomTv();
+        },
+      },
+      2.5,
+    );
+
+    consider(
+      {
+        id: 'sit_bus_stop',
+        kind: 'story_object',
+        label:
+          store.timeOfDay === 'rain_dusk'
+            ? 'Duduk Berteduh dari Hujan di Halte Bus'
+            : 'Duduk Santai di Bangku Halte Jl. Kenangan',
+        sublabel: 'Halte Bus Kota Modern',
+        position: [21.1, 0, 10.3],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Halte Bus Jl. Kenangan',
+            seatPos: [21.15, 0.14, 11.15],
+            lookAt: [21.5, 1.3, 0],
+            standPos: [21.15, 0, 10.0],
+            seatYaw: Math.PI,
+          };
+          store.setSitting(true);
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_bus_stop, 'fw_bus_stop');
+          }
+          store.showToast(
+            store.timeOfDay === 'rain_dusk'
+              ? 'Berteduh adem di bawah atap Halte Jl. Kenangan sambil melihat hujan...'
+              : 'Duduk santai di Halte Bus Jl. Kenangan melihat lalu lintas kota... (WASD/E berdiri)',
+          );
+        },
+      },
+      2.4,
+    );
+
+    consider(
+      {
+        id: 'bus_stop_route_board',
+        kind: 'story_object',
+        label: 'Baca Papan Peta Rute & Info Kota',
+        sublabel: 'Halte Bus Jl. Kenangan · Buka Peta [M]',
+        position: [23.6, 0, 10.6],
+        onInteract: () => {
+          sfxEngine.play('page');
+          store.toggleMapJournal('map');
+          store.showToast('Membuka peta rute & penunjuk kota dari Papan Halte Jl. Kenangan.');
+        },
+      },
+      2.3,
+    );
+
     consider(
       {
         id: 'interior_kira_desk',
@@ -1434,6 +1516,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-87.5, 1.35, 22.5]}>
         <sphereGeometry args={[0.08, 8, 8]} />
         <meshBasicMaterial color="#f6c644" />
+      </mesh>
+      <mesh position={[-25.85, 1.65, 69.25]}>
+        <sphereGeometry args={[0.07, 8, 8]} />
+        <meshBasicMaterial color="#f3cf8a" />
+      </mesh>
+      <mesh position={[-13.85, 1.78, 68.9]}>
+        <sphereGeometry args={[0.07, 8, 8]} />
+        <meshBasicMaterial color="#93c5fd" />
+      </mesh>
+      <mesh position={[24.1, 2.35, 10.8]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#fbbf24" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

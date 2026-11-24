@@ -174,6 +174,20 @@ export function isPositionIndoors(x: number, y: number, z: number): boolean {
   return false;
 }
 
+/**
+ * Area teduh dari hujan (seluruh ruangan + atap Halte Bus Kota Jl. Kenangan & kanopi Stasiun Senja)
+ * agar payung bening Damar, Nadia & Kira otomatis terlipat saat berteduh!
+ */
+export function isPositionSheltered(x: number, y: number, z: number): boolean {
+  if (isPositionIndoors(x, y, z)) return true;
+  if (y > 14) return false;
+  // Atap Halte Bus Kota Jl. Kenangan
+  if (x >= 18.5 && x <= 24.5 && z >= 9.6 && z <= 12.1) return true;
+  // Kanopi Peron Stasiun Kereta Tua Senja
+  if (x >= 75.5 && x <= 87.2 && z >= -21.0 && z <= 13.0) return true;
+  return false;
+}
+
 export function getSurfaceAtPosition(x: number, y: number, z: number): SurfaceType {
   if (y > 14) return 'asphalt';
   if (x >= -27 && x <= -13 && z >= 62 && z <= 74) return 'wood';
@@ -203,6 +217,8 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'rumah_fridge', minX: -15.15, maxX: -13.85, minZ: 71.8, maxZ: 73.0 },
   { id: 'rumah_sofa', minX: -24.95, maxX: -23.5, minZ: 64.1, maxZ: 67.1 },
   { id: 'rumah_kira_corner', minX: -20.85, maxX: -18.75, minZ: 71.85, maxZ: 73.65 },
+  { id: 'rumah_wardrobe', minX: -26.85, maxX: -25.85, minZ: 68.35, maxZ: 70.15 },
+  { id: 'rumah_tv_console', minX: -14.15, maxX: -13.2, minZ: 67.85, maxZ: 69.95 },
   { id: 'rumah_fence_l', minX: -27.4, maxX: -22.0, minZ: 53.6, maxZ: 54.4 },
   { id: 'rumah_fence_r', minX: -18.0, maxX: -12.6, minZ: 53.6, maxZ: 54.4 },
 
@@ -287,6 +303,11 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'playground_swing_r', minX: -80.25, maxX: -79.55, minZ: 19.6, maxZ: 21.4 },
   { id: 'playground_slide', minX: -78.4, maxX: -76.0, minZ: 21.9, maxZ: 24.7 },
   { id: 'playground_bench', minX: -84.9, maxX: -82.5, minZ: 24.55, maxZ: 25.55 },
+
+  // === 13. Halte Bus Kota Modern (Tepi Jl. Kenangan) ===
+  { id: 'bus_stop_back', minX: 18.6, maxX: 24.4, minZ: 11.65, maxZ: 12.15 },
+  { id: 'bus_stop_bench', minX: 19.3, maxX: 23.0, minZ: 10.85, maxZ: 11.55 },
+  { id: 'bus_stop_side_r', minX: 24.1, maxX: 24.55, minZ: 9.8, maxZ: 12.05 },
 ];
 
 /**

@@ -13,6 +13,7 @@ import { PhoneNotification } from './components/ui/PhoneNotification';
 import { PhotoModeOverlay } from './components/ui/PhotoModeOverlay';
 import { SmartphoneModal } from './components/ui/SmartphoneModal';
 import { TitleScreen } from './components/ui/TitleScreen';
+import { WardrobeModal } from './components/ui/WardrobeModal';
 import { GameCanvas } from './components/world/GameCanvas';
 import { useGameStore } from './store/useGameStore';
 
@@ -56,6 +57,7 @@ export function App() {
       <SmartphoneModal />
       <GuitarMinigameModal />
       <CulinaryModal />
+      <WardrobeModal />
       <InventoryBagModal />
       <PhoneNotification />
       <DialogueOverlay />

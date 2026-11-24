@@ -1,15 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { musicEngine } from '../../audio/musicEngine';
 import { sfxEngine } from '../../audio/sfxEngine';
 import { spatialAmbientEngine } from '../../audio/spatialAmbientEngine';
 import { CHARACTERS } from '../../data/characters';
+import { DAMAR_OUTFIT_BY_ID } from '../../data/damarOutfits';
 import {
   GROUND_COLLIDERS,
   getLocationAtPosition,
   getSurfaceAtPosition,
   isPositionIndoors,
+  isPositionSheltered,
   resolvePlayerMovement,
 } from '../../data/worldLocations';
 import { playerRuntime } from '../../store/playerRuntime';
@@ -44,6 +46,20 @@ export const PlayerController: React.FC = () => {
   const isRidingScooter = useGameStore((s) => s.isRidingScooter);
   const isSitting = useGameStore((s) => s.isSitting);
   const heldDrink = useGameStore((s) => s.heldDrink);
+  const damarOutfitId = useGameStore((s) => s.damarOutfitId);
+
+  const damarProfile = useMemo(() => {
+    const outfit = DAMAR_OUTFIT_BY_ID[damarOutfitId] ?? DAMAR_OUTFIT_BY_ID.office;
+    return {
+      ...CHARACTERS.damar,
+      appearance: {
+        ...CHARACTERS.damar.appearance,
+        shirtColor: outfit.shirtColor,
+        pantsColor: outfit.pantsColor,
+        accentProp: outfit.accentProp,
+      },
+    };
+  }, [damarOutfitId]);
 
   const umbrellaActive =
     timeOfDay === 'rain_dusk' && !umbrellaForcedOff && !isRidingScooter && !isSitting && !isIndoorsState;
@@ -97,7 +113,9 @@ export const PlayerController: React.FC = () => {
 
       // Tutup overlay dengan Escape
       if (code === 'Escape') {
-        if (state.activeCulinarySpot) {
+        if (state.isWardrobeOpen) {
+          state.setWardrobeOpen(false);
+        } else if (state.activeCulinarySpot) {
           state.openCulinarySpot(null);
         } else if (state.isBagOpen) {
           state.setBagOpen(false);
@@ -122,7 +140,7 @@ export const PlayerController: React.FC = () => {
         return;
       }
 
-      if (state.isGuitarOpen || state.activeCulinarySpot) return;
+      if (state.isGuitarOpen || state.activeCulinarySpot || state.isWardrobeOpen) return;
 
       // Tas Selempang Damar [I]
       if (
@@ -313,7 +331,8 @@ export const PlayerController: React.FC = () => {
         state.isQuickGraphicsOpen ||
         state.isPhoneOpen ||
         state.isGuitarOpen ||
-        Boolean(state.activeCulinarySpot)
+        Boolean(state.activeCulinarySpot) ||
+        state.isWardrobeOpen
       )
         return;
       isDraggingRef.current = true;
@@ -334,7 +353,8 @@ export const PlayerController: React.FC = () => {
         state.isQuickGraphicsOpen ||
         state.isPhoneOpen ||
         state.isGuitarOpen ||
-        Boolean(state.activeCulinarySpot)
+        Boolean(state.activeCulinarySpot) ||
+        state.isWardrobeOpen
       )
         return;
 
@@ -370,7 +390,8 @@ export const PlayerController: React.FC = () => {
         state.isPhotoMode ||
         state.isPhoneOpen ||
         state.isGuitarOpen ||
-        Boolean(state.activeCulinarySpot)
+        Boolean(state.activeCulinarySpot) ||
+        state.isWardrobeOpen
       )
         return;
       if (!document.pointerLockElement && dom.requestPointerLock) {
@@ -388,7 +409,8 @@ export const PlayerController: React.FC = () => {
         state.isQuickGraphicsOpen ||
         state.isPhoneOpen ||
         state.isGuitarOpen ||
-        Boolean(state.activeCulinarySpot)
+        Boolean(state.activeCulinarySpot) ||
+        state.isWardrobeOpen
       )
         return;
       zoomRef.current = THREE.MathUtils.clamp(zoomRef.current + e.deltaY * 0.0038, 2.8, 12.0);
@@ -679,7 +701,8 @@ export const PlayerController: React.FC = () => {
       !store.isPhoneOpen &&
       !store.isGuitarOpen &&
       !store.isBagOpen &&
-      !store.activeCulinarySpot;
+      !store.activeCulinarySpot &&
+      !store.isWardrobeOpen;
 
     let moveX = 0;
     let moveZ = 0;
@@ -880,6 +903,10 @@ export const PlayerController: React.FC = () => {
               !b.id.startsWith('rumah_table') &&
               !b.id.startsWith('rumah_fence') &&
               !b.id.startsWith('rumah_kira') &&
+              !b.id.startsWith('rumah_wardrobe') &&
+              !b.id.startsWith('rumah_tv') &&
+              !b.id.startsWith('bus_stop') &&
+              !b.id.startsWith('playground') &&
               !b.id.startsWith('kios_shelf') &&
               !b.id.startsWith('kios_cashier') &&
               !b.id.startsWith('music_counter') &&
@@ -912,8 +939,8 @@ export const PlayerController: React.FC = () => {
     locCheckTimerRef.current += dt;
     if (locCheckTimerRef.current > 0.25) {
       locCheckTimerRef.current = 0;
-      const nowIndoors = isPositionIndoors(px, py, pz);
-      setIsIndoorsState((prev) => (prev === nowIndoors ? prev : nowIndoors));
+      const nowSheltered = isPositionSheltered(px, py, pz);
+      setIsIndoorsState((prev) => (prev === nowSheltered ? prev : nowSheltered));
 
       const loc = getLocationAtPosition(playerRuntime.position);
       if (loc.id !== store.currentLocation) {
@@ -940,7 +967,7 @@ export const PlayerController: React.FC = () => {
   return (
     <group ref={groupRef} position={[-19.5, 0.08, 67.5]}>
       <HumanModel
-        profile={CHARACTERS.damar}
+        profile={damarProfile}
         leftLegRef={leftLegRef}
         rightLegRef={rightLegRef}
         leftArmRef={leftArmRef}

@@ -41,6 +41,7 @@ export const GameHUD: React.FC = () => {
   const isGuitarOpen = useGameStore((s) => s.isGuitarOpen);
   const isBagOpen = useGameStore((s) => s.isBagOpen);
   const activeCulinarySpot = useGameStore((s) => s.activeCulinarySpot);
+  const isWardrobeOpen = useGameStore((s) => s.isWardrobeOpen);
   const heldDrink = useGameStore((s) => s.heldDrink);
   const isRidingScooter = useGameStore((s) => s.isRidingScooter);
   const setBagOpen = useGameStore((s) => s.setBagOpen);
@@ -146,7 +147,8 @@ export const GameHUD: React.FC = () => {
     isPhoneOpen ||
     isGuitarOpen ||
     isBagOpen ||
-    Boolean(activeCulinarySpot)
+    Boolean(activeCulinarySpot) ||
+    isWardrobeOpen
   ) {
     return null;
   }

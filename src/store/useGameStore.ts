@@ -11,6 +11,7 @@ import {
   CulinarySpotId,
   HeldDrinkVisual,
 } from '../data/culinaryMenu';
+import { DAMAR_OUTFIT_BY_ID, DamarOutfitId } from '../data/damarOutfits';
 import { evaluateEnding } from '../data/endings';
 import {
   CASUAL_FAMILY_BANTERS,
@@ -114,6 +115,9 @@ interface GameStoreState {
   familyBanter: ActiveFamilyBanter | null;
   activeCulinarySpot: CulinarySpotId | null;
   heldDrink: { type: HeldDrinkVisual; isHot: boolean; label: string } | null;
+  isWardrobeOpen: boolean;
+  damarOutfitId: DamarOutfitId;
+  livingRoomTvChannel: 0 | 1 | 2 | 3;
   catFed: boolean;
   paperBoatsLaunched: number;
 
@@ -150,6 +154,9 @@ interface GameStoreState {
   openCulinarySpot: (spot: CulinarySpotId | null) => void;
   orderCulinaryItem: (itemId: string) => void;
   clearHeldDrink: () => void;
+  setWardrobeOpen: (open: boolean) => void;
+  setDamarOutfit: (outfitId: DamarOutfitId) => void;
+  cycleLivingRoomTv: () => void;
   markCatFed: () => void;
   incrementPaperBoats: () => void;
   openPhone: (app?: 'home' | 'chat' | 'calls' | 'gallery' | 'radio' | 'notes' | 'weather', threadId?: string) => void;
@@ -261,6 +268,9 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     familyBanter: null,
     activeCulinarySpot: null,
     heldDrink: null,
+    isWardrobeOpen: false,
+    damarOutfitId: 'office',
+    livingRoomTvChannel: 1,
     catFed: false,
     paperBoatsLaunched: 0,
 
@@ -553,6 +563,56 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       s.showToast(`${item.name}: "${item.tasteNote}" (Tekan WASD/E berdiri — gelas tetap dibawa sejenak!)`);
     },
 
+    setWardrobeOpen: (open) => {
+      const s = get();
+      if (open && (s.screen !== 'playing' || s.activeDialogue)) return;
+      if (open && document.pointerLockElement) document.exitPointerLock();
+      if (open) sfxEngine.play('door');
+      set({
+        isWardrobeOpen: open,
+        activeCulinarySpot: null,
+        isMapJournalOpen: false,
+        isPauseOpen: false,
+        isPhoneOpen: false,
+        isBagOpen: false,
+        isGuitarOpen: false,
+        isQuickGraphicsOpen: false,
+      });
+    },
+
+    setDamarOutfit: (outfitId) => {
+      const outfit = DAMAR_OUTFIT_BY_ID[outfitId];
+      if (!outfit) return;
+      sfxEngine.play('chime');
+      set({ damarOutfitId: outfitId, isWardrobeOpen: false });
+      get().showToast(`Damar berganti mengenakan: ${outfit.name}`);
+      get().playFamilyBanter([{ speaker: 'nadia', text: outfit.nadiaComment }], `fw_outfit_${outfitId}`);
+    },
+
+    cycleLivingRoomTv: () => {
+      const next = (((get().livingRoomTvChannel + 1) % 4) as 0 | 1 | 2 | 3);
+      sfxEngine.play('switch');
+      set({ livingRoomTvChannel: next });
+      const labels: Record<0 | 1 | 2 | 3, string> = {
+        0: 'TV ruang tamu dimatikan—suasana rumah kembali hening.',
+        1: 'Saluran 1: Kartun Sore Kesukaan Kira!',
+        2: 'Saluran 2: Prakiraan Cuaca & Lalu Lintas Kota.',
+        3: 'Saluran 3: Panggung Akustik Senja Nusantara.',
+      };
+      get().showToast(labels[next]);
+      if (next === 1) {
+        get().playFamilyBanter(
+          [{ speaker: 'kira', text: 'Yeay! Kartun kesukaan Kira lagi tayang, Ayah!' }],
+          'fw_tv_1',
+        );
+      } else if (next === 3) {
+        get().playFamilyBanter(
+          [{ speaker: 'nadia', text: 'Eh, acara musik akustik nih, Mas. Enak ya suasananya.' }],
+          'fw_tv_3',
+        );
+      }
+    },
+
     markCatFed: () => {
       const already = get().catFed;
       set({ catFed: true });
@@ -818,6 +878,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         familyBanter: null,
         activeCulinarySpot: null,
         heldDrink: null,
+        isWardrobeOpen: false,
         interactPrompt: null,
       });
     },
