@@ -105,6 +105,7 @@ interface GameStoreState {
   customWaypoint: CustomWaypoint | null;
   isPhotoMode: boolean;
   isSitting: boolean;
+  isFlyingKite: boolean;
   isRidingScooter: boolean;
   isGuitarOpen: boolean;
   isBagOpen: boolean;
@@ -136,6 +137,7 @@ interface GameStoreState {
   setCustomWaypoint: (wp: CustomWaypoint | null) => void;
   setPhotoMode: (active: boolean) => void;
   setSitting: (sitting: boolean) => void;
+  setFlyingKite: (flying: boolean) => void;
   setRidingScooter: (riding: boolean) => void;
   setGuitarOpen: (open: boolean) => void;
   setBagOpen: (open: boolean) => void;
@@ -250,6 +252,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     customWaypoint: null,
     isPhotoMode: false,
     isSitting: false,
+    isFlyingKite: false,
     isRidingScooter: false,
     isGuitarOpen: false,
     isBagOpen: false,
@@ -311,6 +314,15 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     },
 
     setSitting: (sitting) => set({ isSitting: sitting }),
+
+    setFlyingKite: (flying) => {
+      if (flying) {
+        sfxEngine.play('chime');
+        playerRuntime.kiteHeight = Math.max(playerRuntime.kiteHeight, 6.5);
+        playerRuntime.kitePullBoost = 1.0;
+      }
+      set({ isFlyingKite: flying });
+    },
 
     setRidingScooter: (riding) => {
       if (!riding) {
@@ -801,6 +813,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         activeNodeId: null,
         isMapJournalOpen: false,
         isPauseOpen: false,
+        isFlyingKite: false,
         isFamilyWalkActive: false,
         familyBanter: null,
         activeCulinarySpot: null,

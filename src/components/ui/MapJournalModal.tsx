@@ -228,6 +228,27 @@ export const MapJournalModal: React.FC = () => {
 
                       {/* Zona Hijau Taman Kota & Perumahan */}
                       <rect x="20" y="32" width="185" height="390" rx="22" fill="#182b24" opacity="0.88" />
+                      {/* Area Taman Bermain & Lapangan Layangan */}
+                      <rect
+                        x={toSvg(-89, 17).sx}
+                        y={toSvg(-89, 17).sy}
+                        width={toSvg(-74, 17).sx - toSvg(-89, 17).sx}
+                        height={toSvg(-89, 28).sy - toSvg(-89, 17).sy}
+                        rx="6"
+                        fill="#3b3629"
+                        stroke="#d8c39b"
+                        strokeOpacity="0.4"
+                        strokeWidth="1"
+                      />
+                      <text
+                        x={toSvg(-81.5, 22.8).sx}
+                        y={toSvg(-81.5, 22.8).sy + 2}
+                        fill="rgba(246,209,122,0.7)"
+                        fontSize="7.5"
+                        textAnchor="middle"
+                      >
+                        TAMAN BERMAIN
+                      </text>
                       <rect x="275" y="425" width="320" height="150" rx="18" fill="#182621" opacity="0.72" />
 
                       {/* Area Beton Pusat Kota */}

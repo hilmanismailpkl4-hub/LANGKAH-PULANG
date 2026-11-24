@@ -236,4 +236,16 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'Ayah lihat boneka beruang Kira! Tadi pagi Kira juga gambar Ayah sama Bunda di buku baru!' },
     { speaker: 'nadia', text: 'Tiap malam sebelum tidur dia selalu merapikan krayonnya sendiri lho, Mas.' },
   ],
+  activity_swing: [
+    { speaker: 'kira', text: 'WIIIHH!! Dorong lebih tinggi lagi, Ayaaah!! Seru bangeeet!!' },
+    { speaker: 'nadia', text: 'Pegangan rantai yang erat ya Sayang! Haha, lihat mukanya senang banget, Mas!' },
+  ],
+  activity_koi: [
+    { speaker: 'kira', text: 'Waaah!! Ikan koi warna oranye sama kuningnya langsung datang rebutan makan, Yah!!' },
+    { speaker: 'nadia', text: 'Air danaunya jernih banget hari ini, ikannya kelihatan jelas semua ya.' },
+  ],
+  activity_kite: [
+    { speaker: 'kira', text: 'TINGGI BANGET, AYAH!! Layangannya hampir menyentuh awan senja!! Tarik lagi benangnya!' },
+    { speaker: 'nadia', text: 'Keren banget, Mas! Dulu kamu jago main layangan waktu kecil ya?' },
+  ],
 };

@@ -111,6 +111,9 @@ export const PlayerController: React.FC = () => {
           state.setQuickGraphicsOpen(false);
         } else if (state.isMapJournalOpen) {
           state.closeMapJournal();
+        } else if (state.isFlyingKite) {
+          state.setFlyingKite(false);
+          state.showToast('Benang layang-layang digulung rapi kembali.');
         } else if (state.isSitting) {
           standUpIfSitting();
         } else if (!state.activeDialogue) {
@@ -191,6 +194,27 @@ export const PlayerController: React.FC = () => {
       }
 
       if (state.isPhotoMode || state.isPhoneOpen) return;
+
+      // Saat menerbangkan layang-layang: [Spasi] tarik benang makin tinggi, [WASD / E] selesai
+      if (state.isFlyingKite) {
+        if (code === 'Space') {
+          e.preventDefault();
+          playerRuntime.kitePullBoost = Math.min(1.65, playerRuntime.kitePullBoost + 0.75);
+          sfxEngine.play('interact');
+        } else if (
+          code === 'KeyE' ||
+          code === 'KeyW' ||
+          code === 'KeyA' ||
+          code === 'KeyS' ||
+          code === 'KeyD' ||
+          code === 'ArrowUp' ||
+          code === 'ArrowDown'
+        ) {
+          state.setFlyingKite(false);
+          state.showToast('Benang layang-layang digulung rapi kembali.');
+        }
+        return;
+      }
 
       if (state.isSitting) {
         if (
@@ -592,6 +616,58 @@ export const PlayerController: React.FC = () => {
       return;
     }
 
+    // === 2B. MODE MENERBANGKAN LAYANG-LAYANG DI LANGIT TAMAN ===
+    if (store.isFlyingKite) {
+      const [px, py, pz] = playerRuntime.position;
+      const faceKiteYaw = Math.atan2(-7.8, -6.5);
+      playerRuntime.rotationY = faceKiteYaw;
+      if (groupRef.current) {
+        groupRef.current.position.set(px, py + Math.sin(t * 2.2) * 0.015, pz);
+        groupRef.current.rotation.y = faceKiteYaw;
+      }
+      if (leftLegRef.current) leftLegRef.current.rotation.x = THREE.MathUtils.lerp(leftLegRef.current.rotation.x, 0.08, dt * 8);
+      if (rightLegRef.current) rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, -0.08, dt * 8);
+      if (rightArmRef.current) {
+        rightArmRef.current.rotation.x = THREE.MathUtils.lerp(
+          rightArmRef.current.rotation.x,
+          -1.85 - playerRuntime.kitePullBoost * 0.28 + Math.sin(t * 3.0) * 0.08,
+          dt * 8,
+        );
+        rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, 0.12, dt * 8);
+      }
+      if (leftArmRef.current) {
+        leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, -0.95, dt * 8);
+      }
+      if (headRef.current) {
+        headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, -0.42, dt * 6);
+        headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, Math.sin(t * 0.85) * 0.15, dt * 5);
+      }
+
+      if (!store.isPhotoMode) {
+        // Sudut kamera rendah menengadah agar Damar, keluarga & layang-layang terlihat megah di langit!
+        camDesiredVec.current.set(px + 4.2, py + 1.95, pz + 4.6);
+        camera.position.lerp(camDesiredVec.current, Math.min(1, dt * 3.2));
+        lookTargetVec.current.lerp(
+          new THREE.Vector3(px - 3.8, py + 4.4 + playerRuntime.kitePullBoost * 1.4, pz - 3.2),
+          Math.min(1, dt * 3.2),
+        );
+        camera.lookAt(lookTargetVec.current);
+      } else {
+        const pitch = playerRuntime.cameraPitch;
+        const yaw = playerRuntime.cameraYaw;
+        const dist = zoomRef.current;
+        camDesiredVec.current.set(
+          px + Math.sin(yaw) * Math.cos(pitch) * dist,
+          py + Math.sin(pitch) * dist + 1.8,
+          pz + Math.cos(yaw) * Math.cos(pitch) * dist,
+        );
+        camera.position.lerp(camDesiredVec.current, Math.min(1, dt * 8));
+        lookTargetVec.current.set(px - 2.0, py + 2.8, pz - 1.5);
+        camera.lookAt(lookTargetVec.current);
+      }
+      return;
+    }
+
     // === 3. MODE JALAN KAKI NORMAL ===
     const canControl =
       store.screen === 'playing' &&
@@ -740,6 +816,7 @@ export const PlayerController: React.FC = () => {
       }
 
       if (headRef.current) {
+        headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, 0, dt * 7);
         const focusPos =
           store.activeDialogue && playerRuntime.activeSpeakerPos
             ? playerRuntime.activeSpeakerPos

@@ -92,9 +92,14 @@ export const playerRuntime = {
     isBraking: false,
   } as ScooterRuntimeState,
 
-  // Aktivitas santai: perahu kertas di danau, kucing Sore & posisi kereta spasial
+  // Aktivitas santai: perahu kertas di danau, kucing Sore, ikan koi, ayunan & layang-layang
   paperBoats: [] as FloatingPaperBoat[],
   catHeartTimer: 0,
+  koiFeedTimer: 0,
+  koiFeedPoint: [-73.2, -24.6] as [number, number],
+  swingBoostTimer: 0,
+  kiteHeight: 0,
+  kitePullBoost: 0,
   trainZ: -80,
 
   // Posisi real-time Nadia & Kira (tetap akurat baik di rumah maupun saat jalan sore bersama!)
@@ -137,4 +142,8 @@ export function resetScooterToHome() {
   };
   playerRuntime.paperBoats = [];
   playerRuntime.catHeartTimer = 0;
+  playerRuntime.koiFeedTimer = 0;
+  playerRuntime.swingBoostTimer = 0;
+  playerRuntime.kiteHeight = 0;
+  playerRuntime.kitePullBoost = 0;
 }

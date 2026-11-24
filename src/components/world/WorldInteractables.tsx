@@ -691,7 +691,8 @@ export const WorldInteractables: React.FC = () => {
       store.isBagOpen ||
       Boolean(store.activeCulinarySpot) ||
       store.isRidingScooter ||
-      store.isSitting
+      store.isSitting ||
+      store.isFlyingKite
     ) {
       playerRuntime.nearestInteractable = null;
       store.setInteractPrompt(null);
@@ -846,6 +847,133 @@ export const WorldInteractables: React.FC = () => {
         },
       },
       2.5,
+    );
+
+    // === 5B. TAMAN BERMAIN & AKTIVITAS KELUARGA BARU (AYUNAN, IKAN KOI & LAYANG-LAYANG) ===
+    consider(
+      {
+        id: 'activity_playground_swing',
+        kind: 'story_object',
+        label: 'Ayunkan Ayunan Taman Bermain',
+        sublabel: 'Taman Bermain · Selatan Taman Kota',
+        position: [-81.8, 0, 21.8],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          playerRuntime.swingBoostTimer = 7.5;
+          if (!store.flags.includes('played_park_swing')) {
+            store.applyEffect({
+              kehadiranKeluarga: 1,
+              setFlags: ['played_park_swing'],
+              journalEntry: {
+                id: 'je_park_swing',
+                title: 'Tawa di Ayunan Taman Kota',
+                body: 'Suara rantai ayunan yang berayun pelan di sore hari selalu membawa pulang perasaan masa kecil yang ringan—terlebih saat membayangkan Kira tertawa di atasnya.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_swing, 'fw_swing');
+          }
+          store.showToast('Ayunan taman berayun ceria mengikuti hembusan angin sore!');
+        },
+      },
+      2.8,
+    );
+
+    consider(
+      {
+        id: 'sit_playground_bench',
+        kind: 'story_object',
+        label: 'Duduk Mengawasi Taman Bermain',
+        sublabel: 'Taman Bermain Anak',
+        position: [-83.7, 0, 24.3],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Taman Bermain Anak',
+            seatPos: [-83.7, 0.14, 24.9],
+            lookAt: [-80.2, 1.4, 21.2],
+            standPos: [-83.7, 0, 23.8],
+            seatYaw: Math.PI,
+          };
+          store.setSitting(true);
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_bench, 'fw_bench_play');
+          }
+          store.showToast('Duduk santai memandangi sudut taman bermain... (WASD/E berdiri)');
+        },
+      },
+      2.5,
+    );
+
+    consider(
+      {
+        id: 'activity_feed_koi',
+        kind: 'story_object',
+        label: 'Tebar Pelet untuk Kawanan Ikan Koi',
+        sublabel: 'Danau Senja · Dermaga Kayu',
+        position: [-73.2, 0.12, -26.4],
+        onInteract: () => {
+          sfxEngine.play('chime');
+          playerRuntime.koiFeedTimer = 9.5;
+          playerRuntime.koiFeedPoint = [-73.2, -24.6];
+          if (!store.flags.includes('fed_koi_lake')) {
+            store.applyEffect({
+              kehadiranKeluarga: 1,
+              setFlags: ['fed_koi_lake'],
+              journalEntry: {
+                id: 'je_koi_lake',
+                title: 'Kawanan Ikan Koi di Bawah Dermaga',
+                body: 'Begitu pelet jatuh ke permukaan Danau Senja, sembilan ikan koi warna-warni langsung berenang berkerumun menimbulkan riak air yang menenangkan.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_koi, 'fw_koi');
+          }
+          store.showToast('Kawanan ikan koi oranye & emas langsung berenang menghampiri pelet!');
+        },
+      },
+      2.5,
+    );
+
+    consider(
+      {
+        id: 'activity_fly_kite',
+        kind: 'story_object',
+        label: 'Terbangkan Layang-Layang di Langit Taman',
+        sublabel: 'Aktivitas Sore · Lapangan Taman Kota',
+        position: [-87.5, 0, 22.5],
+        onInteract: () => {
+          if (store.timeOfDay === 'rain_dusk') {
+            sfxEngine.play('interact');
+            store.showToast('Sedang hujan—kertas layangannya nanti basah! Ganti cuaca ke Pagi atau Senja di HP [H] dulu yuk.');
+            return;
+          }
+          if (!store.flags.includes('flew_park_kite')) {
+            store.applyEffect({
+              kehadiranKeluarga: 1,
+              kejujuranDiri: 1,
+              setFlags: ['flew_park_kite'],
+              journalEntry: {
+                id: 'je_park_kite',
+                title: 'Layang-Layang di Langit Sore',
+                body: 'Sudah bertahun-tahun sejak terakhir kali aku mendongak ke langit bukan untuk mengecek cuaca lembur, melainkan untuk menarik benang layang-layang yang menari bebas tertiup angin.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          store.setFlyingKite(true);
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_kite, 'fw_kite');
+          }
+          store.showToast('Layang-layang mengudara! Tekan [Spasi] tarik benang lebih tinggi, [P] foto, atau [WASD/E] selesai.');
+        },
+      },
+      2.8,
     );
 
     // === INTERAKSI INTERIOR BARU: SUDUT KIRA, TOKO MUSIK NADA LAMA & KIOS 24 JAM HARMONI ===
@@ -1298,6 +1426,14 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[24.5, 2.38, 26.8]}>
         <sphereGeometry args={[0.08, 8, 8]} />
         <meshBasicMaterial color="#93e5ff" />
+      </mesh>
+      <mesh position={[-73.2, 0.72, -26.2]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#ff9f5a" />
+      </mesh>
+      <mesh position={[-87.5, 1.35, 22.5]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#f6c644" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

@@ -51,6 +51,7 @@ export const GameHUD: React.FC = () => {
   const toggleFamilyWalk = useGameStore((s) => s.toggleFamilyWalk);
   const triggerCasualFamilyChat = useGameStore((s) => s.triggerCasualFamilyChat);
   const isSitting = useGameStore((s) => s.isSitting);
+  const isFlyingKite = useGameStore((s) => s.isFlyingKite);
   const repliedPhonePrompts = useGameStore((s) => s.repliedPhonePrompts);
   const openPhone = useGameStore((s) => s.openPhone);
   const interactPrompt = useGameStore((s) => s.interactPrompt);
@@ -478,7 +479,15 @@ export const GameHUD: React.FC = () => {
               </div>
             )}
 
-            {!isRidingScooter && isSitting && (
+            {!isRidingScooter && isFlyingKite && (
+              <div className="rounded-full border border-amber-300/50 bg-dusk-950/88 px-5 py-2.5 text-xs text-warm-100 shadow-2xl backdrop-blur-md animate-fadeIn">
+                Layang-Layang Mengudara · Tekan <strong className="text-warm-300">[Spasi]</strong> Tarik Lebih Tinggi ·{' '}
+                <strong className="text-warm-300">[P]</strong> Foto ·{' '}
+                <strong className="text-warm-300">[WASD / E]</strong> Gulung Benang
+              </div>
+            )}
+
+            {!isRidingScooter && !isFlyingKite && isSitting && (
               <div className="rounded-full border border-warm-300/40 bg-dusk-950/85 px-5 py-2 text-xs text-warm-100 shadow-xl backdrop-blur-md animate-fadeIn">
                 {heldDrink ? `Menikmati ${heldDrink.label}` : 'Damar sedang beristirahat tenang'} · Tekan{' '}
                 <strong className="text-warm-300">[WASD / E]</strong> berdiri ·{' '}
@@ -486,7 +495,7 @@ export const GameHUD: React.FC = () => {
               </div>
             )}
 
-            {!isRidingScooter && !isSitting && interactPrompt && (
+            {!isRidingScooter && !isFlyingKite && !isSitting && interactPrompt && (
               <div className="pointer-events-auto animate-fadeIn">
                 <button
                   type="button"

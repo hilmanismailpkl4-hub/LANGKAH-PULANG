@@ -281,6 +281,12 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'bench_taman_3', minX: -70.7, maxX: -68.3, minZ: -14.7, maxZ: -13.7 },
   { id: 'angkringan_cart', minX: -16.5, maxX: -13.9, minZ: 39.0, maxZ: 40.6 },
   { id: 'angkringan_bench', minX: -16.3, maxX: -14.1, minZ: 37.9, maxZ: 38.75 },
+
+  // === 12. Taman Bermain Anak (Selatan Taman Kota) ===
+  { id: 'playground_swing_l', minX: -84.05, maxX: -83.35, minZ: 19.6, maxZ: 21.4 },
+  { id: 'playground_swing_r', minX: -80.25, maxX: -79.55, minZ: 19.6, maxZ: 21.4 },
+  { id: 'playground_slide', minX: -78.4, maxX: -76.0, minZ: 21.9, maxZ: 24.7 },
+  { id: 'playground_bench', minX: -84.9, maxX: -82.5, minZ: 24.55, maxZ: 25.55 },
 ];
 
 /**
