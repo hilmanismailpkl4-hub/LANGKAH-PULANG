@@ -158,6 +158,56 @@ export const EASTER_EGGS: EasterEggDefinition[] = [
     memorySummary: 'Buku catatan lirik Damar yang dulu ia tinggalkan di kotak kardus gedung ini—berisi bait terakhir lagu yang ia tulis untuk Kira saat masih dalam kandungan.',
     isKeyMemory: true,
   },
+  {
+    id: 'ee_gelas_wedang',
+    title: 'Gelas Wedang Jahe Angkringan',
+    location: 'perumahan',
+    position: [-14.5, 0, 41.3],
+    promptLabel: 'Perhatikan Gelas Wedang Hangat',
+    visualType: 'receipt',
+    dialogueId: 'ee_gelas_wedang',
+    memorySummary: 'Dulu Damar dan Nadia sering makan nasi kucing di pinggir gang ini sambil menertawakan betapa mahalnya kopi kafe mal.',
+  },
+  {
+    id: 'ee_stiker_stasiun',
+    title: 'Kotak Gitar Penuh Stiker 2018',
+    location: 'stasiun_tua',
+    position: [80.4, 0.1, 5.8],
+    promptLabel: 'Lihat Kotak Gitar Berstiker',
+    visualType: 'guitar',
+    dialogueId: 'ee_stiker_stasiun',
+    memorySummary: 'Stiker pudar "Festival Akustik Kota 2018"—hari ketika Damar pertama kali percaya suaranya layak didengar.',
+  },
+  {
+    id: 'ee_payung_jembatan',
+    title: 'Payung Lipat Patah di Pagar Jembatan',
+    location: 'jembatan_sungai',
+    position: [-51.8, 0.24, -5.0],
+    promptLabel: 'Periksa Payung Lipat Tua',
+    visualType: 'lock',
+    dialogueId: 'ee_payung_jembatan',
+    memorySummary: 'Mengingatkan Damar pada hujan pertama saat mereka berdua berbagi satu payung kecil pulang dari kantor.',
+  },
+  {
+    id: 'ee_bunga_mangga',
+    title: 'Bunga Gugur di Bawah Pohon Gang',
+    location: 'perumahan',
+    position: [15.5, 0, 58.2],
+    promptLabel: 'Perhatikan Kelopak di Tanah',
+    visualType: 'paper_boat',
+    dialogueId: 'ee_bunga_mangga',
+    memorySummary: 'Aroma sore perumahan yang membuat Damar sadar betapa cepat waktu berlalu ketika kita terlalu sibuk menunduk.',
+  },
+  {
+    id: 'ee_teropong_rooftop',
+    title: 'Teropong Koin di Sudut Rooftop',
+    location: 'rooftop',
+    position: [36.8, 22, -22.8],
+    promptLabel: 'Intip Kota Lewat Teropong',
+    visualType: 'rooftop_notebook',
+    dialogueId: 'ee_teropong_rooftop',
+    memorySummary: 'Dari sudut tertinggi gedung kantor, satu lampu kuning kecil di selatan tetap menjadi satu-satunya arah yang berarti.',
+  },
 ];
 
 export const EASTER_EGG_DIALOGUES: Record<string, DialogueScript> = {
@@ -481,6 +531,71 @@ export const EASTER_EGG_DIALOGUES: Record<string, DialogueScript> = {
             chapter: 3,
           },
         },
+      },
+    },
+  },
+  ee_gelas_wedang: {
+    id: 'ee_gelas_wedang',
+    startNodeId: 'ee_gw_1',
+    nodes: {
+      ee_gw_1: {
+        id: 'ee_gw_1',
+        speaker: 'damar_batin',
+        emotion: 'hangat',
+        text: 'Aroma jahe bakar dan sate telur puyuh... Tahun pertama menikah, setiap tanggal tua aku dan Nadia pasti makan di sini lalu jalan kaki pulang sambil bergandengan tangan.',
+        onEnter: { playSfx: 'coffee', kehadiranKeluarga: 1 },
+      },
+    },
+  },
+  ee_stiker_stasiun: {
+    id: 'ee_stiker_stasiun',
+    startNodeId: 'ee_ss_1',
+    nodes: {
+      ee_ss_1: {
+        id: 'ee_ss_1',
+        speaker: 'damar_batin',
+        emotion: 'haru',
+        text: 'Stiker "Festival Akustik Kota 2018" yang ujungnya sudah mengelupas... Aneh, melihat stiker kecil begini saja langsung membawa kembali rasa gugup sekaligus bahagia di belakang panggung waktu itu.',
+        onEnter: { playSfx: 'guitar', kejujuranDiri: 1 },
+      },
+    },
+  },
+  ee_payung_jembatan: {
+    id: 'ee_payung_jembatan',
+    startNodeId: 'ee_pj_1',
+    nodes: {
+      ee_pj_1: {
+        id: 'ee_pj_1',
+        speaker: 'damar_batin',
+        emotion: 'haru',
+        text: 'Payung lipat kecil tertinggal di dekat tiang jembatan... Dulu tiap hujan, aku selalu memiringkan payung ke arah Nadia sampai bahu kananku basah kuyup. Kapan ya terakhir kali aku benar-benar memperhatikan apakah dia kehujanan?',
+        onEnter: { playSfx: 'interact', kehadiranKeluarga: 1 },
+      },
+    },
+  },
+  ee_bunga_mangga: {
+    id: 'ee_bunga_mangga',
+    startNodeId: 'ee_bm_1',
+    nodes: {
+      ee_bm_1: {
+        id: 'ee_bm_1',
+        speaker: 'damar_batin',
+        emotion: 'tenang',
+        text: 'Kelopak bunga kecil gugur di tepi paving perumahan. Waktu kita kecil, rasanya satu hari panjang sekali. Sekarang, satu tahun bisa lewat begitu saja kalau kita lupa berhenti melihat sekitar.',
+        onEnter: { playSfx: 'interact', kejujuranDiri: 1 },
+      },
+    },
+  },
+  ee_teropong_rooftop: {
+    id: 'ee_teropong_rooftop',
+    startNodeId: 'ee_tr_1',
+    nodes: {
+      ee_tr_1: {
+        id: 'ee_tr_1',
+        speaker: 'damar_batin',
+        emotion: 'haru',
+        text: 'Lewat lensa teropong ini, ribuan atap kota terlihat berjejer rapi... Tapi entah bagaimana, mataku langsung menemukan atap terakota kecil di Jl. Melati No. 14. Ternyata hati selalu tahu letak rumahnya.',
+        onEnter: { playSfx: 'chime', kehadiranKeluarga: 1, kejujuranDiri: 1 },
       },
     },
   },

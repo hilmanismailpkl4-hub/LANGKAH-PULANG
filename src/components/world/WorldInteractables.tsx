@@ -30,6 +30,9 @@ const NPC_PLACEMENTS: NpcPlacement[] = [
   { id: 'mas_bagas', pos: [-20.0, 0, -17.5], rot: 0, greeting: 'Lho, Damar! Lama nggak mampir!' },
   { id: 'mbak_lilis', pos: [24.0, 0, 15.8], rot: Math.PI, greeting: 'Selamat datang di Harmoni, Mas!' },
   { id: 'bu_wati', pos: [24.0, 0, 61.8], rot: Math.PI, greeting: 'Halo Nak Damar, jalan kaki santai?' },
+  { id: 'pak_slamet', pos: [-12.8, 0, 40.2], rot: 0.4, greeting: 'Mari Mas Damar, wedang jahenya hangat!' },
+  { id: 'bang_ari', pos: [79.5, 0.1, 4.5], rot: -Math.PI / 2, greeting: 'Mas Damar! Lagu lama kamu masih enak lho!' },
+  { id: 'pak_budi', pos: [-67.5, 0, -37.0], rot: -Math.PI / 2, greeting: 'Sore yang tenang ya, Mas...' },
 ];
 
 function createBubbleTexture(name: string, greeting: string, accent: string, tag?: string): THREE.CanvasTexture {
@@ -157,7 +160,7 @@ const NpcFigure: React.FC<{
 
     // 4. Lengan melambai hangat saat disapa [F] atau didekati, dan gestur tangan saat bicara!
     if (rightArmRef.current && leftArmRef.current) {
-      if (damarWaving || (isNear && !store.activeDialogue && (isChild || npc.id === 'bima' || npc.id === 'bu_wati' || npc.id === 'mbak_lilis'))) {
+      if (damarWaving || (isNear && !store.activeDialogue && (isChild || npc.id === 'bima' || npc.id === 'bu_wati' || npc.id === 'mbak_lilis' || npc.id === 'pak_slamet' || npc.id === 'bang_ari'))) {
         // Angkat tangan kanan & lambaikan ramah!
         rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, -2.35, dt * 8);
         rightArmRef.current.rotation.z = Math.sin(t * 10.5) * 0.28 + 0.32;
@@ -292,6 +295,9 @@ export const WorldInteractables: React.FC = () => {
         if (store.mainStepId === 'ch1_4_benda_lama') {
           return { dialogueId: 'ch1_benda_lama_main', highlight: 'main', sublabel: 'Cerita Utama' };
         }
+        if (store.sideQuests.sq_bang_ari?.status === 'active' && store.sideQuests.sq_bang_ari.stage === 1) {
+          return { dialogueId: 'sq_helper_bagas_capo', highlight: 'side', sublabel: 'Misi Sampingan' };
+        }
         const sq = store.sideQuests.sq_mas_bagas;
         if (!sq) return { dialogueId: 'sq_mas_bagas_start', highlight: 'side', sublabel: 'Misi Warga' };
         if (sq.status === 'active' && sq.stage === 2) {
@@ -333,6 +339,9 @@ export const WorldInteractables: React.FC = () => {
         if (store.sideQuests.sq_nenek_sari?.status === 'active' && store.sideQuests.sq_nenek_sari.stage === 1) {
           return { dialogueId: 'sq_helper_lilis_tea', highlight: 'side', sublabel: 'Misi Sampingan' };
         }
+        if (store.sideQuests.sq_pak_slamet?.status === 'active' && store.sideQuests.sq_pak_slamet.stage === 1) {
+          return { dialogueId: 'sq_helper_lilis_ginger', highlight: 'side', sublabel: 'Misi Sampingan' };
+        }
         const sq = store.sideQuests.sq_mbak_lilis;
         if (!sq) return { dialogueId: 'sq_mbak_lilis_start', highlight: 'side', sublabel: 'Misi Warga' };
         if (sq.status === 'active' && sq.stage === 2) {
@@ -348,6 +357,33 @@ export const WorldInteractables: React.FC = () => {
           return { dialogueId: 'sq_bu_wati_complete', highlight: 'side', sublabel: 'Selesaikan Misi' };
         }
         return { dialogueId: 'ambient_wati', highlight: null, sublabel: 'Berbincang' };
+      }
+
+      if (npcId === 'pak_slamet') {
+        const sq = store.sideQuests.sq_pak_slamet;
+        if (!sq) return { dialogueId: 'sq_pak_slamet_start', highlight: 'side', sublabel: 'Misi Warga' };
+        if (sq.status === 'active' && sq.stage === 2) {
+          return { dialogueId: 'sq_pak_slamet_complete', highlight: 'side', sublabel: 'Selesaikan Misi' };
+        }
+        return { dialogueId: 'ambient_slamet', highlight: null, sublabel: 'Berbincang' };
+      }
+
+      if (npcId === 'bang_ari') {
+        const sq = store.sideQuests.sq_bang_ari;
+        if (!sq) return { dialogueId: 'sq_bang_ari_start', highlight: 'side', sublabel: 'Misi Warga' };
+        if (sq.status === 'active' && sq.stage === 2) {
+          return { dialogueId: 'sq_bang_ari_complete', highlight: 'side', sublabel: 'Selesaikan Misi' };
+        }
+        return { dialogueId: 'ambient_ari', highlight: null, sublabel: 'Berbincang' };
+      }
+
+      if (npcId === 'pak_budi') {
+        const sq = store.sideQuests.sq_pak_budi;
+        if (!sq) return { dialogueId: 'sq_pak_budi_start', highlight: 'side', sublabel: 'Misi Warga' };
+        if (sq.status === 'active' && sq.stage === 2) {
+          return { dialogueId: 'sq_pak_budi_complete', highlight: 'side', sublabel: 'Selesaikan Misi' };
+        }
+        return { dialogueId: 'ambient_budi', highlight: null, sublabel: 'Berbincang' };
       }
 
       const ambientMap: Partial<Record<CharacterId, string>> = {
@@ -683,6 +719,19 @@ export const WorldInteractables: React.FC = () => {
         3.2,
       );
     }
+    if (store.sideQuests.sq_pak_budi?.status === 'active' && store.sideQuests.sq_pak_budi.stage === 1) {
+      consider(
+        {
+          id: 'sq_budi_sw',
+          kind: 'story_object',
+          label: 'Nyalakan Sakelar Lampu Dermaga Senja',
+          sublabel: 'Misi Sampingan · Pak Budi',
+          position: [-70.2, 0.12, -26.4],
+          onInteract: () => store.startDialogue('sq_pak_budi_switch'),
+        },
+        3.2,
+      );
+    }
 
     for (const npc of NPC_PLACEMENTS) {
       const profile = CHARACTERS[npc.id];
@@ -783,6 +832,13 @@ export const WorldInteractables: React.FC = () => {
         <mesh position={[21.5, 1.35, 62.5]}>
           <boxGeometry args={[0.32, 0.42, 0.18]} />
           <meshStandardMaterial color="#d9d5ce" emissive="#8ec5a3" emissiveIntensity={1.6} />
+        </mesh>
+      )}
+
+      {sideQuests.sq_pak_budi?.status === 'active' && sideQuests.sq_pak_budi.stage === 1 && (
+        <mesh position={[-70.2, 1.05, -26.4]}>
+          <boxGeometry args={[0.3, 0.38, 0.2]} />
+          <meshStandardMaterial color="#e6dec8" emissive="#f5c258" emissiveIntensity={1.8} />
         </mesh>
       )}
 

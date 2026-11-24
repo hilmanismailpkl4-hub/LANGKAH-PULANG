@@ -245,10 +245,12 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'lake_south', minX: -98.2, maxX: -70.2, minZ: -25.8, maxZ: -12.8 },
   { id: 'lake_west', minX: -98.2, maxX: -77.7, minZ: -30.2, maxZ: -25.8 },
 
-  // === 11. Bangku Taman Kota ===
+  // === 11. Bangku Taman Kota & Gerobak Angkringan Pak Slamet ===
   { id: 'bench_taman_1', minX: -69.2, maxX: -66.8, minZ: -18.55, maxZ: -17.45 },
   { id: 'bench_taman_2', minX: -79.2, maxX: -76.8, minZ: -9.0, maxZ: -8.0 },
   { id: 'bench_taman_3', minX: -70.7, maxX: -68.3, minZ: -14.7, maxZ: -13.7 },
+  { id: 'angkringan_cart', minX: -16.5, maxX: -13.9, minZ: 39.0, maxZ: 40.6 },
+  { id: 'angkringan_bench', minX: -16.3, maxX: -14.1, minZ: 37.9, maxZ: 38.75 },
 ];
 
 /**

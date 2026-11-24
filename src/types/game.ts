@@ -37,6 +37,9 @@ export type CharacterId =
   | 'mas_bagas'
   | 'mbak_lilis'
   | 'bu_wati'
+  | 'pak_slamet'
+  | 'bang_ari'
+  | 'pak_budi'
   | 'narator';
 
 export type SfxType =

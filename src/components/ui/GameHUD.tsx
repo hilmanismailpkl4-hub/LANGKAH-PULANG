@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Backpack, BookOpen, Camera, Compass, Map as MapIcon, Menu, Navigation, Sliders, Smartphone } from 'lucide-react';
+import { Backpack, BookOpen, Camera, Compass, Map as MapIcon, Menu, Navigation, Sliders, Smartphone, Umbrella } from 'lucide-react';
 import { MAIN_STEP_BY_ID } from '../../data/dialogues';
 import { PHONE_THREADS } from '../../data/phoneContent';
 import { LOCATION_BY_ID } from '../../data/worldLocations';
@@ -41,6 +41,8 @@ export const GameHUD: React.FC = () => {
   const isBagOpen = useGameStore((s) => s.isBagOpen);
   const isRidingScooter = useGameStore((s) => s.isRidingScooter);
   const setBagOpen = useGameStore((s) => s.setBagOpen);
+  const umbrellaForcedOff = useGameStore((s) => s.umbrellaForcedOff);
+  const toggleUmbrella = useGameStore((s) => s.toggleUmbrella);
   const isSitting = useGameStore((s) => s.isSitting);
   const repliedPhonePrompts = useGameStore((s) => s.repliedPhonePrompts);
   const openPhone = useGameStore((s) => s.openPhone);
@@ -232,6 +234,21 @@ export const GameHUD: React.FC = () => {
                   </span>
                 )}
               </button>
+              {timeOfDay === 'rain_dusk' && !isRidingScooter && (
+                <button
+                  type="button"
+                  onClick={toggleUmbrella}
+                  className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-[11px] backdrop-blur-md transition ${
+                    umbrellaForcedOff
+                      ? 'border-warm-100/15 bg-dusk-950/70 text-warm-200/75 hover:border-sky-300/45'
+                      : 'border-sky-300/50 bg-sky-950/75 text-sky-100 hover:border-sky-300'
+                  }`}
+                  title="Buka / Lipat Payung Hujan Bening"
+                >
+                  <Umbrella className="h-3.5 w-3.5 text-sky-300" />
+                  <span>{umbrellaForcedOff ? 'Payung [U]' : 'Payung Aktif [U]'}</span>
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => setBagOpen(true)}
@@ -423,7 +440,7 @@ export const GameHUD: React.FC = () => {
             )}
 
             <p className="text-[11px] text-warm-200/55">
-              WASD Jalan · H Ponsel · I Tas Damar · F Sapa · P Foto · M Peta
+              WASD Jalan · H Ponsel · I Tas · {timeOfDay === 'rain_dusk' ? 'U Payung · ' : ''}F Sapa · P Foto · M Peta
             </p>
           </div>
 

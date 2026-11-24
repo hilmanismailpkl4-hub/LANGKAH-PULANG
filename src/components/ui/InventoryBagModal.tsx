@@ -73,6 +73,24 @@ const ItemArtwork: React.FC<{ iconType: BagItemDef['iconType']; large?: boolean 
           <circle cx="42" cy="29" r="5" fill="#f5c64c" />
         </svg>
       );
+    case 'ginger':
+      return (
+        <svg viewBox="0 0 80 80" className={cls}>
+          <rect x="16" y="24" width="48" height="42" rx="10" fill="#7a4e2d" stroke="#e0ad6e" strokeWidth="2" />
+          <path d="M26 24 L32 14 L48 14 L54 24" fill="#a86d3b" />
+          <circle cx="35" cy="46" r="8" fill="#c95b42" />
+          <circle cx="46" cy="48" r="7" fill="#d97a54" />
+          <circle cx="41" cy="39" r="6" fill="#e09a63" />
+        </svg>
+      );
+    case 'capo':
+      return (
+        <svg viewBox="0 0 80 80" className={cls}>
+          <path d="M20 26 L60 26 L60 36 L34 36 L44 62 L33 65 L20 36 Z" fill="#2c3340" stroke="#cbd5e1" strokeWidth="2.5" />
+          <rect x="24" y="29" width="32" height="5" rx="2" fill="#e7b87d" />
+          <circle cx="28" cy="36" r="4" fill="#94a3b8" />
+        </svg>
+      );
     default:
       return (
         <svg viewBox="0 0 80 80" className={cls}>
@@ -134,6 +152,12 @@ export const InventoryBagModal: React.FC = () => {
     }
     if (flags.includes('has_lilis_book') && sideQuests.sq_mbak_lilis?.status !== 'completed') {
       has('item_lilis_book');
+    }
+    if (flags.includes('has_slamet_ginger') && sideQuests.sq_pak_slamet?.status !== 'completed') {
+      has('item_slamet_ginger');
+    }
+    if (flags.includes('has_ari_capo') && sideQuests.sq_bang_ari?.status !== 'completed') {
+      has('item_ari_capo');
     }
 
     return owned;

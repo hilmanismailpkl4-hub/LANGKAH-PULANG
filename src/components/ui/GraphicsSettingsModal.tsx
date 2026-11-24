@@ -28,8 +28,12 @@ export const GraphicsSettingsModal: React.FC = () => {
   const applyGraphicsPreset = useGameStore((s) => s.applyGraphicsPreset);
   const titlePreviewTime = useGameStore((s) => s.titlePreviewTime);
   const setTitlePreviewTime = useGameStore((s) => s.setTitlePreviewTime);
+  const timeOfDay = useGameStore((s) => s.timeOfDay);
+  const setFreeTimeOfDay = useGameStore((s) => s.setFreeTimeOfDay);
 
   if (!isOpen) return null;
+
+  const activeTime = screen === 'title' ? titlePreviewTime : timeOfDay;
 
   return (
     <Portal>
@@ -93,34 +97,41 @@ export const GraphicsSettingsModal: React.FC = () => {
               </div>
             </div>
 
-            {/* Preview Suasana Langsung di Layar Judul */}
-            {screen === 'title' && (
-              <div className="rounded-xl border border-warm-300/20 bg-warm-400/5 p-3">
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-warm-300">
-                  Pratinjau Cuaca & Waktu Kota
-                </p>
-                <div className="grid grid-cols-4 gap-1.5">
-                  {TIME_PREVIEW_LIST.map(({ id, label, icon: Icon }) => (
-                    <button
-                      key={id}
-                      type="button"
-                      onClick={() => {
+            {/* Mode Ganti Waktu & Cuaca Kota Bebas (Aktif baik di Layar Judul maupun Saat Bermain!) */}
+            <div className="rounded-xl border border-warm-300/20 bg-warm-400/5 p-3">
+              <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-warm-300">
+                {screen === 'title' ? 'Pratinjau Cuaca & Waktu Kota' : 'Mode Ganti Waktu & Cuaca Bebas'}
+              </p>
+              <div className="grid grid-cols-4 gap-1.5">
+                {TIME_PREVIEW_LIST.map(({ id, label, icon: Icon }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => {
+                      if (screen === 'title') {
                         sfxEngine.play('switch');
                         setTitlePreviewTime(id);
-                      }}
-                      className={`flex flex-col items-center gap-1 rounded-lg py-2 text-[11px] transition ${
-                        titlePreviewTime === id
-                          ? 'bg-warm-400 font-semibold text-dusk-950'
-                          : 'bg-dusk-900/75 text-warm-200 hover:bg-dusk-800'
-                      }`}
-                    >
-                      <Icon className="h-3.5 w-3.5" />
-                      <span>{label}</span>
-                    </button>
-                  ))}
-                </div>
+                      } else {
+                        setFreeTimeOfDay(id);
+                      }
+                    }}
+                    className={`flex flex-col items-center gap-1 rounded-lg py-2 text-[11px] transition ${
+                      activeTime === id
+                        ? 'bg-warm-400 font-semibold text-dusk-950'
+                        : 'bg-dusk-900/75 text-warm-200 hover:bg-dusk-800'
+                    }`}
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                    <span>{label}</span>
+                  </button>
+                ))}
               </div>
-            )}
+              {screen === 'playing' && (
+                <p className="mt-2 text-[10px] text-warm-200/65">
+                  Cocok untuk Mode Foto [P] atau mencoba Payung Hujan Bening [U] kapan saja!
+                </p>
+              )}
+            </div>
 
             {/* Resolusi Render */}
             <div>

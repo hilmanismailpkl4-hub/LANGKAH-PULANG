@@ -12,11 +12,12 @@ interface HumanModelProps {
   torsoRef?: React.RefObject<THREE.Group>;
   isChild?: boolean;
   isFemale?: boolean;
+  holdingUmbrella?: boolean;
 }
 
 /**
  * Model manusia 3D stylized semi-realistis dengan kepala, bahu, torso, lengan, dan kaki
- * terartikulasi penuh untuk kontak mata, napas alami, melambai, dan gestur berbicara.
+ * terartikulasi penuh untuk kontak mata, napas alami, melambai, payung hujan, dan gestur berbicara.
  */
 export const HumanModel: React.FC<HumanModelProps> = ({
   profile,
@@ -28,6 +29,7 @@ export const HumanModel: React.FC<HumanModelProps> = ({
   torsoRef,
   isChild = false,
   isFemale = false,
+  holdingUmbrella = false,
 }) => {
   const { shirtColor, pantsColor, skinColor, hairColor, accentProp } = profile.appearance;
   const scale = profile.appearance.height / 1.74;
@@ -137,7 +139,7 @@ export const HumanModel: React.FC<HumanModelProps> = ({
           </mesh>
         )}
 
-        {/* Lengan Kiri (pivot dari bahu) */}
+        {/* Lengan Kiri (pivot dari bahu — juga memegang Payung Hujan Bening saat hujan!) */}
         <group ref={leftArmRef} position={[-0.27, 0.46, 0]}>
           <mesh position={[0, -0.18, 0]} castShadow>
             <capsuleGeometry args={[0.062, 0.24, 6, 10]} />
@@ -147,6 +149,57 @@ export const HumanModel: React.FC<HumanModelProps> = ({
             <capsuleGeometry args={[0.052, 0.18, 6, 8]} />
             <meshStandardMaterial color={skinColor} roughness={0.75} />
           </mesh>
+
+          {/* Payung Hujan Bening Realistis (terbuka otomatis di luar ruangan saat hujan / tombol [U]) */}
+          {holdingUmbrella && (
+            <group position={[0.04, -0.48, 0.04]} rotation={[1.28, 0, 0.06]}>
+              {/* Gagang J & Batang Logam Payung */}
+              <mesh position={[0, -0.05, -0.04]} rotation={[0, Math.PI / 2, 0]}>
+                <torusGeometry args={[0.045, 0.014, 8, 12, Math.PI]} />
+                <meshStandardMaterial color="#e8eef5" roughness={0.35} />
+              </mesh>
+              <mesh position={[0, 0.42, 0]} castShadow>
+                <cylinderGeometry args={[0.011, 0.012, 0.94, 8]} />
+                <meshStandardMaterial color="#cfd7e3" metalness={0.75} roughness={0.28} />
+              </mesh>
+              {/* Ujung Atas Payung */}
+              <mesh position={[0, 0.95, 0]}>
+                <cylinderGeometry args={[0.008, 0.016, 0.11, 8]} />
+                <meshStandardMaterial color="#d8e0eb" metalness={0.6} roughness={0.35} />
+              </mesh>
+              {/* Kubah Payung Bening Transparan */}
+              <mesh position={[0, 0.64, 0]} castShadow>
+                <sphereGeometry args={[0.66, 16, 10, 0, Math.PI * 2, 0, Math.PI * 0.44]} />
+                <meshPhysicalMaterial
+                  color="#e6f3ff"
+                  transparent
+                  opacity={0.44}
+                  roughness={0.14}
+                  metalness={0.05}
+                  clearcoat={0.9}
+                  clearcoatRoughness={0.12}
+                  side={THREE.DoubleSide}
+                  depthWrite={false}
+                />
+              </mesh>
+              {/* Lis Putih Tepi Payung */}
+              <mesh position={[0, 0.74, 0]} rotation={[Math.PI / 2, 0, 0]}>
+                <torusGeometry args={[0.648, 0.009, 6, 24]} />
+                <meshStandardMaterial color="#eef4fa" roughness={0.4} />
+              </mesh>
+              {/* 8 Rusuk Logam Dalam Payung */}
+              {[0, 1, 2, 3].map((rIdx) => (
+                <mesh
+                  key={`rib-${rIdx}`}
+                  position={[0, 0.8, 0]}
+                  rotation={[0, (rIdx * Math.PI) / 4, Math.PI / 2]}
+                >
+                  <cylinderGeometry args={[0.005, 0.005, 1.22, 6]} />
+                  <meshStandardMaterial color="#aeb9c7" metalness={0.7} roughness={0.35} />
+                </mesh>
+              ))}
+            </group>
+          )}
         </group>
 
         {/* Lengan Kanan (pivot dari bahu — dipakai juga untuk melambai & gestur bicara!) */}

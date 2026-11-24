@@ -157,8 +157,9 @@ const PEDESTRIAN_CONFIGS: PedestrianConfig[] = [
 const AnimatedPedestrian: React.FC<{
   cfg: PedestrianConfig;
   index: number;
+  isRain: boolean;
   positionsOut: React.MutableRefObject<{ id: string; x: number; z: number; radius: number }[]>;
-}> = ({ cfg, index, positionsOut }) => {
+}> = ({ cfg, index, isRain, positionsOut }) => {
   const rootRef = useRef<THREE.Group>(null);
   const leftLegRef = useRef<THREE.Group>(null);
   const rightLegRef = useRef<THREE.Group>(null);
@@ -222,7 +223,14 @@ const AnimatedPedestrian: React.FC<{
     const swing = paused ? 0 : Math.sin(s.stride) * 0.44;
     if (leftLegRef.current) leftLegRef.current.rotation.x = THREE.MathUtils.lerp(leftLegRef.current.rotation.x, swing, dt * 12);
     if (rightLegRef.current) rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, -swing, dt * 12);
-    if (leftArmRef.current) leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, -swing * 0.72, dt * 12);
+    if (leftArmRef.current) {
+      leftArmRef.current.rotation.x = THREE.MathUtils.lerp(
+        leftArmRef.current.rotation.x,
+        isRain ? -1.28 : -swing * 0.72,
+        dt * 12,
+      );
+      leftArmRef.current.rotation.z = THREE.MathUtils.lerp(leftArmRef.current.rotation.z, isRain ? -0.06 : 0, dt * 10);
+    }
 
     // Balas lambaian ramah jika Damar menekan [F] di dekat pejalan kaki!
     if (rightArmRef.current) {
@@ -263,6 +271,7 @@ const AnimatedPedestrian: React.FC<{
         headRef={headRef}
         torsoRef={torsoRef}
         isFemale={cfg.isFemale}
+        holdingUmbrella={isRain}
       />
     </group>
   );
@@ -639,12 +648,13 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
         ))}
       </group>
 
-      {/* 6 Pejalan Kaki Trotoar Lengkap Berwajah, Berambut & Responsif */}
+      {/* 6 Pejalan Kaki Trotoar Lengkap Berwajah, Berambut, Payung Hujan & Responsif */}
       {PEDESTRIAN_CONFIGS.map((cfg, idx) => (
         <AnimatedPedestrian
           key={cfg.id}
           cfg={cfg}
           index={idx}
+          isRain={timeOfDay === 'rain_dusk'}
           positionsOut={walkerPositionsRef}
         />
       ))}

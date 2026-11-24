@@ -7,7 +7,7 @@ export interface BagItemDef {
   subtitle: string;
   description: string;
   monologue: string;
-  iconType: 'wallet' | 'keys' | 'pick' | 'notebook' | 'icecream' | 'flower' | 'bookmark' | 'tea' | 'coffee' | 'archive_key' | 'sketchbook';
+  iconType: 'wallet' | 'keys' | 'pick' | 'notebook' | 'icecream' | 'flower' | 'bookmark' | 'tea' | 'coffee' | 'archive_key' | 'sketchbook' | 'ginger' | 'capo';
   giftTarget?: 'kira' | 'nadia';
   giftDialogueId?: string;
 }
@@ -115,6 +115,24 @@ export const ALL_BAG_ITEMS: BagItemDef[] = [
     description: 'Buku sketsa kertas tebal pemberian tulus Pak Darman untuk kado ulang tahun adik Mbak Lilis.',
     monologue: 'Kebaikan di kota ini ternyata menular dari satu tangan ke tangan lain.',
     iconType: 'sketchbook',
+  },
+  {
+    id: 'item_slamet_ginger',
+    name: 'Bungkusan Jahe Merah Segar',
+    category: 'misi',
+    subtitle: 'Untuk Pak Slamet (Angkringan Jl. Melati)',
+    description: 'Satu kantong jahe merah wangi dari Mbak Lilis untuk rebusan wedang malam di gerobak Pak Slamet.',
+    monologue: 'Aromanya pedas hangat. Kebayang nikmatnya wedang jahe malam ini saat hujan turun.',
+    iconType: 'ginger',
+  },
+  {
+    id: 'item_ari_capo',
+    name: 'Capo Gitar Akustik Cadangan',
+    category: 'misi',
+    subtitle: 'Untuk Bang Ari (Stasiun Senja)',
+    description: 'Capo gitar logam hitam titipan Mas Bagas dari Toko Musik "Nada Lama" untuk Bang Ari di peron stasiun.',
+    monologue: 'Gitar di stasiun itu selalu terdengar seperti ucapan selamat datang pulang bagi para pekerja.',
+    iconType: 'capo',
   },
 ];
 

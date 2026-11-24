@@ -8,6 +8,7 @@ import { getProceduralTextures } from './proceduralTextures';
 interface CityDetailsProps {
   timeOfDay: TimeOfDay;
   settings: GameSettings;
+  pierLampFixed?: boolean;
 }
 
 /**
@@ -211,7 +212,7 @@ const PalmTree: React.FC<{ position: [number, number, number]; scale: number; ph
   );
 };
 
-export const CityDetails: React.FC<CityDetailsProps> = ({ timeOfDay, settings }) => {
+export const CityDetails: React.FC<CityDetailsProps> = ({ timeOfDay, settings, pierLampFixed = false }) => {
   const isEveningOrNight = timeOfDay !== 'morning';
   const isRain = timeOfDay === 'rain_dusk';
   const textures = useMemo(() => getProceduralTextures(), []);
@@ -224,6 +225,7 @@ export const CityDetails: React.FC<CityDetailsProps> = ({ timeOfDay, settings })
       office: createSignTexture('MENARA NUSANTARA', 'PERKANTORAN & SKY DECK', '#1f2b3a', '#9eb3c9', '#eef4fa', '#a9c0d9'),
       station: createSignTexture('STASIUN SENJA', 'JALUR KOMUTER KOTA', '#1f3654', '#e8be6b', '#ffffff', '#f5d48e'),
       house: createSignTexture('JL. MELATI NO. 14', 'KEL. DAMAR PRATAMA', '#3b2b22', '#d9b584', '#fff5e4', '#d9b584'),
+      angkringan: createSignTexture('ANGKRINGAN PAK SLAMET', 'WEDANG JAHE · SEGO KUCING', '#6e281d', '#f5c258', '#fff5de', '#ffd88a'),
       kira: createKiraDrawingTexture(),
       graffiti: createGraffitiTexture(),
     }),
@@ -500,6 +502,174 @@ export const CityDetails: React.FC<CityDetailsProps> = ({ timeOfDay, settings })
             )}
           </group>
         ))}
+
+      {/* === 8. GEROBAK ANGKRINGAN KHAS INDONESIA — PAK SLAMET (SUDUT JL. MELATI) === */}
+      <group position={[-15.2, 0, 39.8]}>
+        {/* Roda Gerobak Kiri & Kanan */}
+        <mesh position={[-0.95, 0.42, 0.56]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+          <cylinderGeometry args={[0.42, 0.42, 0.08, 16]} />
+          <meshStandardMaterial color="#23252a" roughness={0.85} />
+        </mesh>
+        <mesh position={[0.95, 0.42, 0.56]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+          <cylinderGeometry args={[0.42, 0.42, 0.08, 16]} />
+          <meshStandardMaterial color="#23252a" roughness={0.85} />
+        </mesh>
+        <mesh position={[-0.95, 0.42, -0.56]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+          <cylinderGeometry args={[0.42, 0.42, 0.08, 16]} />
+          <meshStandardMaterial color="#23252a" roughness={0.85} />
+        </mesh>
+        <mesh position={[0.95, 0.42, -0.56]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+          <cylinderGeometry args={[0.42, 0.42, 0.08, 16]} />
+          <meshStandardMaterial color="#23252a" roughness={0.85} />
+        </mesh>
+
+        {/* Badan Kayu Gerobak & Meja Etalase */}
+        <mesh position={[0, 0.88, 0]} castShadow receiveShadow>
+          <boxGeometry args={[2.35, 0.88, 1.12]} />
+          <meshStandardMaterial color="#6e472b" roughness={0.86} />
+        </mesh>
+        <mesh position={[0, 1.34, 0]} castShadow receiveShadow>
+          <boxGeometry args={[2.46, 0.08, 1.24]} />
+          <meshStandardMaterial color="#875a38" roughness={0.78} />
+        </mesh>
+
+        {/* Tiang Penopang Atap & Kanopi Terpal Hangat */}
+        {[
+          [-1.12, 1.92, -0.52],
+          [1.12, 1.92, -0.52],
+          [-1.12, 1.92, 0.52],
+          [1.12, 1.92, 0.52],
+        ].map(([tx, ty, tz], idx) => (
+          <mesh key={`ang-p-${idx}`} position={[tx, ty, tz]} castShadow>
+            <boxGeometry args={[0.08, 1.18, 0.08]} />
+            <meshStandardMaterial color="#593822" roughness={0.88} />
+          </mesh>
+        ))}
+        <mesh position={[0, 2.58, 0]} rotation={[0.08, 0, 0]} castShadow>
+          <boxGeometry args={[2.75, 0.1, 1.65]} />
+          <meshStandardMaterial color="#8f3224" roughness={0.84} />
+        </mesh>
+
+        {/* Kain Spanduk Angkringan Pak Slamet di Depan Atap */}
+        <mesh position={[0, 2.28, 0.62]}>
+          <planeGeometry args={[2.35, 0.54]} />
+          <meshStandardMaterial
+            map={signs.angkringan}
+            emissiveMap={signs.angkringan}
+            emissive="#ffdf9e"
+            emissiveIntensity={isEveningOrNight ? 0.68 : 0.1}
+          />
+        </mesh>
+        <mesh position={[0, 2.28, -0.62]} rotation={[0, Math.PI, 0]}>
+          <planeGeometry args={[2.35, 0.54]} />
+          <meshStandardMaterial
+            map={signs.angkringan}
+            emissiveMap={signs.angkringan}
+            emissive="#ffdf9e"
+            emissiveIntensity={isEveningOrNight ? 0.68 : 0.1}
+          />
+        </mesh>
+
+        {/* Teko Wedang Jahe, Angin Bara & Toples Sate */}
+        <mesh position={[-0.65, 1.54, 0.08]} castShadow>
+          <cylinderGeometry args={[0.16, 0.19, 0.34, 12]} />
+          <meshStandardMaterial color="#a8adb5" metalness={0.7} roughness={0.32} />
+        </mesh>
+        <mesh position={[0.15, 1.5, 0.12]} castShadow>
+          <boxGeometry args={[0.62, 0.24, 0.42]} />
+          <meshStandardMaterial color="#e6dbc8" roughness={0.5} transparent opacity={0.85} />
+        </mesh>
+        <mesh position={[0.78, 1.48, 0.05]} castShadow>
+          <cylinderGeometry args={[0.12, 0.12, 0.24, 10]} />
+          <meshStandardMaterial color="#d4a259" roughness={0.4} />
+        </mesh>
+
+        {/* Bohlam Kuning Hangat Menggantung di Tengah Gerobak */}
+        <mesh position={[0, 2.26, 0]}>
+          <sphereGeometry args={[0.1, 10, 10]} />
+          <meshStandardMaterial
+            color="#fff0c2"
+            emissive="#ffb647"
+            emissiveIntensity={isEveningOrNight ? 3.2 : 0.5}
+          />
+        </mesh>
+        {isEveningOrNight && settings.cinematicGlow && (
+          <sprite position={[0, 2.24, 0]} scale={[2.6, 2.6, 1]}>
+            <spriteMaterial
+              map={textures.glowSprite}
+              color="#ffc366"
+              transparent
+              opacity={0.75}
+              blending={THREE.AdditiveBlending}
+              depthWrite={false}
+            />
+          </sprite>
+        )}
+        {isEveningOrNight && (
+          <pointLight position={[0, 2.15, 0.45]} color="#ffbe63" intensity={12} distance={15} decay={1.8} />
+        )}
+
+        {/* Bangku Kayu Panjang Angkringan di Belakang */}
+        <mesh position={[0, 0.46, -1.42]} castShadow receiveShadow>
+          <boxGeometry args={[2.1, 0.1, 0.48]} />
+          <meshStandardMaterial color="#6e4a2e" roughness={0.88} />
+        </mesh>
+        <mesh position={[-0.85, 0.23, -1.42]} castShadow>
+          <boxGeometry args={[0.12, 0.46, 0.42]} />
+          <meshStandardMaterial color="#4f331e" roughness={0.9} />
+        </mesh>
+        <mesh position={[0.85, 0.23, -1.42]} castShadow>
+          <boxGeometry args={[0.12, 0.46, 0.42]} />
+          <meshStandardMaterial color="#4f331e" roughness={0.9} />
+        </mesh>
+      </group>
+
+      {/* === 9. LAMPU DERMAGA DANAU SENJA (MENYALA HANGAT SETELAH MISI PAK BUDI!) === */}
+      <group>
+        {(
+          [
+            [-70.5, 0.12, -26.2],
+            [-73.8, 0.12, -26.2],
+            [-76.8, 0.12, -26.2],
+            [-70.5, 0.12, -29.8],
+            [-76.8, 0.12, -29.8],
+          ] as [number, number, number][]
+        ).map(([px, py, pz], idx) => {
+          const lit = pierLampFixed || (isEveningOrNight && idx === 0);
+          return (
+            <group key={`pier-lamp-${idx}`} position={[px, py, pz]}>
+              <mesh position={[0, 0.72, 0]} castShadow>
+                <cylinderGeometry args={[0.055, 0.07, 1.44, 8]} />
+                <meshStandardMaterial color="#473324" roughness={0.9} />
+              </mesh>
+              <mesh position={[0, 1.52, 0]}>
+                <boxGeometry args={[0.2, 0.26, 0.2]} />
+                <meshStandardMaterial
+                  color={lit ? '#ffefbd' : '#737c87'}
+                  emissive={lit ? '#ffae42' : '#000000'}
+                  emissiveIntensity={lit ? 2.8 : 0}
+                  roughness={0.35}
+                />
+              </mesh>
+              {lit && settings.cinematicGlow && (
+                <sprite position={[0, 1.52, 0]} scale={[2.4, 2.4, 1]}>
+                  <spriteMaterial
+                    map={textures.glowSprite}
+                    color="#ffc56b"
+                    transparent
+                    opacity={0.72}
+                    blending={THREE.AdditiveBlending}
+                    depthWrite={false}
+                  />
+                </sprite>
+              )}
+            </group>
+          );
+        })}
+        {pierLampFixed && (
+          <pointLight position={[-73.8, 2.4, -28.0]} color="#ffbe6b" intensity={18} distance={22} decay={1.6} />
+        )}
+      </group>
     </group>
   );
 };

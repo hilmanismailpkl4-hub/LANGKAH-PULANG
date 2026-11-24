@@ -91,6 +91,7 @@ interface GameStoreState {
   isRidingScooter: boolean;
   isGuitarOpen: boolean;
   isBagOpen: boolean;
+  umbrellaForcedOff: boolean;
   catFed: boolean;
   paperBoatsLaunched: number;
 
@@ -117,6 +118,8 @@ interface GameStoreState {
   setRidingScooter: (riding: boolean) => void;
   setGuitarOpen: (open: boolean) => void;
   setBagOpen: (open: boolean) => void;
+  toggleUmbrella: () => void;
+  setFreeTimeOfDay: (time: TimeOfDay) => void;
   markCatFed: () => void;
   incrementPaperBoats: () => void;
   openPhone: (app?: 'home' | 'chat' | 'calls' | 'gallery' | 'radio' | 'notes' | 'weather', threadId?: string) => void;
@@ -214,6 +217,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     isRidingScooter: false,
     isGuitarOpen: false,
     isBagOpen: false,
+    umbrellaForcedOff: false,
     catFed: false,
     paperBoatsLaunched: 0,
 
@@ -301,6 +305,27 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isQuickGraphicsOpen: false,
         isPhotoMode: false,
       });
+    },
+
+    toggleUmbrella: () => {
+      const next = !get().umbrellaForcedOff;
+      sfxEngine.play('switch');
+      set({ umbrellaForcedOff: next });
+      get().showToast(next ? 'Payung hujan dilipat.' : 'Payung bening dibuka.');
+    },
+
+    setFreeTimeOfDay: (time) => {
+      sfxEngine.play('switch');
+      const loc = getLocationAtPosition(playerRuntime.position);
+      musicEngine.setContext(loc.musicMood, time);
+      set({ timeOfDay: time });
+      const labels: Record<TimeOfDay, string> = {
+        morning: 'Pagi Cerah',
+        sunset: 'Senja Keemasan',
+        rain_dusk: 'Sore Berhujan (Payung aktif otomatis!)',
+        night: 'Malam Tenang',
+      };
+      get().showToast(`Suasana kota diubah ke: ${labels[time]}`);
     },
 
     markCatFed: () => {

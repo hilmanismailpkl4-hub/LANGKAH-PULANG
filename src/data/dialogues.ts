@@ -142,6 +142,42 @@ const AMBIENT_DIALOGUES: Record<string, DialogueScript> = {
       },
     },
   },
+  ambient_slamet: {
+    id: 'ambient_slamet',
+    startNodeId: 'amb_slamet_1',
+    nodes: {
+      amb_slamet_1: {
+        id: 'amb_slamet_1',
+        speaker: 'pak_slamet',
+        emotion: 'hangat',
+        text: 'Wedang jahenya selalu siap, Mas Damar. Kapan pun capek di jalan, mampir duduk sebentar di gerobak Bapak.',
+      },
+    },
+  },
+  ambient_ari: {
+    id: 'ambient_ari',
+    startNodeId: 'amb_ari_1',
+    nodes: {
+      amb_ari_1: {
+        id: 'amb_ari_1',
+        speaker: 'bang_ari',
+        emotion: 'hangat',
+        text: 'Capo-nya enak banget dipakai, Mar! Semangat terus ya—jangan lupa mainin lagu "Pulang" buat Kira.',
+      },
+    },
+  },
+  ambient_budi: {
+    id: 'ambient_budi',
+    startNodeId: 'amb_budi_1',
+    nodes: {
+      amb_budi_1: {
+        id: 'amb_budi_1',
+        speaker: 'pak_budi',
+        emotion: 'tenang',
+        text: 'Lampu dermaga sudah terang lagi. Danau Senja selalu tenang menunggu keluargamu jalan-jalan sore di sini.',
+      },
+    },
+  },
 };
 
 export const ALL_DIALOGUES: Record<string, DialogueScript> = {

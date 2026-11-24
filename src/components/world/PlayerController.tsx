@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { musicEngine } from '../../audio/musicEngine';
@@ -36,6 +36,17 @@ export const PlayerController: React.FC = () => {
 
   const lookTargetVec = useRef(new THREE.Vector3());
   const camDesiredVec = useRef(new THREE.Vector3());
+  const [isIndoorsState, setIsIndoorsState] = useState(true);
+
+  const timeOfDay = useGameStore((s) => s.timeOfDay);
+  const umbrellaForcedOff = useGameStore((s) => s.umbrellaForcedOff);
+  const isRidingScooter = useGameStore((s) => s.isRidingScooter);
+  const isSitting = useGameStore((s) => s.isSitting);
+
+  const umbrellaActive =
+    timeOfDay === 'rain_dusk' && !umbrellaForcedOff && !isRidingScooter && !isSitting && !isIndoorsState;
+  const umbrellaActiveRef = useRef(umbrellaActive);
+  umbrellaActiveRef.current = umbrellaActive;
 
   useEffect(() => {
     const dom = gl.domElement;
@@ -212,6 +223,18 @@ export const PlayerController: React.FC = () => {
         playerRuntime.damarWaveTimer = 1.65;
         sfxEngine.play('interact');
         state.showToast('Damar melambaikan tangan menyapa sekitar.');
+      } else if (
+        code === 'KeyU' &&
+        !state.activeDialogue &&
+        !state.isMapJournalOpen &&
+        !state.isPauseOpen &&
+        !state.isQuickGraphicsOpen
+      ) {
+        if (state.timeOfDay === 'rain_dusk') {
+          state.toggleUmbrella();
+        } else {
+          state.showToast('Langit sedang tidak hujan. Ubah cuaca ke Hujan di HP [H] → Kota untuk memakai payung!');
+        }
       } else if (
         (code === 'Tab' || code === 'KeyM') &&
         !state.activeDialogue &&
@@ -653,18 +676,29 @@ export const PlayerController: React.FC = () => {
           store.activeNodeId &&
           store.activeDialogue.nodes[store.activeNodeId]?.speaker === 'damar';
 
+        const holdingUmb = umbrellaActiveRef.current;
         if (playerRuntime.damarWaveTimer > 0) {
           rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, -2.4, dt * 10);
           rightArmRef.current.rotation.z = Math.sin(t * 11) * 0.3 + 0.35;
-          leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, -swing * 0.6, dt * 10);
+          leftArmRef.current.rotation.x = THREE.MathUtils.lerp(
+            leftArmRef.current.rotation.x,
+            holdingUmb ? -1.28 : -swing * 0.6,
+            dt * 10,
+          );
+          leftArmRef.current.rotation.z = THREE.MathUtils.lerp(leftArmRef.current.rotation.z, holdingUmb ? -0.06 : 0, dt * 10);
         } else if (damarSpeaking) {
           rightArmRef.current.rotation.x = -0.45 + Math.sin(t * 4.4) * 0.22;
           rightArmRef.current.rotation.z = 0.1;
-          leftArmRef.current.rotation.x = -0.25 + Math.cos(t * 3.8) * 0.16;
+          leftArmRef.current.rotation.x = holdingUmb ? -1.28 : -0.25 + Math.cos(t * 3.8) * 0.16;
+          leftArmRef.current.rotation.z = holdingUmb ? -0.06 : 0;
         } else {
-          leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, -swing * 0.72, dt * 12);
+          leftArmRef.current.rotation.x = THREE.MathUtils.lerp(
+            leftArmRef.current.rotation.x,
+            holdingUmb ? -1.28 + Math.sin(t * 2.2) * 0.025 : -swing * 0.72,
+            dt * 12,
+          );
           rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, swing * 0.72, dt * 12);
-          leftArmRef.current.rotation.z = THREE.MathUtils.lerp(leftArmRef.current.rotation.z, 0, dt * 10);
+          leftArmRef.current.rotation.z = THREE.MathUtils.lerp(leftArmRef.current.rotation.z, holdingUmb ? -0.06 : 0, dt * 10);
           rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, 0, dt * 10);
         }
       }
@@ -760,6 +794,12 @@ export const PlayerController: React.FC = () => {
     locCheckTimerRef.current += dt;
     if (locCheckTimerRef.current > 0.25) {
       locCheckTimerRef.current = 0;
+      const nowIndoors =
+        py < 14 &&
+        ((px >= -27 && px <= -13 && pz >= 62 && pz <= 74) ||
+          (px >= -28 && px <= -12 && pz >= 14 && pz <= 27));
+      setIsIndoorsState((prev) => (prev === nowIndoors ? prev : nowIndoors));
+
       const loc = getLocationAtPosition(playerRuntime.position);
       if (loc.id !== store.currentLocation) {
         store.setCurrentLocation(loc.id);
@@ -792,6 +832,7 @@ export const PlayerController: React.FC = () => {
         rightArmRef={rightArmRef}
         headRef={headRef}
         torsoRef={torsoRef}
+        holdingUmbrella={umbrellaActive}
       />
     </group>
   );

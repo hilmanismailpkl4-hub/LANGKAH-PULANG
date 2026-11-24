@@ -145,6 +145,78 @@ export const SIDE_QUESTS: SideQuestDefinition[] = [
     ],
     reflectionNote: 'Kata Bu Wati: "Lampu teras itu kecil, Mar. Tapi buat orang yang capek di jalan, cahaya sekecil itu bisa menyelamatkan hatinya."',
   },
+  {
+    id: 'sq_pak_slamet',
+    title: 'Wedang Jahe Pukul Sembilan',
+    npcId: 'pak_slamet',
+    npcName: 'Pak Slamet',
+    location: 'perumahan',
+    availableFromChapter: 1,
+    summary: 'Pak Slamet, penjual angkringan hangat di sudut Jl. Melati, kehabisan jahe merah menjelang malam saat banyak pekerja pulang lembur.',
+    stages: [
+      {
+        stage: 1,
+        objective: 'Ambilkan bungkusan jahe merah dari Mbak Lilis di Kios 24 Jam Harmoni.',
+        targetPos: [24, 0, 15.8],
+        location: 'minimarket',
+      },
+      {
+        stage: 2,
+        objective: 'Antarkan jahe merah hangat itu ke Gerobak Angkringan Pak Slamet.',
+        targetPos: [-12.8, 0, 40.2],
+        location: 'perumahan',
+      },
+    ],
+    reflectionNote: 'Pak Slamet mengajarkanku bahwa kehangatan sederhana sering kali menyelamatkan malam orang-orang yang paling lelah di kota ini.',
+  },
+  {
+    id: 'sq_bang_ari',
+    title: 'Akor di Peron Terakhir',
+    npcId: 'bang_ari',
+    npcName: 'Bang Ari',
+    location: 'stasiun_tua',
+    availableFromChapter: 1,
+    summary: 'Bang Ari, pengamen akustik di Stasiun Senja yang dulu pernah menonton band Damar, butuh capo cadangan dari Toko Musik "Nada Lama" untuk menyelesaikan lagu pulang para pekerja.',
+    stages: [
+      {
+        stage: 1,
+        objective: 'Minta capo gitar cadangan dari Mas Bagas di Toko Musik "Nada Lama".',
+        targetPos: [-20, 0, -17.5],
+        location: 'toko_musik',
+      },
+      {
+        stage: 2,
+        objective: 'Serahkan capo gitar kepada Bang Ari di Stasiun Kereta Tua Senja.',
+        targetPos: [79.5, 0.1, 4.5],
+        location: 'stasiun_tua',
+      },
+    ],
+    reflectionNote: 'Bang Ari masih hafal intro lagu "Langkah Kecil". Ternyata karya tulus yang kita buat bertahun-tahun lalu diam-diam tetap menemani hidup orang lain.',
+  },
+  {
+    id: 'sq_pak_budi',
+    title: 'Lampu Dermaga Senja',
+    npcId: 'pak_budi',
+    npcName: 'Pak Budi',
+    location: 'taman_danau',
+    availableFromChapter: 1,
+    summary: 'Pak Budi, penjaga Taman Kota selama dua puluh tahun, meminta bantuan Damar memeriksa kotak sakelar lampu dermaga kayu Danau Senja agar keluarga yang berjalan sore tidak kegelapan.',
+    stages: [
+      {
+        stage: 1,
+        objective: 'Nyalakan kotak sakelar lampu di pangkal Dermaga Kayu Danau Senja.',
+        targetPos: [-70.2, 0.12, -26.4],
+        location: 'taman_danau',
+      },
+      {
+        stage: 2,
+        objective: 'Kabari Pak Budi di tepi timur Taman Kota & Danau Senja.',
+        targetPos: [-67.5, 0, -37.0],
+        location: 'taman_danau',
+      },
+    ],
+    reflectionNote: 'Kata Pak Budi, ia paling suka melihat ayah dan anak duduk diam di tepi danau tanpa ponsel—karena pemandangan itu makin langka setiap tahun.',
+  },
 ];
 
 export const SIDE_QUEST_DIALOGUES: Record<string, DialogueScript> = {
@@ -765,6 +837,261 @@ export const SIDE_QUEST_DIALOGUES: Record<string, DialogueScript> = {
           advanceSideQuest: { questId: 'sq_mbak_lilis', stage: 2 },
           setFlags: ['has_lilis_book'],
           toast: 'Buku gambar untuk adik Mbak Lilis didapatkan',
+        },
+      },
+    },
+  },
+
+  // === 7. PAK SLAMET (ANGKRINGAN) ===
+  sq_pak_slamet_start: {
+    id: 'sq_pak_slamet_start',
+    startNodeId: 'sq_sl_1',
+    nodes: {
+      sq_sl_1: {
+        id: 'sq_sl_1',
+        speaker: 'pak_slamet',
+        emotion: 'hangat',
+        text: 'Eh, Mas Damar! Tumben mampir gerobak. Mau nasi kucing sambal teri atau sate telur puyuh dulu?',
+        nextNodeId: 'sq_sl_2',
+      },
+      sq_sl_2: {
+        id: 'sq_sl_2',
+        speaker: 'pak_slamet',
+        emotion: 'ragu',
+        text: 'Ini Bapak lagi agak keteteran, Mas... Jahe merah buat wedang barusan habis, padahal sebentar lagi anak-anak shift sore sama bapak-bapak pulang kantor mulai cari yang hangat. Kalau Mas lewat Kios Harmoni, boleh bantu ambilkan titipan jahe Bapak di Mbak Lilis?',
+        nextNodeId: 'sq_sl_3',
+      },
+      sq_sl_3: {
+        id: 'sq_sl_3',
+        speaker: 'damar',
+        emotion: 'hangat',
+        text: 'Siap, Pak Slamet. Biar saya ambilkan ke Kios Harmoni ya.',
+        onEnd: {
+          startSideQuest: 'sq_pak_slamet',
+          toast: 'Misi Sampingan dimulai: Wedang Jahe Pukul Sembilan',
+        },
+      },
+    },
+  },
+  sq_helper_lilis_ginger: {
+    id: 'sq_helper_lilis_ginger',
+    startNodeId: 'sq_hlg_1',
+    nodes: {
+      sq_hlg_1: {
+        id: 'sq_hlg_1',
+        speaker: 'mbak_lilis',
+        emotion: 'hangat',
+        text: 'Oh, bungkusan jahe merah buat Angkringan Pak Slamet? Sudah aku pisahkan dari tadi, Mas Damar. Wangi banget ini!',
+        onEnter: {
+          playSfx: 'interact',
+          advanceSideQuest: { questId: 'sq_pak_slamet', stage: 2 },
+          setFlags: ['has_slamet_ginger'],
+          toast: 'Bungkusan jahe merah untuk Pak Slamet didapatkan',
+        },
+      },
+    },
+  },
+  sq_pak_slamet_complete: {
+    id: 'sq_pak_slamet_complete',
+    startNodeId: 'sq_sl_e1',
+    nodes: {
+      sq_sl_e1: {
+        id: 'sq_sl_e1',
+        speaker: 'damar',
+        emotion: 'hangat',
+        text: 'Ini jahe merahnya, Pak Slamet. Tadi Mbak Lilis langsung kasih.',
+        onEnter: { playSfx: 'coffee' },
+        nextNodeId: 'sq_sl_e2',
+      },
+      sq_sl_e2: {
+        id: 'sq_sl_e2',
+        speaker: 'pak_slamet',
+        emotion: 'haru',
+        text: 'Wah, matur nuwun banget, Mas Damar! Nih cicipi segelas wedang jahe dulu. Bapak jualan di sudut gang ini lima belas tahun... tahu nggak kenapa orang betah nongkrong di bangku kayu kecil ini?',
+        nextNodeId: 'sq_sl_e3',
+      },
+      sq_sl_e3: {
+        id: 'sq_sl_e3',
+        speaker: 'pak_slamet',
+        emotion: 'hangat',
+        text: 'Karena di sini nggak ada yang nanya target penjualan atau cicilan. Cuma gelas hangat, lampu kuning, sama rasa diterima apa adanya. Jangan lupa bawa rasa hangat itu masuk ke rumahmu juga ya, Mas.',
+        onEnd: {
+          kejujuranDiri: 2,
+          kehadiranKeluarga: 1,
+          completeSideQuest: 'sq_pak_slamet',
+          playSfx: 'chime',
+          journalEntry: {
+            id: 'je_sq_slamet',
+            title: 'Segelas Hangat di Angkringan Pak Slamet',
+            body: 'Pak Slamet mengingatkan bahwa hal paling dirindukan orang dewasa yang lelah bukanlah kemewahan, melainkan ruang hangat di mana ia diterima apa adanya.',
+            chapter: 1,
+          },
+          toast: 'Misi Sampingan Selesai: Wedang Jahe Pukul Sembilan',
+        },
+      },
+    },
+  },
+
+  // === 8. BANG ARI (PENGAMEN STASIUN) ===
+  sq_bang_ari_start: {
+    id: 'sq_bang_ari_start',
+    startNodeId: 'sq_ar_1',
+    nodes: {
+      sq_ar_1: {
+        id: 'sq_ar_1',
+        speaker: 'bang_ari',
+        emotion: 'hangat',
+        text: 'Sebentar... Bro, lo Damar gitaris "Langkah Kecil" dulu kan?! Gila, gue dulu sering nonton lo manggung di Taman Kota tahun 2018!',
+        onEnter: { playSfx: 'guitar' },
+        nextNodeId: 'sq_ar_2',
+      },
+      sq_ar_2: {
+        id: 'sq_ar_2',
+        speaker: 'damar',
+        emotion: 'haru',
+        text: 'Serius masih ingat? Itu udah lama banget, Bang... Sekarang aku cuma kerja kantoran biasa.',
+        nextNodeId: 'sq_ar_3',
+      },
+      sq_ar_3: {
+        id: 'sq_ar_3',
+        speaker: 'bang_ari',
+        emotion: 'hangat',
+        text: 'Lagu akustik kalian dulu nemenin gue pas baru merantau ke kota ini! Kebetulan capo gitar gue patah tadi pagi. Kalau lo sempat lewat Toko Musik "Nada Lama", tolong tanyain capo cadangan ke Mas Bagas dong—nanti gue mainin satu bait buat lo!',
+        onEnd: {
+          startSideQuest: 'sq_bang_ari',
+          toast: 'Misi Sampingan dimulai: Akor di Peron Terakhir',
+        },
+      },
+    },
+  },
+  sq_helper_bagas_capo: {
+    id: 'sq_helper_bagas_capo',
+    startNodeId: 'sq_hbc_1',
+    nodes: {
+      sq_hbc_1: {
+        id: 'sq_hbc_1',
+        speaker: 'mas_bagas',
+        emotion: 'hangat',
+        text: 'Capo buat Bang Ari di stasiun? Ambil aja yang kayu ini, Mar. Senang lihat kamu mulai akrab lagi sama dunia musik.',
+        onEnter: {
+          playSfx: 'guitar',
+          advanceSideQuest: { questId: 'sq_bang_ari', stage: 2 },
+          setFlags: ['has_ari_capo'],
+          toast: 'Capo gitar kayu untuk Bang Ari didapatkan',
+        },
+      },
+    },
+  },
+  sq_bang_ari_complete: {
+    id: 'sq_bang_ari_complete',
+    startNodeId: 'sq_ar_e1',
+    nodes: {
+      sq_ar_e1: {
+        id: 'sq_ar_e1',
+        speaker: 'damar',
+        emotion: 'hangat',
+        text: 'Ini capo-nya dari Mas Bagas, Bang Ari. Kayunya bagus banget.',
+        onEnter: { playSfx: 'guitar' },
+        nextNodeId: 'sq_ar_e2',
+      },
+      sq_ar_e2: {
+        id: 'sq_ar_e2',
+        speaker: 'bang_ari',
+        emotion: 'haru',
+        text: 'Mantap!! Makasih banyak, Damar! Dengar ya—ini intro lagu kalian dulu... Lo tahu nggak, meski lo nggak jadi musisi panggung besar, nada yang lo tulis dulu ternyata udah nolong orang asing kayak gue bertahan di peron sepi.',
+        nextNodeId: 'sq_ar_e3',
+      },
+      sq_ar_e3: {
+        id: 'sq_ar_e3',
+        speaker: 'bang_ari',
+        emotion: 'hangat',
+        text: 'Jangan pernah malu sama mimpi lama lo, Bro. Mainkan lagi buat anak lo di rumah—itu panggung paling keren di dunia.',
+        onEnd: {
+          kejujuranDiri: 3,
+          completeSideQuest: 'sq_bang_ari',
+          playSfx: 'chime',
+          journalEntry: {
+            id: 'je_sq_ari',
+            title: 'Gema Lagu Lama di Stasiun Senja',
+            body: 'Bang Ari, pengamen di peron stasiun, ternyata masih mengingat lagu yang kutulis tahun 2018. Bermimpi tidak pernah sia-sia—terkadang gaungnya bertahan lebih lama daripada yang kita duga.',
+            chapter: 2,
+          },
+          toast: 'Misi Sampingan Selesai: Akor di Peron Terakhir',
+        },
+      },
+    },
+  },
+
+  // === 9. PAK BUDI (PENJAGA TAMAN DANAU) ===
+  sq_pak_budi_start: {
+    id: 'sq_pak_budi_start',
+    startNodeId: 'sq_bd_1',
+    nodes: {
+      sq_bd_1: {
+        id: 'sq_bd_1',
+        speaker: 'pak_budi',
+        emotion: 'tenang',
+        text: 'Sore, Mas Damar... Enak ya udara pinggir danau. Kalau saya lihat, Mas sering kelihatan banyak pikiran kalau lagi lewat taman.',
+        nextNodeId: 'sq_bd_2',
+      },
+      sq_bd_2: {
+        id: 'sq_bd_2',
+        speaker: 'pak_budi',
+        emotion: 'hangat',
+        text: 'Oh iya, boleh minta tolong sebentar? Kotak sakelar lampu di pangkal dermaga kayu sebelah selatan tadi agak korslet kena embun. Saya lagi merapikan dahan di sini—kalau Mas lewat dermaga, tolong tekan sakelarnya ya biar sore nanti terang.',
+        onEnd: {
+          startSideQuest: 'sq_pak_budi',
+          toast: 'Misi Sampingan dimulai: Lampu Dermaga Senja',
+        },
+      },
+    },
+  },
+  sq_pak_budi_switch: {
+    id: 'sq_pak_budi_switch',
+    startNodeId: 'sq_bd_sw1',
+    nodes: {
+      sq_bd_sw1: {
+        id: 'sq_bd_sw1',
+        speaker: 'damar_batin',
+        emotion: 'tenang',
+        text: 'Klik. Lampu dermaga Danau Senja langsung menyala hangat memantul di permukaan air.',
+        onEnter: {
+          playSfx: 'switch',
+          advanceSideQuest: { questId: 'sq_pak_budi', stage: 2 },
+          setFlags: ['pier_lamp_fixed'],
+          toast: 'Lampu Dermaga Danau Senja kembali menyala!',
+        },
+      },
+    },
+  },
+  sq_pak_budi_complete: {
+    id: 'sq_pak_budi_complete',
+    startNodeId: 'sq_bd_e1',
+    nodes: {
+      sq_bd_e1: {
+        id: 'sq_bd_e1',
+        speaker: 'pak_budi',
+        emotion: 'hangat',
+        text: 'Wah, langsung terang pantulannya sampai ke ujung danau! Terima kasih banyak ya, Mas Damar.',
+        nextNodeId: 'sq_bd_e2',
+      },
+      sq_bd_e2: {
+        id: 'sq_bd_e2',
+        speaker: 'pak_budi',
+        emotion: 'haru',
+        text: 'Dua puluh tahun saya jaga taman ini. Pemandangan yang paling saya suka itu sederhana: ayah, ibu, dan anak kecil duduk di dermaga tanpa pegang ponsel, cuma lihat air bergoyang. Kapan-kapan ajak istri dan anakmu ke sini ya, Mas.',
+        onEnd: {
+          kehadiranKeluarga: 2,
+          kejujuranDiri: 1,
+          completeSideQuest: 'sq_pak_budi',
+          playSfx: 'chime',
+          journalEntry: {
+            id: 'je_sq_budi',
+            title: 'Cahaya di Dermaga Pak Budi',
+            body: 'Lampu dermaga Danau Senja menyala lagi. Aku berjanji suatu sore nanti aku akan mengajak Nadia dan Kira duduk di ujung dermaga ini tanpa membawa ponsel atau kegelisahan kantor.',
+            chapter: 2,
+          },
+          toast: 'Misi Sampingan Selesai: Lampu Dermaga Senja',
         },
       },
     },

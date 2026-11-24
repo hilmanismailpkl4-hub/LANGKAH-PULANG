@@ -26,6 +26,7 @@ import {
   Sun,
   Sunset,
   Trash2,
+  Umbrella,
   Wifi,
   X,
 } from 'lucide-react';
@@ -188,6 +189,9 @@ export const SmartphoneModal: React.FC = () => {
   const toggleMapJournal = useGameStore((s) => s.toggleMapJournal);
   const settings = useGameStore((s) => s.settings);
   const updateSettings = useGameStore((s) => s.updateSettings);
+  const setFreeTimeOfDay = useGameStore((s) => s.setFreeTimeOfDay);
+  const umbrellaForcedOff = useGameStore((s) => s.umbrellaForcedOff);
+  const toggleUmbrella = useGameStore((s) => s.toggleUmbrella);
 
   const [typingThread, setTypingThread] = useState<string | null>(null);
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
@@ -999,14 +1003,63 @@ export const SmartphoneModal: React.FC = () => {
               </div>
             )}
 
-            {/* === 6. APLIKASI CUACA & PEDOMETER KOTA === */}
+            {/* === 6. APLIKASI CUACA, GANTI WAKTU BEBAS & PEDOMETER KOTA === */}
             {app === 'weather' && (
-              <div className="flex h-full flex-col justify-between p-5 text-warm-50">
-                <div className="space-y-4">
-                  <div className="text-center pt-2">
+              <div className="flex h-full flex-col justify-between overflow-y-auto subtle-scroll p-5 text-warm-50">
+                <div className="space-y-3.5">
+                  <div className="text-center pt-1">
                     <p className="text-xs text-warm-200/75">{loc.name}</p>
-                    <p className="mt-1 font-serif text-5xl font-light">{meta.temp}</p>
-                    <p className="mt-1 text-sm text-warm-200">{meta.desc}</p>
+                    <p className="mt-0.5 font-serif text-4xl font-light">{meta.temp}</p>
+                    <p className="mt-0.5 text-xs text-warm-200">{meta.desc}</p>
+                  </div>
+
+                  {/* Mode Ganti Waktu & Cuaca Bebas */}
+                  <div className="rounded-2xl border border-warm-300/30 bg-black/35 p-3">
+                    <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-warm-300">
+                      Ganti Suasana Waktu & Cuaca Bebas
+                    </p>
+                    <div className="grid grid-cols-4 gap-1.5">
+                      {(
+                        [
+                          { id: 'morning', label: 'Pagi', icon: Sun },
+                          { id: 'sunset', label: 'Senja', icon: Sunset },
+                          { id: 'rain_dusk', label: 'Hujan', icon: CloudRain },
+                          { id: 'night', label: 'Malam', icon: Moon },
+                        ] as const
+                      ).map(({ id, label, icon: Icon }) => {
+                        const active = timeOfDay === id;
+                        return (
+                          <button
+                            key={id}
+                            type="button"
+                            onClick={() => setFreeTimeOfDay(id)}
+                            className={`flex flex-col items-center gap-1 rounded-xl py-2 text-[10px] font-medium transition ${
+                              active
+                                ? 'bg-warm-400 font-semibold text-dusk-950 shadow'
+                                : 'bg-white/5 text-warm-200 hover:bg-white/15'
+                            }`}
+                          >
+                            <Icon className="h-3.5 w-3.5" />
+                            <span>{label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {timeOfDay === 'rain_dusk' && (
+                      <button
+                        type="button"
+                        onClick={toggleUmbrella}
+                        className="mt-2.5 flex w-full items-center justify-between rounded-xl border border-sky-300/30 bg-sky-500/15 px-3 py-1.5 text-[11px] text-sky-100 hover:bg-sky-500/25"
+                      >
+                        <span className="flex items-center gap-1.5">
+                          <Umbrella className="h-3.5 w-3.5 text-sky-300" />
+                          <span>Payung Hujan Bening [U]</span>
+                        </span>
+                        <span className="font-semibold text-sky-300">
+                          {umbrellaForcedOff ? 'Dilipat' : 'Otomatis Aktif'}
+                        </span>
+                      </button>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-2 gap-2.5 text-xs">
@@ -1021,24 +1074,24 @@ export const SmartphoneModal: React.FC = () => {
                   </div>
 
                   {/* Pedometer Real-Time */}
-                  <div className="rounded-2xl border border-warm-300/25 bg-black/35 p-4">
+                  <div className="rounded-2xl border border-warm-300/25 bg-black/35 p-3.5">
                     <div className="flex items-center gap-2 text-warm-300">
                       <Footprints className="h-4 w-4" />
                       <span className="text-xs font-semibold uppercase tracking-wider">
                         Langkah Damar Hari Ini
                       </span>
                     </div>
-                    <p className="mt-2 font-serif text-3xl text-warm-50">
+                    <p className="mt-1.5 font-serif text-2xl text-warm-50">
                       {stepCount.toLocaleString('id-ID')}{' '}
                       <span className="text-xs font-sans text-warm-200/65">langkah</span>
                     </p>
-                    <p className="mt-1 text-[11px] text-warm-200/70">
+                    <p className="mt-0.5 text-[11px] text-warm-200/70">
                       Estimasi jarak tempuh: ~{Math.round(stepCount * 0.65)} meter menyusuri kota.
                     </p>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
+                <div className="mt-3 grid grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={() => {

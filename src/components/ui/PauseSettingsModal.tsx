@@ -238,6 +238,7 @@ export const PauseSettingsModal: React.FC = () => {
                 ['F', 'Melambaikan tangan menyapa warga sekitar (NPC akan melambai balik!)'],
                 ['H', 'Membuka Ponsel Damar (Pesan, Telepon & Suara, Galeri, Nada FM, Catatan)'],
                 ['I', 'Membuka Tas Selempang Damar (Inspeksi Kenangan & Beri Hadiah Keluarga)'],
+                ['U', 'Buka / lipat Payung Hujan Bening saat sedang hujan di luar ruangan'],
                 ['P', 'Mode Foto Sinematik (kamera bebas & simpan tangkapan layar PNG)'],
                 ['M / Tab / J', 'Membuka Peta Kota, Daftar Misi, & Catatan Harian'],
                 ['Spasi / Enter / Klik', 'Melanjutkan baris dialog'],

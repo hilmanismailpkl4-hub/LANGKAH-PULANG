@@ -22,6 +22,7 @@ export const GameCanvas: React.FC = () => {
   const effectiveTime = screen === 'title' ? titlePreviewTime : timeOfDay;
   const dpr = Math.max(0.7, Math.min(2, settings.resolutionScale));
   const buWatiLampFixed = flags.includes('bu_wati_lamp_fixed');
+  const pierLampFixed = flags.includes('pier_lamp_fixed');
 
   return (
     <div className="fixed inset-0 w-full h-full select-none">
@@ -44,7 +45,7 @@ export const GameCanvas: React.FC = () => {
             buWatiLampFixed={buWatiLampFixed}
             settings={settings}
           />
-          <CityDetails timeOfDay={effectiveTime} settings={settings} />
+          <CityDetails timeOfDay={effectiveTime} settings={settings} pierLampFixed={pierLampFixed} />
           <CityLife timeOfDay={effectiveTime} settings={settings} />
           <ScooterEntity timeOfDay={effectiveTime} settings={settings} />
           <PlayerController />
