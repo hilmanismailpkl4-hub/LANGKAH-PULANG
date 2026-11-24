@@ -257,6 +257,12 @@ export interface GameSettings {
   mouseSensitivity: number;
   showWaypoint: boolean;
   showSubtitles: boolean;
+  showMinimap: boolean;
+}
+
+export interface CustomWaypoint {
+  label: string;
+  position: [number, number, number];
 }
 
 export interface EndingDefinition {

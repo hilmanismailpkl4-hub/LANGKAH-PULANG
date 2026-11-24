@@ -31,6 +31,7 @@ export const GameCanvas: React.FC = () => {
         gl={{
           antialias: settings.graphicsQuality !== 'low',
           powerPreference: 'high-performance',
+          preserveDrawingBuffer: true,
           toneMapping: THREE.ACESFilmicToneMapping,
           toneMappingExposure: settings.exposure,
         }}

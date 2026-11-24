@@ -20,6 +20,7 @@ import {
 } from '../services/saveManager';
 import {
   ChapterNumber,
+  CustomWaypoint,
   DialogueChoice,
   DialogueEffect,
   DialogueScript,
@@ -75,16 +76,22 @@ interface GameStoreState {
   cloudUserEmail: string | null;
   lastSaveStatus: string | null;
 
-  // Settings
+  // Settings & Bonus Features
   settings: GameSettings;
   isQuickGraphicsOpen: boolean;
   titlePreviewTime: TimeOfDay;
+  customWaypoint: CustomWaypoint | null;
+  isPhotoMode: boolean;
+  isSitting: boolean;
 
   // Actions
   initApp: () => Promise<void>;
   setQuickGraphicsOpen: (open: boolean) => void;
   setTitlePreviewTime: (time: TimeOfDay) => void;
   applyGraphicsPreset: (quality: GraphicsQuality) => void;
+  setCustomWaypoint: (wp: CustomWaypoint | null) => void;
+  setPhotoMode: (active: boolean) => void;
+  setSitting: (sitting: boolean) => void;
   setCloudUserEmail: (email: string | null) => void;
   refreshSlotsFromCloud: () => Promise<void>;
   startNewSlot: (slotId: string, journalName: string) => Promise<void>;
@@ -163,6 +170,9 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     settings: initialSettings,
     isQuickGraphicsOpen: false,
     titlePreviewTime: 'sunset',
+    customWaypoint: null,
+    isPhotoMode: false,
+    isSitting: false,
 
     initApp: async () => {
       const merged = await syncAndLoadAllSlots();
@@ -183,6 +193,20 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       const preset = GRAPHICS_PRESETS[quality];
       get().updateSettings(preset);
     },
+
+    setCustomWaypoint: (wp) => {
+      set({ customWaypoint: wp });
+      if (wp) {
+        get().showToast(`Penanda GPS dipasang menuju: ${wp.label}`);
+      }
+    },
+
+    setPhotoMode: (active) => {
+      if (active && document.pointerLockElement) document.exitPointerLock();
+      set({ isPhotoMode: active, isMapJournalOpen: false, isPauseOpen: false, isQuickGraphicsOpen: false });
+    },
+
+    setSitting: (sitting) => set({ isSitting: sitting }),
 
     setCloudUserEmail: (email) => set({ cloudUserEmail: email }),
 

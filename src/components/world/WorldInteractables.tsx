@@ -366,7 +366,9 @@ export const WorldInteractables: React.FC = () => {
       store.activeDialogue ||
       store.isMapJournalOpen ||
       store.isPauseOpen ||
-      store.isQuickGraphicsOpen
+      store.isQuickGraphicsOpen ||
+      store.isPhotoMode ||
+      store.isSitting
     ) {
       playerRuntime.nearestInteractable = null;
       store.setInteractPrompt(null);
@@ -414,6 +416,55 @@ export const WorldInteractables: React.FC = () => {
         },
       },
       3.2,
+    );
+
+    // Bonus Upgrade: Duduk Reflektif di Bangku Taman Danau & Bangku Rooftop
+    consider(
+      {
+        id: 'sit_park_bench',
+        kind: 'story_object',
+        label: 'Duduk Sebentar Menatap Danau Senja',
+        sublabel: 'Momen Tenang',
+        position: [-78.0, 0, -9.2],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Taman Kota & Danau Senja',
+            seatPos: [-78.0, 0.14, -8.5],
+            lookAt: [-84.0, 1.2, -28.0],
+            standPos: [-78.0, 0, -9.6],
+            seatYaw: Math.PI,
+          };
+          store.setSitting(true);
+          store.showToast('Damar duduk beristirahat sejenak... (Tekan WASD atau E untuk berdiri)');
+        },
+      },
+      2.6,
+    );
+
+    consider(
+      {
+        id: 'sit_rooftop_bench',
+        kind: 'story_object',
+        label: 'Duduk Menikmati Panorama Kota',
+        sublabel: 'Rooftop Menara Nusantara',
+        position: [28.5, 22, -23.7],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Rooftop Menara Nusantara',
+            seatPos: [28.5, 22.14, -23.0],
+            lookAt: [-12.0, 6.0, 48.0],
+            standPos: [28.5, 22, -24.2],
+            seatYaw: 0,
+          };
+          store.setSitting(true);
+          store.showToast('Menatap lampu kota dari ketinggian... (Tekan WASD atau E untuk berdiri)');
+        },
+      },
+      2.8,
     );
 
     if (store.mainStepId === 'ch2_2_hujan_jembatan') {

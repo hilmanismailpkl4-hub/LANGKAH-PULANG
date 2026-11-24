@@ -7,6 +7,7 @@ import { GraphicsSettingsModal } from './components/ui/GraphicsSettingsModal';
 import { MapJournalModal } from './components/ui/MapJournalModal';
 import { PauseSettingsModal } from './components/ui/PauseSettingsModal';
 import { PhoneNotification } from './components/ui/PhoneNotification';
+import { PhotoModeOverlay } from './components/ui/PhotoModeOverlay';
 import { TitleScreen } from './components/ui/TitleScreen';
 import { GameCanvas } from './components/world/GameCanvas';
 import { useGameStore } from './store/useGameStore';
@@ -47,6 +48,7 @@ export function App() {
       {/* Seluruh UI dirender lewat React Portal dengan z-index tertinggi */}
       <TitleScreen />
       <GameHUD />
+      <PhotoModeOverlay />
       <PhoneNotification />
       <DialogueOverlay />
       <MapJournalModal />

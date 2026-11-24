@@ -71,6 +71,7 @@ export const DEFAULT_SETTINGS: GameSettings = {
   mouseSensitivity: 1.0,
   showWaypoint: true,
   showSubtitles: true,
+  showMinimap: true,
 };
 
 export function loadLocalSettings(): GameSettings {

@@ -205,6 +205,15 @@ export const PauseSettingsModal: React.FC = () => {
                     className="h-4 w-4 accent-warm-400"
                   />
                 </label>
+                <label className="flex items-center justify-between rounded-xl border border-warm-100/10 bg-dusk-950/50 px-3.5 py-2.5">
+                  <span>Tampilkan Mini-Map Radar di HUD</span>
+                  <input
+                    type="checkbox"
+                    checked={settings.showMinimap}
+                    onChange={(e) => updateSettings({ showMinimap: e.target.checked })}
+                    className="h-4 w-4 accent-warm-400"
+                  />
+                </label>
               </div>
 
               <button
@@ -227,6 +236,7 @@ export const PauseSettingsModal: React.FC = () => {
                 ['Scroll Mouse', 'Mendekatkan atau menjauhkan jarak kamera'],
                 ['E', 'Berbicara dengan tokoh, memeriksa benda, atau naik lift Rooftop'],
                 ['F', 'Melambaikan tangan menyapa warga sekitar (NPC akan melambai balik!)'],
+                ['P', 'Mode Foto Sinematik (kamera bebas & simpan tangkapan layar PNG)'],
                 ['M / Tab / J', 'Membuka Peta Kota, Daftar Misi, & Catatan Harian'],
                 ['Spasi / Enter / Klik', 'Melanjutkan baris dialog'],
                 ['Esc', 'Membuka atau menutup Menu Jeda'],

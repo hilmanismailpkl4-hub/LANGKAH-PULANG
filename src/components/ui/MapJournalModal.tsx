@@ -1,13 +1,32 @@
-import React, { useState } from 'react';
-import { BookOpen, CheckCircle2, Compass, Heart, Map as MapIcon, MapPin, Sparkles, X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import {
+  BookOpen,
+  CheckCircle2,
+  Compass,
+  Heart,
+  Map as MapIcon,
+  Navigation,
+  Sparkles,
+  X,
+  ZoomIn,
+  ZoomOut,
+} from 'lucide-react';
+import { sfxEngine } from '../../audio/sfxEngine';
 import { MAIN_STEP_BY_ID } from '../../data/dialogues';
 import { EASTER_EGGS } from '../../data/easterEggs';
 import { SIDE_QUESTS } from '../../data/sideQuests';
-import { LOCATION_BY_ID, WORLD_LOCATIONS, worldToMapPercent } from '../../data/worldLocations';
+import { LOCATION_BY_ID, WORLD_LOCATIONS } from '../../data/worldLocations';
 import { playerRuntime } from '../../store/playerRuntime';
 import { useGameStore } from '../../store/useGameStore';
 import { LocationId } from '../../types/game';
 import { Portal } from './Portal';
+
+// Konversi koordinat dunia 3D (x: -112..102, z: -68..92) ke viewBox SVG 800x600
+function toSvg(x: number, z: number): { sx: number; sy: number } {
+  const sx = ((x + 112) / 214) * 800;
+  const sy = ((z + 68) / 160) * 600;
+  return { sx, sy };
+}
 
 export const MapJournalModal: React.FC = () => {
   const isOpen = useGameStore((s) => s.isMapJournalOpen);
@@ -21,26 +40,56 @@ export const MapJournalModal: React.FC = () => {
   const discoveredEasterEggs = useGameStore((s) => s.discoveredEasterEggs);
   const journalEntries = useGameStore((s) => s.journalEntries);
   const currentLocation = useGameStore((s) => s.currentLocation);
+  const customWaypoint = useGameStore((s) => s.customWaypoint);
+  const setCustomWaypoint = useGameStore((s) => s.setCustomWaypoint);
 
   const [selectedLocId, setSelectedLocId] = useState<LocationId>(currentLocation);
+  const [zoom, setZoom] = useState(1);
+  const [filterMode, setFilterMode] = useState<'all' | 'quests' | 'memories'>('all');
+  const [livePos, setLivePos] = useState({
+    x: playerRuntime.position[0],
+    z: playerRuntime.position[2],
+    yaw: playerRuntime.cameraYaw,
+  });
+
+  useEffect(() => {
+    if (!isOpen) return;
+    setSelectedLocId(currentLocation);
+    setLivePos({
+      x: playerRuntime.position[0],
+      z: playerRuntime.position[2],
+      yaw: playerRuntime.cameraYaw,
+    });
+  }, [isOpen, currentLocation]);
 
   if (!isOpen) return null;
 
   const mainStep = MAIN_STEP_BY_ID[mainStepId];
-  const playerMap = worldToMapPercent(playerRuntime.position[0], playerRuntime.position[2]);
-  const mainMap = mainStep
-    ? worldToMapPercent(mainStep.waypoint[0], mainStep.waypoint[2])
+  const playerSvg = toSvg(livePos.x, livePos.z);
+  const mainSvg = mainStep ? toSvg(mainStep.waypoint[0], mainStep.waypoint[2]) : null;
+  const customSvg = customWaypoint
+    ? toSvg(customWaypoint.position[0], customWaypoint.position[2])
     : null;
 
   const selectedLoc = LOCATION_BY_ID[selectedLocId] ?? LOCATION_BY_ID.rumah_damar;
   const locEasterEggs = EASTER_EGGS.filter((e) => e.location === selectedLoc.id);
   const locFoundCount = locEasterEggs.filter((e) => discoveredEasterEggs.includes(e.id)).length;
   const completedSideCount = Object.values(sideQuests).filter((q) => q.status === 'completed').length;
+  const distToSelected = Math.round(
+    Math.hypot(livePos.x - selectedLoc.center[0], livePos.z - selectedLoc.center[2]),
+  );
+
+  // Hitung arah hadap kerucut pandang kamera di SVG
+  const fwdX = -Math.sin(livePos.yaw);
+  const fwdZ = -Math.cos(livePos.yaw);
+  const headingDeg = (Math.atan2(fwdX, -fwdZ) * 180) / Math.PI;
+
+  const isCustomAtSelected = customWaypoint?.label === selectedLoc.name;
 
   return (
     <Portal>
-      <div className="fixed inset-0 z-[9996] flex items-center justify-center bg-dusk-950/82 p-4 md:p-8 backdrop-blur-md">
-        <div className="flex h-[84vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-warm-200/20 bg-dusk-900/95 text-warm-50 shadow-2xl animate-fadeIn">
+      <div className="fixed inset-0 z-[9996] flex items-center justify-center bg-dusk-950/84 p-4 md:p-7 backdrop-blur-md">
+        <div className="flex h-[88vh] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-warm-200/20 bg-dusk-900/96 text-warm-50 shadow-2xl animate-fadeIn">
           {/* Header & Tab */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-warm-100/10 px-6 py-4">
             <div>
@@ -88,142 +137,464 @@ export const MapJournalModal: React.FC = () => {
           </div>
 
           {/* Konten Utama */}
-          <div className="flex-1 overflow-y-auto subtle-scroll p-6">
-            {/* === TAB 1: PETA KOTA INTERAKTIF === */}
+          <div className="flex-1 overflow-y-auto subtle-scroll p-5 md:p-6">
+            {/* === TAB 1: PETA KOTA MODERN SVG === */}
             {tab === 'map' && (
-              <div className="grid h-full grid-cols-1 gap-6 lg:grid-cols-3">
-                {/* Kanvas Peta 2D */}
-                <div className="relative min-h-[380px] overflow-hidden rounded-2xl border border-warm-200/15 bg-[#161c26] lg:col-span-2">
-                  {/* Sungai & Danau */}
-                  <div
-                    className="absolute bg-[#24435c]/75"
-                    style={{ left: '26%', top: '0%', width: '7.5%', height: '100%' }}
-                  />
-                  <div
-                    className="absolute rounded-full bg-[#274c69]/80"
-                    style={{ left: '7%', top: '16%', width: '14%', height: '20%' }}
-                  />
-                  {/* Jalan Utama */}
-                  <div
-                    className="absolute bg-warm-100/15"
-                    style={{ left: '6%', top: '41%', width: '80%', height: '4.5%' }}
-                  />
-                  <div
-                    className="absolute bg-warm-100/15"
-                    style={{ left: '50.5%', top: '4%', width: '4.2%', height: '82%' }}
-                  />
-                  <div
-                    className="absolute bg-warm-100/12"
-                    style={{ left: '16%', top: '71%', width: '56%', height: '3.2%' }}
-                  />
-                  <div
-                    className="absolute bg-warm-100/12"
-                    style={{ left: '81%', top: '8%', width: '3.6%', height: '76%' }}
-                  />
-
-                  {/* Pin 10 Lokasi Kota */}
-                  {WORLD_LOCATIONS.map((loc) => {
-                    const pos =
-                      loc.id === 'rooftop'
-                        ? { left: 66, top: 14 }
-                        : worldToMapPercent(loc.center[0], loc.center[2]);
-                    const isSelected = selectedLoc.id === loc.id;
-                    const isCurrent = currentLocation === loc.id;
-                    return (
-                      <button
-                        key={loc.id}
-                        type="button"
-                        onClick={() => setSelectedLocId(loc.id)}
-                        style={{ left: `${pos.left}%`, top: `${pos.top}%` }}
-                        className={`group absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center transition ${
-                          isSelected ? 'z-20 scale-105' : 'z-10 hover:z-20'
-                        }`}
-                      >
-                        <span
-                          className={`flex h-6 w-6 items-center justify-center rounded-full border shadow-md ${
-                            isSelected
-                              ? 'border-warm-200 bg-warm-400 text-dusk-950'
-                              : isCurrent
-                                ? 'border-sky-300 bg-sky-500/85 text-white'
-                                : 'border-warm-200/35 bg-dusk-900/90 text-warm-200'
+              <div className="grid h-full grid-cols-1 gap-5 lg:grid-cols-12">
+                {/* Kanvas Peta Vektor Modern */}
+                <div className="relative flex min-h-[420px] flex-col overflow-hidden rounded-2xl border border-warm-200/20 bg-[#101622] lg:col-span-8">
+                  {/* Toolbar atas peta */}
+                  <div className="z-20 flex flex-wrap items-center justify-between gap-2 border-b border-warm-100/10 bg-dusk-950/85 px-4 py-2.5 text-[11px]">
+                    <div className="flex items-center gap-1.5">
+                      {(
+                        [
+                          { id: 'all', label: 'Semua' },
+                          { id: 'quests', label: 'Fokus Misi' },
+                          { id: 'memories', label: 'Fragmen Memori' },
+                        ] as const
+                      ).map((f) => (
+                        <button
+                          key={f.id}
+                          type="button"
+                          onClick={() => setFilterMode(f.id)}
+                          className={`rounded-lg px-2.5 py-1 transition ${
+                            filterMode === f.id
+                              ? 'bg-warm-400 font-semibold text-dusk-950'
+                              : 'bg-dusk-900 text-warm-200/75 hover:text-warm-50'
                           }`}
                         >
-                          <MapPin className="h-3.5 w-3.5" />
-                        </span>
-                        <span className="mt-1 whitespace-nowrap rounded bg-dusk-950/85 px-1.5 py-0.5 text-[10px] text-warm-100 shadow">
-                          {loc.name.replace('Rumah Keluarga ', 'Rumah ')}
-                        </span>
-                      </button>
-                    );
-                  })}
-
-                  {/* Penanda Misi Utama */}
-                  {mainMap && (
-                    <div
-                      style={{ left: `${mainMap.left}%`, top: `${mainMap.top}%` }}
-                      className="pointer-events-none absolute z-30 -translate-x-1/2 -translate-y-1/2"
-                      title="Tujuan Misi Utama"
-                    >
-                      <span className="flex h-4 w-4 animate-ping rounded-full bg-amber-300/75" />
-                      <span className="absolute inset-0 rounded-full border-2 border-white bg-amber-400" />
+                          {f.label}
+                        </button>
+                      ))}
                     </div>
-                  )}
 
-                  {/* Penanda Misi Sampingan Aktif */}
-                  {SIDE_QUESTS.map((sq) => {
-                    const prog = sideQuests[sq.id];
-                    if (!prog || prog.status !== 'active') return null;
-                    const stageObj = sq.stages.find((st) => st.stage === prog.stage);
-                    if (!stageObj) return null;
-                    const p = worldToMapPercent(stageObj.targetPos[0], stageObj.targetPos[2]);
-                    return (
-                      <div
-                        key={sq.id}
-                        style={{ left: `${p.left}%`, top: `${p.top}%` }}
-                        className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-1/2"
-                        title={`Misi Sampingan: ${sq.title}`}
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setZoom((z) => Math.max(1, +(z - 0.25).toFixed(2)))}
+                        className="rounded-lg border border-warm-100/15 bg-dusk-900 p-1.5 text-warm-200 hover:border-warm-300/45"
+                        title="Perkecil Peta"
                       >
-                        <span className="block h-3 w-3 rounded-full border border-white bg-emerald-400 shadow" />
-                      </div>
-                    );
-                  })}
-
-                  {/* Posisi Damar Saat Ini */}
-                  <div
-                    style={{ left: `${playerMap.left}%`, top: `${playerMap.top}%` }}
-                    className="pointer-events-none absolute z-30 -translate-x-1/2 -translate-y-1/2"
-                  >
-                    <div className="flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-sky-400 shadow-lg" />
+                        <ZoomOut className="h-3.5 w-3.5" />
+                      </button>
+                      <span className="min-w-[40px] text-center text-warm-200/75">
+                        {Math.round(zoom * 100)}%
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setZoom((z) => Math.min(1.75, +(z + 0.25).toFixed(2)))}
+                        className="rounded-lg border border-warm-100/15 bg-dusk-900 p-1.5 text-warm-200 hover:border-warm-300/45"
+                        title="Perbesar Peta"
+                      >
+                        <ZoomIn className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
                   </div>
 
-                  {/* Legenda Peta */}
-                  <div className="absolute bottom-3 left-3 flex flex-wrap gap-3 rounded-xl border border-warm-100/10 bg-dusk-950/80 px-3 py-1.5 text-[10px] text-warm-200/80">
-                    <span className="flex items-center gap-1.5">
-                      <span className="h-2.5 w-2.5 rounded-full bg-sky-400" /> Posisi Damar
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <span className="h-2.5 w-2.5 rounded-full bg-amber-400" /> Cerita Utama
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" /> Misi Warga Aktif
-                    </span>
+                  {/* Viewport SVG Peta */}
+                  <div className="relative flex-1 overflow-auto subtle-scroll bg-[#0f1520]">
+                    <svg
+                      viewBox="0 0 800 600"
+                      className="h-full w-full min-h-[380px] transition-transform duration-200 origin-center"
+                      style={{ transform: `scale(${zoom})` }}
+                    >
+                      <defs>
+                        <pattern id="mapGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+                          <path
+                            d="M 40 0 L 0 0 0 40"
+                            fill="none"
+                            stroke="rgba(148,163,184,0.06)"
+                            strokeWidth="1"
+                          />
+                        </pattern>
+                        <linearGradient id="riverGrad" x1="0" y1="0" x2="1" y2="0">
+                          <stop offset="0%" stopColor="#163a59" />
+                          <stop offset="50%" stopColor="#21557d" />
+                          <stop offset="100%" stopColor="#163a59" />
+                        </linearGradient>
+                        <radialGradient id="lakeGrad" cx="50%" cy="50%" r="50%">
+                          <stop offset="0%" stopColor="#26648f" />
+                          <stop offset="100%" stopColor="#163d5c" />
+                        </radialGradient>
+                        <linearGradient id="viewCone" x1="0" y1="1" x2="0" y2="0">
+                          <stop offset="0%" stopColor="rgba(56, 189, 248, 0.45)" />
+                          <stop offset="100%" stopColor="rgba(56, 189, 248, 0)" />
+                        </linearGradient>
+                      </defs>
+
+                      {/* Latar & Grid */}
+                      <rect width="800" height="600" fill="#121a26" />
+                      <rect width="800" height="600" fill="url(#mapGrid)" />
+
+                      {/* Zona Hijau Taman Kota & Perumahan */}
+                      <rect x="20" y="32" width="185" height="390" rx="22" fill="#182b24" opacity="0.88" />
+                      <rect x="275" y="425" width="320" height="150" rx="18" fill="#182621" opacity="0.72" />
+
+                      {/* Area Beton Pusat Kota */}
+                      <rect x="285" y="52" width="355" height="360" rx="14" fill="#192231" opacity="0.8" />
+
+                      {/* Danau Senja + Dermaga Kayu */}
+                      <ellipse cx={toSvg(-84, -28).sx} cy={toSvg(-84, -28).sy} rx="55" ry="56" fill="url(#lakeGrad)" stroke="#3574a3" strokeWidth="1.5" />
+                      <rect
+                        x={toSvg(-77.5, -30.2).sx}
+                        y={toSvg(-77.5, -30.2).sy}
+                        width="34"
+                        height="16"
+                        rx="2"
+                        fill="#8b623f"
+                      />
+
+                      {/* Sungai Kota */}
+                      <rect
+                        x={toSvg(-56, -68).sx}
+                        y="0"
+                        width={toSvg(-40, -68).sx - toSvg(-56, -68).sx}
+                        height="600"
+                        fill="url(#riverGrad)"
+                      />
+
+                      {/* Rel Kereta Stasiun Timur */}
+                      <line
+                        x1={toSvg(94.3, -68).sx}
+                        y1="0"
+                        x2={toSvg(94.3, 92).sx}
+                        y2="600"
+                        stroke="#64748b"
+                        strokeWidth="4"
+                        strokeDasharray="6 6"
+                      />
+
+                      {/* Jaringan Jalan Aspal Utama */}
+                      {/* Jl. Kenangan (Barat-Timur) */}
+                      <rect
+                        x={toSvg(-98, -5.6).sx}
+                        y={toSvg(-98, -5.6).sy}
+                        width={toSvg(86, -5.6).sx - toSvg(-98, -5.6).sx}
+                        height="40"
+                        fill="#262f3f"
+                      />
+                      <line
+                        x1={toSvg(-96, 0).sx}
+                        y1={toSvg(0, 0).sy}
+                        x2={toSvg(82, 0).sx}
+                        y2={toSvg(0, 0).sy}
+                        stroke="rgba(255,255,255,0.22)"
+                        strokeWidth="1.5"
+                        strokeDasharray="10 10"
+                      />
+                      {/* Jl. Cempaka (Utara-Selatan) */}
+                      <rect
+                        x={toSvg(-5.6, -62).sx}
+                        y={toSvg(-5.6, -62).sy}
+                        width="40"
+                        height={toSvg(0, 82).sy - toSvg(0, -62).sy}
+                        fill="#262f3f"
+                      />
+                      <line
+                        x1={toSvg(0, -60).sx}
+                        y1={toSvg(0, -60).sy}
+                        x2={toSvg(0, 78).sx}
+                        y2={toSvg(0, 78).sy}
+                        stroke="rgba(255,255,255,0.22)"
+                        strokeWidth="1.5"
+                        strokeDasharray="10 10"
+                      />
+                      {/* Jl. Melati Perumahan */}
+                      <rect
+                        x={toSvg(-74, 44.2).sx}
+                        y={toSvg(-74, 44.2).sy}
+                        width={toSvg(50, 44.2).sx - toSvg(-74, 44.2).sx}
+                        height="26"
+                        fill="#2a3345"
+                      />
+                      {/* Jl. Stasiun Timur */}
+                      <rect
+                        x={toSvg(59.3, -60).sx}
+                        y={toSvg(59.3, -60).sy}
+                        width="32"
+                        height={toSvg(64, 64).sy - toSvg(64, -60).sy}
+                        fill="#262f3f"
+                      />
+
+                      {/* Sorotan Jembatan Gantung & Jembatan Selatan */}
+                      <rect
+                        x={toSvg(-58, -6.8).sx}
+                        y={toSvg(-58, -6.8).sy}
+                        width={toSvg(-38, -6.8).sx - toSvg(-58, -6.8).sx}
+                        height="48"
+                        rx="3"
+                        fill="#374559"
+                        stroke="#e7b87d"
+                        strokeOpacity="0.45"
+                        strokeWidth="1.5"
+                      />
+                      <rect
+                        x={toSvg(-57.5, 44.2).sx}
+                        y={toSvg(-57.5, 44.2).sy}
+                        width={toSvg(-38.5, 44.2).sx - toSvg(-57.5, 44.2).sx}
+                        height="26"
+                        rx="2"
+                        fill="#3d4959"
+                      />
+
+                      {/* Jejak Blok Bangunan Top-Down */}
+                      {[
+                        { x: -27, z: 62, w: 14, d: 12, col: '#9c5a46' }, // Rumah Damar
+                        { x: -28, z: 14, w: 16, d: 13.5, col: '#7d563c' }, // Kedai Bima
+                        { x: 17.5, z: 17.5, w: 14, d: 11, col: '#2e7d6c' }, // Kios Harmoni
+                        { x: -29.5, z: -31.5, w: 15, d: 12, col: '#8a4c3e' }, // Nada Lama
+                        { x: 16.5, z: -43.5, w: 25, d: 24, col: '#3a5575' }, // Menara Nusantara
+                        { x: 73, z: -24, w: 15, d: 38, col: '#5c4b44' }, // Stasiun
+                        { x: 10, z: 65, w: 11, d: 12, col: '#4e5866' },
+                        { x: 25, z: 65, w: 12, d: 12, col: '#5b524d' },
+                        { x: -6, z: 66, w: 11, d: 11, col: '#57534e' },
+                        { x: 46, z: -44, w: 10, d: 22, col: '#313d4f' },
+                        { x: 38, z: 16, w: 16, d: 18, col: '#353d4a' },
+                      ].map((b, i) => {
+                        const p1 = toSvg(b.x, b.z);
+                        const p2 = toSvg(b.x + b.w, b.z + b.d);
+                        return (
+                          <rect
+                            key={`bld-${i}`}
+                            x={p1.sx}
+                            y={p1.sy}
+                            width={p2.sx - p1.sx}
+                            height={p2.sy - p1.sy}
+                            rx="3"
+                            fill={b.col}
+                            stroke="rgba(255,255,255,0.18)"
+                            strokeWidth="1"
+                          />
+                        );
+                      })}
+
+                      {/* Nama Jalan Rapi */}
+                      <text x={toSvg(-24, 0).sx} y={toSvg(0, 0).sy + 4} fill="rgba(255,255,255,0.42)" fontSize="9.5" letterSpacing="2" textAnchor="middle">
+                        JL. KENANGAN
+                      </text>
+                      <text x={toSvg(30, 0).sx} y={toSvg(0, 0).sy + 4} fill="rgba(255,255,255,0.42)" fontSize="9.5" letterSpacing="2" textAnchor="middle">
+                        JL. KENANGAN
+                      </text>
+                      <text
+                        x={toSvg(0, 26).sx}
+                        y={toSvg(0, 26).sy}
+                        fill="rgba(255,255,255,0.4)"
+                        fontSize="9"
+                        letterSpacing="2"
+                        textAnchor="middle"
+                        transform={`rotate(-90 ${toSvg(0, 26).sx} ${toSvg(0, 26).sy})`}
+                      >
+                        JL. CEMPAKA
+                      </text>
+                      <text x={toSvg(-2, 48).sx} y={toSvg(-2, 48).sy + 3} fill="rgba(255,255,255,0.42)" fontSize="9" letterSpacing="2" textAnchor="middle">
+                        JL. MELATI
+                      </text>
+
+                      {/* Garis Rute Putus-Putus menuju Custom GPS atau Misi Utama */}
+                      {customSvg && (
+                        <line
+                          x1={playerSvg.sx}
+                          y1={playerSvg.sy}
+                          x2={customSvg.sx}
+                          y2={customSvg.sy}
+                          stroke="#5ad6e6"
+                          strokeWidth="2.2"
+                          strokeDasharray="6 6"
+                          opacity="0.75"
+                        />
+                      )}
+                      {mainSvg && !customSvg && (
+                        <line
+                          x1={playerSvg.sx}
+                          y1={playerSvg.sy}
+                          x2={mainSvg.sx}
+                          y2={mainSvg.sy}
+                          stroke="#f6d17a"
+                          strokeWidth="1.8"
+                          strokeDasharray="5 6"
+                          opacity="0.55"
+                        />
+                      )}
+
+                      {/* Titik Fragmen Memori yang Sudah Ditemukan (Filter Memori / Semua) */}
+                      {(filterMode === 'all' || filterMode === 'memories') &&
+                        EASTER_EGGS.map((ee) => {
+                          const found = discoveredEasterEggs.includes(ee.id);
+                          if (!found && filterMode !== 'memories') return null;
+                          const p = toSvg(ee.position[0], ee.position[2]);
+                          return (
+                            <circle
+                              key={`ee-${ee.id}`}
+                              cx={p.sx}
+                              cy={p.sy}
+                              r={found ? 3.5 : 3}
+                              fill={found ? '#f6d17a' : 'rgba(246, 209, 122, 0.32)'}
+                              stroke={found ? '#ffffff' : '#f6d17a'}
+                              strokeWidth="0.9"
+                            />
+                          );
+                        })}
+
+                      {/* Pin 10 Landmark Kota Interaktif */}
+                      {WORLD_LOCATIONS.map((loc) => {
+                        const pos =
+                          loc.id === 'rooftop'
+                            ? toSvg(32, -46)
+                            : toSvg(loc.center[0], loc.center[2]);
+                        const isSelected = selectedLoc.id === loc.id;
+                        const isCurrent = currentLocation === loc.id;
+                        return (
+                          <g
+                            key={loc.id}
+                            transform={`translate(${pos.sx}, ${pos.sy})`}
+                            className="cursor-pointer"
+                            onClick={() => {
+                              sfxEngine.play('interact');
+                              setSelectedLocId(loc.id);
+                            }}
+                          >
+                            <circle
+                              r={isSelected ? 12 : 8.5}
+                              fill={isSelected ? '#dc9950' : isCurrent ? '#38bdf8' : '#1e293b'}
+                              stroke={isSelected ? '#fff5e4' : '#e7b87d'}
+                              strokeWidth={isSelected ? 2.5 : 1.5}
+                            />
+                            <circle r={isSelected ? 4 : 2.8} fill="#fff" />
+                            <rect
+                              x="-54"
+                              y="12"
+                              width="108"
+                              height="18"
+                              rx="5"
+                              fill="rgba(10, 14, 22, 0.85)"
+                            />
+                            <text
+                              y="24"
+                              fill={isSelected ? '#f9ecd9' : '#cbd5e1'}
+                              fontSize="9.5"
+                              fontWeight={isSelected ? '700' : '500'}
+                              textAnchor="middle"
+                            >
+                              {loc.name.replace('Rumah Keluarga ', 'Rumah ').replace(' Menara Nusantara', '')}
+                            </text>
+                          </g>
+                        );
+                      })}
+
+                      {/* Penanda Misi Utama (Emas) */}
+                      {mainSvg && (filterMode === 'all' || filterMode === 'quests') && (
+                        <g transform={`translate(${mainSvg.sx}, ${mainSvg.sy})`}>
+                          <circle r="14" fill="rgba(245, 198, 92, 0.25)" />
+                          <circle r="6" fill="#f5c249" stroke="#ffffff" strokeWidth="2" />
+                        </g>
+                      )}
+
+                      {/* Penanda Misi Sampingan Aktif (Hijau) */}
+                      {(filterMode === 'all' || filterMode === 'quests') &&
+                        SIDE_QUESTS.map((sq) => {
+                          const prog = Object.prototype.hasOwnProperty.call(sideQuests, sq.id)
+                            ? sideQuests[sq.id]
+                            : undefined;
+                          if (!prog || prog.status !== 'active') return null;
+                          const stageObj = sq.stages.find((st) => st.stage === prog.stage);
+                          if (!stageObj) return null;
+                          const p = toSvg(stageObj.targetPos[0], stageObj.targetPos[2]);
+                          return (
+                            <circle
+                              key={sq.id}
+                              cx={p.sx}
+                              cy={p.sy}
+                              r="5.5"
+                              fill="#34d399"
+                              stroke="#ffffff"
+                              strokeWidth="1.5"
+                            />
+                          );
+                        })}
+
+                      {/* Penanda Custom GPS (Biru Toska) */}
+                      {customSvg && (
+                        <g transform={`translate(${customSvg.sx}, ${customSvg.sy})`}>
+                          <circle r="13" fill="rgba(90, 214, 230, 0.25)" />
+                          <polygon points="0,-9 6,6 0,2 -6,6" fill="#5ad6e6" stroke="#fff" strokeWidth="1.2" />
+                        </g>
+                      )}
+
+                      {/* Posisi Damar & Kerucut Arah Pandang Kamera Real-Time */}
+                      <g transform={`translate(${playerSvg.sx}, ${playerSvg.sy})`}>
+                        <g transform={`rotate(${headingDeg})`}>
+                          <polygon points="0,0 -18,-38 18,-38" fill="url(#viewCone)" />
+                        </g>
+                        <circle r="7" fill="#38bdf8" stroke="#ffffff" strokeWidth="2.5" />
+                      </g>
+                    </svg>
+                  </div>
+
+                  {/* Legenda Peta Modern */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-t border-warm-100/10 bg-dusk-950/85 px-4 py-2 text-[10px] text-warm-200/75">
+                    <div className="flex flex-wrap items-center gap-4">
+                      <span className="flex items-center gap-1.5">
+                        <span className="h-2.5 w-2.5 rounded-full bg-sky-400" /> Posisi Damar
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <span className="h-2.5 w-2.5 rounded-full bg-amber-400" /> Cerita Utama
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" /> Misi Warga Aktif
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <span className="h-2.5 w-2.5 rounded-full bg-cyan-300" /> Penanda GPS Kustom
+                      </span>
+                    </div>
+                    <span className="text-warm-300/70">Klik titik lokasi untuk detail & pasang GPS</span>
                   </div>
                 </div>
 
-                {/* Panel Info Lokasi Terpilih */}
-                <div className="flex flex-col justify-between rounded-2xl border border-warm-200/15 bg-dusk-950/65 p-5">
+                {/* Panel Detail Lokasi & Pasang GPS */}
+                <div className="flex flex-col justify-between rounded-2xl border border-warm-200/15 bg-dusk-950/75 p-5 lg:col-span-4">
                   <div className="space-y-4">
                     <div>
-                      <span className="text-[10px] uppercase tracking-widest text-warm-300">
-                        Detail Wilayah
-                      </span>
-                      <h3 className="mt-1 font-serif text-lg text-warm-50">{selectedLoc.name}</h3>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] uppercase tracking-widest text-warm-300">
+                          Wilayah Terpilih
+                        </span>
+                        <span className="rounded-full bg-warm-400/15 px-2.5 py-0.5 text-[11px] font-medium text-warm-200">
+                          {distToSelected} m dari Damar
+                        </span>
+                      </div>
+                      <h3 className="mt-1 font-serif text-xl text-warm-50">{selectedLoc.name}</h3>
                       <p className="text-xs text-warm-200/70">{selectedLoc.subtitle}</p>
                     </div>
 
-                    <div className="rounded-xl border border-warm-100/10 bg-dusk-900/70 p-3.5">
+                    {/* Tombol Pasang / Hapus Penanda GPS */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        sfxEngine.play('switch');
+                        if (isCustomAtSelected) {
+                          setCustomWaypoint(null);
+                        } else {
+                          setCustomWaypoint({
+                            label: selectedLoc.name,
+                            position: [...selectedLoc.center],
+                          });
+                        }
+                      }}
+                      className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-semibold transition ${
+                        isCustomAtSelected
+                          ? 'border border-cyan-400/45 bg-cyan-500/20 text-cyan-200 hover:bg-cyan-500/30'
+                          : 'bg-cyan-400 text-dusk-950 hover:bg-cyan-300'
+                      }`}
+                    >
+                      <Navigation className="h-3.5 w-3.5" />
+                      <span>
+                        {isCustomAtSelected ? 'Hapus Penanda GPS' : 'Pasang Penanda Arah GPS'}
+                      </span>
+                    </button>
+
+                    <div className="rounded-xl border border-warm-100/10 bg-dusk-900/75 p-3.5">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-warm-200/75">Fragmen Memori di Zona Ini</span>
+                        <span className="text-warm-200/75">Fragmen Memori Zona Ini</span>
                         <span className="font-semibold text-warm-300">
                           {locFoundCount} / {locEasterEggs.length}
                         </span>
@@ -262,13 +633,13 @@ export const MapJournalModal: React.FC = () => {
                   </div>
 
                   <p className="mt-4 text-[11px] italic text-warm-200/55">
-                    Tip: Kamu bisa berjalan bebas ke sudut kota mana saja kapan pun sebelum melanjutkan cerita utama.
+                    Penanda GPS akan memunculkan sinar pandu berwarna biru-toska di kota & kompas atas.
                   </p>
                 </div>
               </div>
             )}
 
-            {/* === TAB 2: DAFTAR MISI UTAMA & SAMPINGAN === */}
+            {/* === TAB 2: DAFTAR MISI === */}
             {tab === 'quests' && (
               <div className="space-y-6">
                 {mainStep && (
@@ -360,10 +731,9 @@ export const MapJournalModal: React.FC = () => {
               </div>
             )}
 
-            {/* === TAB 3: CATATAN HARIAN & 15 FRAGMEN MEMORI (EASTER EGG) === */}
+            {/* === TAB 3: CATATAN HARIAN & FRAGMEN MEMORI === */}
             {tab === 'journal' && (
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                {/* Kolom Kiri: Catatan Harian Damar */}
                 <div className="space-y-3.5">
                   <div className="flex items-center gap-2">
                     <BookOpen className="h-4 w-4 text-warm-300" />
@@ -389,7 +759,6 @@ export const MapJournalModal: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Kolom Kanan: 15 Fragmen Memori / Easter Egg */}
                 <div className="space-y-3.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">

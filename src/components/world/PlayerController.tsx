@@ -4,7 +4,12 @@ import * as THREE from 'three';
 import { musicEngine } from '../../audio/musicEngine';
 import { sfxEngine } from '../../audio/sfxEngine';
 import { CHARACTERS } from '../../data/characters';
-import { getLocationAtPosition, getSurfaceAtPosition, resolvePlayerMovement } from '../../data/worldLocations';
+import {
+  GROUND_COLLIDERS,
+  getLocationAtPosition,
+  getSurfaceAtPosition,
+  resolvePlayerMovement,
+} from '../../data/worldLocations';
 import { playerRuntime } from '../../store/playerRuntime';
 import { useGameStore } from '../../store/useGameStore';
 import { HumanModel } from './HumanModel';
@@ -34,6 +39,17 @@ export const PlayerController: React.FC = () => {
   useEffect(() => {
     const dom = gl.domElement;
 
+    const standUpIfSitting = () => {
+      const st = useGameStore.getState();
+      if (st.isSitting && playerRuntime.sitState) {
+        playerRuntime.position = [...playerRuntime.sitState.standPos];
+        playerRuntime.sitState = null;
+        st.setSitting(false);
+        return true;
+      }
+      return false;
+    };
+
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       const code = e.code;
@@ -41,6 +57,54 @@ export const PlayerController: React.FC = () => {
 
       const state = useGameStore.getState();
       if (state.screen !== 'playing') return;
+
+      // Mode Foto [P]
+      if (
+        code === 'KeyP' &&
+        !state.activeDialogue &&
+        !state.isMapJournalOpen &&
+        !state.isPauseOpen &&
+        !state.isQuickGraphicsOpen
+      ) {
+        e.preventDefault();
+        sfxEngine.play('switch');
+        state.setPhotoMode(!state.isPhotoMode);
+        return;
+      }
+
+      if (code === 'Escape') {
+        if (state.isPhotoMode) {
+          state.setPhotoMode(false);
+        } else if (state.isQuickGraphicsOpen) {
+          state.setQuickGraphicsOpen(false);
+        } else if (state.isMapJournalOpen) {
+          state.closeMapJournal();
+        } else if (state.isSitting) {
+          standUpIfSitting();
+        } else if (!state.activeDialogue) {
+          state.setPauseOpen(!state.isPauseOpen);
+        }
+        return;
+      }
+
+      if (state.isPhotoMode) return;
+
+      // Jika sedang duduk di bangku, tombol gerak / E / Spasi membuat Damar berdiri
+      if (state.isSitting) {
+        if (
+          code === 'KeyE' ||
+          code === 'Space' ||
+          code === 'KeyW' ||
+          code === 'KeyA' ||
+          code === 'KeyS' ||
+          code === 'KeyD' ||
+          code === 'ArrowUp' ||
+          code === 'ArrowDown'
+        ) {
+          standUpIfSitting();
+        }
+        return;
+      }
 
       if (
         code === 'KeyE' &&
@@ -60,7 +124,6 @@ export const PlayerController: React.FC = () => {
         !state.isPauseOpen &&
         !state.isQuickGraphicsOpen
       ) {
-        // Damar melambaikan tangan menyapa warga sekitar!
         playerRuntime.damarWaveTimer = 1.65;
         sfxEngine.play('interact');
         state.showToast('Damar melambaikan tangan menyapa sekitar.');
@@ -75,14 +138,6 @@ export const PlayerController: React.FC = () => {
       } else if (code === 'KeyJ' && !state.activeDialogue && !state.isPauseOpen && !state.isQuickGraphicsOpen) {
         e.preventDefault();
         state.toggleMapJournal('journal');
-      } else if (code === 'Escape') {
-        if (state.isQuickGraphicsOpen) {
-          state.setQuickGraphicsOpen(false);
-        } else if (state.isMapJournalOpen) {
-          state.closeMapJournal();
-        } else if (!state.activeDialogue) {
-          state.setPauseOpen(!state.isPauseOpen);
-        }
       }
     };
 
@@ -124,8 +179,8 @@ export const PlayerController: React.FC = () => {
         playerRuntime.cameraYaw -= e.movementX * sens;
         playerRuntime.cameraPitch = THREE.MathUtils.clamp(
           playerRuntime.cameraPitch + e.movementY * sens * 0.8,
-          0.08,
-          0.88,
+          0.06,
+          0.95,
         );
       } else if (isDraggingRef.current) {
         const dx = e.clientX - lastMouseRef.current.x;
@@ -134,8 +189,8 @@ export const PlayerController: React.FC = () => {
         playerRuntime.cameraYaw -= dx * sens * 1.15;
         playerRuntime.cameraPitch = THREE.MathUtils.clamp(
           playerRuntime.cameraPitch + dy * sens * 0.9,
-          0.08,
-          0.88,
+          0.06,
+          0.95,
         );
       }
     };
@@ -147,7 +202,8 @@ export const PlayerController: React.FC = () => {
         state.activeDialogue ||
         state.isMapJournalOpen ||
         state.isPauseOpen ||
-        state.isQuickGraphicsOpen
+        state.isQuickGraphicsOpen ||
+        state.isPhotoMode
       )
         return;
       if (!document.pointerLockElement && dom.requestPointerLock) {
@@ -165,7 +221,7 @@ export const PlayerController: React.FC = () => {
         state.isQuickGraphicsOpen
       )
         return;
-      zoomRef.current = THREE.MathUtils.clamp(zoomRef.current + e.deltaY * 0.0035, 3.2, 9.2);
+      zoomRef.current = THREE.MathUtils.clamp(zoomRef.current + e.deltaY * 0.0038, 2.8, 12.0);
     };
 
     const onBlur = () => {
@@ -212,19 +268,49 @@ export const PlayerController: React.FC = () => {
       playerRuntime.damarWaveTimer = Math.max(0, playerRuntime.damarWaveTimer - dt);
     }
 
-    const canControl =
-      store.screen === 'playing' &&
-      !store.activeDialogue &&
-      !store.isMapJournalOpen &&
-      !store.isPauseOpen &&
-      !store.isQuickGraphicsOpen;
-
     if (store.screen === 'title') {
       const orbit = t * 0.1;
       camera.position.set(Math.sin(orbit) * 46 - 12, 16 + Math.sin(orbit * 0.65) * 3.5, Math.cos(orbit) * 46 + 4);
       camera.lookAt(-18, 4.5, 4);
       return;
     }
+
+    // === MODE DUDUK REFLEKTIF DI BANGKU ===
+    if (store.isSitting && playerRuntime.sitState) {
+      const sit = playerRuntime.sitState;
+      playerRuntime.position = [...sit.seatPos];
+      playerRuntime.rotationY = sit.seatYaw;
+      if (groupRef.current) {
+        groupRef.current.position.set(sit.seatPos[0], sit.seatPos[1] - 0.18, sit.seatPos[2]);
+        groupRef.current.rotation.y = sit.seatYaw;
+      }
+      if (leftLegRef.current) leftLegRef.current.rotation.x = -1.35;
+      if (rightLegRef.current) rightLegRef.current.rotation.x = -1.35;
+      if (leftArmRef.current) leftArmRef.current.rotation.x = -0.35;
+      if (rightArmRef.current) rightArmRef.current.rotation.x = -0.35;
+
+      // Kamera tenang memandang danau / cakrawala kota
+      const dx = sit.lookAt[0] - sit.seatPos[0];
+      const dz = sit.lookAt[2] - sit.seatPos[2];
+      const len = Math.max(1, Math.hypot(dx, dz));
+      camDesiredVec.current.set(
+        sit.seatPos[0] - (dx / len) * 2.8 + 1.2,
+        sit.seatPos[1] + 2.0,
+        sit.seatPos[2] - (dz / len) * 2.8,
+      );
+      camera.position.lerp(camDesiredVec.current, Math.min(1, dt * 3.5));
+      lookTargetVec.current.lerp(new THREE.Vector3(...sit.lookAt), Math.min(1, dt * 3.5));
+      camera.lookAt(lookTargetVec.current);
+      return;
+    }
+
+    const canControl =
+      store.screen === 'playing' &&
+      !store.activeDialogue &&
+      !store.isMapJournalOpen &&
+      !store.isPauseOpen &&
+      !store.isQuickGraphicsOpen &&
+      !store.isPhotoMode;
 
     let moveX = 0;
     let moveZ = 0;
@@ -256,7 +342,6 @@ export const PlayerController: React.FC = () => {
       desiredVz = (forwardZ * -nz + rightZ * nx) * maxSpd;
     }
 
-    // Inersia gerak halus (akselerasi & deselerasi natural)
     const blend = Math.min(1, dt * (hasInput ? 11 : 14));
     velocityRef.current.x = THREE.MathUtils.lerp(velocityRef.current.x, desiredVx, blend);
     velocityRef.current.z = THREE.MathUtils.lerp(velocityRef.current.z, desiredVz, blend);
@@ -268,7 +353,6 @@ export const PlayerController: React.FC = () => {
     playerRuntime.moveSpeed = speedMag;
 
     const [curX, curY, curZ] = playerRuntime.position;
-    // Selalu jalankan resolvePlayerMovement agar mobil yang berhenti atau NPC tetap menjaga jarak fisik!
     const [rx, ry, rz] = resolvePlayerMovement(
       curX,
       curY,
@@ -295,7 +379,6 @@ export const PlayerController: React.FC = () => {
       }
     } else {
       strideTimerRef.current = 0;
-      // Saat berbicara dengan NPC, badan Damar menghadap lembut ke lawan bicara
       if (store.activeDialogue && playerRuntime.activeSpeakerPos) {
         const sp = playerRuntime.activeSpeakerPos;
         const faceYaw = Math.atan2(sp[0] - rx, sp[2] - rz);
@@ -306,7 +389,6 @@ export const PlayerController: React.FC = () => {
       }
     }
 
-    // === ANIMASI EKSPRESIF TUBUH, LENGAN & KEPALA DAMAR ===
     if (groupRef.current) {
       const [px, py, pz] = playerRuntime.position;
       const bob = isMoving
@@ -320,7 +402,6 @@ export const PlayerController: React.FC = () => {
       if (rightLegRef.current) rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, -swing, dt * 14);
 
       if (torsoRef.current) {
-        // Condong halus ke depan saat berjalan cepat
         const lean = isMoving ? (isRunning ? 0.12 : 0.045) : 0;
         torsoRef.current.rotation.x = THREE.MathUtils.lerp(torsoRef.current.rotation.x, lean, dt * 8);
       }
@@ -332,7 +413,6 @@ export const PlayerController: React.FC = () => {
           store.activeDialogue.nodes[store.activeNodeId]?.speaker === 'damar';
 
         if (playerRuntime.damarWaveTimer > 0) {
-          // Damar melambaikan tangan ramah [F]
           rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, -2.4, dt * 10);
           rightArmRef.current.rotation.z = Math.sin(t * 11) * 0.3 + 0.35;
           leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, -swing * 0.6, dt * 10);
@@ -347,7 +427,6 @@ export const PlayerController: React.FC = () => {
         }
       }
 
-      // Kepala Damar menoleh halus ke objek/NPC terdekat atau lawan bicara
       if (headRef.current) {
         const focusPos =
           store.activeDialogue && playerRuntime.activeSpeakerPos
@@ -370,11 +449,10 @@ export const PlayerController: React.FC = () => {
       }
     }
 
-    // === KAMERA THIRD-PERSON + KAMERA DIALOG SINEMATIK ===
+    // === KAMERA ANTI-TEMBUS DINDING + DIALOG SINEMATIK ===
     const [px, py, pz] = playerRuntime.position;
 
     if (store.activeDialogue && playerRuntime.activeSpeakerPos) {
-      // Framing sinematik dua tokoh (over-the-shoulder lembut)
       const [sx, sy, sz] = playerRuntime.activeSpeakerPos;
       const midX = (px + sx) * 0.5;
       const midY = Math.max(py, sy) + 1.45;
@@ -382,7 +460,6 @@ export const PlayerController: React.FC = () => {
       const dx = sx - px;
       const dz = sz - pz;
       const dist = Math.max(0.8, Math.hypot(dx, dz));
-      // Ambil sudut miring dari samping kanan belakang Damar
       const sideX = -dz / dist;
       const sideZ = dx / dist;
       const camX = px - (dx / dist) * 1.9 + sideX * 1.85;
@@ -397,22 +474,50 @@ export const PlayerController: React.FC = () => {
       const isIndoors =
         (px >= -27 && px <= -13 && pz >= 62 && pz <= 74) ||
         (px >= -28 && px <= -12 && pz >= 14 && pz <= 27);
-      const desiredDist = isIndoors ? Math.min(zoomRef.current, 3.6) : zoomRef.current;
+      let desiredDist = isIndoors ? Math.min(zoomRef.current, 3.3) : zoomRef.current;
 
       const pitch = playerRuntime.cameraPitch;
       const yaw = playerRuntime.cameraYaw;
+
+      // Uji jarak kamera terhadap dinding gedung solid agar kamera tidak menembus tembok
+      if (py < 14) {
+        const dirX = Math.sin(yaw) * Math.cos(pitch);
+        const dirZ = Math.cos(yaw) * Math.cos(pitch);
+        for (let step = 1.6; step <= desiredDist; step += 0.45) {
+          const tx = px + dirX * step;
+          const tz = pz + dirZ * step;
+          const insideWall = GROUND_COLLIDERS.some(
+            (b) =>
+              !b.id.startsWith('river') &&
+              !b.id.startsWith('lake') &&
+              !b.id.startsWith('bench') &&
+              !b.id.startsWith('bridge') &&
+              !b.id.startsWith('rumah_table') &&
+              !b.id.startsWith('rumah_fence') &&
+              tx > b.minX - 0.15 &&
+              tx < b.maxX + 0.15 &&
+              tz > b.minZ - 0.15 &&
+              tz < b.maxZ + 0.15,
+          );
+          if (insideWall) {
+            desiredDist = Math.max(1.65, step - 0.35);
+            break;
+          }
+        }
+      }
 
       const camOffsetX = Math.sin(yaw) * Math.cos(pitch) * desiredDist;
       const camOffsetY = Math.sin(pitch) * desiredDist + 1.75;
       const camOffsetZ = Math.cos(yaw) * Math.cos(pitch) * desiredDist;
 
       camDesiredVec.current.set(px + camOffsetX, py + camOffsetY, pz + camOffsetZ);
-      camera.position.lerp(camDesiredVec.current, Math.min(1, dt * 9));
+      camera.position.lerp(camDesiredVec.current, Math.min(1, dt * 10));
 
       lookTargetVec.current.set(px, py + 1.48, pz);
       camera.lookAt(lookTargetVec.current);
     }
 
+    // Cek perubahan lokasi & kedatangan di Custom GPS Waypoint
     locCheckTimerRef.current += dt;
     if (locCheckTimerRef.current > 0.35) {
       locCheckTimerRef.current = 0;
@@ -420,6 +525,14 @@ export const PlayerController: React.FC = () => {
       if (loc.id !== store.currentLocation) {
         store.setCurrentLocation(loc.id);
         musicEngine.setContext(loc.musicMood, store.timeOfDay);
+      }
+      if (store.customWaypoint) {
+        const [wx, , wz] = store.customWaypoint.position;
+        if (Math.hypot(px - wx, pz - wz) < 5.0) {
+          sfxEngine.play('chime');
+          store.showToast(`Tiba di tujuan penanda: ${store.customWaypoint.label}`);
+          store.setCustomWaypoint(null);
+        }
       }
     }
   });
