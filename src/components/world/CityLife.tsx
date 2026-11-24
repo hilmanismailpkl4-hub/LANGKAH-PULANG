@@ -512,6 +512,7 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
     if (trainRef.current) {
       const cycle = ((t * 11) % 240) - 120;
       trainRef.current.position.set(94.3, 1.35, cycle);
+      playerRuntime.trainZ = cycle;
     }
 
     // === 3. KUCING ORANYE "SORE" ===

@@ -3,6 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { musicEngine } from '../../audio/musicEngine';
 import { sfxEngine } from '../../audio/sfxEngine';
+import { spatialAmbientEngine } from '../../audio/spatialAmbientEngine';
 import { CHARACTERS } from '../../data/characters';
 import {
   GROUND_COLLIDERS,
@@ -81,7 +82,9 @@ export const PlayerController: React.FC = () => {
 
       // Tutup overlay dengan Escape
       if (code === 'Escape') {
-        if (state.isGuitarOpen) {
+        if (state.isBagOpen) {
+          state.setBagOpen(false);
+        } else if (state.isGuitarOpen) {
           state.setGuitarOpen(false);
         } else if (state.isPhoneOpen) {
           state.closePhone();
@@ -100,6 +103,24 @@ export const PlayerController: React.FC = () => {
       }
 
       if (state.isGuitarOpen) return;
+
+      // Tas Selempang Damar [I]
+      if (
+        code === 'KeyI' &&
+        !state.activeDialogue &&
+        !state.isMapJournalOpen &&
+        !state.isPauseOpen &&
+        !state.isQuickGraphicsOpen &&
+        !state.isPhotoMode &&
+        !state.isPhoneOpen &&
+        !state.isRidingScooter
+      ) {
+        e.preventDefault();
+        state.setBagOpen(!state.isBagOpen);
+        return;
+      }
+
+      if (state.isBagOpen) return;
 
       // Saat mengendarai motor skuter
       if (state.isRidingScooter) {
@@ -461,13 +482,19 @@ export const PlayerController: React.FC = () => {
       camera.lookAt(lookTargetVec.current);
 
       locCheckTimerRef.current += dt;
-      if (locCheckTimerRef.current > 0.35) {
+      if (locCheckTimerRef.current > 0.25) {
         locCheckTimerRef.current = 0;
         const loc = getLocationAtPosition(playerRuntime.position);
         if (loc.id !== store.currentLocation) {
           store.setCurrentLocation(loc.id);
           musicEngine.setContext(loc.musicMood, store.timeOfDay);
         }
+        spatialAmbientEngine.updateSpatialMix(
+          playerRuntime.position,
+          playerRuntime.trainZ,
+          store.timeOfDay,
+          store.screen === 'playing' && !store.isPauseOpen,
+        );
         if (store.customWaypoint) {
           const [wx, , wz] = store.customWaypoint.position;
           if (Math.hypot(nx - wx, nz - wz) < 6.0) {
@@ -521,7 +548,8 @@ export const PlayerController: React.FC = () => {
       !store.isQuickGraphicsOpen &&
       !store.isPhotoMode &&
       !store.isPhoneOpen &&
-      !store.isGuitarOpen;
+      !store.isGuitarOpen &&
+      !store.isBagOpen;
 
     let moveX = 0;
     let moveZ = 0;
@@ -730,13 +758,19 @@ export const PlayerController: React.FC = () => {
     }
 
     locCheckTimerRef.current += dt;
-    if (locCheckTimerRef.current > 0.35) {
+    if (locCheckTimerRef.current > 0.25) {
       locCheckTimerRef.current = 0;
       const loc = getLocationAtPosition(playerRuntime.position);
       if (loc.id !== store.currentLocation) {
         store.setCurrentLocation(loc.id);
         musicEngine.setContext(loc.musicMood, store.timeOfDay);
       }
+      spatialAmbientEngine.updateSpatialMix(
+        playerRuntime.position,
+        playerRuntime.trainZ,
+        store.timeOfDay,
+        store.screen === 'playing' && !store.isPauseOpen,
+      );
       if (store.customWaypoint) {
         const [wx, , wz] = store.customWaypoint.position;
         if (Math.hypot(px - wx, pz - wz) < 5.0) {

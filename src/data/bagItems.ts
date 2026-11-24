@@ -1,0 +1,215 @@
+import { DialogueScript } from '../types/game';
+
+export interface BagItemDef {
+  id: string;
+  name: string;
+  category: 'kenangan' | 'hadiah' | 'misi';
+  subtitle: string;
+  description: string;
+  monologue: string;
+  iconType: 'wallet' | 'keys' | 'pick' | 'notebook' | 'icecream' | 'flower' | 'bookmark' | 'tea' | 'coffee' | 'archive_key' | 'sketchbook';
+  giftTarget?: 'kira' | 'nadia';
+  giftDialogueId?: string;
+}
+
+export const ALL_BAG_ITEMS: BagItemDef[] = [
+  {
+    id: 'item_wallet_photo',
+    name: 'Dompet & Foto Kecil Keluarga',
+    category: 'kenangan',
+    subtitle: 'Selalu di saku kanan Damar',
+    description: 'Foto ukuran 3×4 dari ulang tahun kelima Kira. Sudutnya agak lecek karena sering dibuka saat Damar lelah lembur.',
+    monologue: 'Setiap kali ruang rapat terasa dingin, foto kecil ini yang mengingatkanku buat siapa sebenarnya aku bertahan.',
+    iconType: 'wallet',
+  },
+  {
+    id: 'item_house_keys',
+    name: 'Kunci Rumah & Gantungan Bintang',
+    category: 'kenangan',
+    subtitle: 'Jl. Melati No. 14',
+    description: 'Kunci pagar dan pintu depan dengan gantungan bintang plastik kuning buatan tangan Kira.',
+    monologue: 'Kata Kira waktu memasangnya: "Biar bintangnya selalu nunjukin jalan pulang buat Ayah."',
+    iconType: 'keys',
+  },
+  {
+    id: 'item_guitar_pick',
+    name: 'Pick Gitar 2018 ("DP")',
+    category: 'kenangan',
+    subtitle: 'Dari etalase Toko Musik "Nada Lama"',
+    description: 'Pick gitar cokelat tua yang jatuh dari tas gitar lamamu enam tahun lalu dan disimpan rapi oleh Mas Bagas.',
+    monologue: 'Tipis, kecil, tapi rasanya seperti menggenggam kembali bagian diriku yang selama ini kutinggalkan di belakang.',
+    iconType: 'pick',
+  },
+  {
+    id: 'item_rooftop_notebook',
+    name: 'Buku Catatan Lirik "Pulang"',
+    category: 'kenangan',
+    subtitle: 'Ditemukan di Rooftop Menara Nusantara',
+    description: 'Buku catatan bersampul cokelat berisi bait lagu yang pernah Damar tulis untuk Kira sebelum ia lahir.',
+    monologue: 'Aku pernah berjanji rumah kami akan selalu punya lagu yang hangat. Belum terlambat untuk menepatinya.',
+    iconType: 'notebook',
+  },
+  {
+    id: 'item_gift_kira',
+    name: 'Es Krim Stroberi & Cat Air Biru',
+    category: 'hadiah',
+    subtitle: 'Hadiah Kejutan untuk Kira',
+    description: 'Satu set cat air baru lengkap dengan warna biru cerah dan es krim stroberi dalam kantong dingin dari Kios Harmoni.',
+    monologue: 'Benda sederhana, tapi aku sudah bisa membayangkan senyum lebar Kira saat melihatnya di rumah nanti.',
+    iconType: 'icecream',
+    giftTarget: 'kira',
+    giftDialogueId: 'gift_kira_watercolor',
+  },
+  {
+    id: 'item_gift_nadia',
+    name: 'Setangkai Bunga Melati Senja',
+    category: 'hadiah',
+    subtitle: 'Hadiah Kecil untuk Nadia',
+    description: 'Bunga melati putih wangi dari tepi Taman Kota — bunga kesukaan Nadia sejak pertama kali mereka tinggal di Jl. Melati.',
+    monologue: 'Sudah berapa lama sejak terakhir kali aku pulang membawa sesuatu kecil hanya karena teringat Nadia?',
+    iconType: 'flower',
+    giftTarget: 'nadia',
+    giftDialogueId: 'gift_nadia_flower',
+  },
+  {
+    id: 'item_darman_bookmark',
+    name: 'Pembatas Buku Bunga Kering',
+    category: 'misi',
+    subtitle: 'Milik Pak Darman (Stasiun Senja)',
+    description: 'Pembatas buku dengan tulisan tangan mendiang istri Pak Darman yang ditemukan di bawah bangku Taman Danau.',
+    monologue: 'Kertas tipis yang menyimpan seluruh cinta dan penyesalan seseorang. Aku harus segera mengembalikannya.',
+    iconType: 'bookmark',
+  },
+  {
+    id: 'item_nenek_tea',
+    name: 'Teh Melati Hangat',
+    category: 'misi',
+    subtitle: 'Untuk Nenek Sari (Taman Danau)',
+    description: 'Gelas teh melati hangat yang baru diseduh Mbak Lilis dari Kios 24 Jam Harmoni.',
+    monologue: 'Masih hangat di telapak tangan. Semoga Nenek Sari suka.',
+    iconType: 'tea',
+  },
+  {
+    id: 'item_raka_coffee',
+    name: 'Kopi Gula Aren Hangat',
+    category: 'misi',
+    subtitle: 'Untuk Mas Raka (Jembatan Sungai)',
+    description: 'Racikan kopi gula aren hangat gratis dari Bima untuk pekerja shift malam di jembatan.',
+    monologue: 'Aroma gulanya hangat banget. Pas buat menemani angin malam di atas jembatan.',
+    iconType: 'coffee',
+  },
+  {
+    id: 'item_bagas_key',
+    name: 'Kunci Kotak Arsip Band 2018',
+    category: 'misi',
+    subtitle: 'Untuk Mas Bagas ("Nada Lama")',
+    description: 'Kunci kuningan kecil yang disimpan Bima selama bertahun-tahun di laci kasir kedainya.',
+    monologue: 'Entah kenangan apa yang Bima dan Mas Bagas simpan di balik kunci ini.',
+    iconType: 'archive_key',
+  },
+  {
+    id: 'item_lilis_book',
+    name: 'Buku Sketsa Ilustrasi',
+    category: 'misi',
+    subtitle: 'Untuk Adik Mbak Lilis (Kios Harmoni)',
+    description: 'Buku sketsa kertas tebal pemberian tulus Pak Darman untuk kado ulang tahun adik Mbak Lilis.',
+    monologue: 'Kebaikan di kota ini ternyata menular dari satu tangan ke tangan lain.',
+    iconType: 'sketchbook',
+  },
+];
+
+export const GIFT_DIALOGUES: Record<string, DialogueScript> = {
+  gift_kira_watercolor: {
+    id: 'gift_kira_watercolor',
+    startNodeId: 'gk_1',
+    nodes: {
+      gk_1: {
+        id: 'gk_1',
+        speaker: 'damar',
+        emotion: 'hangat',
+        text: 'Kira, coba tutup mata sebentar... Ayah bawa sesuatu di tas buat kamu.',
+        onEnter: { playSfx: 'chime' },
+        nextNodeId: 'gk_2',
+      },
+      gk_2: {
+        id: 'gk_2',
+        speaker: 'kira',
+        emotion: 'ceria',
+        text: 'WAAAH!! CAT AIR WARNA BIRU SAMA ES KRIM STROBERI!! Ayah beneran ingat?! Makasih banget, Ayaaah!!',
+        nextNodeId: 'gk_3',
+      },
+      gk_3: {
+        id: 'gk_3',
+        speaker: 'kira',
+        emotion: 'haru',
+        text: 'Nanti Kira gambar Ayah lagi ya—kali ini tangan Ayah nggak pegang HP, tapi pegang gitar sama tangan Kira!',
+        nextNodeId: 'gk_4',
+      },
+      gk_4: {
+        id: 'gk_4',
+        speaker: 'damar_batin',
+        emotion: 'haru',
+        text: 'Pelukan kecilnya menempel erat di pinggangku. Tidak ada bonus proyek sebesar apa pun yang bisa menandingi tawa ini.',
+        onEnd: {
+          kehadiranKeluarga: 3,
+          kejujuranDiri: 1,
+          setFlags: ['gave_gift_kira'],
+          journalEntry: {
+            id: 'je_gift_kira',
+            title: 'Cat Air Biru & Es Krim Stroberi',
+            body: 'Aku membawakan cat air biru dan es krim stroberi untuk Kira. Ia berjanji akan menggambar ulang keluarga kami—kali ini tanpa telepon di tanganku.',
+            chapter: 1,
+          },
+          toast: 'Hadiah diberikan kepada Kira! (+Kehadiran Keluarga)',
+        },
+      },
+    },
+  },
+
+  gift_nadia_flower: {
+    id: 'gift_nadia_flower',
+    startNodeId: 'gn_1',
+    nodes: {
+      gn_1: {
+        id: 'gn_1',
+        speaker: 'damar',
+        emotion: 'hangat',
+        text: 'Nad... tadi waktu lewat tepi taman aku lihat melati ini mekar, langsung keingat kamu. Ambil ya.',
+        onEnter: { playSfx: 'chime' },
+        nextNodeId: 'gn_2',
+      },
+      gn_2: {
+        id: 'gn_2',
+        speaker: 'nadia',
+        emotion: 'haru',
+        text: 'Ya ampun, Mas... Kamu masih ingat bunga kesukaanku waktu kita baru pindah ke Jl. Melati ini?',
+        nextNodeId: 'gn_3',
+      },
+      gn_3: {
+        id: 'gn_3',
+        speaker: 'nadia',
+        emotion: 'hangat',
+        text: 'Terima kasih banyak ya, Mas. Kadang hal-hal kecil begini yang bikin semua capekku langsung hilang begitu saja.',
+        nextNodeId: 'gn_4',
+      },
+      gn_4: {
+        id: 'gn_4',
+        speaker: 'damar_batin',
+        emotion: 'hangat',
+        text: 'Senyum Nadia yang sudah lama tidak kulihat akhirnya kembali lagi. Aku harus mengingat rasanya momen ini selamanya.',
+        onEnd: {
+          kehadiranKeluarga: 3,
+          kejujuranDiri: 1,
+          setFlags: ['gave_gift_nadia'],
+          journalEntry: {
+            id: 'je_gift_nadia',
+            title: 'Setangkai Melati untuk Nadia',
+            body: 'Nadia tersenyum hangat menerima setangkai melati dari tepi Taman Kota. Ternyata menjaga cinta tidak pernah butuh hal megah—hanya ingatan yang tulus.',
+            chapter: 1,
+          },
+          toast: 'Hadiah diberikan kepada Nadia! (+Kehadiran Keluarga)',
+        },
+      },
+    },
+  },
+};

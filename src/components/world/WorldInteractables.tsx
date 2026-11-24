@@ -259,6 +259,12 @@ export const WorldInteractables: React.FC = () => {
         if (store.mainStepId === 'ch3_2_kembali_ke_rumah') {
           return { dialogueId: 'ch3_meja_makan_finale', highlight: 'main', sublabel: 'Momen Penentu' };
         }
+        if (npcId === 'kira' && store.flags.includes('has_gift_kira') && !store.flags.includes('gave_gift_kira')) {
+          return { dialogueId: 'gift_kira_watercolor', highlight: 'side', sublabel: 'Berikan Hadiah!' };
+        }
+        if (npcId === 'nadia' && store.flags.includes('has_gift_nadia') && !store.flags.includes('gave_gift_nadia')) {
+          return { dialogueId: 'gift_nadia_flower', highlight: 'side', sublabel: 'Berikan Hadiah!' };
+        }
       }
       if (npcId === 'bima') {
         if (store.mainStepId === 'ch1_2_kedai_bima') {
@@ -370,6 +376,7 @@ export const WorldInteractables: React.FC = () => {
       store.isPhotoMode ||
       store.isPhoneOpen ||
       store.isGuitarOpen ||
+      store.isBagOpen ||
       store.isRidingScooter ||
       store.isSitting
     ) {
@@ -500,6 +507,47 @@ export const WorldInteractables: React.FC = () => {
       },
       2.5,
     );
+
+    // === HADIAH KEJUTAN UNTUK KELUARGA (MASUK KE TAS SELEMPANG [I]) ===
+    if (!store.flags.includes('has_gift_kira')) {
+      consider(
+        {
+          id: 'pickup_gift_kira',
+          kind: 'story_object',
+          label: 'Beli Es Krim Stroberi & Cat Air Biru (Hadiah Kira)',
+          sublabel: 'Kios 24 Jam Harmoni · Masuk ke Tas [I]',
+          position: [22.2, 0, 16.0],
+          onInteract: () => {
+            sfxEngine.play('chime');
+            store.applyEffect({
+              setFlags: ['has_gift_kira'],
+              toast: 'Es Krim Stroberi & Cat Air Biru masuk ke Tas Selempang [I]! Bawa pulang untuk Kira.',
+            });
+          },
+        },
+        2.6,
+      );
+    }
+
+    if (!store.flags.includes('has_gift_nadia')) {
+      consider(
+        {
+          id: 'pickup_gift_nadia',
+          kind: 'story_object',
+          label: 'Petik Setangkai Bunga Melati Senja (Hadiah Nadia)',
+          sublabel: 'Taman Kota · Masuk ke Tas [I]',
+          position: [-65.8, 0, -11.5],
+          onInteract: () => {
+            sfxEngine.play('chime');
+            store.applyEffect({
+              setFlags: ['has_gift_nadia'],
+              toast: 'Setangkai Bunga Melati masuk ke Tas Selempang [I]! Bawa pulang untuk Nadia.',
+            });
+          },
+        },
+        2.7,
+      );
+    }
 
     consider(
       {
@@ -735,6 +783,20 @@ export const WorldInteractables: React.FC = () => {
         <mesh position={[21.5, 1.35, 62.5]}>
           <boxGeometry args={[0.32, 0.42, 0.18]} />
           <meshStandardMaterial color="#d9d5ce" emissive="#8ec5a3" emissiveIntensity={1.6} />
+        </mesh>
+      )}
+
+      {/* Visual Hadiah Keluarga di Kota sebelum Diambil */}
+      {!flags.includes('has_gift_kira') && (
+        <mesh position={[22.2, 0.85, 16.0]}>
+          <boxGeometry args={[0.28, 0.24, 0.22]} />
+          <meshStandardMaterial color="#f48ca3" emissive="#f48ca3" emissiveIntensity={1.2} />
+        </mesh>
+      )}
+      {!flags.includes('has_gift_nadia') && (
+        <mesh position={[-65.8, 0.52, -11.5]}>
+          <dodecahedronGeometry args={[0.18, 0]} />
+          <meshStandardMaterial color="#fffaf0" emissive="#ffe599" emissiveIntensity={1.3} />
         </mesh>
       )}
 

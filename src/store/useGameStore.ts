@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { musicEngine } from '../audio/musicEngine';
 import { sfxEngine } from '../audio/sfxEngine';
+import { spatialAmbientEngine } from '../audio/spatialAmbientEngine';
 import { voiceManager } from '../audio/voiceManager';
 import { ALL_DIALOGUES } from '../data/dialogues';
 import { EASTER_EGGS } from '../data/easterEggs';
@@ -89,6 +90,7 @@ interface GameStoreState {
   isSitting: boolean;
   isRidingScooter: boolean;
   isGuitarOpen: boolean;
+  isBagOpen: boolean;
   catFed: boolean;
   paperBoatsLaunched: number;
 
@@ -114,6 +116,7 @@ interface GameStoreState {
   setSitting: (sitting: boolean) => void;
   setRidingScooter: (riding: boolean) => void;
   setGuitarOpen: (open: boolean) => void;
+  setBagOpen: (open: boolean) => void;
   markCatFed: () => void;
   incrementPaperBoats: () => void;
   openPhone: (app?: 'home' | 'chat' | 'calls' | 'gallery' | 'radio' | 'notes' | 'weather', threadId?: string) => void;
@@ -162,6 +165,7 @@ let toastCounter = 0;
 function applyAudioSettings(settings: GameSettings) {
   musicEngine.setVolume(settings.musicVolume);
   sfxEngine.setVolume(settings.sfxVolume);
+  spatialAmbientEngine.setVolume(settings.sfxVolume);
   voiceManager.setVolume(settings.voiceVolume);
   voiceManager.setEnabled(settings.voiceEnabled);
 }
@@ -209,6 +213,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     isSitting: false,
     isRidingScooter: false,
     isGuitarOpen: false,
+    isBagOpen: false,
     catFed: false,
     paperBoatsLaunched: 0,
 
@@ -274,10 +279,27 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       if (open && document.pointerLockElement) document.exitPointerLock();
       set({
         isGuitarOpen: open,
+        isBagOpen: false,
         isMapJournalOpen: false,
         isPauseOpen: false,
         isPhoneOpen: false,
         isQuickGraphicsOpen: false,
+      });
+    },
+
+    setBagOpen: (open) => {
+      const s = get();
+      if (open && (s.screen !== 'playing' || s.activeDialogue)) return;
+      if (open && document.pointerLockElement) document.exitPointerLock();
+      if (open) sfxEngine.play('page');
+      set({
+        isBagOpen: open,
+        isGuitarOpen: false,
+        isMapJournalOpen: false,
+        isPauseOpen: false,
+        isPhoneOpen: false,
+        isQuickGraphicsOpen: false,
+        isPhotoMode: false,
       });
     },
 

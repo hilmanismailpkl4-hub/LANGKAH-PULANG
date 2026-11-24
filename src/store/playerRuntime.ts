@@ -89,9 +89,10 @@ export const playerRuntime = {
     isBraking: false,
   } as ScooterRuntimeState,
 
-  // Aktivitas santai: perahu kertas di danau & reaksi kucing Sore
+  // Aktivitas santai: perahu kertas di danau, kucing Sore & posisi kereta spasial
   paperBoats: [] as FloatingPaperBoat[],
   catHeartTimer: 0,
+  trainZ: -80,
 };
 
 export function setRuntimePosition(pos: [number, number, number], rot?: number) {
