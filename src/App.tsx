@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { ChapterTransition } from './components/ui/ChapterTransition';
+import { CulinaryModal } from './components/ui/CulinaryModal';
 import { DialogueOverlay } from './components/ui/DialogueOverlay';
 import { EndingScreen } from './components/ui/EndingScreen';
 import { GameHUD } from './components/ui/GameHUD';
@@ -54,6 +55,7 @@ export function App() {
       <PhotoModeOverlay />
       <SmartphoneModal />
       <GuitarMinigameModal />
+      <CulinaryModal />
       <InventoryBagModal />
       <PhoneNotification />
       <DialogueOverlay />

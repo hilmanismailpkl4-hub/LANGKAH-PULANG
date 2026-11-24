@@ -40,6 +40,8 @@ export const GameHUD: React.FC = () => {
   const isPhoneOpen = useGameStore((s) => s.isPhoneOpen);
   const isGuitarOpen = useGameStore((s) => s.isGuitarOpen);
   const isBagOpen = useGameStore((s) => s.isBagOpen);
+  const activeCulinarySpot = useGameStore((s) => s.activeCulinarySpot);
+  const heldDrink = useGameStore((s) => s.heldDrink);
   const isRidingScooter = useGameStore((s) => s.isRidingScooter);
   const setBagOpen = useGameStore((s) => s.setBagOpen);
   const umbrellaForcedOff = useGameStore((s) => s.umbrellaForcedOff);
@@ -142,7 +144,8 @@ export const GameHUD: React.FC = () => {
     isPhotoMode ||
     isPhoneOpen ||
     isGuitarOpen ||
-    isBagOpen
+    isBagOpen ||
+    Boolean(activeCulinarySpot)
   ) {
     return null;
   }
@@ -477,8 +480,9 @@ export const GameHUD: React.FC = () => {
 
             {!isRidingScooter && isSitting && (
               <div className="rounded-full border border-warm-300/40 bg-dusk-950/85 px-5 py-2 text-xs text-warm-100 shadow-xl backdrop-blur-md animate-fadeIn">
-                Damar sedang beristirahat tenang · Tekan <strong className="text-warm-300">[WASD]</strong> atau{' '}
-                <strong className="text-warm-300">[E]</strong> untuk berdiri
+                {heldDrink ? `Menikmati ${heldDrink.label}` : 'Damar sedang beristirahat tenang'} · Tekan{' '}
+                <strong className="text-warm-300">[WASD / E]</strong> berdiri ·{' '}
+                <strong className="text-warm-300">[P]</strong> Foto
               </div>
             )}
 

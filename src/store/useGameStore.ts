@@ -5,6 +5,12 @@ import { spatialAmbientEngine } from '../audio/spatialAmbientEngine';
 import { voiceManager } from '../audio/voiceManager';
 import { ALL_DIALOGUES } from '../data/dialogues';
 import { EASTER_EGGS } from '../data/easterEggs';
+import {
+  CULINARY_MENU_ITEMS,
+  CULINARY_SPOTS,
+  CulinarySpotId,
+  HeldDrinkVisual,
+} from '../data/culinaryMenu';
 import { evaluateEnding } from '../data/endings';
 import {
   CASUAL_FAMILY_BANTERS,
@@ -105,6 +111,8 @@ interface GameStoreState {
   umbrellaForcedOff: boolean;
   isFamilyWalkActive: boolean;
   familyBanter: ActiveFamilyBanter | null;
+  activeCulinarySpot: CulinarySpotId | null;
+  heldDrink: { type: HeldDrinkVisual; isHot: boolean; label: string } | null;
   catFed: boolean;
   paperBoatsLaunched: number;
 
@@ -137,6 +145,9 @@ interface GameStoreState {
   playFamilyBanter: (lines: FamilyBanterLine[], voiceKey?: string) => void;
   triggerCasualFamilyChat: () => void;
   clearFamilyBanter: () => void;
+  openCulinarySpot: (spot: CulinarySpotId | null) => void;
+  orderCulinaryItem: (itemId: string) => void;
+  clearHeldDrink: () => void;
   markCatFed: () => void;
   incrementPaperBoats: () => void;
   openPhone: (app?: 'home' | 'chat' | 'calls' | 'gallery' | 'radio' | 'notes' | 'weather', threadId?: string) => void;
@@ -182,6 +193,7 @@ interface GameStoreState {
 
 let toastCounter = 0;
 let banterTimers: number[] = [];
+let drinkTimer: number | null = null;
 let casualBanterCursor = 0;
 
 function clearBanterTimers() {
@@ -244,6 +256,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     umbrellaForcedOff: false,
     isFamilyWalkActive: false,
     familyBanter: null,
+    activeCulinarySpot: null,
+    heldDrink: null,
     catFed: false,
     paperBoatsLaunched: 0,
 
@@ -443,6 +457,88 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       casualBanterCursor += 1;
       sfxEngine.play('interact');
       s.playFamilyBanter(lines, `fw_casual_${casualBanterCursor}`);
+    },
+
+    openCulinarySpot: (spot) => {
+      const s = get();
+      if (spot && (s.screen !== 'playing' || s.activeDialogue)) return;
+      if (spot && document.pointerLockElement) document.exitPointerLock();
+      if (spot) sfxEngine.play('interact');
+      set({
+        activeCulinarySpot: spot,
+        isMapJournalOpen: false,
+        isPauseOpen: false,
+        isPhoneOpen: false,
+        isBagOpen: false,
+        isGuitarOpen: false,
+        isQuickGraphicsOpen: false,
+      });
+    },
+
+    clearHeldDrink: () => {
+      if (drinkTimer) {
+        window.clearTimeout(drinkTimer);
+        drinkTimer = null;
+      }
+      set({ heldDrink: null });
+    },
+
+    orderCulinaryItem: (itemId) => {
+      const s = get();
+      const item = CULINARY_MENU_ITEMS.find((m) => m.id === itemId);
+      if (!item) return;
+      const spot = CULINARY_SPOTS[item.spot];
+
+      sfxEngine.play(item.isHot ? 'coffee' : 'chime');
+
+      // Dudukkan Damar di kursi / bangku kayu tempat kuliner + tampilkan hidangan hangat di meja & tangan
+      playerRuntime.sitState = {
+        active: true,
+        label: spot.title,
+        seatPos: [...spot.seatPos],
+        lookAt: [...spot.lookAt],
+        standPos: [...spot.standPos],
+        seatYaw: spot.seatYaw,
+        holdingCoffee: true,
+        drinkVisual: item.drinkVisual,
+        tablePropPos: [...spot.tablePropPos],
+        tableIsHot: item.isHot,
+      };
+
+      if (drinkTimer) window.clearTimeout(drinkTimer);
+      drinkTimer = window.setTimeout(() => {
+        set({ heldDrink: null });
+      }, 28000);
+
+      set({
+        activeCulinarySpot: null,
+        isSitting: true,
+        heldDrink: { type: item.drinkVisual, isHot: item.isHot, label: item.name },
+      });
+
+      // Tambah kehangatan emosi & catatan jurnal bila mentraktir keluarga pertama kali di tempat ini
+      const flagKey = `culinary_${item.id}`;
+      if (!s.flags.includes(flagKey)) {
+        s.applyEffect({
+          kehadiranKeluarga: item.isFamilyTreat ? 2 : 0,
+          kejujuranDiri: item.isFamilyTreat ? 1 : 1,
+          setFlags: [flagKey],
+          journalEntry:
+            item.journalTitle && item.journalBody
+              ? {
+                  id: `je_${flagKey}`,
+                  title: item.journalTitle,
+                  body: item.journalBody,
+                  chapter: s.chapter,
+                }
+              : undefined,
+        });
+      }
+
+      if (s.isFamilyWalkActive && item.familyReaction.length > 0) {
+        s.playFamilyBanter(item.familyReaction, `fw_${item.id}`);
+      }
+      s.showToast(`${item.name}: "${item.tasteNote}" (Tekan WASD/E berdiri — gelas tetap dibawa sejenak!)`);
     },
 
     markCatFed: () => {
@@ -707,6 +803,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isPauseOpen: false,
         isFamilyWalkActive: false,
         familyBanter: null,
+        activeCulinarySpot: null,
+        heldDrink: null,
         interactPrompt: null,
       });
     },

@@ -25,6 +25,9 @@ export interface SitSpotState {
   standPos: [number, number, number];
   seatYaw: number;
   holdingCoffee?: boolean;
+  drinkVisual?: 'wedang' | 'coffee' | 'tea' | 'icecream' | 'cocoa';
+  tablePropPos?: [number, number, number];
+  tableIsHot?: boolean;
 }
 
 export interface ScooterRuntimeState {

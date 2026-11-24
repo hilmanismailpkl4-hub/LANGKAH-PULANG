@@ -1,6 +1,44 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { CharacterProfile } from '../../data/characters';
+import { HeldDrinkVisual } from '../../data/culinaryMenu';
+
+/**
+ * Kepulan uap asap tipis yang naik perlahan dari gelas wedang, kopi, atau teh hangat.
+ */
+const CupSteam: React.FC<{ position?: [number, number, number] }> = ({ position = [0, 0.12, 0] }) => {
+  const puffsRef = useRef<(THREE.Mesh | null)[]>([]);
+  useFrame(({ clock }) => {
+    const t = clock.getElapsedTime();
+    for (let i = 0; i < 3; i++) {
+      const m = puffsRef.current[i];
+      if (!m) continue;
+      const phase = ((t * 0.65 + i * 0.33) % 1 + 1) % 1;
+      m.position.y = phase * 0.24;
+      m.position.x = Math.sin(t * 2.2 + i * 2.1) * 0.028 * phase;
+      const s = 0.55 + phase * 1.1;
+      m.scale.set(s, s, s);
+      const mat = m.material as THREE.MeshBasicMaterial;
+      mat.opacity = Math.sin(phase * Math.PI) * 0.36;
+    }
+  });
+  return (
+    <group position={position}>
+      {[0, 1, 2].map((i) => (
+        <mesh
+          key={`st-${i}`}
+          ref={(el) => {
+            puffsRef.current[i] = el;
+          }}
+        >
+          <sphereGeometry args={[0.032, 8, 8]} />
+          <meshBasicMaterial color="#fff9f0" transparent opacity={0.25} depthWrite={false} />
+        </mesh>
+      ))}
+    </group>
+  );
+};
 
 interface HumanModelProps {
   profile: CharacterProfile;
@@ -13,11 +51,12 @@ interface HumanModelProps {
   isChild?: boolean;
   isFemale?: boolean;
   holdingUmbrella?: boolean;
+  holdingDrink?: HeldDrinkVisual | null;
 }
 
 /**
  * Model manusia 3D stylized semi-realistis dengan kepala, bahu, torso, lengan, dan kaki
- * terartikulasi penuh untuk kontak mata, napas alami, melambai, payung hujan, dan gestur berbicara.
+ * terartikulasi penuh untuk kontak mata, napas alami, melambai, payung hujan, minuman hangat, dan gestur berbicara.
  */
 export const HumanModel: React.FC<HumanModelProps> = ({
   profile,
@@ -30,6 +69,7 @@ export const HumanModel: React.FC<HumanModelProps> = ({
   isChild = false,
   isFemale = false,
   holdingUmbrella = false,
+  holdingDrink = null,
 }) => {
   const { shirtColor, pantsColor, skinColor, hairColor, accentProp } = profile.appearance;
   const scale = profile.appearance.height / 1.74;
@@ -202,7 +242,7 @@ export const HumanModel: React.FC<HumanModelProps> = ({
           )}
         </group>
 
-        {/* Lengan Kanan (pivot dari bahu — dipakai juga untuk melambai & gestur bicara!) */}
+        {/* Lengan Kanan (pivot dari bahu — melambai, gestur bicara & memegang minuman/jajan hangat!) */}
         <group ref={rightArmRef} position={[0.27, 0.46, 0]}>
           <mesh position={[0, -0.18, 0]} castShadow>
             <capsuleGeometry args={[0.062, 0.24, 6, 10]} />
@@ -212,6 +252,60 @@ export const HumanModel: React.FC<HumanModelProps> = ({
             <capsuleGeometry args={[0.052, 0.18, 6, 8]} />
             <meshStandardMaterial color={skinColor} roughness={0.75} />
           </mesh>
+
+          {/* Visual Gelas Hangat / Es Krim di Tangan Kanan */}
+          {holdingDrink && (
+            <group position={[0, -0.48, 0.05]} rotation={[0.92, 0, 0]}>
+              {holdingDrink === 'icecream' ? (
+                <group>
+                  <mesh position={[0, 0.02, 0]} rotation={[Math.PI, 0, 0]} castShadow>
+                    <coneGeometry args={[0.045, 0.14, 10]} />
+                    <meshStandardMaterial color="#d9a15b" roughness={0.8} />
+                  </mesh>
+                  <mesh position={[0, 0.11, 0]} castShadow>
+                    <sphereGeometry args={[0.055, 10, 10]} />
+                    <meshStandardMaterial color="#f598ad" roughness={0.5} />
+                  </mesh>
+                </group>
+              ) : (
+                <group>
+                  <mesh position={[0, 0.05, 0]} castShadow>
+                    <cylinderGeometry args={[0.052, 0.044, 0.12, 12]} />
+                    <meshStandardMaterial
+                      color={
+                        holdingDrink === 'wedang'
+                          ? '#f0d7a8'
+                          : holdingDrink === 'coffee'
+                            ? '#f2ece1'
+                            : holdingDrink === 'cocoa'
+                              ? '#8a5942'
+                              : '#e8e4d8'
+                      }
+                      transparent={holdingDrink === 'wedang'}
+                      opacity={holdingDrink === 'wedang' ? 0.72 : 1}
+                      roughness={holdingDrink === 'wedang' ? 0.18 : 0.45}
+                    />
+                  </mesh>
+                  <mesh position={[0, 0.105, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <circleGeometry args={[0.046, 12]} />
+                    <meshStandardMaterial
+                      color={
+                        holdingDrink === 'wedang'
+                          ? '#b56727'
+                          : holdingDrink === 'coffee'
+                            ? '#3d2517'
+                            : holdingDrink === 'cocoa'
+                              ? '#663c27'
+                              : '#a67b3c'
+                      }
+                      roughness={0.25}
+                    />
+                  </mesh>
+                  <CupSteam position={[0, 0.12, 0]} />
+                </group>
+              )}
+            </group>
+          )}
         </group>
 
         {/* Leher */}

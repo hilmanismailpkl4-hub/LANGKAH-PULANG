@@ -689,6 +689,7 @@ export const WorldInteractables: React.FC = () => {
       store.isPhoneOpen ||
       store.isGuitarOpen ||
       store.isBagOpen ||
+      Boolean(store.activeCulinarySpot) ||
       store.isRidingScooter ||
       store.isSitting
     ) {
@@ -748,36 +749,49 @@ export const WorldInteractables: React.FC = () => {
       2.8,
     );
 
-    // === 3. MINI-AKTIVITAS 2: MINUM KOPI HANGAT DI TERAS KAFE ===
+    // === 3. KULINER & NONGKRONG 1: KEDAI KOPI SUDUT BIMA ===
     consider(
       {
         id: 'activity_coffee',
         kind: 'story_object',
-        label: 'Duduk & Nikmati Kopi Hangat',
-        sublabel: 'Mini-Aktivitas · Kedai Kopi Sudut',
+        label: 'Duduk & Pesan Kopi / Cokelat di Kedai Bima',
+        sublabel: 'Kuliner & Nongkrong · Kedai Kopi Sudut',
         position: [-25.0, 0.08, 17.8],
         onInteract: () => {
-          sfxEngine.play('coffee');
-          playerRuntime.sitState = {
-            active: true,
-            label: 'Kedai Kopi Sudut',
-            seatPos: [-25.0, 0.16, 18.45],
-            lookAt: [-20.0, 1.4, 21.0],
-            standPos: [-24.0, 0.08, 18.5],
-            seatYaw: Math.PI,
-            holdingCoffee: true,
-          };
-          store.setSitting(true);
-          if (!store.flags.includes('enjoyed_bima_coffee')) {
-            store.applyEffect({ kejujuranDiri: 1, setFlags: ['enjoyed_bima_coffee'] });
-          }
-          if (store.isFamilyWalkActive) {
-            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_coffee, 'fw_coffee');
-          }
-          store.showToast('"Pahitnya pas... sepuluh menit tenang tanpa lihat jam tangan." (Tekan WASD/E berdiri)');
+          store.openCulinarySpot('cafe');
         },
       },
-      2.4,
+      2.5,
+    );
+
+    // === 3B. KULINER & NONGKRONG 2: BANGKU ANGKRINGAN PAK SLAMET ===
+    consider(
+      {
+        id: 'activity_angkringan',
+        kind: 'story_object',
+        label: 'Duduk & Jajan di Angkringan Pak Slamet',
+        sublabel: 'Kuliner & Nongkrong · Wedang Jahe & Sego Kucing',
+        position: [-15.2, 0, 38.0],
+        onInteract: () => {
+          store.openCulinarySpot('angkringan');
+        },
+      },
+      2.8,
+    );
+
+    // === 3C. KULINER & NONGKRONG 3: MEJA TERAS KIOS 24 JAM HARMONI ===
+    consider(
+      {
+        id: 'activity_kios_terrace',
+        kind: 'story_object',
+        label: 'Duduk & Jajan di Teras Kios Harmoni',
+        sublabel: 'Kuliner & Nongkrong · Teh Hangat & Es Krim',
+        position: [20.5, 0, 15.1],
+        onInteract: () => {
+          store.openCulinarySpot('kios');
+        },
+      },
+      2.3,
     );
 
     // === 4. MINI-AKTIVITAS 3: BERI MAKAN KUCING ORANYE "SORE" ===

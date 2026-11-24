@@ -1,9 +1,50 @@
 import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { getTrafficSignalState } from '../../store/playerRuntime';
+import { getTrafficSignalState, playerRuntime } from '../../store/playerRuntime';
+import { useGameStore } from '../../store/useGameStore';
 import { GameSettings, TimeOfDay } from '../../types/game';
 import { getProceduralTextures } from './proceduralTextures';
+
+/**
+ * Uap asap tipis hangat yang mengepul pelan dari teko angkringan, mesin espresso, dan hidangan meja.
+ */
+const RisingSteamPlume: React.FC<{ position: [number, number, number]; scale?: number }> = ({
+  position,
+  scale = 1,
+}) => {
+  const puffs = useRef<(THREE.Mesh | null)[]>([]);
+  useFrame(({ clock }) => {
+    const t = clock.getElapsedTime();
+    for (let i = 0; i < 4; i++) {
+      const m = puffs.current[i];
+      if (!m) continue;
+      const p = ((t * 0.45 + i * 0.25) % 1 + 1) % 1;
+      m.position.y = p * 0.65 * scale;
+      m.position.x = Math.sin(t * 1.8 + i * 1.7) * 0.08 * p * scale;
+      m.position.z = Math.cos(t * 1.4 + i * 1.9) * 0.06 * p * scale;
+      const s = (0.45 + p * 1.25) * scale;
+      m.scale.set(s, s, s);
+      const mat = m.material as THREE.MeshBasicMaterial;
+      mat.opacity = Math.sin(p * Math.PI) * 0.28;
+    }
+  });
+  return (
+    <group position={position}>
+      {[0, 1, 2, 3].map((i) => (
+        <mesh
+          key={`pl-${i}`}
+          ref={(el) => {
+            puffs.current[i] = el;
+          }}
+        >
+          <sphereGeometry args={[0.08, 8, 8]} />
+          <meshBasicMaterial color="#fff8ed" transparent opacity={0.22} depthWrite={false} />
+        </mesh>
+      ))}
+    </group>
+  );
+};
 
 interface CityDetailsProps {
   timeOfDay: TimeOfDay;
@@ -215,6 +256,7 @@ const PalmTree: React.FC<{ position: [number, number, number]; scale: number; ph
 export const CityDetails: React.FC<CityDetailsProps> = ({ timeOfDay, settings, pierLampFixed = false }) => {
   const isEveningOrNight = timeOfDay !== 'morning';
   const isRain = timeOfDay === 'rain_dusk';
+  const isSitting = useGameStore((s) => s.isSitting);
   const textures = useMemo(() => getProceduralTextures(), []);
 
   const signs = useMemo(
@@ -585,11 +627,12 @@ export const CityDetails: React.FC<CityDetailsProps> = ({ timeOfDay, settings, p
           />
         </mesh>
 
-        {/* Teko Wedang Jahe, Angin Bara & Toples Sate */}
+        {/* Teko Wedang Jahe, Angin Bara & Toples Sate + Uap Hangat */}
         <mesh position={[-0.65, 1.54, 0.08]} castShadow>
           <cylinderGeometry args={[0.16, 0.19, 0.34, 12]} />
           <meshStandardMaterial color="#a8adb5" metalness={0.7} roughness={0.32} />
         </mesh>
+        <RisingSteamPlume position={[-0.65, 1.75, 0.08]} scale={0.9} />
         <mesh position={[0.15, 1.5, 0.12]} castShadow>
           <boxGeometry args={[0.62, 0.24, 0.42]} />
           <meshStandardMaterial color="#e6dbc8" roughness={0.5} transparent opacity={0.85} />
@@ -685,6 +728,29 @@ export const CityDetails: React.FC<CityDetailsProps> = ({ timeOfDay, settings, p
           <pointLight position={[-73.8, 2.4, -28.0]} color="#ffbe6b" intensity={18} distance={22} decay={1.6} />
         )}
       </group>
+
+      {/* === 10. UAP MESIN ESPRESSO KEDAI BIMA & HIDANGAN 3D DI MEJA SAAT NONGKRONG === */}
+      <RisingSteamPlume position={[-22.2, 1.92, 22.6]} scale={0.75} />
+
+      {isSitting && playerRuntime.sitState?.tablePropPos && (
+        <group position={playerRuntime.sitState.tablePropPos}>
+          {/* Piring Kecil Kudapan Hangat (Sego Kucing / Roti Bakar / Camilan) */}
+          <mesh position={[-0.22, 0.03, 0]} castShadow>
+            <cylinderGeometry args={[0.18, 0.14, 0.04, 14]} />
+            <meshStandardMaterial color="#f2ece1" roughness={0.35} />
+          </mesh>
+          <mesh position={[-0.22, 0.08, 0]} castShadow>
+            <boxGeometry args={[0.18, 0.07, 0.14]} />
+            <meshStandardMaterial color="#9c6a3c" roughness={0.75} />
+          </mesh>
+          {/* Gelas Minuman di Atas Meja */}
+          <mesh position={[0.18, 0.08, 0.04]} castShadow>
+            <cylinderGeometry args={[0.06, 0.05, 0.14, 12]} />
+            <meshStandardMaterial color="#f5e6cc" roughness={0.35} />
+          </mesh>
+          {playerRuntime.sitState.tableIsHot && <RisingSteamPlume position={[0.18, 0.18, 0.04]} scale={0.55} />}
+        </group>
+      )}
     </group>
   );
 };

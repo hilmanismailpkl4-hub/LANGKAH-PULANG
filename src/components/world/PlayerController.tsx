@@ -43,11 +43,14 @@ export const PlayerController: React.FC = () => {
   const umbrellaForcedOff = useGameStore((s) => s.umbrellaForcedOff);
   const isRidingScooter = useGameStore((s) => s.isRidingScooter);
   const isSitting = useGameStore((s) => s.isSitting);
+  const heldDrink = useGameStore((s) => s.heldDrink);
 
   const umbrellaActive =
     timeOfDay === 'rain_dusk' && !umbrellaForcedOff && !isRidingScooter && !isSitting && !isIndoorsState;
   const umbrellaActiveRef = useRef(umbrellaActive);
   umbrellaActiveRef.current = umbrellaActive;
+  const hasDrinkRef = useRef(Boolean(heldDrink));
+  hasDrinkRef.current = Boolean(heldDrink) && !isRidingScooter;
 
   useEffect(() => {
     const dom = gl.domElement;
@@ -94,7 +97,9 @@ export const PlayerController: React.FC = () => {
 
       // Tutup overlay dengan Escape
       if (code === 'Escape') {
-        if (state.isBagOpen) {
+        if (state.activeCulinarySpot) {
+          state.openCulinarySpot(null);
+        } else if (state.isBagOpen) {
           state.setBagOpen(false);
         } else if (state.isGuitarOpen) {
           state.setGuitarOpen(false);
@@ -114,7 +119,7 @@ export const PlayerController: React.FC = () => {
         return;
       }
 
-      if (state.isGuitarOpen) return;
+      if (state.isGuitarOpen || state.activeCulinarySpot) return;
 
       // Tas Selempang Damar [I]
       if (
@@ -283,7 +288,8 @@ export const PlayerController: React.FC = () => {
         state.isPauseOpen ||
         state.isQuickGraphicsOpen ||
         state.isPhoneOpen ||
-        state.isGuitarOpen
+        state.isGuitarOpen ||
+        Boolean(state.activeCulinarySpot)
       )
         return;
       isDraggingRef.current = true;
@@ -303,7 +309,8 @@ export const PlayerController: React.FC = () => {
         state.isPauseOpen ||
         state.isQuickGraphicsOpen ||
         state.isPhoneOpen ||
-        state.isGuitarOpen
+        state.isGuitarOpen ||
+        Boolean(state.activeCulinarySpot)
       )
         return;
 
@@ -338,7 +345,8 @@ export const PlayerController: React.FC = () => {
         state.isQuickGraphicsOpen ||
         state.isPhotoMode ||
         state.isPhoneOpen ||
-        state.isGuitarOpen
+        state.isGuitarOpen ||
+        Boolean(state.activeCulinarySpot)
       )
         return;
       if (!document.pointerLockElement && dom.requestPointerLock) {
@@ -355,7 +363,8 @@ export const PlayerController: React.FC = () => {
         state.isPauseOpen ||
         state.isQuickGraphicsOpen ||
         state.isPhoneOpen ||
-        state.isGuitarOpen
+        state.isGuitarOpen ||
+        Boolean(state.activeCulinarySpot)
       )
         return;
       zoomRef.current = THREE.MathUtils.clamp(zoomRef.current + e.deltaY * 0.0038, 2.8, 12.0);
@@ -593,7 +602,8 @@ export const PlayerController: React.FC = () => {
       !store.isPhotoMode &&
       !store.isPhoneOpen &&
       !store.isGuitarOpen &&
-      !store.isBagOpen;
+      !store.isBagOpen &&
+      !store.activeCulinarySpot;
 
     let moveX = 0;
     let moveZ = 0;
@@ -698,6 +708,7 @@ export const PlayerController: React.FC = () => {
           store.activeDialogue.nodes[store.activeNodeId]?.speaker === 'damar';
 
         const holdingUmb = umbrellaActiveRef.current;
+        const holdingDrk = hasDrinkRef.current;
         if (playerRuntime.damarWaveTimer > 0) {
           rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, -2.4, dt * 10);
           rightArmRef.current.rotation.z = Math.sin(t * 11) * 0.3 + 0.35;
@@ -708,8 +719,8 @@ export const PlayerController: React.FC = () => {
           );
           leftArmRef.current.rotation.z = THREE.MathUtils.lerp(leftArmRef.current.rotation.z, holdingUmb ? -0.06 : 0, dt * 10);
         } else if (damarSpeaking) {
-          rightArmRef.current.rotation.x = -0.45 + Math.sin(t * 4.4) * 0.22;
-          rightArmRef.current.rotation.z = 0.1;
+          rightArmRef.current.rotation.x = holdingDrk ? -0.9 : -0.45 + Math.sin(t * 4.4) * 0.22;
+          rightArmRef.current.rotation.z = holdingDrk ? 0.05 : 0.1;
           leftArmRef.current.rotation.x = holdingUmb ? -1.28 : -0.25 + Math.cos(t * 3.8) * 0.16;
           leftArmRef.current.rotation.z = holdingUmb ? -0.06 : 0;
         } else {
@@ -718,9 +729,13 @@ export const PlayerController: React.FC = () => {
             holdingUmb ? -1.28 + Math.sin(t * 2.2) * 0.025 : -swing * 0.72,
             dt * 12,
           );
-          rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, swing * 0.72, dt * 12);
+          rightArmRef.current.rotation.x = THREE.MathUtils.lerp(
+            rightArmRef.current.rotation.x,
+            holdingDrk ? -0.92 + Math.sin(t * 2.5) * 0.03 : swing * 0.72,
+            dt * 12,
+          );
           leftArmRef.current.rotation.z = THREE.MathUtils.lerp(leftArmRef.current.rotation.z, holdingUmb ? -0.06 : 0, dt * 10);
-          rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, 0, dt * 10);
+          rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, holdingDrk ? 0.06 : 0, dt * 10);
         }
       }
 
@@ -856,6 +871,7 @@ export const PlayerController: React.FC = () => {
         headRef={headRef}
         torsoRef={torsoRef}
         holdingUmbrella={umbrellaActive}
+        holdingDrink={!isRidingScooter ? (heldDrink?.type ?? null) : null}
       />
     </group>
   );
