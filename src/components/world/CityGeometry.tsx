@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { GameSettings, TimeOfDay } from '../../types/game';
 import { getProceduralTextures } from './proceduralTextures';
+import { WaterSurface } from './WaterSurface';
 
 interface CityGeometryProps {
   timeOfDay: TimeOfDay;
@@ -373,17 +374,13 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
         </React.Fragment>
       ))}
 
-      {/* === SUNGAI KOTA & DANAU SENJA BERIAK REFLEKTIF === */}
-      <mesh position={[-48, -0.22, 10]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry args={[15.8, 210]} />
-        <meshStandardMaterial
-          color={waterColor}
-          bumpMap={textures.waterBump}
-          bumpScale={0.09}
-          roughness={settings.waterReflections ? 0.09 : 0.35}
-          metalness={settings.waterReflections ? 0.72 : 0.25}
-        />
-      </mesh>
+      {/* === SUNGAI KOTA & DANAU SENJA BERIAK SHADER FRESNEL === */}
+      <WaterSurface
+        position={[-48, -0.22, 10]}
+        size={[15.8, 210]}
+        timeOfDay={timeOfDay}
+        highQuality={settings.waterReflections}
+      />
       <mesh position={[-56.2, -0.02, 10]} receiveShadow>
         <boxGeometry args={[1.1, 0.58, 210]} />
         <meshStandardMaterial map={textures.paving} roughness={0.85} />
@@ -394,16 +391,12 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
       </mesh>
 
       {/* Danau Senja */}
-      <mesh position={[-84, -0.14, -28]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry args={[28, 30]} />
-        <meshStandardMaterial
-          color={waterColor}
-          bumpMap={textures.waterBump}
-          bumpScale={0.07}
-          roughness={settings.waterReflections ? 0.07 : 0.3}
-          metalness={settings.waterReflections ? 0.78 : 0.3}
-        />
-      </mesh>
+      <WaterSurface
+        position={[-84, -0.14, -28]}
+        size={[28, 30]}
+        timeOfDay={timeOfDay}
+        highQuality={settings.waterReflections}
+      />
       {/* Dermaga Kayu & Tiang Lampu Dermaga */}
       <group>
         <mesh position={[-73, 0.07, -28]} receiveShadow castShadow>

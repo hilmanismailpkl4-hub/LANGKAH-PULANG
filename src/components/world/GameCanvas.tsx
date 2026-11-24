@@ -3,9 +3,11 @@ import { Canvas } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGameStore } from '../../store/useGameStore';
 import { Atmosphere } from './Atmosphere';
+import { CityDetails } from './CityDetails';
 import { CityGeometry } from './CityGeometry';
 import { CityLife } from './CityLife';
 import { PlayerController } from './PlayerController';
+import { PostEffects } from './PostEffects';
 import { WaypointBeacon } from './WaypointBeacon';
 import { WorldInteractables } from './WorldInteractables';
 
@@ -40,10 +42,12 @@ export const GameCanvas: React.FC = () => {
             buWatiLampFixed={buWatiLampFixed}
             settings={settings}
           />
+          <CityDetails timeOfDay={effectiveTime} settings={settings} />
           <CityLife timeOfDay={effectiveTime} settings={settings} />
           <PlayerController />
           <WorldInteractables />
           <WaypointBeacon />
+          <PostEffects settings={settings} timeOfDay={effectiveTime} />
         </Suspense>
       </Canvas>
       <div className="pointer-events-none fixed inset-0 film-vignette" />

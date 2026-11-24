@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react';
+import { Environment, Lightformer } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { playerRuntime } from '../../store/playerRuntime';
@@ -359,6 +360,42 @@ export const Atmosphere: React.FC<AtmosphereProps> = ({ timeOfDay, settings }) =
   return (
     <>
       <SkyDome zenith={preset.zenith} horizon={preset.horizon} ground={preset.ground} />
+
+      {/* Real-time Image-Based Lighting (IBL) untuk pantulan realistis kaca gedung, mobil & aspal basah */}
+      {settings.waterReflections && (
+        <Environment resolution={256} frames={1} key={`env-${timeOfDay}`}>
+          <Lightformer
+            form="ring"
+            intensity={timeOfDay === 'night' ? 0.8 : 2.2}
+            color={preset.sunGlow}
+            scale={18}
+            position={preset.sunPos}
+            target={[0, 0, 0]}
+          />
+          <Lightformer
+            form="rect"
+            intensity={timeOfDay === 'night' ? 0.6 : 1.4}
+            color={preset.horizon}
+            scale={[50, 14, 1]}
+            position={[0, 10, -40]}
+          />
+          <Lightformer
+            form="rect"
+            intensity={timeOfDay === 'night' ? 0.45 : 1.0}
+            color={preset.zenith}
+            scale={[60, 60, 1]}
+            rotation={[Math.PI / 2, 0, 0]}
+            position={[0, 35, 0]}
+          />
+          <Lightformer
+            form="rect"
+            intensity={timeOfDay === 'night' ? 0.55 : 0.7}
+            color="#ffba6b"
+            scale={[40, 8, 1]}
+            position={[0, 4, 40]}
+          />
+        </Environment>
+      )}
 
       <ambientLight intensity={preset.ambientIntensity} color={preset.hemiSky} />
       <hemisphereLight args={[preset.hemiSky, preset.hemiGround, preset.hemiIntensity]} />

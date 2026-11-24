@@ -13,6 +13,7 @@ export const GRAPHICS_PRESETS: Record<
     | 'resolutionScale'
     | 'shadowQuality'
     | 'cinematicGlow'
+    | 'bloomIntensity'
     | 'waterReflections'
     | 'particleDensity'
     | 'drawDistance'
@@ -23,6 +24,7 @@ export const GRAPHICS_PRESETS: Record<
     resolutionScale: 0.85,
     shadowQuality: 'off',
     cinematicGlow: false,
+    bloomIntensity: 0,
     waterReflections: false,
     particleDensity: 'low',
     drawDistance: 'near',
@@ -32,6 +34,7 @@ export const GRAPHICS_PRESETS: Record<
     resolutionScale: 1.2,
     shadowQuality: 'soft',
     cinematicGlow: true,
+    bloomIntensity: 0.45,
     waterReflections: true,
     particleDensity: 'medium',
     drawDistance: 'medium',
@@ -41,6 +44,7 @@ export const GRAPHICS_PRESETS: Record<
     resolutionScale: 1.5,
     shadowQuality: 'sharp',
     cinematicGlow: true,
+    bloomIntensity: 0.72,
     waterReflections: true,
     particleDensity: 'high',
     drawDistance: 'far',
@@ -50,6 +54,7 @@ export const GRAPHICS_PRESETS: Record<
     resolutionScale: 2.0,
     shadowQuality: 'sharp',
     cinematicGlow: true,
+    bloomIntensity: 0.95,
     waterReflections: true,
     particleDensity: 'high',
     drawDistance: 'far',

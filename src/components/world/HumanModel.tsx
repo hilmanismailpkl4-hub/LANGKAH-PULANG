@@ -31,6 +31,12 @@ export const HumanModel: React.FC<HumanModelProps> = ({
 
   return (
     <group scale={scale}>
+      {/* Bayangan kontak lembut di tanah agar karakter menapak realistis */}
+      <mesh position={[0, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.38, 16]} />
+        <meshBasicMaterial color="#0b0d12" transparent opacity={0.32} depthWrite={false} />
+      </mesh>
+
       {/* Kaki Kiri */}
       <group ref={leftLegRef} position={[-0.12, 0.82, 0]}>
         <mesh position={[0, -0.34, 0]} castShadow>

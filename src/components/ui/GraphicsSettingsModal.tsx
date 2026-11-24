@@ -158,6 +158,28 @@ export const GraphicsSettingsModal: React.FC = () => {
               />
             </div>
 
+            {/* Intensitas HDR Bloom */}
+            <div>
+              <div className="flex justify-between text-warm-200">
+                <span>Intensitas HDR Bloom (Pendar Film)</span>
+                <span className="font-semibold text-warm-300">
+                  {Math.round(settings.bloomIntensity * 100)}%
+                </span>
+              </div>
+              <input
+                type="range"
+                min={0}
+                max={1.4}
+                step={0.05}
+                value={settings.bloomIntensity}
+                onChange={(e) => {
+                  const val = parseFloat(e.target.value);
+                  updateSettings({ bloomIntensity: val, cinematicGlow: val > 0 });
+                }}
+                className="mt-1.5 w-full accent-warm-400"
+              />
+            </div>
+
             {/* Kualitas Bayangan */}
             <div>
               <p className="mb-1.5 text-warm-200">Kualitas Bayangan Real-Time</p>

@@ -248,6 +248,7 @@ export interface GameSettings {
   resolutionScale: number; // 0.75..2.0
   shadowQuality: ShadowQuality;
   cinematicGlow: boolean;
+  bloomIntensity: number; // 0..1.5
   waterReflections: boolean;
   particleDensity: ParticleDensity;
   drawDistance: 'near' | 'medium' | 'far';
