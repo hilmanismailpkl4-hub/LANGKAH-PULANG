@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #0d0f14;
+    color: #fdf8f0;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Scrollbar halus untuk jurnal dan daftar misi */
+.subtle-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.subtle-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 999px;
+}
+
+.subtle-scroll::-webkit-scrollbar-thumb {
+  background: rgba(231, 184, 125, 0.35);
+  border-radius: 999px;
+}
+
+.subtle-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(231, 184, 125, 0.6);
+}
+
+.film-vignette {
+  background: radial-gradient(circle at center, transparent 58%, rgba(8, 10, 15, 0.58) 100%);
+}

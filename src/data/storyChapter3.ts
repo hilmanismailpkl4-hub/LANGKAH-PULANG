@@ -1,0 +1,268 @@
+import { DialogueScript, MainObjectiveStep } from '../types/game';
+
+export const CHAPTER_3_STEPS: MainObjectiveStep[] = [
+  {
+    id: 'ch3_1_rooftop_malam',
+    chapter: 3,
+    title: 'Lampu Kota dari Ketinggian',
+    description: 'Hujan telah reda. Naiklah lewat lift di lobi Menara Nusantara menuju Rooftop untuk menenangkan pikiran sebelum melangkah pulang.',
+    targetLocation: 'rooftop',
+    waypoint: [28.5, 22.8, -22.5],
+    hint: 'Masuk ke lobi Menara Nusantara dan tekan [E] pada pintu Lift Rooftop di sisi kiri. (Kamu juga bebas menjelajah kota malam untuk melengkapi misi warga & fragmen memori).',
+  },
+  {
+    id: 'ch3_2_kembali_ke_rumah',
+    chapter: 3,
+    title: 'Langkah Pulang',
+    description: 'Saatnya turun dan berjalan pulang ke rumah di Jl. Melati No. 14. Lampu ruang makan masih menyala menunggumu.',
+    targetLocation: 'rumah_damar',
+    waypoint: [-17.5, 1.5, 65.8],
+    hint: 'Turun menggunakan Lift Rooftop, lalu berjalan pulang ke Rumah Keluarga Damar dan temui Nadia di meja makan.',
+  },
+];
+
+export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
+  ch3_rooftop_reflection: {
+    id: 'ch3_rooftop_reflection',
+    startNodeId: 'ch3_rt_1',
+    nodes: {
+      ch3_rt_1: {
+        id: 'ch3_rt_1',
+        speaker: 'damar_batin',
+        emotion: 'tenang',
+        text: 'Angin malam setelah hujan selalu terasa paling jujur. Dari atas sini, seluruh kota terlihat begitu kecil dan tenang... Jalanan yang tiap hari kulalui terburu-buru, jembatan sungai, taman danau, kedai Bima...',
+        onEnter: { playSfx: 'chime' },
+        nextNodeId: 'ch3_rt_2',
+      },
+      ch3_rt_2: {
+        id: 'ch3_rt_2',
+        speaker: 'damar_batin',
+        emotion: 'haru',
+        text: 'Dan jauh di ujung selatan sana, di antara barisan atap Perumahan Melati, satu lampu teras kuning masih menyala terang. Rumah kami.',
+        nextNodeId: 'ch3_rt_3',
+      },
+      ch3_rt_3: {
+        id: 'ch3_rt_3',
+        speaker: 'damar_batin',
+        emotion: 'ragu',
+        text: 'Sepuluh tahun lalu aku membayangkan usia tiga puluh akan terasa seperti garis finis: sudah tahu mau jadi apa, sudah tenang, tidak lagi takut. Ternyata menjadi dewasa hanya berarti belajar berani mengakui bahwa kita juga bisa tersesat.',
+        choices: [
+          {
+            id: 'ch3_rt_c1',
+            text: '"Aku bukan cuma jabatan di kartu nama. Aku Damar—suami Nadia, ayah Kira, dan manusia yang masih boleh bermimpi."',
+            subtext: 'Berdamai dengan jati diri sendiri',
+            nextNodeId: 'ch3_rt_r1',
+            effects: { kejujuranDiri: 3, kehadiranKeluarga: 1 },
+          },
+          {
+            id: 'ch3_rt_c2',
+            text: '"Mungkin mimpi masa lalu memang sudah lewat, tapi aku masih bisa memilih untuk hadir sepenuhnya bagi keluargaku."',
+            subtext: 'Mengutamakan kehangatan rumah',
+            nextNodeId: 'ch3_rt_r2',
+            effects: { kehadiranKeluarga: 3, kejujuranDiri: 1 },
+          },
+          {
+            id: 'ch3_rt_c3',
+            text: '"Kota ini keras. Kalau aku melambat sedikit saja, semuanya bisa runtuh. Aku harus tetap kuat dan tidak boleh lengah."',
+            subtext: 'Tetap mengeraskan hati terhadap dunia',
+            nextNodeId: 'ch3_rt_r3',
+            effects: { ambisiPelarian: 3 },
+          },
+        ],
+      },
+      ch3_rt_r1: {
+        id: 'ch3_rt_r1',
+        speaker: 'damar_batin',
+        emotion: 'hangat',
+        text: 'Untuk pertama kalinya dalam waktu yang sangat lama, tarikan napasku terasa penuh. Waktunya pulang.',
+        nextNodeId: 'ch3_rt_end',
+      },
+      ch3_rt_r2: {
+        id: 'ch3_rt_r2',
+        speaker: 'damar_batin',
+        emotion: 'hangat',
+        text: 'Cahaya kuning di selatan sana sudah cukup menjelaskan apa yang paling berharga. Waktunya pulang.',
+        nextNodeId: 'ch3_rt_end',
+      },
+      ch3_rt_r3: {
+        id: 'ch3_rt_r3',
+        speaker: 'damar_batin',
+        emotion: 'lelah',
+        text: 'Angin malam menusuk menembus kemeja. Aku harus segera pulang sebelum terlalu larut.',
+        nextNodeId: 'ch3_rt_end',
+      },
+      ch3_rt_end: {
+        id: 'ch3_rt_end',
+        speaker: 'narator',
+        emotion: 'tenang',
+        text: 'Sebelum kembali ke rumah, kamu masih bisa memeriksa sudut rooftop atau menyusuri kota malam bila masih ada kenangan dan warga yang ingin kamu temui.',
+        onEnd: {
+          advanceMainStep: 'ch3_2_kembali_ke_rumah',
+          setFlags: ['ch3_rooftop_done'],
+          journalEntry: {
+            id: 'je_ch3_rooftop',
+            title: 'Lampu Kecil di Selatan Kota',
+            body: 'Dari rooftop Menara Nusantara, aku menatap arah Perumahan Melati. Di tengah ribuan lampu kota yang dingin, ada satu rumah yang masih menyalakan cahayanya menungguku pulang.',
+            chapter: 3,
+          },
+          toast: 'Objektif baru: Pulang ke Rumah Keluarga Damar',
+        },
+      },
+    },
+  },
+
+  ch3_meja_makan_finale: {
+    id: 'ch3_meja_makan_finale',
+    startNodeId: 'ch3_fin_1',
+    nodes: {
+      ch3_fin_1: {
+        id: 'ch3_fin_1',
+        speaker: 'nadia',
+        emotion: 'tenang',
+        text: 'Kamu pulang, Mas... Masuk, duduk dulu. Sup ayamnya baru aku hangatkan lagi sepuluh menit lalu.',
+        onEnter: { playSfx: 'door' },
+        nextNodeId: 'ch3_fin_2',
+      },
+      ch3_fin_2: {
+        id: 'ch3_fin_2',
+        speaker: 'kira',
+        emotion: 'hangat',
+        text: 'Ayah...! Bunda bilang Ayah capek, jadi Kira nggak mau marah soal cat air biru. Kira cuma pengin tanya satu hal sebelum bobo...',
+        nextNodeId: 'ch3_fin_3',
+      },
+      ch3_fin_3: {
+        id: 'ch3_fin_3',
+        speaker: 'damar',
+        emotion: 'haru',
+        text: 'Iya, Sayang? Kira mau tanya apa sama Ayah?',
+        nextNodeId: 'ch3_fin_4',
+      },
+      ch3_fin_4: {
+        id: 'ch3_fin_4',
+        speaker: 'kira',
+        emotion: 'haru',
+        text: 'Ayah senang nggak sih jadi Ayahnya Kira? Soalnya belakangan Ayah jarang ketawa kayak di foto lama yang Bunda simpan...',
+        nextNodeId: 'ch3_fin_5',
+      },
+      ch3_fin_5: {
+        id: 'ch3_fin_5',
+        speaker: 'damar_batin',
+        emotion: 'haru',
+        text: 'Seluruh pertahananku runtuh seketika. Enam tahun usianya, dan ia menangkap kesedihan yang bahkan aku sembunyikan dari diriku sendiri.',
+        nextNodeId: 'ch3_fin_6',
+      },
+      ch3_fin_6: {
+        id: 'ch3_fin_6',
+        speaker: 'damar',
+        emotion: 'haru',
+        text: 'Sini, Nak... Peluk Ayah sebentar. Jadi Ayahnya Kira itu hal terbaik yang pernah terjadi di hidup Ayah. Maafin Ayah ya, belakangan Ayah terlalu sibuk mikirin hal-hal rumit sampai lupa ketawa bareng Kira.',
+        nextNodeId: 'ch3_fin_7',
+      },
+      ch3_fin_7: {
+        id: 'ch3_fin_7',
+        speaker: 'kira',
+        emotion: 'ceria',
+        text: 'Hehe, hangat... Besok pagi Ayah ajarin Kira naik sepeda tanpa roda bantu ya? Kira bobo dulu biar cepet besok! Selamat malam, Ayah... Bunda...',
+        nextNodeId: 'ch3_fin_8',
+      },
+      ch3_fin_8: {
+        id: 'ch3_fin_8',
+        speaker: 'nadia',
+        emotion: 'haru',
+        text: 'Kira sudah masuk kamar... Mas, lihat mataku. Tolong jangan pakai topeng "aku baik-baik saja" lagi malam ini. Sebenarnya apa yang sedang kamu lawan di dalam kepalamu?',
+        nextNodeId: 'ch3_fin_9',
+      },
+      ch3_fin_9: {
+        id: 'ch3_fin_9',
+        speaker: 'damar_batin',
+        emotion: 'haru',
+        text: 'Lampu ruang makan memantul lembut di mata Nadia. Ini saatnya menentukan arah hidupku—apakah aku akhirnya berani pulang sepenuhnya, atau terus bersembunyi di balik kesibukan.',
+        choices: [
+          {
+            id: 'ch3_fin_c_open',
+            text: 'Ceritakan semuanya dengan jujur: rasa takut gagal, rindu pada musik, dan keinginan membangun hidup yang seimbang bersamanya.',
+            subtext: 'Membuka hati seutuhnya di depan Nadia',
+            nextNodeId: 'ch3_fin_open_1',
+            effects: {
+              kejujuranDiri: 4,
+              kehadiranKeluarga: 4,
+              setFlags: ['ch3_chose_honest_home'],
+            },
+          },
+          {
+            id: 'ch3_fin_c_balance',
+            text: 'Minta maaf dengan tulus dan ajak Nadia menata ulang batas antara pekerjaan dan waktu keluarga mulai besok.',
+            subtext: 'Memilih keseimbangan dan perbaikan pelan-pelan',
+            nextNodeId: 'ch3_fin_balance_1',
+            effects: {
+              kejujuranDiri: 2,
+              kehadiranKeluarga: 3,
+              setFlags: ['ch3_chose_balance'],
+            },
+          },
+          {
+            id: 'ch3_fin_c_escape',
+            text: '"Nad, aku bakal ambil penuh Proyek Kartika dua bulan ini. Tahan sedikit lagi ya—setelah naik jabatan, semuanya pasti membaik."',
+            subtext: 'Terus lari ke dalam pekerjaan dan menunda kebahagiaan',
+            nextNodeId: 'ch3_fin_escape_1',
+            effects: {
+              ambisiPelarian: 5,
+              setFlags: ['ch3_chose_escape_work'],
+            },
+          },
+        ],
+      },
+      ch3_fin_open_1: {
+        id: 'ch3_fin_open_1',
+        speaker: 'damar',
+        emotion: 'haru',
+        text: 'Nad... aku takut banget nggak cukup buat kamu dan Kira. Saking takutnya, aku sampai lupa siapa aku, lupa gitar yang dulu bikin aku bernapas, dan malah bikin rumah kita terasa sepi. Aku nggak mau lagi pura-pura kuat sendirian. Ajak aku pulang lagi, ya?',
+        nextNodeId: 'ch3_fin_open_2',
+      },
+      ch3_fin_open_2: {
+        id: 'ch3_fin_open_2',
+        speaker: 'nadia',
+        emotion: 'haru',
+        text: 'Bodoh banget kamu, Mas... Aku tahu kok kamu dulu jual gitarmu diam-diam waktu aku melahirkan Kira. Aku nggak pernah lupa. Kita nggak perlu jadi kaya raya untuk bahagia—kita cuma perlu saling pulang. Selamat datang di rumah, Damar.',
+        onEnd: {
+          playSfx: 'guitar',
+          triggerEnding: true,
+        },
+      },
+      ch3_fin_balance_1: {
+        id: 'ch3_fin_balance_1',
+        speaker: 'damar',
+        emotion: 'hangat',
+        text: 'Maafin aku, Nad. Aku memang capek dan sempat kehilangan arah. Besok aku bicara sama Pak Hendra supaya jam kerjaku nggak lagi memakan seluruh waktu kita. Mulai minggu ini, meja makan ini nggak boleh dingin lagi.',
+        nextNodeId: 'ch3_fin_balance_2',
+      },
+      ch3_fin_balance_2: {
+        id: 'ch3_fin_balance_2',
+        speaker: 'nadia',
+        emotion: 'hangat',
+        text: 'Makasih sudah mau berhenti sejenak dan dengerin aku, Mas. Pelan-pelan ya... kita jalani bareng lagi, kayak dulu.',
+        onEnd: {
+          playSfx: 'chime',
+          triggerEnding: true,
+        },
+      },
+      ch3_fin_escape_1: {
+        id: 'ch3_fin_escape_1',
+        speaker: 'nadia',
+        emotion: 'sedih',
+        text: '...Dua bulan lagi, Mas? Tahun lalu kamu juga bilang tiga bulan lagi. Aku mengerti. Makanlah dulu sebelum dingin. Aku mau tidur menemani Kira.',
+        nextNodeId: 'ch3_fin_escape_2',
+      },
+      ch3_fin_escape_2: {
+        id: 'ch3_fin_escape_2',
+        speaker: 'damar_batin',
+        emotion: 'sedih',
+        text: 'Kursi di depanku kembali kosong. Hanya detak jam dinding yang mengisi ruang makan, sementara ponselku menyala lagi menampilkan pesan email baru dari kantor.',
+        onEnd: {
+          playSfx: 'phone',
+          triggerEnding: true,
+        },
+      },
+    },
+  },
+};
