@@ -50,6 +50,27 @@ export const PlayerController: React.FC = () => {
       return false;
     };
 
+    const dismountScooter = () => {
+      const st = useGameStore.getState();
+      if (!st.isRidingScooter) return;
+      const sc = playerRuntime.scooter;
+      sc.isRiding = false;
+      sc.speed = 0;
+      sc.roll = 0;
+      sc.steer = 0;
+      sc.isBraking = false;
+      sfxEngine.setScooterEngine(false, 0);
+      sfxEngine.play('switch');
+
+      // Turunkan Damar di sisi kiri skuter secara aman (anti tembus tembok)
+      const sideX = sc.pos[0] + Math.cos(sc.yaw) * 1.15;
+      const sideZ = sc.pos[2] - Math.sin(sc.yaw) * 1.15;
+      const safePos = resolvePlayerMovement(sc.pos[0], sc.pos[1], sc.pos[2], sideX, sideZ, false);
+      playerRuntime.position = safePos;
+      st.setRidingScooter(false);
+      st.showToast('Motor skuter diparkir rapi.');
+    };
+
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       const code = e.code;
@@ -57,6 +78,46 @@ export const PlayerController: React.FC = () => {
 
       const state = useGameStore.getState();
       if (state.screen !== 'playing') return;
+
+      // Tutup overlay dengan Escape
+      if (code === 'Escape') {
+        if (state.isGuitarOpen) {
+          state.setGuitarOpen(false);
+        } else if (state.isPhoneOpen) {
+          state.closePhone();
+        } else if (state.isPhotoMode) {
+          state.setPhotoMode(false);
+        } else if (state.isQuickGraphicsOpen) {
+          state.setQuickGraphicsOpen(false);
+        } else if (state.isMapJournalOpen) {
+          state.closeMapJournal();
+        } else if (state.isSitting) {
+          standUpIfSitting();
+        } else if (!state.activeDialogue) {
+          state.setPauseOpen(!state.isPauseOpen);
+        }
+        return;
+      }
+
+      if (state.isGuitarOpen) return;
+
+      // Saat mengendarai motor skuter
+      if (state.isRidingScooter) {
+        if (code === 'KeyE') {
+          e.preventDefault();
+          dismountScooter();
+        } else if (code === 'Space') {
+          e.preventDefault();
+          sfxEngine.playScooterHorn();
+        } else if (code === 'KeyM' || code === 'Tab') {
+          e.preventDefault();
+          state.toggleMapJournal('map');
+        } else if (code === 'KeyP') {
+          e.preventDefault();
+          state.setPhotoMode(!state.isPhotoMode);
+        }
+        return;
+      }
 
       // Ponsel Damar [H]
       if (
@@ -91,26 +152,8 @@ export const PlayerController: React.FC = () => {
         return;
       }
 
-      if (code === 'Escape') {
-        if (state.isPhoneOpen) {
-          state.closePhone();
-        } else if (state.isPhotoMode) {
-          state.setPhotoMode(false);
-        } else if (state.isQuickGraphicsOpen) {
-          state.setQuickGraphicsOpen(false);
-        } else if (state.isMapJournalOpen) {
-          state.closeMapJournal();
-        } else if (state.isSitting) {
-          standUpIfSitting();
-        } else if (!state.activeDialogue) {
-          state.setPauseOpen(!state.isPauseOpen);
-        }
-        return;
-      }
-
       if (state.isPhotoMode || state.isPhoneOpen) return;
 
-      // Jika sedang duduk di bangku, tombol gerak / E / Spasi membuat Damar berdiri
       if (state.isSitting) {
         if (
           code === 'KeyE' ||
@@ -174,7 +217,8 @@ export const PlayerController: React.FC = () => {
         state.isMapJournalOpen ||
         state.isPauseOpen ||
         state.isQuickGraphicsOpen ||
-        state.isPhoneOpen
+        state.isPhoneOpen ||
+        state.isGuitarOpen
       )
         return;
       isDraggingRef.current = true;
@@ -193,7 +237,8 @@ export const PlayerController: React.FC = () => {
         state.isMapJournalOpen ||
         state.isPauseOpen ||
         state.isQuickGraphicsOpen ||
-        state.isPhoneOpen
+        state.isPhoneOpen ||
+        state.isGuitarOpen
       )
         return;
 
@@ -226,7 +271,9 @@ export const PlayerController: React.FC = () => {
         state.isMapJournalOpen ||
         state.isPauseOpen ||
         state.isQuickGraphicsOpen ||
-        state.isPhotoMode
+        state.isPhotoMode ||
+        state.isPhoneOpen ||
+        state.isGuitarOpen
       )
         return;
       if (!document.pointerLockElement && dom.requestPointerLock) {
@@ -241,7 +288,9 @@ export const PlayerController: React.FC = () => {
         state.activeDialogue ||
         state.isMapJournalOpen ||
         state.isPauseOpen ||
-        state.isQuickGraphicsOpen
+        state.isQuickGraphicsOpen ||
+        state.isPhoneOpen ||
+        state.isGuitarOpen
       )
         return;
       zoomRef.current = THREE.MathUtils.clamp(zoomRef.current + e.deltaY * 0.0038, 2.8, 12.0);
@@ -262,6 +311,7 @@ export const PlayerController: React.FC = () => {
     dom.addEventListener('wheel', onWheel, { passive: true });
 
     return () => {
+      sfxEngine.setScooterEngine(false, 0);
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
       window.removeEventListener('mouseup', onMouseUp);
@@ -298,7 +348,143 @@ export const PlayerController: React.FC = () => {
       return;
     }
 
-    // === MODE DUDUK REFLEKTIF DI BANGKU ===
+    // === 1. MODE MENGENDARAI MOTOR SKUTER DAMAR ===
+    if (store.isRidingScooter && playerRuntime.scooter.isRiding) {
+      const sc = playerRuntime.scooter;
+      const keys = keysRef.current;
+      const canDrive =
+        store.screen === 'playing' &&
+        !store.isMapJournalOpen &&
+        !store.isPauseOpen &&
+        !store.isQuickGraphicsOpen &&
+        !store.isPhotoMode;
+
+      const gas = canDrive && (keys['KeyW'] || keys['ArrowUp']) ? 1 : 0;
+      const brake = canDrive && (keys['KeyS'] || keys['ArrowDown']) ? 1 : 0;
+      const steerIn =
+        canDrive
+          ? (keys['KeyA'] || keys['ArrowLeft'] ? 1 : 0) - (keys['KeyD'] || keys['ArrowRight'] ? 1 : 0)
+          : 0;
+
+      sc.isBraking = brake > 0;
+      sc.steer = THREE.MathUtils.lerp(sc.steer, steerIn, dt * 8);
+
+      const maxForward = 12.2;
+      const maxReverse = -3.2;
+      if (gas > 0) {
+        sc.speed = Math.min(maxForward, sc.speed + 9.2 * dt);
+      } else if (brake > 0) {
+        if (sc.speed > 0.2) {
+          sc.speed = Math.max(0, sc.speed - 15.5 * dt);
+        } else {
+          sc.speed = Math.max(maxReverse, sc.speed - 5.0 * dt);
+        }
+      } else {
+        // Deselerasi alami
+        sc.speed *= Math.max(0, 1 - 2.6 * dt);
+        if (Math.abs(sc.speed) < 0.08) sc.speed = 0;
+      }
+
+      if (Math.abs(sc.speed) > 0.15) {
+        const turnSign = sc.speed >= 0 ? 1 : -1;
+        const turnSpeed = Math.min(1, Math.abs(sc.speed) / 4.0) * 2.15;
+        sc.yaw += sc.steer * turnSpeed * turnSign * dt;
+      }
+      sc.roll = -sc.steer * Math.min(0.24, Math.abs(sc.speed) * 0.025);
+
+      const dx = Math.sin(sc.yaw) * sc.speed * dt;
+      const dz = Math.cos(sc.yaw) * sc.speed * dt;
+      const [nx, ny, nz] = resolvePlayerMovement(
+        sc.pos[0],
+        sc.pos[1],
+        sc.pos[2],
+        sc.pos[0] + dx,
+        sc.pos[2] + dz,
+        true,
+      );
+
+      // Jika menabrak objek solid, kurangi kecepatan seketika agar terasa padat & realistis
+      const actualMove = Math.hypot(nx - sc.pos[0], nz - sc.pos[2]);
+      const expectedMove = Math.abs(sc.speed * dt);
+      if (expectedMove > 0.02 && actualMove < expectedMove * 0.35) {
+        sc.speed *= 0.2;
+      }
+
+      sc.pos = [nx, ny + 0.04, nz];
+      sc.wheelAngle += (sc.speed * dt) / 0.26;
+      playerRuntime.position = [nx, ny + 0.04, nz];
+      playerRuntime.rotationY = sc.yaw;
+      playerRuntime.moveSpeed = Math.abs(sc.speed);
+
+      sfxEngine.setScooterEngine(canDrive, Math.abs(sc.speed) / maxForward);
+
+      // Posisi Damar duduk gagah di atas jok skuter
+      if (groupRef.current) {
+        const seatBackX = nx - Math.sin(sc.yaw) * 0.28;
+        const seatBackZ = nz - Math.cos(sc.yaw) * 0.28;
+        groupRef.current.position.set(seatBackX, ny + 0.28, seatBackZ);
+        groupRef.current.rotation.y = sc.yaw;
+        groupRef.current.rotation.z = sc.roll * 0.65;
+      }
+      if (leftLegRef.current) leftLegRef.current.rotation.x = -1.1;
+      if (rightLegRef.current) rightLegRef.current.rotation.x = -1.1;
+      if (leftArmRef.current) {
+        leftArmRef.current.rotation.x = -1.12;
+        leftArmRef.current.rotation.z = 0.08;
+      }
+      if (rightArmRef.current) {
+        rightArmRef.current.rotation.x = -1.12;
+        rightArmRef.current.rotation.z = -0.08;
+      }
+      if (torsoRef.current) torsoRef.current.rotation.x = 0.14;
+      if (headRef.current) headRef.current.rotation.y = sc.steer * 0.32;
+
+      // Kamera mengikuti lembut di belakang skuter (bisa tetap digeser mouse)
+      if (!isDraggingRef.current && Math.abs(sc.speed) > 1.2) {
+        const targetCamYaw = sc.yaw + Math.PI;
+        let diff = targetCamYaw - playerRuntime.cameraYaw;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        playerRuntime.cameraYaw += diff * Math.min(1, dt * 2.6);
+      }
+
+      const dist = Math.max(5.8, zoomRef.current + 1.0);
+      const pitch = Math.max(0.18, playerRuntime.cameraPitch);
+      const yaw = playerRuntime.cameraYaw;
+      camDesiredVec.current.set(
+        nx + Math.sin(yaw) * Math.cos(pitch) * dist,
+        ny + Math.sin(pitch) * dist + 2.15,
+        nz + Math.cos(yaw) * Math.cos(pitch) * dist,
+      );
+      camera.position.lerp(camDesiredVec.current, Math.min(1, dt * 8));
+      lookTargetVec.current.set(nx, ny + 1.45, nz);
+      camera.lookAt(lookTargetVec.current);
+
+      locCheckTimerRef.current += dt;
+      if (locCheckTimerRef.current > 0.35) {
+        locCheckTimerRef.current = 0;
+        const loc = getLocationAtPosition(playerRuntime.position);
+        if (loc.id !== store.currentLocation) {
+          store.setCurrentLocation(loc.id);
+          musicEngine.setContext(loc.musicMood, store.timeOfDay);
+        }
+        if (store.customWaypoint) {
+          const [wx, , wz] = store.customWaypoint.position;
+          if (Math.hypot(nx - wx, nz - wz) < 6.0) {
+            sfxEngine.play('chime');
+            store.showToast(`Tiba di tujuan penanda: ${store.customWaypoint.label}`);
+            store.setCustomWaypoint(null);
+          }
+        }
+      }
+      return;
+    }
+
+    if (groupRef.current) {
+      groupRef.current.rotation.z = THREE.MathUtils.lerp(groupRef.current.rotation.z, 0, dt * 10);
+    }
+
+    // === 2. MODE DUDUK REFLEKTIF DI BANGKU / MEJA KOPI ===
     if (store.isSitting && playerRuntime.sitState) {
       const sit = playerRuntime.sitState;
       playerRuntime.position = [...sit.seatPos];
@@ -310,9 +496,8 @@ export const PlayerController: React.FC = () => {
       if (leftLegRef.current) leftLegRef.current.rotation.x = -1.35;
       if (rightLegRef.current) rightLegRef.current.rotation.x = -1.35;
       if (leftArmRef.current) leftArmRef.current.rotation.x = -0.35;
-      if (rightArmRef.current) rightArmRef.current.rotation.x = -0.35;
+      if (rightArmRef.current) rightArmRef.current.rotation.x = sit.holdingCoffee ? -0.82 : -0.35;
 
-      // Kamera tenang memandang danau / cakrawala kota
       const dx = sit.lookAt[0] - sit.seatPos[0];
       const dz = sit.lookAt[2] - sit.seatPos[2];
       const len = Math.max(1, Math.hypot(dx, dz));
@@ -327,6 +512,7 @@ export const PlayerController: React.FC = () => {
       return;
     }
 
+    // === 3. MODE JALAN KAKI NORMAL ===
     const canControl =
       store.screen === 'playing' &&
       !store.activeDialogue &&
@@ -334,7 +520,8 @@ export const PlayerController: React.FC = () => {
       !store.isPauseOpen &&
       !store.isQuickGraphicsOpen &&
       !store.isPhotoMode &&
-      !store.isPhoneOpen;
+      !store.isPhoneOpen &&
+      !store.isGuitarOpen;
 
     let moveX = 0;
     let moveZ = 0;
@@ -383,6 +570,7 @@ export const PlayerController: React.FC = () => {
       curZ,
       curX + velocityRef.current.x * dt,
       curZ + velocityRef.current.z * dt,
+      false,
     );
     playerRuntime.position = [rx, ry, rz];
 
@@ -448,6 +636,7 @@ export const PlayerController: React.FC = () => {
         } else {
           leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, -swing * 0.72, dt * 12);
           rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, swing * 0.72, dt * 12);
+          leftArmRef.current.rotation.z = THREE.MathUtils.lerp(leftArmRef.current.rotation.z, 0, dt * 10);
           rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, 0, dt * 10);
         }
       }
@@ -474,7 +663,6 @@ export const PlayerController: React.FC = () => {
       }
     }
 
-    // === KAMERA ANTI-TEMBUS DINDING + DIALOG SINEMATIK ===
     const [px, py, pz] = playerRuntime.position;
 
     if (store.activeDialogue && playerRuntime.activeSpeakerPos) {
@@ -504,7 +692,6 @@ export const PlayerController: React.FC = () => {
       const pitch = playerRuntime.cameraPitch;
       const yaw = playerRuntime.cameraYaw;
 
-      // Uji jarak kamera terhadap dinding gedung solid agar kamera tidak menembus tembok
       if (py < 14) {
         const dirX = Math.sin(yaw) * Math.cos(pitch);
         const dirZ = Math.cos(yaw) * Math.cos(pitch);
@@ -542,7 +729,6 @@ export const PlayerController: React.FC = () => {
       camera.lookAt(lookTargetVec.current);
     }
 
-    // Cek perubahan lokasi & kedatangan di Custom GPS Waypoint
     locCheckTimerRef.current += dt;
     if (locCheckTimerRef.current > 0.35) {
       locCheckTimerRef.current = 0;

@@ -369,6 +369,8 @@ export const WorldInteractables: React.FC = () => {
       store.isQuickGraphicsOpen ||
       store.isPhotoMode ||
       store.isPhoneOpen ||
+      store.isGuitarOpen ||
+      store.isRidingScooter ||
       store.isSitting
     ) {
       playerRuntime.nearestInteractable = null;
@@ -386,6 +388,118 @@ export const WorldInteractables: React.FC = () => {
         best = { ...target, distance: dist };
       }
     };
+
+    // === 1. NAIK MOTOR SKUTER DAMAR (di mana pun terparkir) ===
+    consider(
+      {
+        id: 'ride_scooter',
+        kind: 'portal',
+        label: 'Naik Motor Skuter Damar',
+        sublabel: 'WASD Kendarai · Spasi Klakson · E Parkir',
+        position: playerRuntime.scooter.pos,
+        onInteract: () => {
+          sfxEngine.play('switch');
+          playerRuntime.scooter.isRiding = true;
+          playerRuntime.scooter.speed = 0;
+          store.setRidingScooter(true);
+          store.showToast('Naik motor skuter! Gunakan WASD untuk melaju, Spasi klakson, E untuk parkir.');
+        },
+      },
+      2.6,
+    );
+
+    // === 2. MINI-AKTIVITAS 1: PETIK GITAR AKUSTIK DI KEDAI KOPI BIMA ===
+    consider(
+      {
+        id: 'activity_guitar',
+        kind: 'story_object',
+        label: 'Petik Gitar Akustik ("Lagu Pulang")',
+        sublabel: 'Mini-Aktivitas · Kedai Kopi Sudut',
+        position: [-15.2, 0.08, 25.5],
+        onInteract: () => {
+          sfxEngine.playGuitarChord(0);
+          store.setGuitarOpen(true);
+        },
+      },
+      2.8,
+    );
+
+    // === 3. MINI-AKTIVITAS 2: MINUM KOPI HANGAT DI TERAS KAFE ===
+    consider(
+      {
+        id: 'activity_coffee',
+        kind: 'story_object',
+        label: 'Duduk & Nikmati Kopi Hangat',
+        sublabel: 'Mini-Aktivitas · Kedai Kopi Sudut',
+        position: [-25.0, 0.08, 17.8],
+        onInteract: () => {
+          sfxEngine.play('coffee');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Kedai Kopi Sudut',
+            seatPos: [-25.0, 0.16, 18.45],
+            lookAt: [-20.0, 1.4, 21.0],
+            standPos: [-24.0, 0.08, 18.5],
+            seatYaw: Math.PI,
+            holdingCoffee: true,
+          };
+          store.setSitting(true);
+          if (!store.flags.includes('enjoyed_bima_coffee')) {
+            store.applyEffect({ kejujuranDiri: 1, setFlags: ['enjoyed_bima_coffee'] });
+          }
+          store.showToast('"Pahitnya pas... sepuluh menit tenang tanpa lihat jam tangan." (Tekan WASD/E berdiri)');
+        },
+      },
+      2.4,
+    );
+
+    // === 4. MINI-AKTIVITAS 3: BERI MAKAN KUCING ORANYE "SORE" ===
+    consider(
+      {
+        id: 'activity_feed_cat',
+        kind: 'story_object',
+        label: store.catFed ? 'Elus & Beri Camilan Lagi untuk "Sore"' : 'Beri Makan Kucing Oranye "Sore"',
+        sublabel: 'Mini-Aktivitas · Perumahan Melati',
+        position: [10.3, 0, 56.9],
+        onInteract: () => {
+          sfxEngine.play('cat');
+          playerRuntime.catHeartTimer = 4.2;
+          store.markCatFed();
+          store.showToast('Sore makan lahap sambil mendengkur hangat di dekat kakimu!');
+        },
+      },
+      2.3,
+    );
+
+    // === 5. MINI-AKTIVITAS 4: LIPAT & HANYUTKAN PERAHU KERTAS DI DANAU SENJA ===
+    consider(
+      {
+        id: 'activity_paper_boat',
+        kind: 'story_object',
+        label: 'Lipat & Hanyutkan Perahu Kertas di Danau',
+        sublabel: 'Mini-Aktivitas · Dermaga Danau Senja',
+        position: [-76.8, 0.12, -28.0],
+        onInteract: () => {
+          sfxEngine.play('page');
+          if (playerRuntime.paperBoats.length < 6) {
+            playerRuntime.paperBoats.push({
+              id: Date.now(),
+              x: -77.6,
+              z: -28.0 + (Math.random() - 0.5) * 1.4,
+              vx: -0.95 - Math.random() * 0.55,
+              vz: (Math.random() - 0.5) * 0.45,
+              rotY: Math.random() * Math.PI * 2,
+              bornAt: Date.now(),
+            });
+            store.incrementPaperBoats();
+            store.showToast('"Ini buat kamu, Kira... semoga doa kecil kita tidak pernah tenggelam."');
+          } else {
+            store.showToast('Enam perahu kertas sudah mengapung damai di permukaan Danau Senja.');
+          }
+        },
+      },
+      2.5,
+    );
 
     consider(
       {

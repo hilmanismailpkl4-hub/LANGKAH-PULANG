@@ -190,7 +190,6 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'rumah_sofa', minX: -24.95, maxX: -23.5, minZ: 64.1, maxZ: 67.1 },
   { id: 'rumah_fence_l', minX: -27.4, maxX: -22.0, minZ: 53.6, maxZ: 54.4 },
   { id: 'rumah_fence_r', minX: -18.0, maxX: -12.6, minZ: 53.6, maxZ: 54.4 },
-  { id: 'rumah_scooter', minX: -16.0, maxX: -14.4, minZ: 56.6, maxZ: 58.4 },
 
   // === 2. Perumahan Melati ===
   { id: 'house_n1', minX: 10.1, maxX: 20.9, minZ: 65.4, maxZ: 76.6 },
@@ -202,6 +201,7 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'cafe_left', minX: -28.4, maxX: -27.4, minZ: 13.8, maxZ: 27.6 },
   { id: 'cafe_right', minX: -12.8, maxX: -12.0, minZ: 13.8, maxZ: 27.6 },
   { id: 'cafe_counter', minX: -24.6, maxX: -17.4, minZ: 21.8, maxZ: 23.4 },
+  { id: 'cafe_coffee_table', minX: -25.7, maxX: -24.3, minZ: 16.8, maxZ: 18.2 },
 
   // === 4. Kios 24 Jam Harmoni + Meja Teras ===
   { id: 'kios_body', minX: 17.4, maxX: 31.6, minZ: 17.4, maxZ: 28.6 },
@@ -331,8 +331,9 @@ export function resolvePlayerMovement(
   currentZ: number,
   nextX: number,
   nextZ: number,
+  isScooter = false,
 ): [number, number, number] {
-  const radius = 0.45;
+  const radius = isScooter ? 0.68 : 0.45;
 
   // === FISIKA SOLID ROOFTOP (Y = 22) ===
   if (currentY > 14) {
@@ -397,6 +398,18 @@ export function resolvePlayerMovement(
       if (Math.hypot(px - walker.x, pz - walker.z) < radius + walker.radius) {
         return true;
       }
+    }
+    // Saat tidak mengendarai skuter, skuter yang terparkir tetap solid 100%!
+    if (!isScooter) {
+      const [sx, , sz] = playerRuntime.scooter.pos;
+      if (Math.hypot(px - sx, pz - sz) < radius + 0.62) {
+        return true;
+      }
+    } else {
+      // Skuter tidak boleh masuk ke dalam interior rumah Damar / Kedai Bima / dermaga kayu
+      if (px > -27.5 && px < -12.5 && pz > 61.2 && pz < 74.8) return true;
+      if (px > -28.5 && px < -11.8 && pz > 13.5 && pz < 27.8) return true;
+      if (px > -78.0 && px < -68.0 && pz > -31.0 && pz < -25.0) return true;
     }
     return false;
   };

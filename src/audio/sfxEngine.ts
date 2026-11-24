@@ -4,9 +4,96 @@ import { getAudioContext } from './audioContext';
 class SfxEngine {
   private volume = 0.72;
   private noiseBuffer: AudioBuffer | null = null;
+  private scooterOsc: OscillatorNode | null = null;
+  private scooterGain: GainNode | null = null;
 
   public setVolume(v: number) {
     this.volume = Math.max(0, Math.min(1, v));
+  }
+
+  /**
+   * Suara mesin motor matic lembut (frekuensi naik halus mengikuti kecepatan berkendara).
+   */
+  public setScooterEngine(active: boolean, speedRatio = 0) {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+
+    if (!active || this.volume <= 0.01) {
+      if (this.scooterGain) {
+        this.scooterGain.gain.setTargetAtTime(0.0001, now, 0.12);
+      }
+      return;
+    }
+
+    if (!this.scooterOsc || !this.scooterGain) {
+      const osc = ctx.createOscillator();
+      const filter = ctx.createBiquadFilter();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = 54;
+      filter.type = 'lowpass';
+      filter.frequency.value = 185;
+      gain.gain.value = 0.0001;
+      osc.connect(filter).connect(gain).connect(ctx.destination);
+      osc.start();
+      this.scooterOsc = osc;
+      this.scooterGain = gain;
+    }
+
+    const clamped = Math.max(0, Math.min(1, speedRatio));
+    const targetFreq = 52 + clamped * 68;
+    const targetGain = (0.045 + clamped * 0.04) * this.volume;
+    this.scooterOsc.frequency.setTargetAtTime(targetFreq, now, 0.08);
+    this.scooterGain.gain.setTargetAtTime(targetGain, now, 0.1);
+  }
+
+  /**
+   * Klakson motor skuter khas Indonesia ("tin-tin!" lembut & sopan).
+   */
+  public playScooterHorn() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+    [0, 0.13].forEach((offset) => {
+      const osc = ctx.createOscillator();
+      const filter = ctx.createBiquadFilter();
+      const g = ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(520, now + offset);
+      filter.type = 'lowpass';
+      filter.frequency.value = 1400;
+      g.gain.setValueAtTime(0.001, now + offset);
+      g.gain.linearRampToValueAtTime(0.055 * v, now + offset + 0.015);
+      g.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.1);
+      osc.connect(filter).connect(g).connect(ctx.destination);
+      osc.start(now + offset);
+      osc.stop(now + offset + 0.12);
+    });
+  }
+
+  /**
+   * Memetik 6 akor gitar akustik hangat untuk mini-game gitar di Kedai Kopi Bima.
+   */
+  public playGuitarChord(chordIdx: number) {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const chords: number[][] = [
+      [146.83, 220.0, 293.66, 369.99, 440.0, 554.37], // 0: Dmaj7
+      [123.47, 185.0, 246.94, 293.66, 369.99, 440.0], // 1: Bm7
+      [98.0, 196.0, 246.94, 293.66, 369.99, 493.88], // 2: Gmaj7
+      [110.0, 220.0, 277.18, 329.63, 369.99, 440.0], // 3: A6
+      [82.41, 164.81, 246.94, 293.66, 329.63, 392.0], // 4: Em7
+      [146.83, 220.0, 293.66, 329.63, 369.99, 587.33], // 5: Dadd9
+    ];
+    const notes = chords[chordIdx % chords.length];
+    const now = ctx.currentTime;
+    notes.forEach((freq, i) => {
+      this.pluckedNote(ctx, freq, now + i * 0.042, 2.3, 0.08 * this.volume);
+    });
   }
 
   private getNoiseBuffer(ctx: AudioContext): AudioBuffer {

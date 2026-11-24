@@ -8,6 +8,7 @@ import { CityGeometry } from './CityGeometry';
 import { CityLife } from './CityLife';
 import { PlayerController } from './PlayerController';
 import { PostEffects } from './PostEffects';
+import { ScooterEntity } from './ScooterEntity';
 import { WaypointBeacon } from './WaypointBeacon';
 import { WorldInteractables } from './WorldInteractables';
 
@@ -45,6 +46,7 @@ export const GameCanvas: React.FC = () => {
           />
           <CityDetails timeOfDay={effectiveTime} settings={settings} />
           <CityLife timeOfDay={effectiveTime} settings={settings} />
+          <ScooterEntity timeOfDay={effectiveTime} settings={settings} />
           <PlayerController />
           <WorldInteractables />
           <WaypointBeacon />

@@ -24,15 +24,30 @@ export interface SitSpotState {
   lookAt: [number, number, number];
   standPos: [number, number, number];
   seatYaw: number;
+  holdingCoffee?: boolean;
 }
 
-/**
- * Siklus lampu lalu lintas terpadu (dipakai bersama oleh tiang lampu lalu lintas & AI mobil):
- * 0..7.5s = Utara-Selatan HIJAU (Timur-Barat MERAH)
- * 7.5..9.5s = KUNING transisi
- * 9.5..17s = Timur-Barat HIJAU (Utara-Selatan MERAH)
- * 17..19s = KUNING transisi
- */
+export interface ScooterRuntimeState {
+  pos: [number, number, number];
+  yaw: number;
+  speed: number;
+  steer: number;
+  roll: number;
+  wheelAngle: number;
+  isRiding: boolean;
+  isBraking: boolean;
+}
+
+export interface FloatingPaperBoat {
+  id: number;
+  x: number;
+  z: number;
+  vx: number;
+  vz: number;
+  rotY: number;
+  bornAt: number;
+}
+
 export function getTrafficSignalState(elapsedSec: number): {
   ns: 'green' | 'yellow' | 'red';
   ew: 'green' | 'yellow' | 'red';
@@ -44,9 +59,6 @@ export function getTrafficSignalState(elapsedSec: number): {
   return { ns: 'red', ew: 'yellow' };
 }
 
-/**
- * Runtime mutable state 60 FPS untuk fisika solid, mobil, pejalan kaki, duduk reflektif, dan mini-map.
- */
 export const playerRuntime = {
   position: [-19.5, 0.08, 67.5] as [number, number, number],
   rotationY: Math.PI,
@@ -64,6 +76,22 @@ export const playerRuntime = {
   npcColliders: [] as DynamicCircleObstacle[],
   walkerColliders: [] as DynamicCircleObstacle[],
   sitState: null as SitSpotState | null,
+
+  // Skuter Damar (berawal parkir rapi di halaman depan rumah)
+  scooter: {
+    pos: [-15.2, 0.04, 57.5] as [number, number, number],
+    yaw: -0.45,
+    speed: 0,
+    steer: 0,
+    roll: 0,
+    wheelAngle: 0,
+    isRiding: false,
+    isBraking: false,
+  } as ScooterRuntimeState,
+
+  // Aktivitas santai: perahu kertas di danau & reaksi kucing Sore
+  paperBoats: [] as FloatingPaperBoat[],
+  catHeartTimer: 0,
 };
 
 export function setRuntimePosition(pos: [number, number, number], rot?: number) {
@@ -73,5 +101,22 @@ export function setRuntimePosition(pos: [number, number, number], rot?: number) 
     playerRuntime.cameraYaw = rot;
   }
   playerRuntime.sitState = null;
+  playerRuntime.scooter.isRiding = false;
+  playerRuntime.scooter.speed = 0;
   playerRuntime.teleportPending = { pos: [pos[0], pos[1], pos[2]], rot };
+}
+
+export function resetScooterToHome() {
+  playerRuntime.scooter = {
+    pos: [-15.2, 0.04, 57.5],
+    yaw: -0.45,
+    speed: 0,
+    steer: 0,
+    roll: 0,
+    wheelAngle: 0,
+    isRiding: false,
+    isBraking: false,
+  };
+  playerRuntime.paperBoats = [];
+  playerRuntime.catHeartTimer = 0;
 }

@@ -670,25 +670,6 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
           <boxGeometry args={[5.2, 1.15, 0.28]} />
           <meshStandardMaterial map={textures.stucco} />
         </mesh>
-        {/* Motor Skuter Damar di Halaman Depan */}
-        <group position={[-15.2, 0.04, 57.5]} rotation={[0, -0.45, 0]}>
-          <mesh position={[0, 0.34, -0.55]} rotation={[0, 0, Math.PI / 2]} castShadow>
-            <cylinderGeometry args={[0.26, 0.26, 0.14, 14]} />
-            <meshStandardMaterial color="#1f2226" roughness={0.85} />
-          </mesh>
-          <mesh position={[0, 0.34, 0.55]} rotation={[0, 0, Math.PI / 2]} castShadow>
-            <cylinderGeometry args={[0.26, 0.26, 0.14, 14]} />
-            <meshStandardMaterial color="#1f2226" roughness={0.85} />
-          </mesh>
-          <mesh position={[0, 0.68, -0.1]} castShadow>
-            <boxGeometry args={[0.42, 0.45, 1.2]} />
-            <meshStandardMaterial color="#3c5269" metalness={0.35} roughness={0.35} />
-          </mesh>
-          <mesh position={[0, 1.05, 0.42]} rotation={[-0.25, 0, 0]} castShadow>
-            <boxGeometry args={[0.38, 0.55, 0.24]} />
-            <meshStandardMaterial color="#3c5269" metalness={0.35} roughness={0.35} />
-          </mesh>
-        </group>
       </group>
 
       {/* ============================================================ */}

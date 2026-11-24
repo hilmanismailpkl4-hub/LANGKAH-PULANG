@@ -40,7 +40,7 @@ import {
   SideQuestProgress,
   TimeOfDay,
 } from '../types/game';
-import { playerRuntime, setRuntimePosition } from './playerRuntime';
+import { playerRuntime, resetScooterToHome, setRuntimePosition } from './playerRuntime';
 
 interface ToastNotice {
   id: number;
@@ -87,6 +87,10 @@ interface GameStoreState {
   customWaypoint: CustomWaypoint | null;
   isPhotoMode: boolean;
   isSitting: boolean;
+  isRidingScooter: boolean;
+  isGuitarOpen: boolean;
+  catFed: boolean;
+  paperBoatsLaunched: number;
 
   // Smartphone Interaktif Damar ([H])
   isPhoneOpen: boolean;
@@ -108,6 +112,10 @@ interface GameStoreState {
   setCustomWaypoint: (wp: CustomWaypoint | null) => void;
   setPhotoMode: (active: boolean) => void;
   setSitting: (sitting: boolean) => void;
+  setRidingScooter: (riding: boolean) => void;
+  setGuitarOpen: (open: boolean) => void;
+  markCatFed: () => void;
+  incrementPaperBoats: () => void;
   openPhone: (app?: 'home' | 'chat' | 'calls' | 'gallery' | 'radio' | 'notes' | 'weather', threadId?: string) => void;
   closePhone: () => void;
   replyToPhonePrompt: (promptId: string, optionId: string, effects?: DialogueEffect) => void;
@@ -199,6 +207,10 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     customWaypoint: null,
     isPhotoMode: false,
     isSitting: false,
+    isRidingScooter: false,
+    isGuitarOpen: false,
+    catFed: false,
+    paperBoatsLaunched: 0,
 
     isPhoneOpen: false,
     phoneApp: 'home',
@@ -250,6 +262,40 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     },
 
     setSitting: (sitting) => set({ isSitting: sitting }),
+
+    setRidingScooter: (riding) => {
+      if (!riding) {
+        sfxEngine.setScooterEngine(false, 0);
+      }
+      set({ isRidingScooter: riding });
+    },
+
+    setGuitarOpen: (open) => {
+      if (open && document.pointerLockElement) document.exitPointerLock();
+      set({
+        isGuitarOpen: open,
+        isMapJournalOpen: false,
+        isPauseOpen: false,
+        isPhoneOpen: false,
+        isQuickGraphicsOpen: false,
+      });
+    },
+
+    markCatFed: () => {
+      const already = get().catFed;
+      set({ catFed: true });
+      if (!already) {
+        get().applyEffect({ kehadiranKeluarga: 1, setFlags: ['fed_cat_sore'] });
+      }
+    },
+
+    incrementPaperBoats: () => {
+      const prev = get().paperBoatsLaunched;
+      set({ paperBoatsLaunched: prev + 1 });
+      if (prev === 0) {
+        get().applyEffect({ kehadiranKeluarga: 1, setFlags: ['launched_paper_boat'] });
+      }
+    },
 
     openPhone: (app, threadId) => {
       const s = get();
@@ -347,6 +393,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     startNewSlot: async (slotId, journalName) => {
       const fresh = createFreshSaveSlot(slotId, journalName);
       await saveSlotData(fresh);
+      resetScooterToHome();
       setRuntimePosition(fresh.playerPosition, fresh.playerRotation);
       musicEngine.start();
       musicEngine.setContext('home', 'morning');
@@ -389,6 +436,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     loadSlot: (slotId) => {
       const slot = get().slots[slotId];
       if (!slot) return;
+      resetScooterToHome();
       setRuntimePosition(slot.playerPosition, slot.playerRotation);
       const loc = getLocationAtPosition(slot.playerPosition);
       musicEngine.start();

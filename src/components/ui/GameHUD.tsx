@@ -18,6 +18,9 @@ interface MiniMapState {
   px: number;
   pz: number;
   headingDeg: number;
+  scooterX: number;
+  scooterZ: number;
+  scooterKmh: number;
   cars: { x: number; z: number }[];
   npcs: { x: number; z: number }[];
 }
@@ -34,6 +37,8 @@ export const GameHUD: React.FC = () => {
   const isQuickGraphicsOpen = useGameStore((s) => s.isQuickGraphicsOpen);
   const isPhotoMode = useGameStore((s) => s.isPhotoMode);
   const isPhoneOpen = useGameStore((s) => s.isPhoneOpen);
+  const isGuitarOpen = useGameStore((s) => s.isGuitarOpen);
+  const isRidingScooter = useGameStore((s) => s.isRidingScooter);
   const isSitting = useGameStore((s) => s.isSitting);
   const repliedPhonePrompts = useGameStore((s) => s.repliedPhonePrompts);
   const openPhone = useGameStore((s) => s.openPhone);
@@ -58,6 +63,9 @@ export const GameHUD: React.FC = () => {
     px: -19.5,
     pz: 67.5,
     headingDeg: 0,
+    scooterX: -15.2,
+    scooterZ: 57.5,
+    scooterKmh: 0,
     cars: [],
     npcs: [],
   });
@@ -106,6 +114,9 @@ export const GameHUD: React.FC = () => {
         px,
         pz,
         headingDeg,
+        scooterX: playerRuntime.scooter.pos[0],
+        scooterZ: playerRuntime.scooter.pos[2],
+        scooterKmh: Math.round(Math.abs(playerRuntime.scooter.speed) * 3.1),
         cars: playerRuntime.dynamicCarBoxes.map((c) => ({ x: c.x, z: c.z })),
         npcs: playerRuntime.npcColliders.map((n) => ({ x: n.x, z: n.z })),
       });
@@ -120,7 +131,8 @@ export const GameHUD: React.FC = () => {
     isPauseOpen ||
     isQuickGraphicsOpen ||
     isPhotoMode ||
-    isPhoneOpen
+    isPhoneOpen ||
+    isGuitarOpen
   ) {
     return null;
   }
@@ -308,6 +320,12 @@ export const GameHUD: React.FC = () => {
                   return <circle key={`mn-${idx}`} cx={p.rx} cy={p.ry} r="2.5" fill="#86efac" />;
                 })}
 
+                {/* Posisi Skuter Terparkir */}
+                {!isRidingScooter && (() => {
+                  const sp = toRadar(miniMap.scooterX, miniMap.scooterZ);
+                  return <rect x={sp.rx - 2.5} y={sp.ry - 2.5} width="5" height="5" rx="1" fill="#a78bfa" stroke="#fff" strokeWidth="0.8" />;
+                })()}
+
                 {/* Penanda Misi Utama */}
                 {showWaypoint && step && (() => {
                   const p = toRadar(step.waypoint[0], step.waypoint[2]);
@@ -344,16 +362,33 @@ export const GameHUD: React.FC = () => {
             <div />
           )}
 
-          {/* Tengah Bawah: Prompt Interaksi [E] atau Status Duduk */}
+          {/* Tengah Bawah: Speedometer Skuter / Prompt Interaksi [E] / Status Duduk */}
           <div className="flex flex-1 flex-col items-center gap-2.5">
-            {isSitting && (
+            {isRidingScooter && (
+              <div className="flex items-center gap-4 rounded-full border border-warm-300/45 bg-dusk-950/88 px-6 py-2.5 shadow-2xl backdrop-blur-md animate-fadeIn">
+                <div className="flex items-baseline gap-1">
+                  <span className="font-serif text-2xl font-semibold text-warm-300">
+                    {miniMap.scooterKmh}
+                  </span>
+                  <span className="text-[10px] uppercase tracking-wider text-warm-200/70">km/j</span>
+                </div>
+                <div className="h-5 w-px bg-warm-100/20" />
+                <span className="text-xs text-warm-100">
+                  <strong className="text-warm-300">WASD</strong> Kendarai ·{' '}
+                  <strong className="text-warm-300">Spasi</strong> Klakson ·{' '}
+                  <strong className="text-warm-300">E</strong> Parkir & Turun
+                </span>
+              </div>
+            )}
+
+            {!isRidingScooter && isSitting && (
               <div className="rounded-full border border-warm-300/40 bg-dusk-950/85 px-5 py-2 text-xs text-warm-100 shadow-xl backdrop-blur-md animate-fadeIn">
-                Damar sedang duduk tenang · Tekan <strong className="text-warm-300">[WASD]</strong> atau{' '}
+                Damar sedang beristirahat tenang · Tekan <strong className="text-warm-300">[WASD]</strong> atau{' '}
                 <strong className="text-warm-300">[E]</strong> untuk berdiri
               </div>
             )}
 
-            {!isSitting && interactPrompt && (
+            {!isRidingScooter && !isSitting && interactPrompt && (
               <div className="pointer-events-auto animate-fadeIn">
                 <button
                   type="button"
