@@ -9,6 +9,7 @@ import {
   CloudRain,
   CloudSun,
   Footprints,
+  Heart,
   Home,
   Image as ImageIcon,
   Map as MapIcon,
@@ -192,6 +193,8 @@ export const SmartphoneModal: React.FC = () => {
   const setFreeTimeOfDay = useGameStore((s) => s.setFreeTimeOfDay);
   const umbrellaForcedOff = useGameStore((s) => s.umbrellaForcedOff);
   const toggleUmbrella = useGameStore((s) => s.toggleUmbrella);
+  const isFamilyWalkActive = useGameStore((s) => s.isFamilyWalkActive);
+  const toggleFamilyWalk = useGameStore((s) => s.toggleFamilyWalk);
 
   const [typingThread, setTypingThread] = useState<string | null>(null);
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
@@ -376,6 +379,28 @@ export const SmartphoneModal: React.FC = () => {
                       <span className="text-warm-300">Bab {chapter}</span>
                     </div>
                   </div>
+
+                  {/* Tombol Cepat Jalan Sore Bersama Nadia & Kira */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      closePhone();
+                      toggleFamilyWalk();
+                    }}
+                    className={`flex w-full items-center justify-between rounded-2xl border px-3.5 py-2.5 text-left text-xs transition ${
+                      isFamilyWalkActive
+                        ? 'border-rose-300/45 bg-rose-500/20 text-rose-100 hover:bg-rose-500/30'
+                        : 'border-white/15 bg-black/30 text-warm-100 hover:border-rose-300/45 hover:bg-rose-500/15'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2 font-medium">
+                      <Heart className={`h-4 w-4 text-rose-300 ${isFamilyWalkActive ? 'fill-rose-300' : ''}`} />
+                      <span>
+                        {isFamilyWalkActive ? 'Antar Nadia & Kira Pulang' : 'Ajak Nadia & Kira Jalan Sore'}
+                      </span>
+                    </span>
+                    <span className="text-[10px] font-semibold text-rose-200/80">[G]</span>
+                  </button>
 
                   {/* Grid 6 Aplikasi Interaktif */}
                   <div className="grid grid-cols-3 gap-3.5 pt-1">

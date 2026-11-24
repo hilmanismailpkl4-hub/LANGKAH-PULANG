@@ -6,6 +6,11 @@ import { voiceManager } from '../audio/voiceManager';
 import { ALL_DIALOGUES } from '../data/dialogues';
 import { EASTER_EGGS } from '../data/easterEggs';
 import { evaluateEnding } from '../data/endings';
+import {
+  CASUAL_FAMILY_BANTERS,
+  EVENT_FAMILY_BANTERS,
+  FamilyBanterLine,
+} from '../data/familyWalkBanter';
 import { RADIO_STATIONS } from '../data/phoneContent';
 import { getLocationAtPosition } from '../data/worldLocations';
 import {
@@ -41,10 +46,16 @@ import {
   SideQuestProgress,
   TimeOfDay,
 } from '../types/game';
-import { playerRuntime, resetScooterToHome, setRuntimePosition } from './playerRuntime';
+import { playerRuntime, resetCompanionsToHome, resetScooterToHome, setRuntimePosition } from './playerRuntime';
 
 interface ToastNotice {
   id: number;
+  text: string;
+}
+
+export interface ActiveFamilyBanter {
+  id: number;
+  speaker: 'nadia' | 'kira' | 'damar';
   text: string;
 }
 
@@ -92,6 +103,8 @@ interface GameStoreState {
   isGuitarOpen: boolean;
   isBagOpen: boolean;
   umbrellaForcedOff: boolean;
+  isFamilyWalkActive: boolean;
+  familyBanter: ActiveFamilyBanter | null;
   catFed: boolean;
   paperBoatsLaunched: number;
 
@@ -120,6 +133,10 @@ interface GameStoreState {
   setBagOpen: (open: boolean) => void;
   toggleUmbrella: () => void;
   setFreeTimeOfDay: (time: TimeOfDay) => void;
+  toggleFamilyWalk: () => void;
+  playFamilyBanter: (lines: FamilyBanterLine[], voiceKey?: string) => void;
+  triggerCasualFamilyChat: () => void;
+  clearFamilyBanter: () => void;
   markCatFed: () => void;
   incrementPaperBoats: () => void;
   openPhone: (app?: 'home' | 'chat' | 'calls' | 'gallery' | 'radio' | 'notes' | 'weather', threadId?: string) => void;
@@ -164,6 +181,13 @@ interface GameStoreState {
 }
 
 let toastCounter = 0;
+let banterTimers: number[] = [];
+let casualBanterCursor = 0;
+
+function clearBanterTimers() {
+  banterTimers.forEach((id) => window.clearTimeout(id));
+  banterTimers = [];
+}
 
 function applyAudioSettings(settings: GameSettings) {
   musicEngine.setVolume(settings.musicVolume);
@@ -218,6 +242,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     isGuitarOpen: false,
     isBagOpen: false,
     umbrellaForcedOff: false,
+    isFamilyWalkActive: false,
+    familyBanter: null,
     catFed: false,
     paperBoatsLaunched: 0,
 
@@ -326,6 +352,97 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         night: 'Malam Tenang',
       };
       get().showToast(`Suasana kota diubah ke: ${labels[time]}`);
+    },
+
+    clearFamilyBanter: () => {
+      clearBanterTimers();
+      set({ familyBanter: null });
+    },
+
+    playFamilyBanter: (lines, voiceKey = 'fw') => {
+      const s = get();
+      if (s.screen !== 'playing' || s.activeDialogue || lines.length === 0) return;
+      clearBanterTimers();
+
+      let delayMs = 0;
+      lines.forEach((line, idx) => {
+        const showTimer = window.setTimeout(() => {
+          const cur = get();
+          if (cur.screen !== 'playing' || cur.activeDialogue) return;
+          set({
+            familyBanter: {
+              id: Date.now() + idx,
+              speaker: line.speaker,
+              text: line.text,
+            },
+          });
+          voiceManager.speak(`${voiceKey}_${idx}`, line.speaker, line.text);
+        }, delayMs);
+        banterTimers.push(showTimer);
+
+        // Estimasi durasi baca natural per baris (3.6 - 5.2 detik)
+        const readDuration = Math.min(5400, Math.max(3600, line.text.length * 52 + 1200));
+        delayMs += readDuration;
+      });
+
+      const endTimer = window.setTimeout(() => {
+        set({ familyBanter: null });
+      }, delayMs + 450);
+      banterTimers.push(endTimer);
+    },
+
+    toggleFamilyWalk: () => {
+      const s = get();
+      if (s.screen !== 'playing' || s.activeDialogue) return;
+      if (s.isRidingScooter) {
+        s.showToast('Parkir motor skuter dulu [E] sebelum mengajak Nadia & Kira jalan santai.');
+        return;
+      }
+
+      const nextActive = !s.isFamilyWalkActive;
+      sfxEngine.play(nextActive ? 'chime' : 'switch');
+
+      if (nextActive) {
+        const [px, py, pz] = playerRuntime.position;
+        const nearHome = py < 5 && Math.hypot(px - -18.5, pz - 66) < 15;
+        if (!nearHome) {
+          // Nadia & Kira menyusul tepat di sisi Damar secara mulus
+          playerRuntime.companions.snapPending = true;
+        }
+        set({ isFamilyWalkActive: true });
+
+        if (!s.flags.includes('first_family_walk')) {
+          s.applyEffect({
+            kehadiranKeluarga: 2,
+            setFlags: ['first_family_walk'],
+            journalEntry: {
+              id: 'je_family_walk',
+              title: 'Jalan Sore Bersama Nadia & Kira',
+              body: 'Hari ini aku mengajak Nadia dan Kira berjalan santai menyusuri sudut-sudut kota. Tidak ada rapat, tidak ada ponsel berdering—hanya langkah kaki kami bertiga yang sejajar.',
+              chapter: s.chapter,
+            },
+          });
+        }
+        s.showToast('Nadia & Kira ikut berjalan bersamamu! Tekan [T] untuk ngobrol santai atau [G] antar pulang.');
+        s.playFamilyBanter(
+          nearHome ? EVENT_FAMILY_BANTERS.walk_start_home : EVENT_FAMILY_BANTERS.walk_start_away,
+          'fw_start',
+        );
+      } else {
+        set({ isFamilyWalkActive: false });
+        resetCompanionsToHome();
+        s.showToast('Nadia & Kira kembali beristirahat di Rumah Jl. Melati No. 14.');
+        s.playFamilyBanter(EVENT_FAMILY_BANTERS.walk_end, 'fw_end');
+      }
+    },
+
+    triggerCasualFamilyChat: () => {
+      const s = get();
+      if (!s.isFamilyWalkActive || s.activeDialogue || s.screen !== 'playing') return;
+      const lines = CASUAL_FAMILY_BANTERS[casualBanterCursor % CASUAL_FAMILY_BANTERS.length];
+      casualBanterCursor += 1;
+      sfxEngine.play('interact');
+      s.playFamilyBanter(lines, `fw_casual_${casualBanterCursor}`);
     },
 
     markCatFed: () => {
@@ -440,7 +557,9 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     startNewSlot: async (slotId, journalName) => {
       const fresh = createFreshSaveSlot(slotId, journalName);
       await saveSlotData(fresh);
+      clearBanterTimers();
       resetScooterToHome();
+      resetCompanionsToHome();
       setRuntimePosition(fresh.playerPosition, fresh.playerRotation);
       musicEngine.start();
       musicEngine.setContext('home', 'morning');
@@ -465,6 +584,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isMapJournalOpen: false,
         isPauseOpen: false,
         isPhoneOpen: false,
+        isFamilyWalkActive: false,
+        familyBanter: null,
         repliedPhonePrompts: {},
         readPhoneThreads: [],
         playerNotes: [
@@ -483,7 +604,9 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     loadSlot: (slotId) => {
       const slot = get().slots[slotId];
       if (!slot) return;
+      clearBanterTimers();
       resetScooterToHome();
+      resetCompanionsToHome();
       setRuntimePosition(slot.playerPosition, slot.playerRotation);
       const loc = getLocationAtPosition(slot.playerPosition);
       musicEngine.start();
@@ -509,6 +632,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isMapJournalOpen: false,
         isPauseOpen: false,
         isPhoneOpen: false,
+        isFamilyWalkActive: false,
+        familyBanter: null,
         repliedPhonePrompts: slot.repliedPhonePrompts ?? {},
         readPhoneThreads: slot.readPhoneThreads ?? [],
         playerNotes: slot.playerNotes ?? [
@@ -570,6 +695,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     },
 
     returnToTitle: () => {
+      clearBanterTimers();
+      resetCompanionsToHome();
       voiceManager.stop();
       musicEngine.setContext('title', 'sunset');
       set({
@@ -578,6 +705,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         activeNodeId: null,
         isMapJournalOpen: false,
         isPauseOpen: false,
+        isFamilyWalkActive: false,
+        familyBanter: null,
         interactPrompt: null,
       });
     },
@@ -608,12 +737,14 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       if (document.pointerLockElement) {
         document.exitPointerLock();
       }
+      clearBanterTimers();
 
       set({
         activeDialogue: script,
         activeNodeId: startNode.id,
         isMapJournalOpen: false,
         isPauseOpen: false,
+        familyBanter: null,
       });
 
       if (startNode.onEnter) {

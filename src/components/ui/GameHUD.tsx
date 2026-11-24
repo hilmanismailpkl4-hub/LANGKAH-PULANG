@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Backpack, BookOpen, Camera, Compass, Map as MapIcon, Menu, Navigation, Sliders, Smartphone, Umbrella } from 'lucide-react';
+import { Backpack, BookOpen, Camera, Compass, Heart, Map as MapIcon, Menu, MessageSquareHeart, Navigation, Sliders, Smartphone, Umbrella } from 'lucide-react';
+import { CHARACTERS } from '../../data/characters';
 import { MAIN_STEP_BY_ID } from '../../data/dialogues';
 import { PHONE_THREADS } from '../../data/phoneContent';
 import { LOCATION_BY_ID } from '../../data/worldLocations';
@@ -43,6 +44,10 @@ export const GameHUD: React.FC = () => {
   const setBagOpen = useGameStore((s) => s.setBagOpen);
   const umbrellaForcedOff = useGameStore((s) => s.umbrellaForcedOff);
   const toggleUmbrella = useGameStore((s) => s.toggleUmbrella);
+  const isFamilyWalkActive = useGameStore((s) => s.isFamilyWalkActive);
+  const familyBanter = useGameStore((s) => s.familyBanter);
+  const toggleFamilyWalk = useGameStore((s) => s.toggleFamilyWalk);
+  const triggerCasualFamilyChat = useGameStore((s) => s.triggerCasualFamilyChat);
   const isSitting = useGameStore((s) => s.isSitting);
   const repliedPhonePrompts = useGameStore((s) => s.repliedPhonePrompts);
   const openPhone = useGameStore((s) => s.openPhone);
@@ -234,6 +239,32 @@ export const GameHUD: React.FC = () => {
                   </span>
                 )}
               </button>
+              {!isRidingScooter && (
+                <button
+                  type="button"
+                  onClick={toggleFamilyWalk}
+                  className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-[11px] font-medium backdrop-blur-md transition ${
+                    isFamilyWalkActive
+                      ? 'border-rose-300/60 bg-rose-950/75 text-rose-100 hover:border-rose-300'
+                      : 'border-warm-100/15 bg-dusk-950/70 text-warm-100 hover:border-rose-300/50'
+                  }`}
+                  title={isFamilyWalkActive ? 'Antar Nadia & Kira kembali ke rumah' : 'Ajak Nadia & Kira jalan sore bersama'}
+                >
+                  <Heart className={`h-3.5 w-3.5 ${isFamilyWalkActive ? 'fill-rose-300 text-rose-300' : 'text-rose-300'}`} />
+                  <span>{isFamilyWalkActive ? 'Jalan Bersama [G]' : 'Ajak Keluarga [G]'}</span>
+                </button>
+              )}
+              {isFamilyWalkActive && !isRidingScooter && (
+                <button
+                  type="button"
+                  onClick={triggerCasualFamilyChat}
+                  className="flex items-center gap-1.5 rounded-xl border border-rose-300/35 bg-dusk-950/75 px-3 py-1.5 text-[11px] text-rose-100 backdrop-blur-md transition hover:border-rose-300/75"
+                  title="Ajak Nadia & Kira ngobrol santai sambil jalan"
+                >
+                  <MessageSquareHeart className="h-3.5 w-3.5 text-rose-300" />
+                  <span>Ngobrol [T]</span>
+                </button>
+              )}
               {timeOfDay === 'rain_dusk' && !isRidingScooter && (
                 <button
                   type="button"
@@ -343,10 +374,21 @@ export const GameHUD: React.FC = () => {
                   return <circle key={`mc-${idx}`} cx={p.rx} cy={p.ry} r="2.2" fill="#f87171" />;
                 })}
 
-                {/* NPC Sekitar */}
+                {/* NPC Sekitar (Nadia & Kira berwarna merah muda hangat saat jalan bersama!) */}
                 {miniMap.npcs.map((n, idx) => {
                   const p = toRadar(n.x, n.z);
-                  return <circle key={`mn-${idx}`} cx={p.rx} cy={p.ry} r="2.5" fill="#86efac" />;
+                  const isFamDot = isFamilyWalkActive && (idx === 0 || idx === 1);
+                  return (
+                    <circle
+                      key={`mn-${idx}`}
+                      cx={p.rx}
+                      cy={p.ry}
+                      r={isFamDot ? '3.1' : '2.5'}
+                      fill={isFamDot ? '#f472b6' : '#86efac'}
+                      stroke={isFamDot ? '#ffffff' : 'none'}
+                      strokeWidth={isFamDot ? '0.8' : '0'}
+                    />
+                  );
                 })}
 
                 {/* Posisi Skuter Terparkir */}
@@ -391,8 +433,31 @@ export const GameHUD: React.FC = () => {
             <div />
           )}
 
-          {/* Tengah Bawah: Speedometer Skuter / Prompt Interaksi [E] / Status Duduk */}
+          {/* Tengah Bawah: Obrolan Spontan Keluarga + Speedometer / Prompt [E] / Status Duduk */}
           <div className="flex flex-1 flex-col items-center gap-2.5">
+            {familyBanter && (
+              <div
+                key={familyBanter.id}
+                className="max-w-xl rounded-2xl border border-rose-200/30 bg-dusk-950/86 px-5 py-3 text-center shadow-2xl backdrop-blur-md animate-fadeIn"
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <span
+                    className="h-2 w-2 rounded-full"
+                    style={{ backgroundColor: CHARACTERS[familyBanter.speaker].accentColor }}
+                  />
+                  <span
+                    className="text-[11px] font-semibold uppercase tracking-wider"
+                    style={{ color: CHARACTERS[familyBanter.speaker].accentColor }}
+                  >
+                    {CHARACTERS[familyBanter.speaker].name}
+                  </span>
+                </div>
+                <p className="mt-1 font-serif text-sm italic leading-relaxed text-warm-50">
+                  "{familyBanter.text}"
+                </p>
+              </div>
+            )}
+
             {isRidingScooter && (
               <div className="flex items-center gap-4 rounded-full border border-warm-300/45 bg-dusk-950/88 px-6 py-2.5 shadow-2xl backdrop-blur-md animate-fadeIn">
                 <div className="flex items-baseline gap-1">
@@ -440,7 +505,7 @@ export const GameHUD: React.FC = () => {
             )}
 
             <p className="text-[11px] text-warm-200/55">
-              WASD Jalan · H Ponsel · I Tas · {timeOfDay === 'rain_dusk' ? 'U Payung · ' : ''}F Sapa · P Foto · M Peta
+              WASD Jalan · G {isFamilyWalkActive ? 'Antar Pulang' : 'Ajak Keluarga'} · {isFamilyWalkActive ? 'T Ngobrol · ' : ''}H Ponsel · I Tas · {timeOfDay === 'rain_dusk' ? 'U Payung · ' : ''}F Sapa · P Foto · M Peta
             </p>
           </div>
 

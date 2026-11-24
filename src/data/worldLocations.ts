@@ -476,3 +476,85 @@ export function resolvePlayerMovement(
 
   return [rx, ry, rz];
 }
+
+/**
+ * Fisika solid 100% khusus pendamping keluarga (Nadia & Kira) saat berjalan bersama Damar:
+ * tidak pernah menembus tembok, furnitur, pohon, sungai, danau, atau mobil,
+ * serta otomatis menyesuaikan elevasi jembatan, lantai rumah/kafe, dan rooftop.
+ */
+export function resolveCompanionMovement(
+  currentX: number,
+  currentY: number,
+  currentZ: number,
+  nextX: number,
+  nextZ: number,
+  radius = 0.34,
+): [number, number, number] {
+  if (currentY > 14) {
+    let rx = Math.max(ROOFTOP_BOUNDS.minX + 0.4, Math.min(ROOFTOP_BOUNDS.maxX - 0.4, nextX));
+    let rz = Math.max(ROOFTOP_BOUNDS.minZ + 0.4, Math.min(ROOFTOP_BOUNDS.maxZ - 0.4, nextZ));
+    const hitsRoof = (px: number, pz: number) =>
+      ROOFTOP_COLLIDERS.some(
+        (box) =>
+          px + radius > box.minX &&
+          px - radius < box.maxX &&
+          pz + radius > box.minZ &&
+          pz - radius < box.maxZ,
+      );
+    if (hitsRoof(rx, currentZ)) rx = currentX;
+    if (hitsRoof(rx, rz)) rz = currentZ;
+    return [rx, ROOFTOP_BOUNDS.elevation, rz];
+  }
+
+  let rx = Math.max(WORLD_BOUNDS.minX, Math.min(WORLD_BOUNDS.maxX, nextX));
+  let rz = Math.max(WORLD_BOUNDS.minZ, Math.min(WORLD_BOUNDS.maxZ, nextZ));
+
+  const hits = (px: number, pz: number) => {
+    for (const box of GROUND_COLLIDERS) {
+      if (
+        px + radius > box.minX &&
+        px - radius < box.maxX &&
+        pz + radius > box.minZ &&
+        pz - radius < box.maxZ
+      ) {
+        return true;
+      }
+    }
+    for (const c of STATIC_CIRCLE_COLLIDERS) {
+      if (Math.hypot(px - c.x, pz - c.z) < radius + c.r) {
+        return true;
+      }
+    }
+    for (const car of playerRuntime.dynamicCarBoxes) {
+      if (
+        px + radius > car.minX &&
+        px - radius < car.maxX &&
+        pz + radius > car.minZ &&
+        pz - radius < car.maxZ
+      ) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  if (hits(rx, currentZ)) rx = currentX;
+  if (hits(rx, rz)) rz = currentZ;
+
+  let ry = 0;
+  if (rx >= -57 && rx <= -39 && ((rz >= -7 && rz <= 7) || (rz >= 44.5 && rz <= 51.5))) {
+    ry = 0.24;
+  } else if (rx >= -27 && rx <= -13 && rz >= 62 && rz <= 74) {
+    ry = 0.08;
+  } else if (rx >= -28 && rx <= -12 && rz >= 14 && rz <= 27) {
+    ry = 0.08;
+  } else if (rx >= 17 && rx <= 41 && rz >= -25.8 && rz <= -19) {
+    ry = 0.08;
+  } else if (rx >= 72 && rx <= 89 && rz >= -24 && rz <= 16) {
+    ry = 0.1;
+  } else if (rx >= -77 && rx <= -69 && rz >= -30.5 && rz <= -25.5) {
+    ry = 0.12;
+  }
+
+  return [rx, ry, rz];
+}

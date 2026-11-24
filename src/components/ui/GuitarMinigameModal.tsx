@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Music, RotateCcw, Sparkles, X } from 'lucide-react';
 import { sfxEngine } from '../../audio/sfxEngine';
+import { EVENT_FAMILY_BANTERS } from '../../data/familyWalkBanter';
 import { useGameStore } from '../../store/useGameStore';
 import { Portal } from './Portal';
 
@@ -62,6 +63,9 @@ export const GuitarMinigameModal: React.FC = () => {
             });
           }
           showToast('Bima: "Tuh kan, jarimu nggak pernah lupa nadanya, Mar..."');
+          if (useGameStore.getState().isFamilyWalkActive) {
+            useGameStore.getState().playFamilyBanter(EVENT_FAMILY_BANTERS.activity_guitar, 'fw_guitar');
+          }
         } else {
           setStepIdx((prev) => prev + 1);
         }

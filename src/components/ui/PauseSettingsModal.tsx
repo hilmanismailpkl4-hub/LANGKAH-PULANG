@@ -236,6 +236,8 @@ export const PauseSettingsModal: React.FC = () => {
                 ['Scroll Mouse', 'Mendekatkan atau menjauhkan jarak kamera'],
                 ['E', 'Berbicara dengan tokoh, memeriksa benda, atau naik lift Rooftop'],
                 ['F', 'Melambaikan tangan menyapa warga sekitar (NPC akan melambai balik!)'],
+                ['G', 'Ajak Nadia & Kira jalan sore bersama berkeliling kota (atau antar pulang)'],
+                ['T', 'Ajak Nadia & Kira mengobrol santai saat sedang berjalan bersama'],
                 ['H', 'Membuka Ponsel Damar (Pesan, Telepon & Suara, Galeri, Nada FM, Catatan)'],
                 ['I', 'Membuka Tas Selempang Damar (Inspeksi Kenangan & Beri Hadiah Keluarga)'],
                 ['U', 'Buka / lipat Payung Hujan Bening saat sedang hujan di luar ruangan'],

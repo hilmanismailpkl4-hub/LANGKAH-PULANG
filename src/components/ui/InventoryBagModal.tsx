@@ -169,8 +169,10 @@ export const InventoryBagModal: React.FC = () => {
   const selected = ownedItems.find((i) => i.id === selectedId) ?? ownedItems[0];
 
   const [px, py, pz] = playerRuntime.position;
-  const distKira = py > 10 ? 999 : Math.round(Math.hypot(px - -18.7, pz - 65.0));
-  const distNadia = py > 10 ? 999 : Math.round(Math.hypot(px - -16.2, pz - 66.2));
+  const kiraPos = playerRuntime.companions.kira.pos;
+  const nadiaPos = playerRuntime.companions.nadia.pos;
+  const distKira = Math.abs(py - kiraPos[1]) > 5 ? 999 : Math.round(Math.hypot(px - kiraPos[0], pz - kiraPos[2]));
+  const distNadia = Math.abs(py - nadiaPos[1]) > 5 ? 999 : Math.round(Math.hypot(px - nadiaPos[0], pz - nadiaPos[2]));
 
   // Deteksi suasana suara spasial 3D aktif di sekitar Damar
   const activeSoundTags: string[] = [];

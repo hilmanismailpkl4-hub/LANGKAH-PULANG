@@ -236,6 +236,26 @@ export const PlayerController: React.FC = () => {
           state.showToast('Langit sedang tidak hujan. Ubah cuaca ke Hujan di HP [H] → Kota untuk memakai payung!');
         }
       } else if (
+        code === 'KeyG' &&
+        !state.activeDialogue &&
+        !state.isMapJournalOpen &&
+        !state.isPauseOpen &&
+        !state.isQuickGraphicsOpen
+      ) {
+        e.preventDefault();
+        state.toggleFamilyWalk();
+      } else if (
+        code === 'KeyT' &&
+        !state.activeDialogue &&
+        !state.isMapJournalOpen &&
+        !state.isPauseOpen &&
+        !state.isQuickGraphicsOpen
+      ) {
+        if (state.isFamilyWalkActive) {
+          e.preventDefault();
+          state.triggerCasualFamilyChat();
+        }
+      } else if (
         (code === 'Tab' || code === 'KeyM') &&
         !state.activeDialogue &&
         !state.isPauseOpen &&

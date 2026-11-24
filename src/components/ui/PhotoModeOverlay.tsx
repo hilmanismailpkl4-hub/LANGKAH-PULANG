@@ -1,6 +1,7 @@
 import React from 'react';
 import { Camera, Download, Smartphone, X } from 'lucide-react';
 import { sfxEngine } from '../../audio/sfxEngine';
+import { EVENT_FAMILY_BANTERS } from '../../data/familyWalkBanter';
 import { LOCATION_BY_ID } from '../../data/worldLocations';
 import { useGameStore } from '../../store/useGameStore';
 import { Portal } from './Portal';
@@ -23,6 +24,8 @@ export const PhotoModeOverlay: React.FC = () => {
   const addPlayerPhoto = useGameStore((s) => s.addPlayerPhoto);
   const openPhone = useGameStore((s) => s.openPhone);
   const showToast = useGameStore((s) => s.showToast);
+  const isFamilyWalkActive = useGameStore((s) => s.isFamilyWalkActive);
+  const playFamilyBanter = useGameStore((s) => s.playFamilyBanter);
 
   if (!isPhotoMode) return null;
 
@@ -44,8 +47,13 @@ export const PhotoModeOverlay: React.FC = () => {
           dataUrl: thumbCanvas.toDataURL('image/jpeg', 0.82),
           locationName: loc.name,
           timeLabel: TIME_LABELS[timeOfDay],
-          caption: `Jepretan di ${loc.name} saat ${TIME_LABELS[timeOfDay].toLowerCase()}.`,
+          caption: isFamilyWalkActive
+            ? `Foto keluarga hangat bersama Nadia & Kira di ${loc.name} saat ${TIME_LABELS[timeOfDay].toLowerCase()}.`
+            : `Jepretan di ${loc.name} saat ${TIME_LABELS[timeOfDay].toLowerCase()}.`,
         });
+      }
+      if (isFamilyWalkActive) {
+        playFamilyBanter(EVENT_FAMILY_BANTERS.activity_photo, 'fw_photo');
       }
 
       if (downloadAlso) {
@@ -67,9 +75,16 @@ export const PhotoModeOverlay: React.FC = () => {
     <Portal>
       <div className="pointer-events-none fixed inset-0 z-[9993] flex flex-col justify-between p-6 text-warm-50">
         <div className="flex items-start justify-between">
-          <div className="flex items-center gap-2 rounded-full border border-warm-200/25 bg-dusk-950/70 px-4 py-1.5 text-xs backdrop-blur-md">
-            <Camera className="h-3.5 w-3.5 text-warm-300" />
-            <span>Mode Foto · Geser Mouse untuk Putar · Scroll untuk Zoom</span>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-2 rounded-full border border-warm-200/25 bg-dusk-950/70 px-4 py-1.5 text-xs backdrop-blur-md">
+              <Camera className="h-3.5 w-3.5 text-warm-300" />
+              <span>Mode Foto · Geser Mouse untuk Putar · Scroll untuk Zoom</span>
+            </div>
+            {isFamilyWalkActive && (
+              <div className="rounded-full border border-rose-300/40 bg-rose-950/75 px-3.5 py-1.5 text-xs text-rose-100 backdrop-blur-md">
+                Nadia & Kira sedang berpose ceria ke arah kamera!
+              </div>
+            )}
           </div>
 
           <button

@@ -1,13 +1,19 @@
-import React, { useEffect, useMemo, useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { sfxEngine } from '../../audio/sfxEngine';
 import { CHARACTERS } from '../../data/characters';
 import { EASTER_EGGS } from '../../data/easterEggs';
-import { ELEVATOR_PORTALS } from '../../data/worldLocations';
+import {
+  EVENT_FAMILY_BANTERS,
+  LOCATION_FAMILY_BANTERS,
+  SPOT_FAMILY_BANTERS,
+  WEATHER_FAMILY_BANTERS,
+} from '../../data/familyWalkBanter';
+import { ELEVATOR_PORTALS, resolveCompanionMovement } from '../../data/worldLocations';
 import { playerRuntime, setRuntimePosition } from '../../store/playerRuntime';
 import { useGameStore } from '../../store/useGameStore';
-import { CharacterId, InteractableTarget } from '../../types/game';
+import { CharacterId, InteractableTarget, TimeOfDay } from '../../types/game';
 import { HumanModel } from './HumanModel';
 
 interface NpcPlacement {
@@ -71,7 +77,10 @@ function createBubbleTexture(name: string, greeting: string, accent: string, tag
 const NpcFigure: React.FC<{
   npc: NpcPlacement;
   highlight?: 'main' | 'side' | null;
-}> = ({ npc, highlight }) => {
+  isFamilyCompanion?: boolean;
+  timeOfDay: TimeOfDay;
+}> = ({ npc, highlight, isFamilyCompanion = false, timeOfDay }) => {
+  const { camera } = useThree();
   const profile = CHARACTERS[npc.id];
   const scale = profile.appearance.height / 1.74;
   const isChild = npc.id === 'kira';
@@ -79,13 +88,23 @@ const NpcFigure: React.FC<{
   const rootRef = useRef<THREE.Group>(null);
   const headRef = useRef<THREE.Group>(null);
   const torsoRef = useRef<THREE.Group>(null);
+  const leftLegRef = useRef<THREE.Group>(null);
+  const rightLegRef = useRef<THREE.Group>(null);
   const leftArmRef = useRef<THREE.Group>(null);
   const rightArmRef = useRef<THREE.Group>(null);
   const ringRef = useRef<THREE.Mesh>(null);
   const bubbleRef = useRef<THREE.Sprite>(null);
 
+  const posRef = useRef<[number, number, number]>([...npc.pos]);
   const currentYawRef = useRef(npc.rot);
+  const strideRef = useRef(isChild ? 1.1 : 0);
   const bubbleOpacityRef = useRef(0);
+  const [compIndoors, setCompIndoors] = useState(true);
+  const indoorsCheckRef = useRef(0);
+
+  const companionUmbrella = isFamilyCompanion && timeOfDay === 'rain_dusk' && !compIndoors;
+  const companionUmbrellaRef = useRef(companionUmbrella);
+  companionUmbrellaRef.current = companionUmbrella;
 
   const bubbleTex = useMemo(
     () =>
@@ -104,53 +123,221 @@ const NpcFigure: React.FC<{
     const [px, py, pz] = playerRuntime.position;
     const store = useGameStore.getState();
 
-    const dx = px - npc.pos[0];
-    const dz = pz - npc.pos[2];
-    const dy = Math.abs(py - npc.pos[1]);
+    let isWalkingCompanion = false;
+
+    // === AI PENGIKUT KELUARGA (NADIA & KIRA BERJALAN BERSAMA DAMAR) ===
+    if (isFamilyCompanion && (npc.id === 'nadia' || npc.id === 'kira')) {
+      const yaw = playerRuntime.rotationY;
+      const fwdX = Math.sin(yaw);
+      const fwdZ = Math.cos(yaw);
+      const leftX = Math.cos(yaw);
+      const leftZ = -Math.sin(yaw);
+      const sideSign = npc.id === 'nadia' ? 1 : -1; // Nadia kiri, Kira kanan
+
+      let desiredX: number;
+      let desiredZ: number;
+
+      if (store.isSitting && playerRuntime.sitState) {
+        const sitYaw = playerRuntime.sitState.seatYaw;
+        const sLeftX = Math.cos(sitYaw);
+        const sLeftZ = -Math.sin(sitYaw);
+        const sFwdX = Math.sin(sitYaw);
+        const sFwdZ = Math.cos(sitYaw);
+        desiredX = px + sLeftX * sideSign * 1.15 - sFwdX * 0.15;
+        desiredZ = pz + sLeftZ * sideSign * 1.15 - sFwdZ * 0.15;
+      } else if (store.isPhotoMode) {
+        // Berpose manis di sisi Damar menghadap kamera saat Mode Foto [P]!
+        desiredX = px + leftX * sideSign * 1.05 + fwdX * 0.15;
+        desiredZ = pz + leftZ * sideSign * 1.05 + fwdZ * 0.15;
+      } else {
+        const sideDist = npc.id === 'nadia' ? 1.32 : 1.2;
+        const backDist = npc.id === 'nadia' ? 0.58 : 0.28;
+        desiredX = px + leftX * sideSign * sideDist - fwdX * backDist;
+        desiredZ = pz + leftZ * sideSign * sideDist - fwdZ * backDist;
+      }
+
+      const [cx, cy, cz] = posRef.current;
+      const elevDiff = Math.abs(py - cy);
+      const distToDamar = Math.hypot(px - cx, pz - cz);
+
+      // Sinkron instan saat naik/turun lift Rooftop, memanggil dari jauh, atau tertinggal jauh
+      if (playerRuntime.companions.snapPending || elevDiff > 5.0 || distToDamar > 16.0) {
+        const snapped = resolveCompanionMovement(
+          px,
+          py,
+          pz,
+          desiredX,
+          desiredZ,
+          isChild ? 0.28 : 0.34,
+        );
+        posRef.current = snapped;
+        if (npc.id === 'kira') {
+          playerRuntime.companions.snapPending = false;
+        }
+      } else {
+        // Beri ruang jika Damar berjalan tepat ke arah mereka (anti macet di pintu!)
+        if (distToDamar < 0.85 && distToDamar > 0.01) {
+          const awayX = (cx - px) / distToDamar;
+          const awayZ = (cz - pz) / distToDamar;
+          desiredX += awayX * 0.45;
+          desiredZ += awayZ * 0.45;
+        }
+
+        const toTargetX = desiredX - cx;
+        const toTargetZ = desiredZ - cz;
+        const distTarget = Math.hypot(toTargetX, toTargetZ);
+
+        if (distTarget > 0.24) {
+          isWalkingCompanion = true;
+          const maxSpd = playerRuntime.isRunning ? 7.9 : 4.95;
+          const spd = Math.min(maxSpd, 1.55 + distTarget * 2.25);
+          const step = Math.min(distTarget, spd * dt);
+          const nextX = cx + (toTargetX / distTarget) * step;
+          const nextZ = cz + (toTargetZ / distTarget) * step;
+          posRef.current = resolveCompanionMovement(
+            cx,
+            py,
+            cz,
+            nextX,
+            nextZ,
+            isChild ? 0.28 : 0.34,
+          );
+          strideRef.current += dt * (isChild ? 9.8 : 7.4) * Math.min(1.35, spd / 3.8);
+
+          const walkYaw = Math.atan2(toTargetX, toTargetZ);
+          let diff = walkYaw - currentYawRef.current;
+          while (diff > Math.PI) diff -= Math.PI * 2;
+          while (diff < -Math.PI) diff += Math.PI * 2;
+          currentYawRef.current += diff * Math.min(1, dt * 9.5);
+        } else {
+          // Berhenti halus — hadap pemandangan / kamera / Damar
+          let idleYaw = yaw;
+          if (store.isPhotoMode) {
+            idleYaw = Math.atan2(camera.position.x - cx, camera.position.z - cz);
+          } else if (store.isSitting && playerRuntime.sitState) {
+            idleYaw = Math.atan2(
+              playerRuntime.sitState.lookAt[0] - cx,
+              playerRuntime.sitState.lookAt[2] - cz,
+            );
+          } else if (distToDamar < 3.4) {
+            idleYaw = Math.atan2(px - cx, pz - cz);
+          }
+          let diff = idleYaw - currentYawRef.current;
+          while (diff > Math.PI) diff -= Math.PI * 2;
+          while (diff < -Math.PI) diff += Math.PI * 2;
+          currentYawRef.current += diff * Math.min(1, dt * 5.5);
+        }
+      }
+
+      // Perbarui posisi runtime & kolisi real-time Nadia/Kira
+      playerRuntime.companions[npc.id].pos = [...posRef.current];
+      playerRuntime.companions[npc.id].yaw = currentYawRef.current;
+      const colEntry = playerRuntime.npcColliders.find((c) => c.id === npc.id);
+      if (colEntry) {
+        colEntry.x = posRef.current[0];
+        colEntry.z = posRef.current[2];
+      }
+
+      // Cek apakah pendamping di dalam ruangan (untuk melipat payung hujan secara alami)
+      indoorsCheckRef.current += dt;
+      if (indoorsCheckRef.current > 0.25) {
+        indoorsCheckRef.current = 0;
+        const [rx, ry, rz] = posRef.current;
+        const indoorsNow =
+          ry < 14 &&
+          ((rx >= -27 && rx <= -13 && rz >= 62 && rz <= 74) ||
+            (rx >= -28 && rx <= -12 && rz >= 14 && rz <= 27));
+        setCompIndoors((prev) => (prev === indoorsNow ? prev : indoorsNow));
+      }
+    } else {
+      // Kembali ke titik asal di rumah saat tidak sedang jalan bersama
+      posRef.current[0] = npc.pos[0];
+      posRef.current[1] = npc.pos[1];
+      posRef.current[2] = npc.pos[2];
+      if (npc.id === 'nadia' || npc.id === 'kira') {
+        playerRuntime.companions[npc.id].pos = [...npc.pos];
+        const colEntry = playerRuntime.npcColliders.find((c) => c.id === npc.id);
+        if (colEntry) {
+          colEntry.x = npc.pos[0];
+          colEntry.z = npc.pos[2];
+        }
+      }
+    }
+
+    const [myX, myY, myZ] = posRef.current;
+    const dx = px - myX;
+    const dz = pz - myZ;
+    const dy = Math.abs(py - myY);
     const dist = dy > 4 ? 99 : Math.hypot(dx, dz);
 
     const isTalkingNow =
-      Boolean(store.activeDialogue) &&
-      (playerRuntime.activeSpeakerId === npc.id ||
-        (store.activeDialogue &&
-          store.activeNodeId &&
-          store.activeDialogue.nodes[store.activeNodeId]?.speaker === npc.id));
+      (Boolean(store.activeDialogue) &&
+        (playerRuntime.activeSpeakerId === npc.id ||
+          (store.activeDialogue &&
+            store.activeNodeId &&
+            store.activeDialogue.nodes[store.activeNodeId]?.speaker === npc.id))) ||
+      (isFamilyCompanion && store.familyBanter?.speaker === npc.id);
 
-    const damarWaving = playerRuntime.damarWaveTimer > 0 && dist < 8.0;
+    const damarWaving = playerRuntime.damarWaveTimer > 0 && dist < 8.5;
     const isNear = dist < 5.6;
     const isVeryNear = dist < 4.2 || isTalkingNow || damarWaving;
 
-    // 1. Napas alami & gestur tubuh
-    if (torsoRef.current) {
-      const bounce = isChild && isNear ? Math.abs(Math.sin(t * 5.2)) * 0.045 : Math.sin(t * 2.1 + npc.pos[0]) * 0.012;
-      torsoRef.current.position.y = 0.92 + bounce;
-      torsoRef.current.rotation.x = isTalkingNow ? Math.sin(t * 3.5) * 0.045 : 0;
-    }
-
-    // 2. Badan menoleh halus ke arah Damar saat dekat / berbicara
+    // 1. Posisi root + bob langkah berjalan / napas alami
     if (rootRef.current) {
-      const desiredYaw = isVeryNear ? Math.atan2(dx, dz) : npc.rot;
-      let diff = desiredYaw - currentYawRef.current;
-      while (diff > Math.PI) diff -= Math.PI * 2;
-      while (diff < -Math.PI) diff += Math.PI * 2;
-      currentYawRef.current += diff * Math.min(1, dt * 5.5);
+      const walkBob = isWalkingCompanion
+        ? Math.abs(Math.sin(strideRef.current)) * (isChild ? 0.075 : 0.048)
+        : 0;
+      rootRef.current.position.set(myX, myY + walkBob, myZ);
+
+      if (!isFamilyCompanion) {
+        const desiredYaw = isVeryNear ? Math.atan2(dx, dz) : npc.rot;
+        let diff = desiredYaw - currentYawRef.current;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        currentYawRef.current += diff * Math.min(1, dt * 5.5);
+      }
       rootRef.current.rotation.y = currentYawRef.current;
     }
 
-    // 3. Kontak mata — kepala menoleh ke arah Damar dari jarak 7.5 meter!
+    if (torsoRef.current) {
+      const bounce =
+        !isWalkingCompanion && isChild && isNear
+          ? Math.abs(Math.sin(t * 5.2)) * 0.045
+          : Math.sin(t * 2.1 + npc.pos[0]) * 0.012;
+      torsoRef.current.position.y = 0.92 + bounce;
+      torsoRef.current.rotation.x = isWalkingCompanion
+        ? 0.06
+        : isTalkingNow
+          ? Math.sin(t * 3.5) * 0.045
+          : 0;
+    }
+
+    // 2. Animasi kaki berjalan
+    const legSwing = isWalkingCompanion ? Math.sin(strideRef.current) * (isChild ? 0.62 : 0.52) : 0;
+    if (leftLegRef.current) {
+      leftLegRef.current.rotation.x = THREE.MathUtils.lerp(leftLegRef.current.rotation.x, legSwing, dt * 12);
+    }
+    if (rightLegRef.current) {
+      rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, -legSwing, dt * 12);
+    }
+
+    // 3. Kontak mata — kepala menoleh ke kamera saat Mode Foto atau ke Damar saat dekat!
     if (headRef.current) {
-      if (dist < 7.5 || isTalkingNow) {
+      if (isFamilyCompanion && store.isPhotoMode) {
+        const angCam = Math.atan2(camera.position.x - myX, camera.position.z - myZ);
+        let rel = angCam - currentYawRef.current;
+        while (rel > Math.PI) rel -= Math.PI * 2;
+        while (rel < -Math.PI) rel += Math.PI * 2;
+        headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, THREE.MathUtils.clamp(rel, -0.65, 0.65), dt * 7);
+        headRef.current.rotation.x = isChild ? -0.14 : -0.04;
+      } else if (dist < 7.5 || isTalkingNow) {
         const angleToPlayer = Math.atan2(dx, dz);
         let relHead = angleToPlayer - currentYawRef.current;
         while (relHead > Math.PI) relHead -= Math.PI * 2;
         while (relHead < -Math.PI) relHead += Math.PI * 2;
         const clamped = THREE.MathUtils.clamp(relHead, -0.75, 0.75);
         headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, clamped, dt * 7);
-        headRef.current.rotation.x = isTalkingNow
-          ? Math.sin(t * 4.2) * 0.08
-          : isChild
-            ? -0.18
-            : 0;
+        headRef.current.rotation.x = isTalkingNow ? Math.sin(t * 4.2) * 0.08 : isChild ? -0.18 : 0;
       } else {
         const idleLook = Math.sin(t * 0.65 + npc.pos[2]) * 0.16;
         headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, idleLook, dt * 3);
@@ -158,34 +345,54 @@ const NpcFigure: React.FC<{
       }
     }
 
-    // 4. Lengan melambai hangat saat disapa [F] atau didekati, dan gestur tangan saat bicara!
+    // 4. Lengan: payung bening di tangan kiri saat hujan, lambaian ramah saat [F]/Mode Foto, & gestur bicara!
     if (rightArmRef.current && leftArmRef.current) {
-      if (damarWaving || (isNear && !store.activeDialogue && (isChild || npc.id === 'bima' || npc.id === 'bu_wati' || npc.id === 'mbak_lilis' || npc.id === 'pak_slamet' || npc.id === 'bang_ari'))) {
-        // Angkat tangan kanan & lambaikan ramah!
+      const holdUmb = companionUmbrellaRef.current;
+      const shouldWave =
+        damarWaving ||
+        (isFamilyCompanion && store.isPhotoMode) ||
+        (!isFamilyCompanion &&
+          isNear &&
+          !store.activeDialogue &&
+          (isChild ||
+            npc.id === 'bima' ||
+            npc.id === 'bu_wati' ||
+            npc.id === 'mbak_lilis' ||
+            npc.id === 'pak_slamet' ||
+            npc.id === 'bang_ari'));
+
+      if (shouldWave) {
         rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, -2.35, dt * 8);
         rightArmRef.current.rotation.z = Math.sin(t * 10.5) * 0.28 + 0.32;
-        leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, 0, dt * 6);
-      } else if (isTalkingNow) {
-        // Gestur percakapan realistis
+        leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, holdUmb ? -1.28 : 0, dt * 8);
+        leftArmRef.current.rotation.z = THREE.MathUtils.lerp(leftArmRef.current.rotation.z, holdUmb ? -0.06 : 0, dt * 8);
+      } else if (isTalkingNow && !isWalkingCompanion) {
         rightArmRef.current.rotation.x = -0.55 + Math.sin(t * 4.6) * 0.28;
         rightArmRef.current.rotation.z = 0.12 + Math.cos(t * 3.8) * 0.1;
-        leftArmRef.current.rotation.x = -0.35 + Math.cos(t * 3.9) * 0.2;
+        leftArmRef.current.rotation.x = holdUmb ? -1.28 : -0.35 + Math.cos(t * 3.9) * 0.2;
+        leftArmRef.current.rotation.z = holdUmb ? -0.06 : 0;
       } else {
-        rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, 0, dt * 6);
-        rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, 0, dt * 6);
-        leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, 0, dt * 6);
+        rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, legSwing * 0.72, dt * 10);
+        rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, 0, dt * 8);
+        leftArmRef.current.rotation.x = THREE.MathUtils.lerp(
+          leftArmRef.current.rotation.x,
+          holdUmb ? -1.28 + Math.sin(t * 2.1) * 0.025 : -legSwing * 0.72,
+          dt * 10,
+        );
+        leftArmRef.current.rotation.z = THREE.MathUtils.lerp(leftArmRef.current.rotation.z, holdUmb ? -0.06 : 0, dt * 8);
       }
     }
 
-    // 5. Penanda misi halus
+    // 5. Penanda misi halus (sembunyikan saat sedang jalan santai bersama agar pemandangan rapi!)
     if (ringRef.current) {
+      ringRef.current.visible = !isFamilyCompanion;
       ringRef.current.position.y = 2.15 * scale + Math.sin(t * 2.5) * 0.06;
       ringRef.current.rotation.y = t * 1.1;
     }
 
-    // 6. Balon sapaan WebGL muncul halus saat Damar mendekat (hilang saat dialog fullscreen terbuka)
+    // 6. Balon sapaan WebGL (sembunyikan saat Nadia & Kira sedang jalan bersama agar tidak mengganggu layar)
     if (bubbleRef.current) {
-      const showBubble = dist < 6.4 && !store.activeDialogue && store.screen === 'playing';
+      const showBubble = !isFamilyCompanion && dist < 6.4 && !store.activeDialogue && store.screen === 'playing';
       const targetOp = showBubble ? 0.96 : 0;
       bubbleOpacityRef.current = THREE.MathUtils.lerp(bubbleOpacityRef.current, targetOp, dt * 7);
       const mat = bubbleRef.current.material as THREE.SpriteMaterial;
@@ -201,10 +408,13 @@ const NpcFigure: React.FC<{
         profile={profile}
         headRef={headRef}
         torsoRef={torsoRef}
+        leftLegRef={leftLegRef}
+        rightLegRef={rightLegRef}
         leftArmRef={leftArmRef}
         rightArmRef={rightArmRef}
         isChild={isChild}
         isFemale={FEMALE_NPCS.includes(npc.id)}
+        holdingUmbrella={companionUmbrella}
       />
 
       {highlight && (
@@ -232,6 +442,12 @@ export const WorldInteractables: React.FC = () => {
   const discoveredEasterEggs = useGameStore((s) => s.discoveredEasterEggs);
   const flags = useGameStore((s) => s.flags);
   const activeDialogue = useGameStore((s) => s.activeDialogue);
+  const isFamilyWalkActive = useGameStore((s) => s.isFamilyWalkActive);
+  const timeOfDay = useGameStore((s) => s.timeOfDay);
+
+  const heardBantersRef = useRef<Set<string>>(new Set());
+  const lastBanterTimeRef = useRef(0);
+  const banterCheckTimerRef = useRef(0);
 
   // Daftarkan kolisi tubuh NPC agar Damar tidak bisa menembus NPC
   useEffect(() => {
@@ -401,8 +617,70 @@ export const WorldInteractables: React.FC = () => {
     };
   }, [mainStepId, sideQuests, flags]);
 
-  useFrame(() => {
+  useFrame((_, delta) => {
     const store = useGameStore.getState();
+
+    // === PICU OBROLAN SPONTAN KELUARGA OTOMATIS SAAT MELINTASI LOKASI / CUACA BARU ===
+    if (
+      store.isFamilyWalkActive &&
+      store.screen === 'playing' &&
+      !store.activeDialogue &&
+      !store.familyBanter &&
+      !store.isPauseOpen &&
+      !store.isMapJournalOpen &&
+      !store.isPhoneOpen
+    ) {
+      banterCheckTimerRef.current += Math.min(delta, 0.05);
+      if (banterCheckTimerRef.current > 1.4) {
+        banterCheckTimerRef.current = 0;
+        const now = Date.now();
+        if (now - lastBanterTimeRef.current > 19000) {
+          const [px, py, pz] = playerRuntime.position;
+
+          // 1. Cek sudut spesial (Angkringan Pak Slamet / Kucing Sore)
+          let picked: { id: string; lines: { speaker: 'nadia' | 'kira' | 'damar'; text: string }[] } | null = null;
+          if (py < 6) {
+            for (const sp of SPOT_FAMILY_BANTERS) {
+              if (!heardBantersRef.current.has(sp.id) && Math.hypot(px - sp.x, pz - sp.z) <= sp.radius) {
+                picked = { id: sp.id, lines: sp.lines };
+                break;
+              }
+            }
+          }
+
+          // 2. Cek cuaca hujan / malam
+          if (!picked) {
+            const wList = WEATHER_FAMILY_BANTERS[store.timeOfDay];
+            if (wList) {
+              for (let i = 0; i < wList.length; i++) {
+                const wid = `fw_weather_${store.timeOfDay}_${i}`;
+                if (!heardBantersRef.current.has(wid)) {
+                  picked = { id: wid, lines: wList[i] };
+                  break;
+                }
+              }
+            }
+          }
+
+          // 3. Cek obrolan lokasi kota saat ini
+          if (!picked) {
+            const locCandidate = LOCATION_FAMILY_BANTERS.find(
+              (entry) => entry.location === store.currentLocation && !heardBantersRef.current.has(entry.id),
+            );
+            if (locCandidate) {
+              picked = { id: locCandidate.id, lines: locCandidate.lines };
+            }
+          }
+
+          if (picked) {
+            heardBantersRef.current.add(picked.id);
+            lastBanterTimeRef.current = now;
+            store.playFamilyBanter(picked.lines, picked.id);
+          }
+        }
+      }
+    }
+
     if (
       store.screen !== 'playing' ||
       store.activeDialogue ||
@@ -441,6 +719,11 @@ export const WorldInteractables: React.FC = () => {
         sublabel: 'WASD Kendarai · Spasi Klakson · E Parkir',
         position: playerRuntime.scooter.pos,
         onInteract: () => {
+          if (store.isFamilyWalkActive) {
+            sfxEngine.play('interact');
+            store.showToast('Jalan kaki santai saja saat bersama Nadia & Kira (tekan [G] untuk antar pulang dulu).');
+            return;
+          }
           sfxEngine.play('switch');
           playerRuntime.scooter.isRiding = true;
           playerRuntime.scooter.speed = 0;
@@ -490,6 +773,9 @@ export const WorldInteractables: React.FC = () => {
           if (!store.flags.includes('enjoyed_bima_coffee')) {
             store.applyEffect({ kejujuranDiri: 1, setFlags: ['enjoyed_bima_coffee'] });
           }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_coffee, 'fw_coffee');
+          }
           store.showToast('"Pahitnya pas... sepuluh menit tenang tanpa lihat jam tangan." (Tekan WASD/E berdiri)');
         },
       },
@@ -508,6 +794,9 @@ export const WorldInteractables: React.FC = () => {
           sfxEngine.play('cat');
           playerRuntime.catHeartTimer = 4.2;
           store.markCatFed();
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_cat, 'fw_cat');
+          }
           store.showToast('Sore makan lahap sambil mendengkur hangat di dekat kakimu!');
         },
       },
@@ -535,6 +824,9 @@ export const WorldInteractables: React.FC = () => {
               bornAt: Date.now(),
             });
             store.incrementPaperBoats();
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_boat, 'fw_boat');
+            }
             store.showToast('"Ini buat kamu, Kira... semoga doa kecil kita tidak pernah tenggelam."');
           } else {
             store.showToast('Enam perahu kertas sudah mengapung damai di permukaan Danau Senja.');
@@ -636,6 +928,9 @@ export const WorldInteractables: React.FC = () => {
             seatYaw: Math.PI,
           };
           store.setSitting(true);
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_bench, 'fw_bench_park');
+          }
           store.showToast('Damar duduk beristirahat sejenak... (Tekan WASD atau E untuk berdiri)');
         },
       },
@@ -660,6 +955,9 @@ export const WorldInteractables: React.FC = () => {
             seatYaw: 0,
           };
           store.setSitting(true);
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_bench, 'fw_bench_roof');
+          }
           store.showToast('Menatap lampu kota dari ketinggian... (Tekan WASD atau E untuk berdiri)');
         },
       },
@@ -736,15 +1034,28 @@ export const WorldInteractables: React.FC = () => {
     for (const npc of NPC_PLACEMENTS) {
       const profile = CHARACTERS[npc.id];
       const resolved = resolveNpcInteraction(npc.id);
+      const livePos: [number, number, number] =
+        store.isFamilyWalkActive && (npc.id === 'nadia' || npc.id === 'kira')
+          ? playerRuntime.companions[npc.id].pos
+          : npc.pos;
+      // Saat Nadia & Kira ikut jalan bersama, hanya jadikan prioritas [E] bila ada cerita utama / hadiah,
+      // agar tidak menghalangi tombol [E] untuk NPC warga, lift, atau fragmen memori di depan Damar!
+      if (
+        store.isFamilyWalkActive &&
+        (npc.id === 'nadia' || npc.id === 'kira') &&
+        resolved.highlight === null
+      ) {
+        continue;
+      }
       consider(
         {
           id: `npc_${npc.id}`,
           kind: 'npc',
           label: `Bicara dengan ${profile.name}`,
           sublabel: resolved.sublabel,
-          position: npc.pos,
+          position: livePos,
           onInteract: () => {
-            playerRuntime.activeSpeakerPos = [...npc.pos];
+            playerRuntime.activeSpeakerPos = [...livePos];
             playerRuntime.activeSpeakerId = npc.id;
             store.startDialogue(resolved.dialogueId);
           },
@@ -784,7 +1095,16 @@ export const WorldInteractables: React.FC = () => {
     <group>
       {NPC_PLACEMENTS.map((npc) => {
         const res = resolveNpcInteraction(npc.id);
-        return <NpcFigure key={npc.id} npc={npc} highlight={res.highlight} />;
+        const isComp = isFamilyWalkActive && (npc.id === 'nadia' || npc.id === 'kira');
+        return (
+          <NpcFigure
+            key={npc.id}
+            npc={npc}
+            highlight={res.highlight}
+            isFamilyCompanion={isComp}
+            timeOfDay={timeOfDay}
+          />
+        );
       })}
 
       {EASTER_EGGS.map((ee) => {
