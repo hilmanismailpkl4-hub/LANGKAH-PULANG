@@ -58,13 +58,32 @@ export const PlayerController: React.FC = () => {
       const state = useGameStore.getState();
       if (state.screen !== 'playing') return;
 
+      // Ponsel Damar [H]
+      if (
+        code === 'KeyH' &&
+        !state.activeDialogue &&
+        !state.isMapJournalOpen &&
+        !state.isPauseOpen &&
+        !state.isQuickGraphicsOpen &&
+        !state.isPhotoMode
+      ) {
+        e.preventDefault();
+        if (state.isPhoneOpen) {
+          state.closePhone();
+        } else {
+          state.openPhone('home');
+        }
+        return;
+      }
+
       // Mode Foto [P]
       if (
         code === 'KeyP' &&
         !state.activeDialogue &&
         !state.isMapJournalOpen &&
         !state.isPauseOpen &&
-        !state.isQuickGraphicsOpen
+        !state.isQuickGraphicsOpen &&
+        !state.isPhoneOpen
       ) {
         e.preventDefault();
         sfxEngine.play('switch');
@@ -73,7 +92,9 @@ export const PlayerController: React.FC = () => {
       }
 
       if (code === 'Escape') {
-        if (state.isPhotoMode) {
+        if (state.isPhoneOpen) {
+          state.closePhone();
+        } else if (state.isPhotoMode) {
           state.setPhotoMode(false);
         } else if (state.isQuickGraphicsOpen) {
           state.setQuickGraphicsOpen(false);
@@ -87,7 +108,7 @@ export const PlayerController: React.FC = () => {
         return;
       }
 
-      if (state.isPhotoMode) return;
+      if (state.isPhotoMode || state.isPhoneOpen) return;
 
       // Jika sedang duduk di bangku, tombol gerak / E / Spasi membuat Damar berdiri
       if (state.isSitting) {
@@ -152,7 +173,8 @@ export const PlayerController: React.FC = () => {
         state.activeDialogue ||
         state.isMapJournalOpen ||
         state.isPauseOpen ||
-        state.isQuickGraphicsOpen
+        state.isQuickGraphicsOpen ||
+        state.isPhoneOpen
       )
         return;
       isDraggingRef.current = true;
@@ -170,7 +192,8 @@ export const PlayerController: React.FC = () => {
         state.activeDialogue ||
         state.isMapJournalOpen ||
         state.isPauseOpen ||
-        state.isQuickGraphicsOpen
+        state.isQuickGraphicsOpen ||
+        state.isPhoneOpen
       )
         return;
 
@@ -310,7 +333,8 @@ export const PlayerController: React.FC = () => {
       !store.isMapJournalOpen &&
       !store.isPauseOpen &&
       !store.isQuickGraphicsOpen &&
-      !store.isPhotoMode;
+      !store.isPhotoMode &&
+      !store.isPhoneOpen;
 
     let moveX = 0;
     let moveZ = 0;
@@ -376,6 +400,7 @@ export const PlayerController: React.FC = () => {
         lastStepHalfRef.current = halfCycle;
         const surf = getSurfaceAtPosition(rx, ry, rz);
         sfxEngine.playFootstep(surf, isRunning);
+        store.incrementStepCount();
       }
     } else {
       strideTimerRef.current = 0;

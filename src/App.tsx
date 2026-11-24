@@ -8,6 +8,7 @@ import { MapJournalModal } from './components/ui/MapJournalModal';
 import { PauseSettingsModal } from './components/ui/PauseSettingsModal';
 import { PhoneNotification } from './components/ui/PhoneNotification';
 import { PhotoModeOverlay } from './components/ui/PhotoModeOverlay';
+import { SmartphoneModal } from './components/ui/SmartphoneModal';
 import { TitleScreen } from './components/ui/TitleScreen';
 import { GameCanvas } from './components/world/GameCanvas';
 import { useGameStore } from './store/useGameStore';
@@ -49,6 +50,7 @@ export function App() {
       <TitleScreen />
       <GameHUD />
       <PhotoModeOverlay />
+      <SmartphoneModal />
       <PhoneNotification />
       <DialogueOverlay />
       <MapJournalModal />

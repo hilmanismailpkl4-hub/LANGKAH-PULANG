@@ -72,7 +72,24 @@ export interface PhoneMessage {
   sender: string;
   preview: string;
   timeLabel: string;
+  threadId?: string;
 }
+
+export interface PlayerPhoto {
+  id: string;
+  dataUrl: string;
+  locationName: string;
+  timeLabel: string;
+  caption: string;
+}
+
+export interface PlayerNote {
+  id: string;
+  text: string;
+  createdAt: string;
+}
+
+export type RadioStationId = 'auto' | 'senja_fm' | 'langkah_kecil' | 'piano_hujan' | 'malam_rooftop';
 
 export interface JournalEntry {
   id: string;
@@ -238,6 +255,10 @@ export interface SaveSlotData {
   journalEntries: JournalEntry[];
   unlockedEndings: EndingId[];
   completedEnding?: EndingId;
+  repliedPhonePrompts?: Record<string, string>;
+  readPhoneThreads?: string[];
+  playerNotes?: PlayerNote[];
+  stepCount?: number;
 }
 
 export interface GameSettings {

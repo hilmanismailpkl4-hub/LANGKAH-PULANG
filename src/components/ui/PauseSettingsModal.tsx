@@ -236,6 +236,7 @@ export const PauseSettingsModal: React.FC = () => {
                 ['Scroll Mouse', 'Mendekatkan atau menjauhkan jarak kamera'],
                 ['E', 'Berbicara dengan tokoh, memeriksa benda, atau naik lift Rooftop'],
                 ['F', 'Melambaikan tangan menyapa warga sekitar (NPC akan melambai balik!)'],
+                ['H', 'Membuka Ponsel Damar (Pesan, Telepon & Suara, Galeri, Nada FM, Catatan)'],
                 ['P', 'Mode Foto Sinematik (kamera bebas & simpan tangkapan layar PNG)'],
                 ['M / Tab / J', 'Membuka Peta Kota, Daftar Misi, & Catatan Harian'],
                 ['Spasi / Enter / Klik', 'Melanjutkan baris dialog'],

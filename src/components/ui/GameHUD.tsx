@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { BookOpen, Camera, Compass, Map as MapIcon, Menu, Navigation, Sliders } from 'lucide-react';
+import { BookOpen, Camera, Compass, Map as MapIcon, Menu, Navigation, Sliders, Smartphone } from 'lucide-react';
 import { MAIN_STEP_BY_ID } from '../../data/dialogues';
+import { PHONE_THREADS } from '../../data/phoneContent';
 import { LOCATION_BY_ID } from '../../data/worldLocations';
 import { playerRuntime } from '../../store/playerRuntime';
 import { useGameStore } from '../../store/useGameStore';
@@ -32,7 +33,10 @@ export const GameHUD: React.FC = () => {
   const isPauseOpen = useGameStore((s) => s.isPauseOpen);
   const isQuickGraphicsOpen = useGameStore((s) => s.isQuickGraphicsOpen);
   const isPhotoMode = useGameStore((s) => s.isPhotoMode);
+  const isPhoneOpen = useGameStore((s) => s.isPhoneOpen);
   const isSitting = useGameStore((s) => s.isSitting);
+  const repliedPhonePrompts = useGameStore((s) => s.repliedPhonePrompts);
+  const openPhone = useGameStore((s) => s.openPhone);
   const interactPrompt = useGameStore((s) => s.interactPrompt);
   const toast = useGameStore((s) => s.toast);
   const customWaypoint = useGameStore((s) => s.customWaypoint);
@@ -115,10 +119,17 @@ export const GameHUD: React.FC = () => {
     isMapJournalOpen ||
     isPauseOpen ||
     isQuickGraphicsOpen ||
-    isPhotoMode
+    isPhotoMode ||
+    isPhoneOpen
   ) {
     return null;
   }
+
+  const unreadPhoneCount = PHONE_THREADS.reduce(
+    (sum, th) =>
+      sum + th.prompts.filter((p) => p.chapterMin <= chapter && !repliedPhonePrompts[p.id]).length,
+    0,
+  );
 
   // Skala Mini-Map Radar: radius 48 meter di sekitar Damar -> 120px diameter
   const radarScale = 1.25;
@@ -192,6 +203,20 @@ export const GameHUD: React.FC = () => {
               <p className="text-[11px] text-warm-200/65">{locInfo.subtitle}</p>
             </div>
             <div className="flex flex-wrap justify-end items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => openPhone('home')}
+                className="relative flex items-center gap-1.5 rounded-xl border border-warm-300/35 bg-dusk-950/75 px-3 py-1.5 text-[11px] font-medium text-warm-100 backdrop-blur-md transition hover:border-warm-300/70"
+                title="Buka Ponsel Damar"
+              >
+                <Smartphone className="h-3.5 w-3.5 text-warm-300" />
+                <span>HP [H]</span>
+                {unreadPhoneCount > 0 && (
+                  <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white">
+                    {unreadPhoneCount}
+                  </span>
+                )}
+              </button>
               <button
                 type="button"
                 onClick={() => toggleMapJournal('map')}
@@ -351,7 +376,7 @@ export const GameHUD: React.FC = () => {
             )}
 
             <p className="text-[11px] text-warm-200/55">
-              WASD Jalan · Shift Cepat · F Sapa Warga · P Mode Foto · M Peta
+              WASD Jalan · Shift Cepat · H Ponsel Damar · F Sapa · P Foto · M Peta
             </p>
           </div>
 

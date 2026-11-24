@@ -368,6 +368,7 @@ export const WorldInteractables: React.FC = () => {
       store.isPauseOpen ||
       store.isQuickGraphicsOpen ||
       store.isPhotoMode ||
+      store.isPhoneOpen ||
       store.isSitting
     ) {
       playerRuntime.nearestInteractable = null;

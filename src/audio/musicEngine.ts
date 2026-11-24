@@ -62,6 +62,8 @@ const PROGRESSIONS: Record<MusicMood, ChordStep[]> = {
 
 class AmbientMusicEngine {
   private isRunning = false;
+  private isPausedByRadio = false;
+  private overrideMood: MusicMood | null = null;
   private volume = 0.55;
   private mood: MusicMood = 'title';
   private timeOfDay: TimeOfDay = 'morning';
@@ -117,6 +119,14 @@ class AmbientMusicEngine {
     this.mood = mood;
     this.timeOfDay = timeOfDay;
     this.updateAmbientLayers();
+  }
+
+  public setRadioOverride(mood: MusicMood | null) {
+    this.overrideMood = mood;
+  }
+
+  public setRadioPaused(paused: boolean) {
+    this.isPausedByRadio = paused;
   }
 
   private initAmbientNoise(ctx: AudioContext) {
@@ -190,15 +200,16 @@ class AmbientMusicEngine {
 
   private playBar() {
     const ctx = getAudioContext();
-    if (!ctx || !this.masterGain || ctx.state !== 'running') return;
+    if (!ctx || !this.masterGain || ctx.state !== 'running' || this.isPausedByRadio) return;
 
     const now = ctx.currentTime + 0.05;
-    const prog = PROGRESSIONS[this.mood] || PROGRESSIONS.city;
+    const activeMood = this.overrideMood ?? this.mood;
+    const prog = PROGRESSIONS[activeMood] || PROGRESSIONS.city;
     const chord = prog[this.stepIdx % prog.length];
     this.stepIdx++;
 
     // 1. Cello / Warm Pad Bass lembut
-    this.playWarmCello(ctx, chord.bass, now, 4.5, this.mood === 'office' ? 0.055 : 0.085);
+    this.playWarmCello(ctx, chord.bass, now, 4.5, activeMood === 'office' ? 0.055 : 0.085);
 
     // 2. Felt Piano lembut pada ketukan 1 dan 3
     this.playFeltPiano(ctx, chord.notes[0], now, 3.4, 0.075);
@@ -210,7 +221,7 @@ class AmbientMusicEngine {
       if (Math.random() > 0.22) {
         const freq = chord.notes[(idx + this.stepIdx) % chord.notes.length];
         const octave = idx === 3 && Math.random() > 0.5 ? 2 : 1;
-        if (this.mood === 'cafe' || this.mood === 'park' || this.mood === 'ending') {
+        if (activeMood === 'cafe' || activeMood === 'park' || activeMood === 'ending') {
           this.playAcousticGuitar(ctx, freq * octave, now + offset, 2.1, 0.048);
         } else {
           this.playFeltPiano(ctx, freq * octave, now + offset, 2.4, 0.045);

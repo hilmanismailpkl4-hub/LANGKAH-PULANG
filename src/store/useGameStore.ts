@@ -5,6 +5,7 @@ import { voiceManager } from '../audio/voiceManager';
 import { ALL_DIALOGUES } from '../data/dialogues';
 import { EASTER_EGGS } from '../data/easterEggs';
 import { evaluateEnding } from '../data/endings';
+import { RADIO_STATIONS } from '../data/phoneContent';
 import { getLocationAtPosition } from '../data/worldLocations';
 import {
   createFreshSaveSlot,
@@ -31,6 +32,9 @@ import {
   JournalEntry,
   LocationId,
   PhoneMessage,
+  PlayerNote,
+  PlayerPhoto,
+  RadioStationId,
   SaveSlotData,
   ScreenMode,
   SideQuestProgress,
@@ -84,6 +88,18 @@ interface GameStoreState {
   isPhotoMode: boolean;
   isSitting: boolean;
 
+  // Smartphone Interaktif Damar ([H])
+  isPhoneOpen: boolean;
+  phoneApp: 'home' | 'chat' | 'calls' | 'gallery' | 'radio' | 'notes' | 'weather';
+  phoneThreadId: string | null;
+  repliedPhonePrompts: Record<string, string>;
+  readPhoneThreads: string[];
+  playerNotes: PlayerNote[];
+  playerPhotos: PlayerPhoto[];
+  radioStation: RadioStationId;
+  radioPaused: boolean;
+  stepCount: number;
+
   // Actions
   initApp: () => Promise<void>;
   setQuickGraphicsOpen: (open: boolean) => void;
@@ -92,6 +108,16 @@ interface GameStoreState {
   setCustomWaypoint: (wp: CustomWaypoint | null) => void;
   setPhotoMode: (active: boolean) => void;
   setSitting: (sitting: boolean) => void;
+  openPhone: (app?: 'home' | 'chat' | 'calls' | 'gallery' | 'radio' | 'notes' | 'weather', threadId?: string) => void;
+  closePhone: () => void;
+  replyToPhonePrompt: (promptId: string, optionId: string, effects?: DialogueEffect) => void;
+  markPhoneThreadRead: (threadId: string) => void;
+  addPlayerNote: (text: string) => void;
+  deletePlayerNote: (id: string) => void;
+  addPlayerPhoto: (photo: PlayerPhoto) => void;
+  setRadioStation: (station: RadioStationId) => void;
+  setRadioPaused: (paused: boolean) => void;
+  incrementStepCount: () => void;
   setCloudUserEmail: (email: string | null) => void;
   refreshSlotsFromCloud: () => Promise<void>;
   startNewSlot: (slotId: string, journalName: string) => Promise<void>;
@@ -174,6 +200,23 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     isPhotoMode: false,
     isSitting: false,
 
+    isPhoneOpen: false,
+    phoneApp: 'home',
+    phoneThreadId: null,
+    repliedPhonePrompts: {},
+    readPhoneThreads: [],
+    playerNotes: [
+      {
+        id: 'note_init_1',
+        text: 'Jangan lupa beli cat air warna biru untuk Kira sebelum pulang.',
+        createdAt: '07:30',
+      },
+    ],
+    playerPhotos: [],
+    radioStation: 'auto',
+    radioPaused: false,
+    stepCount: 0,
+
     initApp: async () => {
       const merged = await syncAndLoadAllSlots();
       set({
@@ -207,6 +250,89 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     },
 
     setSitting: (sitting) => set({ isSitting: sitting }),
+
+    openPhone: (app, threadId) => {
+      const s = get();
+      if (s.screen !== 'playing' || s.activeDialogue) return;
+      if (document.pointerLockElement) document.exitPointerLock();
+      sfxEngine.play('switch');
+      set({
+        isPhoneOpen: true,
+        isMapJournalOpen: false,
+        isPauseOpen: false,
+        isQuickGraphicsOpen: false,
+        isPhotoMode: false,
+        phoneApp: app ?? 'home',
+        phoneThreadId: threadId ?? s.phoneThreadId,
+      });
+    },
+
+    closePhone: () => {
+      voiceManager.stop();
+      set({ isPhoneOpen: false });
+    },
+
+    replyToPhonePrompt: (promptId, optionId, effects) => {
+      set((s) => ({
+        repliedPhonePrompts: { ...s.repliedPhonePrompts, [promptId]: optionId },
+      }));
+      if (effects) {
+        get().applyEffect(effects);
+      }
+      void get().saveCurrentGame(true);
+    },
+
+    markPhoneThreadRead: (threadId) => {
+      set((s) => ({
+        readPhoneThreads: s.readPhoneThreads.includes(threadId)
+          ? s.readPhoneThreads
+          : [...s.readPhoneThreads, threadId],
+      }));
+    },
+
+    addPlayerNote: (text) => {
+      const clean = text.trim();
+      if (!clean) return;
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      set((s) => ({
+        playerNotes: [{ id: `note_${Date.now()}`, text: clean, createdAt: timeStr }, ...s.playerNotes],
+      }));
+      void get().saveCurrentGame(true);
+    },
+
+    deletePlayerNote: (id) => {
+      set((s) => ({
+        playerNotes: s.playerNotes.filter((n) => n.id !== id),
+      }));
+      void get().saveCurrentGame(true);
+    },
+
+    addPlayerPhoto: (photo) => {
+      set((s) => ({
+        playerPhotos: [photo, ...s.playerPhotos].slice(0, 12),
+      }));
+    },
+
+    setRadioStation: (station) => {
+      set({ radioStation: station, radioPaused: false });
+      musicEngine.setRadioPaused(false);
+      if (station === 'auto') {
+        musicEngine.setRadioOverride(null);
+      } else {
+        const found = RADIO_STATIONS.find((r) => r.id === station);
+        musicEngine.setRadioOverride(found ? found.mood : null);
+      }
+    },
+
+    setRadioPaused: (paused) => {
+      set({ radioPaused: paused });
+      musicEngine.setRadioPaused(paused);
+    },
+
+    incrementStepCount: () => {
+      set((s) => ({ stepCount: s.stepCount + 1 }));
+    },
 
     setCloudUserEmail: (email) => set({ cloudUserEmail: email }),
 
@@ -244,6 +370,17 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         activeNodeId: null,
         isMapJournalOpen: false,
         isPauseOpen: false,
+        isPhoneOpen: false,
+        repliedPhonePrompts: {},
+        readPhoneThreads: [],
+        playerNotes: [
+          {
+            id: 'note_init_1',
+            text: 'Jangan lupa beli cat air warna biru untuk Kira sebelum pulang.',
+            createdAt: '07:30',
+          },
+        ],
+        stepCount: 0,
         transitionChapter: 1,
         screen: 'chapter_transition',
       }));
@@ -276,6 +413,17 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         activeNodeId: null,
         isMapJournalOpen: false,
         isPauseOpen: false,
+        isPhoneOpen: false,
+        repliedPhonePrompts: slot.repliedPhonePrompts ?? {},
+        readPhoneThreads: slot.readPhoneThreads ?? [],
+        playerNotes: slot.playerNotes ?? [
+          {
+            id: 'note_init_1',
+            text: 'Jangan lupa beli cat air warna biru untuk Kira sebelum pulang.',
+            createdAt: '07:30',
+          },
+        ],
+        stepCount: slot.stepCount ?? 0,
         screen: 'playing',
       });
     },
@@ -310,6 +458,10 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         journalEntries: [...s.journalEntries],
         unlockedEndings: [...s.unlockedEndings],
         completedEnding: s.activeEnding ?? undefined,
+        repliedPhonePrompts: { ...s.repliedPhonePrompts },
+        readPhoneThreads: [...s.readPhoneThreads],
+        playerNotes: [...s.playerNotes],
+        stepCount: s.stepCount,
       };
 
       const res = await saveSlotData(payload);
