@@ -10,7 +10,7 @@ import {
   SPOT_FAMILY_BANTERS,
   WEATHER_FAMILY_BANTERS,
 } from '../../data/familyWalkBanter';
-import { ELEVATOR_PORTALS, resolveCompanionMovement } from '../../data/worldLocations';
+import { ELEVATOR_PORTALS, isPositionIndoors, resolveCompanionMovement } from '../../data/worldLocations';
 import { playerRuntime, setRuntimePosition } from '../../store/playerRuntime';
 import { useGameStore } from '../../store/useGameStore';
 import { CharacterId, InteractableTarget, TimeOfDay } from '../../types/game';
@@ -238,15 +238,12 @@ const NpcFigure: React.FC<{
         colEntry.z = posRef.current[2];
       }
 
-      // Cek apakah pendamping di dalam ruangan (untuk melipat payung hujan secara alami)
+      // Cek apakah pendamping di dalam ruangan (untuk melipat payung hujan secara alami di semua 4 bangunan!)
       indoorsCheckRef.current += dt;
       if (indoorsCheckRef.current > 0.25) {
         indoorsCheckRef.current = 0;
         const [rx, ry, rz] = posRef.current;
-        const indoorsNow =
-          ry < 14 &&
-          ((rx >= -27 && rx <= -13 && rz >= 62 && rz <= 74) ||
-            (rx >= -28 && rx <= -12 && rz >= 14 && rz <= 27));
+        const indoorsNow = isPositionIndoors(rx, ry, rz);
         setCompIndoors((prev) => (prev === indoorsNow ? prev : indoorsNow));
       }
     } else {
@@ -448,6 +445,7 @@ export const WorldInteractables: React.FC = () => {
   const heardBantersRef = useRef<Set<string>>(new Set());
   const lastBanterTimeRef = useRef(0);
   const banterCheckTimerRef = useRef(0);
+  const cassetteIdxRef = useRef(0);
 
   // Daftarkan kolisi tubuh NPC agar Damar tidak bisa menembus NPC
   useEffect(() => {
@@ -836,6 +834,95 @@ export const WorldInteractables: React.FC = () => {
       2.5,
     );
 
+    // === INTERAKSI INTERIOR BARU: SUDUT KIRA, TOKO MUSIK NADA LAMA & KIOS 24 JAM HARMONI ===
+    consider(
+      {
+        id: 'interior_kira_desk',
+        kind: 'story_object',
+        label: 'Periksa Meja Gambar & Mainan Kira',
+        sublabel: 'Sudut Kira · Rumah Jl. Melati No. 14',
+        position: [-19.8, 0.08, 71.5],
+        onInteract: () => {
+          playerRuntime.activeSpeakerPos = [-19.8, 0.6, 72.4];
+          store.startDialogue('interior_kira_drawing_table');
+        },
+      },
+      2.4,
+    );
+
+    consider(
+      {
+        id: 'interior_music_cassette',
+        kind: 'story_object',
+        label: 'Putar Kaset Lawas di Tape Deck "Nada Lama"',
+        sublabel: 'Interior Toko Musik · Ganti Kaset Musik Live',
+        position: [-25.1, 0.08, -25.4],
+        onInteract: () => {
+          const tapes: { station: 'langkah_kecil' | 'piano_hujan' | 'senja_fm'; title: string }[] = [
+            { station: 'langkah_kecil', title: 'Kaset Demo "Langkah Kecil" (2018)' },
+            { station: 'piano_hujan', title: 'Kaset Piano Hujan & Kopi' },
+            { station: 'senja_fm', title: 'Kaset Akustik Senja Klasik' },
+          ];
+          const chosen = tapes[cassetteIdxRef.current % tapes.length];
+          cassetteIdxRef.current += 1;
+          sfxEngine.play('switch');
+          store.setRadioStation(chosen.station);
+          if (!store.flags.includes('visited_nada_lama_cassette')) {
+            store.startDialogue('interior_music_cassette');
+          } else {
+            store.showToast(`Memutar ${chosen.title} di Tape Deck "Nada Lama"!`);
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.interior_music_cassette, 'fw_cassette');
+            }
+          }
+        },
+      },
+      2.6,
+    );
+
+    consider(
+      {
+        id: 'interior_music_guitar',
+        kind: 'story_object',
+        label: 'Coba Petik Gitar Etalase "Nada Lama"',
+        sublabel: 'Interior Toko Musik · Mini-Aktivitas Gitar',
+        position: [-18.2, 0.08, -23.4],
+        onInteract: () => {
+          sfxEngine.playGuitarChord(0);
+          store.setGuitarOpen(true);
+        },
+      },
+      2.5,
+    );
+
+    consider(
+      {
+        id: 'interior_kios_fridge',
+        kind: 'story_object',
+        label: 'Buka Lemari Es Minuman Kios Harmoni',
+        sublabel: 'Interior Kios 24 Jam Harmoni',
+        position: [24.5, 0.08, 26.2],
+        onInteract: () => {
+          store.startDialogue('interior_kios_fridge');
+        },
+      },
+      2.6,
+    );
+
+    consider(
+      {
+        id: 'interior_kios_tea',
+        kind: 'story_object',
+        label: 'Seduh Teh Melati Hangat di Dispenser Kasir',
+        sublabel: 'Interior Kios 24 Jam Harmoni',
+        position: [28.0, 0.08, 23.4],
+        onInteract: () => {
+          store.startDialogue('interior_kios_tea');
+        },
+      },
+      2.4,
+    );
+
     // === HADIAH KEJUTAN UNTUK KELUARGA (MASUK KE TAS SELEMPANG [I]) ===
     if (!store.flags.includes('has_gift_kira')) {
       consider(
@@ -1183,6 +1270,20 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[ELEVATOR_PORTALS.rooftopPos[0], 23.4, ELEVATOR_PORTALS.rooftopPos[2] - 0.8]}>
         <sphereGeometry args={[0.12, 8, 8]} />
         <meshBasicMaterial color="#f6d17a" />
+      </mesh>
+
+      {/* Penanda Interaktif Halus di Interior Baru (Sudut Kira, Nada Lama & Kios Harmoni) */}
+      <mesh position={[-19.8, 1.08, 72.3]}>
+        <sphereGeometry args={[0.07, 8, 8]} />
+        <meshBasicMaterial color="#ffe599" />
+      </mesh>
+      <mesh position={[-25.6, 1.72, -25.4]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#ffb85c" />
+      </mesh>
+      <mesh position={[24.5, 2.38, 26.8]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#93e5ff" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

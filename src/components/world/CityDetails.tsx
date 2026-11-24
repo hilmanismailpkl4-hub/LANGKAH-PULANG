@@ -308,7 +308,7 @@ export const CityDetails: React.FC<CityDetailsProps> = ({ timeOfDay, settings, p
         />
       </mesh>
       {/* Kios Harmoni */}
-      <mesh position={[24.5, 4.45, 17.38]} rotation={[0, Math.PI, 0]}>
+      <mesh position={[24.5, 4.45, 17.3]} rotation={[0, Math.PI, 0]}>
         <planeGeometry args={[6.4, 0.96]} />
         <meshStandardMaterial
           map={signs.kios}
@@ -318,13 +318,23 @@ export const CityDetails: React.FC<CityDetailsProps> = ({ timeOfDay, settings, p
         />
       </mesh>
       {/* Toko Musik Nada Lama */}
-      <mesh position={[-22, 4.45, -19.48]}>
+      <mesh position={[-22, 4.45, -19.36]}>
         <planeGeometry args={[6.4, 1.1]} />
         <meshStandardMaterial
           map={signs.music}
           emissiveMap={signs.music}
           emissive="#ffffff"
           emissiveIntensity={isEveningOrNight ? 0.85 : 0.15}
+        />
+      </mesh>
+      {/* Poster Konser Akustik di Dalam Dinding Toko Musik Nada Lama */}
+      <mesh position={[-15.0, 2.35, -27.2]} rotation={[0, -Math.PI / 2, 0]}>
+        <planeGeometry args={[2.6, 1.1]} />
+        <meshStandardMaterial
+          map={signs.music}
+          emissiveMap={signs.music}
+          emissive="#ffdfa8"
+          emissiveIntensity={0.35}
         />
       </mesh>
       {/* Menara Nusantara */}
@@ -356,6 +366,11 @@ export const CityDetails: React.FC<CityDetailsProps> = ({ timeOfDay, settings, p
       <mesh position={[-14.5, 1.45, 71.88]} rotation={[0, Math.PI, 0]}>
         <planeGeometry args={[0.55, 0.55]} />
         <meshStandardMaterial map={signs.kira} roughness={0.8} />
+      </mesh>
+      {/* Gambar Krayon Kira di Meja Gambar Sudut Kira */}
+      <mesh position={[-19.98, 0.665, 72.32]} rotation={[-Math.PI / 2, 0, 0.08]}>
+        <planeGeometry args={[0.48, 0.36]} />
+        <meshStandardMaterial map={signs.kira} roughness={0.82} />
       </mesh>
       {/* Mural Grafiti di Gang Belakang Nada Lama */}
       <mesh position={[-31.18, 1.85, -25]} rotation={[0, -Math.PI / 2, 0]}>

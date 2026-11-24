@@ -657,6 +657,111 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
           <meshStandardMaterial color="#4a5e59" roughness={0.9} />
         </mesh>
 
+        {/* === SUDUT MEJA GAMBAR & MAINAN KIRA (RUMAH JL. MELATI NO. 14) === */}
+        <group position={[-19.8, 0.08, 72.1]}>
+          {/* Karpet Bulat Pastel Lembut */}
+          <mesh position={[0, 0.015, -0.35]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+            <circleGeometry args={[1.65, 24]} />
+            <meshStandardMaterial color="#c9dde8" roughness={0.94} />
+          </mesh>
+          <mesh position={[0, 0.018, -0.35]} rotation={[-Math.PI / 2, 0, 0]}>
+            <ringGeometry args={[1.38, 1.52, 24]} />
+            <meshStandardMaterial color="#f2cf7e" roughness={0.9} />
+          </mesh>
+
+          {/* Meja Gambar Kayu Mungil Kira */}
+          <mesh position={[0, 0.52, 0.25]} castShadow receiveShadow>
+            <boxGeometry args={[1.62, 0.08, 0.92]} />
+            <meshStandardMaterial color="#e6cda8" roughness={0.62} />
+          </mesh>
+          {[
+            [-0.7, 0.26, -0.14],
+            [0.7, 0.26, -0.14],
+            [-0.7, 0.26, 0.64],
+            [0.7, 0.26, 0.64],
+          ].map(([lx, ly, lz], idx) => (
+            <mesh key={`kl-${idx}`} position={[lx, ly, lz]} castShadow>
+              <cylinderGeometry args={[0.04, 0.04, 0.52, 8]} />
+              <meshStandardMaterial color="#a67c52" roughness={0.75} />
+            </mesh>
+          ))}
+          {/* Kursi Kuning Mungil Kira */}
+          <mesh position={[-0.3, 0.31, -0.45]} castShadow>
+            <boxGeometry args={[0.42, 0.06, 0.42]} />
+            <meshStandardMaterial color="#eab949" roughness={0.6} />
+          </mesh>
+          <mesh position={[-0.3, 0.52, -0.64]} castShadow>
+            <boxGeometry args={[0.42, 0.38, 0.06]} />
+            <meshStandardMaterial color="#eab949" roughness={0.6} />
+          </mesh>
+          <mesh position={[-0.3, 0.15, -0.45]}>
+            <cylinderGeometry args={[0.14, 0.18, 0.3, 8]} />
+            <meshStandardMaterial color="#b38858" roughness={0.75} />
+          </mesh>
+
+          {/* Buku Gambar, Kotak Krayon & Gelas Cat Air di Atas Meja */}
+          <mesh position={[-0.18, 0.575, 0.22]} rotation={[-Math.PI / 2, 0, 0.08]}>
+            <planeGeometry args={[0.56, 0.42]} />
+            <meshStandardMaterial color="#fcf8ee" roughness={0.85} />
+          </mesh>
+          <mesh position={[0.42, 0.59, 0.15]} castShadow>
+            <boxGeometry args={[0.34, 0.06, 0.22]} />
+            <meshStandardMaterial color="#d96b6b" roughness={0.55} />
+          </mesh>
+          {['#f2c14e', '#4ea8de', '#52b788', '#f28482'].map((col, ci) => (
+            <mesh key={`cr-${ci}`} position={[0.3 + ci * 0.07, 0.58, 0.42]} rotation={[0, 0.25, Math.PI / 2]}>
+              <cylinderGeometry args={[0.014, 0.014, 0.14, 6]} />
+              <meshStandardMaterial color={col} roughness={0.6} />
+            </mesh>
+          ))}
+          <mesh position={[-0.6, 0.62, 0.42]}>
+            <cylinderGeometry args={[0.06, 0.05, 0.12, 10]} />
+            <meshStandardMaterial color="#72b6e0" transparent opacity={0.8} roughness={0.2} />
+          </mesh>
+
+          {/* Rak Buku Cerita & Kotak Mainan di Dinding Belakang */}
+          <mesh position={[0, 0.68, 1.38]} castShadow receiveShadow>
+            <boxGeometry args={[2.05, 1.36, 0.42]} />
+            <meshStandardMaterial color="#f2e6d5" roughness={0.72} />
+          </mesh>
+          {/* Buku Cerita Warna-Warni + Boneka Beruang Mungil */}
+          {[-0.68, -0.45, -0.22, 0.02].map((bx, bi) => (
+            <mesh key={`kb-${bi}`} position={[bx, 1.02, 1.34]} castShadow>
+              <boxGeometry args={[0.16, 0.34, 0.26]} />
+              <meshStandardMaterial color={['#e07a5f', '#3d7ea6', '#f2cc8f', '#81b29a'][bi]} roughness={0.75} />
+            </mesh>
+          ))}
+          <group position={[0.58, 1.0, 1.34]}>
+            <mesh castShadow>
+              <sphereGeometry args={[0.14, 10, 10]} />
+              <meshStandardMaterial color="#9c6b43" roughness={0.9} />
+            </mesh>
+            <mesh position={[0, 0.19, 0.02]} castShadow>
+              <sphereGeometry args={[0.11, 10, 10]} />
+              <meshStandardMaterial color="#a8754b" roughness={0.9} />
+            </mesh>
+            <mesh position={[-0.08, 0.28, 0.02]}>
+              <sphereGeometry args={[0.04, 8, 8]} />
+              <meshStandardMaterial color="#8f5f38" roughness={0.9} />
+            </mesh>
+            <mesh position={[0.08, 0.28, 0.02]}>
+              <sphereGeometry args={[0.04, 8, 8]} />
+              <meshStandardMaterial color="#8f5f38" roughness={0.9} />
+            </mesh>
+          </group>
+          {/* Lampu Tidur Bintang Hangat & Bendera Hias Dinding */}
+          <mesh position={[-0.66, 1.5, 1.38]}>
+            <octahedronGeometry args={[0.14, 0]} />
+            <meshStandardMaterial color="#fff3b0" emissive="#ffd166" emissiveIntensity={2.0} />
+          </mesh>
+          {[-0.8, -0.4, 0, 0.4, 0.8].map((fx, fi) => (
+            <mesh key={`flag-${fi}`} position={[fx, 2.45, 1.66]} rotation={[0, 0, Math.PI]}>
+              <coneGeometry args={[0.16, 0.24, 3]} />
+              <meshStandardMaterial color={['#f4a261', '#e76f51', '#e9c46a', '#2a9d8f', '#6096ba'][fi]} roughness={0.8} />
+            </mesh>
+          ))}
+        </group>
+
         {/* Halaman, Jalan Setapak, Pagar & Motor Matic Parkir */}
         <mesh position={[-20, 0.025, 58]} receiveShadow>
           <boxGeometry args={[3.4, 0.05, 8.2]} />
@@ -810,32 +915,157 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
       </group>
 
       {/* ============================================================ */}
-      {/* 4. KIOS 24 JAM HARMONI (MINIMARKET MODERN)                   */}
+      {/* 4. KIOS 24 JAM HARMONI — INTERIOR MINIMARKET BISA DIMASUKI   */}
       {/* ============================================================ */}
       <group>
-        <mesh position={[24.5, 2.35, 23]} castShadow receiveShadow>
-          <boxGeometry args={[13.8, 4.7, 10.8]} />
+        {/* Lantai Keramik Bersih Mengkilap */}
+        <mesh position={[24.5, 0.04, 23]} receiveShadow>
+          <boxGeometry args={[13.8, 0.08, 10.8]} />
+          <meshStandardMaterial color="#e8edf2" roughness={0.28} metalness={0.08} />
+        </mesh>
+        {/* Dinding Belakang, Kiri & Kanan */}
+        <mesh position={[24.5, 2.35, 28.25]} castShadow receiveShadow>
+          <boxGeometry args={[13.8, 4.7, 0.36]} />
           <meshStandardMaterial map={textures.stucco} color="#f2f4f6" roughness={0.78} />
         </mesh>
-        <mesh position={[24.5, 4.45, 17.52]}>
+        <mesh position={[17.72, 2.35, 23]} castShadow receiveShadow>
+          <boxGeometry args={[0.36, 4.7, 10.8]} />
+          <meshStandardMaterial map={textures.stucco} color="#f2f4f6" roughness={0.78} />
+        </mesh>
+        <mesh position={[31.28, 2.35, 23]} castShadow receiveShadow>
+          <boxGeometry args={[0.36, 4.7, 10.8]} />
+          <meshStandardMaterial map={textures.stucco} color="#f2f4f6" roughness={0.78} />
+        </mesh>
+        {/* Dinding Depan Kiri & Kanan dengan Kaca Etalase Bening + Pintu Masuk Lebar di Tengah (x=22.7..26.3) */}
+        <mesh position={[20.15, 0.62, 17.68]} castShadow receiveShadow>
+          <boxGeometry args={[5.1, 1.24, 0.32]} />
+          <meshStandardMaterial map={textures.stucco} color="#f2f4f6" roughness={0.78} />
+        </mesh>
+        <mesh position={[28.85, 0.62, 17.68]} castShadow receiveShadow>
+          <boxGeometry args={[5.1, 1.24, 0.32]} />
+          <meshStandardMaterial map={textures.stucco} color="#f2f4f6" roughness={0.78} />
+        </mesh>
+        <mesh position={[20.15, 2.4, 17.68]}>
+          <boxGeometry args={[4.85, 2.35, 0.08]} />
+          <meshStandardMaterial color="#d8f0ff" transparent opacity={0.28} roughness={0.08} metalness={0.25} />
+        </mesh>
+        <mesh position={[28.85, 2.4, 17.68]}>
+          <boxGeometry args={[4.85, 2.35, 0.08]} />
+          <meshStandardMaterial color="#d8f0ff" transparent opacity={0.28} roughness={0.08} metalness={0.25} />
+        </mesh>
+        {/* Kusen Pintu Kaca Otomatis & Bagian Atas Pintu */}
+        <mesh position={[24.5, 4.05, 17.68]} castShadow>
+          <boxGeometry args={[13.8, 1.3, 0.36]} />
+          <meshStandardMaterial map={textures.stucco} color="#f2f4f6" roughness={0.75} />
+        </mesh>
+        <mesh position={[22.66, 1.7, 17.68]}>
+          <boxGeometry args={[0.14, 3.4, 0.24]} />
+          <meshStandardMaterial color="#3c4957" metalness={0.6} roughness={0.35} />
+        </mesh>
+        <mesh position={[26.34, 1.7, 17.68]}>
+          <boxGeometry args={[0.14, 3.4, 0.24]} />
+          <meshStandardMaterial color="#3c4957" metalness={0.6} roughness={0.35} />
+        </mesh>
+        {/* Atap Plafon + Strip Ikonik Hijau-Oranye Harmoni */}
+        <mesh position={[24.5, 4.72, 23]} castShadow>
+          <boxGeometry args={[14.3, 0.28, 11.4]} />
+          <meshStandardMaterial color="#dce3ea" roughness={0.7} />
+        </mesh>
+        <mesh position={[24.5, 4.45, 17.46]}>
           <boxGeometry args={[14.2, 0.68, 0.24]} />
           <meshStandardMaterial color="#27826f" emissive="#27826f" emissiveIntensity={isEveningOrNight ? 1.15 : 0.15} />
         </mesh>
-        <mesh position={[24.5, 3.92, 17.52]}>
+        <mesh position={[24.5, 3.92, 17.46]}>
           <boxGeometry args={[14.2, 0.3, 0.24]} />
           <meshStandardMaterial color="#e88a35" emissive="#e88a35" emissiveIntensity={isEveningOrNight ? 1.25 : 0.2} />
         </mesh>
-        <mesh position={[24.5, 1.85, 17.52]}>
-          <planeGeometry args={[10.8, 2.7]} />
-          <meshStandardMaterial
-            color="#e7f6ff"
-            emissive="#cceeff"
-            emissiveIntensity={isEveningOrNight ? 1.15 : 0.25}
-            roughness={0.12}
-            metalness={0.2}
-          />
-        </mesh>
-        {/* Meja Teras + Payung */}
+
+        {/* Lampu LED Plafon Minimarket 24 Jam */}
+        {[-2.4, 2.4].map((ox, i) => (
+          <mesh key={`kled-${i}`} position={[24.5 + ox, 4.5, 23]}>
+            <boxGeometry args={[0.28, 0.08, 6.8]} />
+            <meshStandardMaterial color="#ffffff" emissive="#e3f4ff" emissiveIntensity={2.3} />
+          </mesh>
+        ))}
+        <pointLight position={[24.5, 3.9, 23]} color="#eef8ff" intensity={18} distance={18} decay={1.6} />
+
+        {/* Deretan 4 Lemari Es Minuman Bercahaya di Dinding Belakang */}
+        <group position={[24.5, 0.08, 27.45]}>
+          <mesh position={[0, 1.15, 0]} castShadow>
+            <boxGeometry args={[9.4, 2.3, 1.05]} />
+            <meshStandardMaterial color="#2a3542" roughness={0.4} metalness={0.4} />
+          </mesh>
+          {[-3.4, -1.15, 1.15, 3.4].map((fx, fi) => (
+            <group key={`fr-${fi}`} position={[fx, 1.18, -0.53]}>
+              <mesh>
+                <planeGeometry args={[1.95, 1.88]} />
+                <meshStandardMaterial
+                  color="#d8f2ff"
+                  emissive="#a8e2ff"
+                  emissiveIntensity={1.25}
+                  roughness={0.15}
+                />
+              </mesh>
+              {/* Deretan Baris Minuman Berwarna di Dalam Kulkas */}
+              {[-0.55, -0.1, 0.35].map((ry, ri) => (
+                <mesh key={`dr-${ri}`} position={[0, ry, 0.02]}>
+                  <boxGeometry args={[1.7, 0.22, 0.06]} />
+                  <meshStandardMaterial
+                    color={['#f48ca3', '#60a5fa', '#4ade80', '#fbbf24'][(fi + ri) % 4]}
+                    roughness={0.4}
+                  />
+                </mesh>
+              ))}
+            </group>
+          ))}
+        </group>
+
+        {/* 2 Lorong Rak Gondola Snack & Kebutuhan Harian */}
+        {[21.3, 25.0].map((gx, gi) => (
+          <group key={`gondola-${gi}`} position={[gx, 0.08, 23.1]}>
+            <mesh position={[0, 0.88, 0]} castShadow receiveShadow>
+              <boxGeometry args={[1.15, 1.76, 3.4]} />
+              <meshStandardMaterial color="#e5e9ee" roughness={0.55} />
+            </mesh>
+            {[0.45, 0.92, 1.38].map((sy, si) => (
+              <mesh key={`snk-${si}`} position={[0, sy, 0]}>
+                <boxGeometry args={[1.22, 0.22, 3.15]} />
+                <meshStandardMaterial
+                  color={['#e07a5f', '#f2cc8f', '#5fa8d3', '#81b29a', '#f4a261', '#c77dff'][(gi * 3 + si) % 6]}
+                  roughness={0.65}
+                />
+              </mesh>
+            ))}
+          </group>
+        ))}
+
+        {/* Meja Kasir Kanan + Monitor Kasir & Dispenser Teh Melati Hangat */}
+        <group position={[29.3, 0.08, 22.6]}>
+          <mesh position={[0, 0.52, 0]} castShadow receiveShadow>
+            <boxGeometry args={[1.45, 1.04, 3.75]} />
+            <meshStandardMaterial color="#277363" roughness={0.55} />
+          </mesh>
+          <mesh position={[0, 1.07, 0]} castShadow>
+            <boxGeometry args={[1.55, 0.08, 3.85]} />
+            <meshStandardMaterial color="#f2f4f7" roughness={0.35} />
+          </mesh>
+          {/* Layar Kasir */}
+          <mesh position={[-0.2, 1.34, -0.55]} rotation={[0, -0.3, 0]}>
+            <boxGeometry args={[0.42, 0.34, 0.08]} />
+            <meshStandardMaterial color="#1f2937" emissive="#60a5fa" emissiveIntensity={0.9} />
+          </mesh>
+          {/* Dispenser Teh Melati & Kopi Hangat */}
+          <mesh position={[-0.2, 1.38, 0.95]} castShadow>
+            <boxGeometry args={[0.48, 0.58, 0.52]} />
+            <meshStandardMaterial color="#d4dbe3" metalness={0.65} roughness={0.28} />
+          </mesh>
+          <mesh position={[-0.45, 1.48, 0.95]}>
+            <sphereGeometry args={[0.04, 8, 8]} />
+            <meshStandardMaterial color="#fbbf24" emissive="#fbbf24" emissiveIntensity={2.2} />
+          </mesh>
+        </group>
+
+        {/* Meja Teras Depan Kios */}
         <mesh position={[20.5, 0.72, 14.2]} castShadow>
           <cylinderGeometry args={[0.72, 0.72, 0.08, 16]} />
           <meshStandardMaterial color="#e0e5ea" roughness={0.5} />
@@ -847,30 +1077,182 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
       </group>
 
       {/* ============================================================ */}
-      {/* 5. TOKO MUSIK & BARANG ANTIK "NADA LAMA"                     */}
+      {/* 5. TOKO MUSIK "NADA LAMA" — INTERIOR HANGAT BISA DIMASUKI    */}
       {/* ============================================================ */}
       <group>
-        <mesh position={[-22, 2.6, -25.5]} castShadow receiveShadow>
-          <boxGeometry args={[14.8, 5.2, 11.8]} />
+        {/* Lantai Kayu Antik + Karpet Tenun Hangat */}
+        <mesh position={[-22, 0.04, -25.5]} receiveShadow>
+          <boxGeometry args={[14.8, 0.08, 11.8]} />
+          <meshStandardMaterial map={textures.woodFloor} roughness={0.66} />
+        </mesh>
+        <mesh position={[-21.8, 0.095, -24.6]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+          <planeGeometry args={[5.4, 3.8]} />
+          <meshStandardMaterial color="#7d3b32" roughness={0.95} />
+        </mesh>
+        <mesh position={[-21.8, 0.098, -24.6]} rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[1.3, 1.55, 24]} />
+          <meshStandardMaterial color="#d9a866" roughness={0.9} />
+        </mesh>
+
+        {/* Dinding Bata Hangat (Belakang, Kiri, Kanan) */}
+        <mesh position={[-22, 2.6, -31.3]} castShadow receiveShadow>
+          <boxGeometry args={[14.8, 5.2, 0.42]} />
           <meshStandardMaterial map={textures.brick} roughness={0.88} />
         </mesh>
-        <mesh position={[-22, 3.65, -18.7]} rotation={[0.28, 0, 0]} castShadow>
-          <boxGeometry args={[13.8, 0.24, 2.6]} />
+        <mesh position={[-29.28, 2.6, -25.5]} castShadow receiveShadow>
+          <boxGeometry args={[0.42, 5.2, 11.8]} />
+          <meshStandardMaterial map={textures.brick} roughness={0.88} />
+        </mesh>
+        <mesh position={[-14.72, 2.6, -25.5]} castShadow receiveShadow>
+          <boxGeometry args={[0.42, 5.2, 11.8]} />
+          <meshStandardMaterial map={textures.brick} roughness={0.88} />
+        </mesh>
+
+        {/* Dinding Depan Kiri & Kanan dengan Kaca Etalase Bening + Pintu Masuk Lebar di Tengah (x=-23.8..-20.2) */}
+        <mesh position={[-26.6, 0.62, -19.62]} castShadow receiveShadow>
+          <boxGeometry args={[5.6, 1.24, 0.36]} />
+          <meshStandardMaterial map={textures.brick} roughness={0.88} />
+        </mesh>
+        <mesh position={[-17.4, 0.62, -19.62]} castShadow receiveShadow>
+          <boxGeometry args={[5.6, 1.24, 0.36]} />
+          <meshStandardMaterial map={textures.brick} roughness={0.88} />
+        </mesh>
+        <mesh position={[-26.6, 2.45, -19.62]}>
+          <boxGeometry args={[5.1, 2.4, 0.08]} />
+          <meshStandardMaterial color="#ffecd1" transparent opacity={0.25} roughness={0.1} metalness={0.2} />
+        </mesh>
+        <mesh position={[-17.4, 2.45, -19.62]}>
+          <boxGeometry args={[5.1, 2.4, 0.08]} />
+          <meshStandardMaterial color="#ffecd1" transparent opacity={0.25} roughness={0.1} metalness={0.2} />
+        </mesh>
+        <mesh position={[-22, 4.4, -19.62]} castShadow>
+          <boxGeometry args={[14.8, 1.6, 0.4]} />
+          <meshStandardMaterial map={textures.brick} roughness={0.88} />
+        </mesh>
+        {/* Kusen Kayu Pintu Masuk */}
+        <mesh position={[-23.82, 1.85, -19.62]}>
+          <boxGeometry args={[0.16, 3.7, 0.38]} />
+          <meshStandardMaterial color="#4a2e1f" roughness={0.7} />
+        </mesh>
+        <mesh position={[-20.18, 1.85, -19.62]}>
+          <boxGeometry args={[0.16, 3.7, 0.38]} />
+          <meshStandardMaterial color="#4a2e1f" roughness={0.7} />
+        </mesh>
+        {/* Atap & Kanopi Merah Klasik */}
+        <mesh position={[-22, 5.2, -25.5]} castShadow>
+          <boxGeometry args={[15.4, 0.3, 12.4]} />
+          <meshStandardMaterial color="#382720" roughness={0.82} />
+        </mesh>
+        <mesh position={[-22, 3.68, -18.7]} rotation={[0.28, 0, 0]} castShadow>
+          <boxGeometry args={[13.8, 0.24, 2.5]} />
           <meshStandardMaterial color="#9c3830" roughness={0.85} />
         </mesh>
-        <mesh position={[-22, 1.75, -19.52]}>
-          <planeGeometry args={[11.4, 2.6]} />
-          <meshStandardMaterial
-            color="#ffe0ad"
-            emissive="#ffb45c"
-            emissiveIntensity={isEveningOrNight ? 1.35 : 0.3}
-            roughness={0.18}
-          />
-        </mesh>
-        {/* Gitar Pajangan Etalase */}
-        <DetailedGuitar position={[-24.2, 1.5, -19.25]} rotation={[0, 0, -0.1]} />
-        <DetailedGuitar position={[-19.5, 1.5, -19.25]} rotation={[0, 0, 0.08]} />
-        {/* Dinding Gang Grafiti */}
+
+        {/* Lampu Gantung Vintage & Cahaya Keemasan Interior */}
+        {[-25.0, -19.0].map((lx, i) => (
+          <group key={`mlamp-${i}`} position={[lx, 4.05, -25.4]}>
+            <mesh position={[0, 0.55, 0]}>
+              <cylinderGeometry args={[0.02, 0.02, 1.1, 6]} />
+              <meshStandardMaterial color="#2b231e" />
+            </mesh>
+            <mesh>
+              <coneGeometry args={[0.42, 0.3, 12]} />
+              <meshStandardMaterial color="#4a3122" roughness={0.55} />
+            </mesh>
+            <mesh position={[0, -0.14, 0]}>
+              <sphereGeometry args={[0.15, 10, 10]} />
+              <meshStandardMaterial color="#ffefc2" emissive="#ffb852" emissiveIntensity={2.8} />
+            </mesh>
+          </group>
+        ))}
+        <pointLight position={[-22, 3.85, -25.5]} color="#ffcb7a" intensity={20} distance={20} decay={1.5} />
+
+        {/* Deretan 4 Gitar Akustik & Klasik Tergantung di Dinding Belakang */}
+        <DetailedGuitar position={[-27.2, 2.15, -30.88]} rotation={[0, 0, -0.05]} />
+        <DetailedGuitar position={[-25.4, 2.15, -30.88]} rotation={[0, 0, 0.04]} />
+        <DetailedGuitar position={[-23.6, 2.15, -30.88]} rotation={[0, 0, -0.03]} />
+        <DetailedGuitar position={[-21.8, 2.15, -30.88]} rotation={[0, 0, 0.05]} />
+
+        {/* Gitar Pajangan Etalase Luar Depan */}
+        <DetailedGuitar position={[-25.6, 1.65, -19.3]} rotation={[0, 0, -0.1]} />
+        <DetailedGuitar position={[-18.4, 1.65, -19.3]} rotation={[0, 0, 0.08]} />
+
+        {/* Meja Kasir Vintage & Pemutar Vinyl / Tape Deck di Kanan Belakang */}
+        <group position={[-18.0, 0.08, -28.6]}>
+          <mesh position={[0, 0.52, 0]} castShadow receiveShadow>
+            <boxGeometry args={[4.4, 1.04, 1.25]} />
+            <meshStandardMaterial map={textures.woodSlat} color="#593a27" roughness={0.7} />
+          </mesh>
+          <mesh position={[0, 1.07, 0]} castShadow>
+            <boxGeometry args={[4.55, 0.08, 1.38]} />
+            <meshStandardMaterial color="#7c5338" roughness={0.5} />
+          </mesh>
+          {/* Turntable Piringan Hitam */}
+          <mesh position={[-0.95, 1.18, 0.05]} castShadow>
+            <boxGeometry args={[0.78, 0.14, 0.62]} />
+            <meshStandardMaterial color="#38251a" roughness={0.6} />
+          </mesh>
+          <mesh position={[-0.95, 1.26, 0.05]}>
+            <cylinderGeometry args={[0.24, 0.24, 0.03, 18]} />
+            <meshStandardMaterial color="#14161a" roughness={0.22} metalness={0.4} />
+          </mesh>
+          <mesh position={[-0.95, 1.28, 0.05]}>
+            <cylinderGeometry args={[0.07, 0.07, 0.035, 12]} />
+            <meshStandardMaterial color="#d97746" roughness={0.4} />
+          </mesh>
+          {/* Tape Deck Kaset dengan Lampu Indikator Hangat */}
+          <mesh position={[0.75, 1.24, 0]} castShadow>
+            <boxGeometry args={[0.85, 0.28, 0.45]} />
+            <meshStandardMaterial color="#2a2f38" metalness={0.55} roughness={0.35} />
+          </mesh>
+          <mesh position={[0.75, 1.26, 0.23]}>
+            <planeGeometry args={[0.42, 0.1]} />
+            <meshStandardMaterial color="#ffdf9e" emissive="#ffb84d" emissiveIntensity={1.8} />
+          </mesh>
+        </group>
+
+        {/* Rak Kayu Kaset & Vinyl Lawas di Sisi Kiri */}
+        <group position={[-26.4, 0.08, -25.4]}>
+          <mesh position={[0, 0.78, 0]} castShadow receiveShadow>
+            <boxGeometry args={[1.25, 1.56, 4.35]} />
+            <meshStandardMaterial color="#5c3d28" roughness={0.78} />
+          </mesh>
+          {[-1.5, -0.5, 0.5, 1.5].map((rz, ri) => (
+            <mesh key={`cas-${ri}`} position={[0.52, 1.12, rz]} castShadow>
+              <boxGeometry args={[0.28, 0.34, 0.72]} />
+              <meshStandardMaterial color={['#c96a4a', '#487699', '#d9a84e', '#5d8a68'][ri]} roughness={0.65} />
+            </mesh>
+          ))}
+          {[-1.4, 0, 1.4].map((rz, ri) => (
+            <mesh key={`vin-${ri}`} position={[0.52, 0.55, rz]} castShadow>
+              <boxGeometry args={[0.3, 0.42, 0.92]} />
+              <meshStandardMaterial color={['#e6d5b8', '#9e4738', '#3c526b'][ri]} roughness={0.7} />
+            </mesh>
+          ))}
+        </group>
+
+        {/* Sofa Kulit Vintage & Amplifier Gitar di Sisi Kanan */}
+        <group position={[-16.8, 0.08, -23.4]}>
+          <mesh position={[0, 0.4, 0]} castShadow>
+            <boxGeometry args={[1.25, 0.52, 2.3]} />
+            <meshStandardMaterial color="#6e3f2a" roughness={0.72} />
+          </mesh>
+          <mesh position={[0.48, 0.82, 0]} castShadow>
+            <boxGeometry args={[0.3, 0.62, 2.3]} />
+            <meshStandardMaterial color="#5e3422" roughness={0.75} />
+          </mesh>
+          {/* Amplifier Gitar Hitam Klasik */}
+          <mesh position={[0.05, 0.42, -1.65]} castShadow>
+            <boxGeometry args={[0.72, 0.84, 0.58]} />
+            <meshStandardMaterial color="#1f2329" roughness={0.7} />
+          </mesh>
+          <mesh position={[-0.32, 0.42, -1.65]} rotation={[0, -Math.PI / 2, 0]}>
+            <planeGeometry args={[0.46, 0.58]} />
+            <meshStandardMaterial color="#4a4038" roughness={0.9} />
+          </mesh>
+        </group>
+
+        {/* Dinding Gang Grafiti Luar Kiri */}
         <mesh position={[-31.2, 1.85, -25]} rotation={[0, Math.PI / 2, 0]}>
           <planeGeometry args={[4.4, 2.3]} />
           <meshStandardMaterial map={textures.brick} color="#635c56" roughness={0.95} />

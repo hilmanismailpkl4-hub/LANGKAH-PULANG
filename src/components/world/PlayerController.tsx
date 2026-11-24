@@ -9,6 +9,7 @@ import {
   GROUND_COLLIDERS,
   getLocationAtPosition,
   getSurfaceAtPosition,
+  isPositionIndoors,
   resolvePlayerMovement,
 } from '../../data/worldLocations';
 import { playerRuntime } from '../../store/playerRuntime';
@@ -766,10 +767,8 @@ export const PlayerController: React.FC = () => {
       lookTargetVec.current.lerp(new THREE.Vector3(midX, midY, midZ), Math.min(1, dt * 5.5));
       camera.lookAt(lookTargetVec.current);
     } else {
-      const isIndoors =
-        (px >= -27 && px <= -13 && pz >= 62 && pz <= 74) ||
-        (px >= -28 && px <= -12 && pz >= 14 && pz <= 27);
-      let desiredDist = isIndoors ? Math.min(zoomRef.current, 3.3) : zoomRef.current;
+      const isIndoors = isPositionIndoors(px, py, pz);
+      let desiredDist = isIndoors ? Math.min(zoomRef.current, 3.25) : zoomRef.current;
 
       const pitch = playerRuntime.cameraPitch;
       const yaw = playerRuntime.cameraYaw;
@@ -788,6 +787,13 @@ export const PlayerController: React.FC = () => {
               !b.id.startsWith('bridge') &&
               !b.id.startsWith('rumah_table') &&
               !b.id.startsWith('rumah_fence') &&
+              !b.id.startsWith('rumah_kira') &&
+              !b.id.startsWith('kios_shelf') &&
+              !b.id.startsWith('kios_cashier') &&
+              !b.id.startsWith('music_counter') &&
+              !b.id.startsWith('music_cassette') &&
+              !b.id.startsWith('music_amp') &&
+              !b.id.startsWith('angkringan') &&
               tx > b.minX - 0.15 &&
               tx < b.maxX + 0.15 &&
               tz > b.minZ - 0.15 &&
@@ -814,10 +820,7 @@ export const PlayerController: React.FC = () => {
     locCheckTimerRef.current += dt;
     if (locCheckTimerRef.current > 0.25) {
       locCheckTimerRef.current = 0;
-      const nowIndoors =
-        py < 14 &&
-        ((px >= -27 && px <= -13 && pz >= 62 && pz <= 74) ||
-          (px >= -28 && px <= -12 && pz >= 14 && pz <= 27));
+      const nowIndoors = isPositionIndoors(px, py, pz);
       setIsIndoorsState((prev) => (prev === nowIndoors ? prev : nowIndoors));
 
       const loc = getLocationAtPosition(playerRuntime.position);

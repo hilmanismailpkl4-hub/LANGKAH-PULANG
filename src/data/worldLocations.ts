@@ -161,10 +161,24 @@ export function getLocationAtPosition(pos: [number, number, number]): LocationIn
   return best;
 }
 
+export function isPositionIndoors(x: number, y: number, z: number): boolean {
+  if (y > 14) return false;
+  // Rumah Keluarga Damar
+  if (x >= -27 && x <= -13 && z >= 62 && z <= 74) return true;
+  // Kedai Kopi Sudut (Bima)
+  if (x >= -28 && x <= -12 && z >= 14 && z <= 27) return true;
+  // Kios 24 Jam Harmoni
+  if (x >= 17.6 && x <= 31.4 && z >= 17.6 && z <= 28.4) return true;
+  // Toko Musik "Nada Lama"
+  if (x >= -29.4 && x <= -14.6 && z >= -31.4 && z <= -19.6) return true;
+  return false;
+}
+
 export function getSurfaceAtPosition(x: number, y: number, z: number): SurfaceType {
   if (y > 14) return 'asphalt';
   if (x >= -27 && x <= -13 && z >= 62 && z <= 74) return 'wood';
   if (x >= -28 && x <= -12 && z >= 13 && z <= 27) return 'wood';
+  if (x >= -29.4 && x <= -14.6 && z >= -31.4 && z <= -19.6) return 'wood';
   if (x >= -77 && x <= -68 && z >= -31 && z <= -25) return 'wood';
   if (x < -58 && !(z > -7 && z < 7)) return 'grass';
   if (z > 53 && x > -34 && x < 48 && !(x >= -27 && x <= -13 && z >= 62 && z <= 74)) {
@@ -188,6 +202,7 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'rumah_desk', minX: -26.25, maxX: -23.75, minZ: 71.5, maxZ: 72.75 },
   { id: 'rumah_fridge', minX: -15.15, maxX: -13.85, minZ: 71.8, maxZ: 73.0 },
   { id: 'rumah_sofa', minX: -24.95, maxX: -23.5, minZ: 64.1, maxZ: 67.1 },
+  { id: 'rumah_kira_corner', minX: -20.85, maxX: -18.75, minZ: 71.85, maxZ: 73.65 },
   { id: 'rumah_fence_l', minX: -27.4, maxX: -22.0, minZ: 53.6, maxZ: 54.4 },
   { id: 'rumah_fence_r', minX: -18.0, maxX: -12.6, minZ: 53.6, maxZ: 54.4 },
 
@@ -203,12 +218,27 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'cafe_counter', minX: -24.6, maxX: -17.4, minZ: 21.8, maxZ: 23.4 },
   { id: 'cafe_coffee_table', minX: -25.7, maxX: -24.3, minZ: 16.8, maxZ: 18.2 },
 
-  // === 4. Kios 24 Jam Harmoni + Meja Teras ===
-  { id: 'kios_body', minX: 17.4, maxX: 31.6, minZ: 17.4, maxZ: 28.6 },
+  // === 4. Kios 24 Jam Harmoni (Interior Terbuka + Dinding, Kulkas, Rak & Kasir Solid) ===
+  { id: 'kios_back', minX: 17.4, maxX: 31.6, minZ: 27.95, maxZ: 28.6 },
+  { id: 'kios_left', minX: 17.4, maxX: 18.0, minZ: 17.4, maxZ: 28.6 },
+  { id: 'kios_right', minX: 31.0, maxX: 31.6, minZ: 17.4, maxZ: 28.6 },
+  { id: 'kios_front_l', minX: 17.4, maxX: 22.72, minZ: 17.4, maxZ: 17.95 },
+  { id: 'kios_front_r', minX: 26.28, maxX: 31.6, minZ: 17.4, maxZ: 17.95 },
+  { id: 'kios_fridges', minX: 19.6, maxX: 29.4, minZ: 26.75, maxZ: 28.1 },
+  { id: 'kios_shelf_1', minX: 20.65, maxX: 21.95, minZ: 21.3, maxZ: 24.9 },
+  { id: 'kios_shelf_2', minX: 24.35, maxX: 25.65, minZ: 21.3, maxZ: 24.9 },
+  { id: 'kios_cashier', minX: 28.5, maxX: 30.15, minZ: 20.6, maxZ: 24.6 },
   { id: 'kios_table', minX: 19.75, maxX: 21.25, minZ: 13.45, maxZ: 14.95 },
 
-  // === 5. Toko Musik "Nada Lama" ===
-  { id: 'music_body', minX: -29.6, maxX: -14.4, minZ: -31.6, maxZ: -19.4 },
+  // === 5. Toko Musik "Nada Lama" (Interior Terbuka + Dinding, Kasir, Rak Kaset & Sofa Solid) ===
+  { id: 'music_back', minX: -29.6, maxX: -14.4, minZ: -31.6, maxZ: -31.0 },
+  { id: 'music_left', minX: -29.6, maxX: -28.95, minZ: -31.6, maxZ: -19.4 },
+  { id: 'music_right', minX: -15.05, maxX: -14.4, minZ: -31.6, maxZ: -19.4 },
+  { id: 'music_front_l', minX: -29.6, maxX: -23.78, minZ: -19.9, maxZ: -19.35 },
+  { id: 'music_front_r', minX: -20.22, maxX: -14.4, minZ: -19.9, maxZ: -19.35 },
+  { id: 'music_counter', minX: -20.3, maxX: -15.7, minZ: -29.35, maxZ: -27.85 },
+  { id: 'music_cassette_rack', minX: -27.15, maxX: -25.65, minZ: -27.65, maxZ: -23.15 },
+  { id: 'music_amp_sofa', minX: -17.6, maxX: -16.0, minZ: -25.4, maxZ: -22.1 },
 
   // === 6. Menara Nusantara + Meja Lobi ===
   { id: 'office_core', minX: 16.5, maxX: 41.5, minZ: -43.5, maxZ: -25.7 },
@@ -408,9 +438,11 @@ export function resolvePlayerMovement(
         return true;
       }
     } else {
-      // Skuter tidak boleh masuk ke dalam interior rumah Damar / Kedai Bima / dermaga kayu
+      // Skuter tidak boleh masuk ke dalam interior rumah Damar / Kedai Bima / Kios / Toko Musik / dermaga kayu
       if (px > -27.5 && px < -12.5 && pz > 61.2 && pz < 74.8) return true;
       if (px > -28.5 && px < -11.8 && pz > 13.5 && pz < 27.8) return true;
+      if (px > 17.2 && px < 31.8 && pz > 17.2 && pz < 28.8) return true;
+      if (px > -29.8 && px < -14.2 && pz > -31.8 && pz < -19.2) return true;
       if (px > -78.0 && px < -68.0 && pz > -31.0 && pz < -25.0) return true;
     }
     return false;
@@ -465,6 +497,10 @@ export function resolvePlayerMovement(
   } else if (rx >= -27 && rx <= -13 && rz >= 62 && rz <= 74) {
     ry = 0.08;
   } else if (rx >= -28 && rx <= -12 && rz >= 14 && rz <= 27) {
+    ry = 0.08;
+  } else if (rx >= 17.6 && rx <= 31.4 && rz >= 17.6 && rz <= 28.4) {
+    ry = 0.08;
+  } else if (rx >= -29.4 && rx <= -14.6 && rz >= -31.4 && rz <= -19.6) {
     ry = 0.08;
   } else if (rx >= 17 && rx <= 41 && rz >= -25.8 && rz <= -19) {
     ry = 0.08;
@@ -547,6 +583,10 @@ export function resolveCompanionMovement(
   } else if (rx >= -27 && rx <= -13 && rz >= 62 && rz <= 74) {
     ry = 0.08;
   } else if (rx >= -28 && rx <= -12 && rz >= 14 && rz <= 27) {
+    ry = 0.08;
+  } else if (rx >= 17.6 && rx <= 31.4 && rz >= 17.6 && rz <= 28.4) {
+    ry = 0.08;
+  } else if (rx >= -29.4 && rx <= -14.6 && rz >= -31.4 && rz <= -19.6) {
     ry = 0.08;
   } else if (rx >= 17 && rx <= 41 && rz >= -25.8 && rz <= -19) {
     ry = 0.08;

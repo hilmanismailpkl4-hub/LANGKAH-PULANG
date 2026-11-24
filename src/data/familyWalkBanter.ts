@@ -224,4 +224,16 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
   activity_photo: [
     { speaker: 'kira', text: 'Ciisss!! Lihat deh Yah, foto keluarga kita pasti bagus banget di galeri HP!' },
   ],
+  interior_music_cassette: [
+    { speaker: 'kira', text: 'Wah, suara kasetnya bunyi "klik" kayak di film lama, Yah! Lagunya enak banget!' },
+    { speaker: 'nadia', text: 'Dulu kamu sampai rela nabung uang makan demi beli kaset-kaset di rak ini kan, Mas?' },
+  ],
+  interior_kios_fridge: [
+    { speaker: 'kira', text: 'Dingin banget udaranya!! Kira mau susu stroberi yang botol merah muda ya, Ayah!' },
+    { speaker: 'nadia', text: 'Satu saja ya Sayang, biar nanti malam nggak batuk.' },
+  ],
+  interior_kira_desk: [
+    { speaker: 'kira', text: 'Ayah lihat boneka beruang Kira! Tadi pagi Kira juga gambar Ayah sama Bunda di buku baru!' },
+    { speaker: 'nadia', text: 'Tiap malam sebelum tidur dia selalu merapikan krayonnya sendiri lho, Mas.' },
+  ],
 };
