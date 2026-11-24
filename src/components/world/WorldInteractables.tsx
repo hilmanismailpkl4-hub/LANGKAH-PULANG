@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { sfxEngine } from '../../audio/sfxEngine';
@@ -14,60 +14,211 @@ interface NpcPlacement {
   id: CharacterId;
   pos: [number, number, number];
   rot: number;
+  greeting: string;
 }
 
 const FEMALE_NPCS: CharacterId[] = ['nadia', 'nenek_sari', 'mbak_lilis', 'bu_wati'];
 
 const NPC_PLACEMENTS: NpcPlacement[] = [
-  { id: 'nadia', pos: [-16.2, 0.08, 66.2], rot: -0.9 },
-  { id: 'kira', pos: [-18.7, 0.08, 65.0], rot: 0.4 },
-  { id: 'bima', pos: [-20.0, 0.08, 21.0], rot: Math.PI },
-  { id: 'pak_hendra', pos: [27.0, 0.08, -22.5], rot: 0 },
-  { id: 'pak_darman', pos: [76.2, 0.1, -4.0], rot: -Math.PI / 2 },
-  { id: 'nenek_sari', pos: [-68.0, 0, -18.0], rot: 0.6 },
-  { id: 'mas_raka', pos: [-48.0, 0.24, -5.0], rot: 0 },
-  { id: 'mas_bagas', pos: [-20.0, 0, -17.5], rot: 0 },
-  { id: 'mbak_lilis', pos: [24.0, 0, 15.8], rot: Math.PI },
-  { id: 'bu_wati', pos: [24.0, 0, 61.8], rot: Math.PI },
+  { id: 'nadia', pos: [-16.2, 0.08, 66.2], rot: -0.9, greeting: 'Mas, sarapannya masih hangat...' },
+  { id: 'kira', pos: [-18.7, 0.08, 65.0], rot: 0.4, greeting: 'Ayah! Lihat gambar Kira!' },
+  { id: 'bima', pos: [-20.0, 0.08, 21.0], rot: Math.PI, greeting: 'Ngopi dulu sini, Mar!' },
+  { id: 'pak_hendra', pos: [27.0, 0.08, -22.5], rot: 0, greeting: 'Damar, mari bicara sebentar.' },
+  { id: 'pak_darman', pos: [76.2, 0.1, -4.0], rot: -Math.PI / 2, greeting: 'Eh, Nak Damar... mampir lihat buku?' },
+  { id: 'nenek_sari', pos: [-68.0, 0, -18.0], rot: 0.6, greeting: 'Angin danaunya enak ya, Nak...' },
+  { id: 'mas_raka', pos: [-48.0, 0.24, -5.0], rot: 0, greeting: 'Huh... angin jembatan dingin ya, Mas.' },
+  { id: 'mas_bagas', pos: [-20.0, 0, -17.5], rot: 0, greeting: 'Lho, Damar! Lama nggak mampir!' },
+  { id: 'mbak_lilis', pos: [24.0, 0, 15.8], rot: Math.PI, greeting: 'Selamat datang di Harmoni, Mas!' },
+  { id: 'bu_wati', pos: [24.0, 0, 61.8], rot: Math.PI, greeting: 'Halo Nak Damar, jalan kaki santai?' },
 ];
 
-const NpcFigure: React.FC<{
-  id: CharacterId;
-  position: [number, number, number];
-  rotation: number;
-  highlight?: 'main' | 'side' | null;
-}> = ({ id, position, rotation, highlight }) => {
-  const profile = CHARACTERS[id];
-  const scale = profile.appearance.height / 1.74;
-  const ringRef = useRef<THREE.Mesh>(null);
+function createBubbleTexture(name: string, greeting: string, accent: string, tag?: string): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 148;
+  const ctx = canvas.getContext('2d')!;
 
-  useFrame(({ clock }) => {
+  // Latar kapsul hangat transparan
+  ctx.fillStyle = 'rgba(14, 18, 28, 0.84)';
+  const r = 24;
+  ctx.beginPath();
+  ctx.roundRect(14, 14, 484, 114, r);
+  ctx.fill();
+
+  ctx.strokeStyle = accent;
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Nama karakter
+  ctx.fillStyle = accent;
+  ctx.font = 'bold 28px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(tag ? `${name} · ${tag}` : name, 256, 56);
+
+  // Sapaan singkat hangat
+  ctx.fillStyle = '#f8f2e8';
+  ctx.font = 'italic 23px Georgia, serif';
+  ctx.fillText(`"${greeting}"`, 256, 98);
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+const NpcFigure: React.FC<{
+  npc: NpcPlacement;
+  highlight?: 'main' | 'side' | null;
+}> = ({ npc, highlight }) => {
+  const profile = CHARACTERS[npc.id];
+  const scale = profile.appearance.height / 1.74;
+  const isChild = npc.id === 'kira';
+
+  const rootRef = useRef<THREE.Group>(null);
+  const headRef = useRef<THREE.Group>(null);
+  const torsoRef = useRef<THREE.Group>(null);
+  const leftArmRef = useRef<THREE.Group>(null);
+  const rightArmRef = useRef<THREE.Group>(null);
+  const ringRef = useRef<THREE.Mesh>(null);
+  const bubbleRef = useRef<THREE.Sprite>(null);
+
+  const currentYawRef = useRef(npc.rot);
+  const bubbleOpacityRef = useRef(0);
+
+  const bubbleTex = useMemo(
+    () =>
+      createBubbleTexture(
+        profile.name,
+        npc.greeting,
+        highlight === 'main' ? '#f6d17a' : highlight === 'side' ? '#8ec5a3' : profile.accentColor,
+        highlight === 'main' ? 'Cerita' : highlight === 'side' ? 'Misi' : undefined,
+      ),
+    [profile.name, npc.greeting, profile.accentColor, highlight],
+  );
+
+  useFrame(({ clock }, delta) => {
+    const dt = Math.min(delta, 0.05);
+    const t = clock.getElapsedTime();
+    const [px, py, pz] = playerRuntime.position;
+    const store = useGameStore.getState();
+
+    const dx = px - npc.pos[0];
+    const dz = pz - npc.pos[2];
+    const dy = Math.abs(py - npc.pos[1]);
+    const dist = dy > 4 ? 99 : Math.hypot(dx, dz);
+
+    const isTalkingNow =
+      Boolean(store.activeDialogue) &&
+      (playerRuntime.activeSpeakerId === npc.id ||
+        (store.activeDialogue &&
+          store.activeNodeId &&
+          store.activeDialogue.nodes[store.activeNodeId]?.speaker === npc.id));
+
+    const damarWaving = playerRuntime.damarWaveTimer > 0 && dist < 8.0;
+    const isNear = dist < 5.6;
+    const isVeryNear = dist < 4.2 || isTalkingNow || damarWaving;
+
+    // 1. Napas alami & gestur tubuh
+    if (torsoRef.current) {
+      const bounce = isChild && isNear ? Math.abs(Math.sin(t * 5.2)) * 0.045 : Math.sin(t * 2.1 + npc.pos[0]) * 0.012;
+      torsoRef.current.position.y = 0.92 + bounce;
+      torsoRef.current.rotation.x = isTalkingNow ? Math.sin(t * 3.5) * 0.045 : 0;
+    }
+
+    // 2. Badan menoleh halus ke arah Damar saat dekat / berbicara
+    if (rootRef.current) {
+      const desiredYaw = isVeryNear ? Math.atan2(dx, dz) : npc.rot;
+      let diff = desiredYaw - currentYawRef.current;
+      while (diff > Math.PI) diff -= Math.PI * 2;
+      while (diff < -Math.PI) diff += Math.PI * 2;
+      currentYawRef.current += diff * Math.min(1, dt * 5.5);
+      rootRef.current.rotation.y = currentYawRef.current;
+    }
+
+    // 3. Kontak mata — kepala menoleh ke arah Damar dari jarak 7.5 meter!
+    if (headRef.current) {
+      if (dist < 7.5 || isTalkingNow) {
+        const angleToPlayer = Math.atan2(dx, dz);
+        let relHead = angleToPlayer - currentYawRef.current;
+        while (relHead > Math.PI) relHead -= Math.PI * 2;
+        while (relHead < -Math.PI) relHead += Math.PI * 2;
+        const clamped = THREE.MathUtils.clamp(relHead, -0.75, 0.75);
+        headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, clamped, dt * 7);
+        headRef.current.rotation.x = isTalkingNow
+          ? Math.sin(t * 4.2) * 0.08
+          : isChild
+            ? -0.18
+            : 0;
+      } else {
+        const idleLook = Math.sin(t * 0.65 + npc.pos[2]) * 0.16;
+        headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, idleLook, dt * 3);
+        headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, 0, dt * 4);
+      }
+    }
+
+    // 4. Lengan melambai hangat saat disapa [F] atau didekati, dan gestur tangan saat bicara!
+    if (rightArmRef.current && leftArmRef.current) {
+      if (damarWaving || (isNear && !store.activeDialogue && (isChild || npc.id === 'bima' || npc.id === 'bu_wati' || npc.id === 'mbak_lilis'))) {
+        // Angkat tangan kanan & lambaikan ramah!
+        rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, -2.35, dt * 8);
+        rightArmRef.current.rotation.z = Math.sin(t * 10.5) * 0.28 + 0.32;
+        leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, 0, dt * 6);
+      } else if (isTalkingNow) {
+        // Gestur percakapan realistis
+        rightArmRef.current.rotation.x = -0.55 + Math.sin(t * 4.6) * 0.28;
+        rightArmRef.current.rotation.z = 0.12 + Math.cos(t * 3.8) * 0.1;
+        leftArmRef.current.rotation.x = -0.35 + Math.cos(t * 3.9) * 0.2;
+      } else {
+        rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, 0, dt * 6);
+        rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, 0, dt * 6);
+        leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, 0, dt * 6);
+      }
+    }
+
+    // 5. Penanda misi halus
     if (ringRef.current) {
-      const t = clock.getElapsedTime();
-      ringRef.current.position.y = 2.08 * scale + Math.sin(t * 2.5) * 0.07;
+      ringRef.current.position.y = 2.15 * scale + Math.sin(t * 2.5) * 0.06;
       ringRef.current.rotation.y = t * 1.1;
+    }
+
+    // 6. Balon sapaan WebGL muncul halus saat Damar mendekat (hilang saat dialog fullscreen terbuka)
+    if (bubbleRef.current) {
+      const showBubble = dist < 6.4 && !store.activeDialogue && store.screen === 'playing';
+      const targetOp = showBubble ? 0.96 : 0;
+      bubbleOpacityRef.current = THREE.MathUtils.lerp(bubbleOpacityRef.current, targetOp, dt * 7);
+      const mat = bubbleRef.current.material as THREE.SpriteMaterial;
+      mat.opacity = bubbleOpacityRef.current;
+      bubbleRef.current.visible = bubbleOpacityRef.current > 0.02;
+      bubbleRef.current.position.y = 2.55 * scale + Math.sin(t * 2.0) * 0.04;
     }
   });
 
   return (
-    <group position={position} rotation={[0, rotation, 0]}>
+    <group ref={rootRef} position={npc.pos} rotation={[0, npc.rot, 0]}>
       <HumanModel
         profile={profile}
-        isChild={id === 'kira'}
-        isFemale={FEMALE_NPCS.includes(id)}
+        headRef={headRef}
+        torsoRef={torsoRef}
+        leftArmRef={leftArmRef}
+        rightArmRef={rightArmRef}
+        isChild={isChild}
+        isFemale={FEMALE_NPCS.includes(npc.id)}
       />
 
-      {/* Penanda halus di atas kepala jika NPC punya cerita utama atau misi sampingan */}
       {highlight && (
-        <mesh ref={ringRef} position={[0, 2.08 * scale, 0]}>
-          <octahedronGeometry args={[0.14, 0]} />
+        <mesh ref={ringRef} position={[0, 2.15 * scale, 0]}>
+          <octahedronGeometry args={[0.13, 0]} />
           <meshStandardMaterial
             color={highlight === 'main' ? '#f6d17a' : '#8ec5a3'}
             emissive={highlight === 'main' ? '#e7a84a' : '#5ca378'}
-            emissiveIntensity={1.8}
+            emissiveIntensity={2.0}
           />
         </mesh>
       )}
+
+      {/* Balon Nama & Sapaan Interaktif 3D (murni WebGL, tidak pernah menutupi Portal UI!) */}
+      <sprite ref={bubbleRef} position={[0, 2.55 * scale, 0]} scale={[2.35, 0.68, 1]}>
+        <spriteMaterial map={bubbleTex} transparent opacity={0} depthTest={false} />
+      </sprite>
     </group>
   );
 };
@@ -77,13 +228,30 @@ export const WorldInteractables: React.FC = () => {
   const sideQuests = useGameStore((s) => s.sideQuests);
   const discoveredEasterEggs = useGameStore((s) => s.discoveredEasterEggs);
   const flags = useGameStore((s) => s.flags);
+  const activeDialogue = useGameStore((s) => s.activeDialogue);
 
-  // Tentukan dialog yang tepat saat berbicara dengan setiap NPC
+  // Daftarkan kolisi tubuh NPC agar Damar tidak bisa menembus NPC
+  useEffect(() => {
+    playerRuntime.npcColliders = NPC_PLACEMENTS.map((n) => ({
+      id: n.id,
+      x: n.pos[0],
+      z: n.pos[2],
+      radius: n.id === 'kira' ? 0.34 : 0.44,
+    }));
+  }, []);
+
+  // Bersihkan fokus kamera dialog saat percakapan selesai
+  useEffect(() => {
+    if (!activeDialogue) {
+      playerRuntime.activeSpeakerPos = null;
+      playerRuntime.activeSpeakerId = null;
+    }
+  }, [activeDialogue]);
+
   const resolveNpcInteraction = useMemo(() => {
     return (npcId: CharacterId): { dialogueId: string; highlight: 'main' | 'side' | null; sublabel: string } => {
       const store = useGameStore.getState();
 
-      // 1. Prioritas Cerita Utama
       if (npcId === 'nadia' || npcId === 'kira') {
         if (store.mainStepId === 'ch1_1_sarapan') {
           return { dialogueId: 'ch1_sarapan_main', highlight: 'main', sublabel: 'Cerita Utama' };
@@ -99,7 +267,6 @@ export const WorldInteractables: React.FC = () => {
         if (store.mainStepId === 'ch2_3_kedai_hujan') {
           return { dialogueId: 'ch2_bima_hujan', highlight: 'main', sublabel: 'Cerita Utama' };
         }
-        // Helper misi sampingan
         if (store.sideQuests.sq_mas_raka?.status === 'active' && store.sideQuests.sq_mas_raka.stage === 1) {
           return { dialogueId: 'sq_helper_bima_coffee', highlight: 'side', sublabel: 'Misi Sampingan' };
         }
@@ -126,7 +293,6 @@ export const WorldInteractables: React.FC = () => {
         }
       }
 
-      // 2. Misi Sampingan Warga Kota
       if (npcId === 'pak_darman') {
         if (store.sideQuests.sq_mbak_lilis?.status === 'active' && store.sideQuests.sq_mbak_lilis.stage === 1) {
           return { dialogueId: 'sq_helper_darman_sketchbook', highlight: 'side', sublabel: 'Misi Sampingan' };
@@ -193,10 +359,15 @@ export const WorldInteractables: React.FC = () => {
     };
   }, [mainStepId, sideQuests, flags]);
 
-  // Deteksi interaksi terdekat setiap frame (ringan)
   useFrame(() => {
     const store = useGameStore.getState();
-    if (store.screen !== 'playing' || store.activeDialogue || store.isMapJournalOpen || store.isPauseOpen) {
+    if (
+      store.screen !== 'playing' ||
+      store.activeDialogue ||
+      store.isMapJournalOpen ||
+      store.isPauseOpen ||
+      store.isQuickGraphicsOpen
+    ) {
       playerRuntime.nearestInteractable = null;
       store.setInteractPrompt(null);
       return;
@@ -213,7 +384,6 @@ export const WorldInteractables: React.FC = () => {
       }
     };
 
-    // 1. Lift Menara Nusantara <-> Rooftop
     consider(
       {
         id: 'portal_up',
@@ -246,7 +416,6 @@ export const WorldInteractables: React.FC = () => {
       3.2,
     );
 
-    // 2. Momen Cerita Utama khusus Lokasi (Jembatan Bab 2 & Rooftop Bab 3)
     if (store.mainStepId === 'ch2_2_hujan_jembatan') {
       consider(
         {
@@ -274,7 +443,6 @@ export const WorldInteractables: React.FC = () => {
       );
     }
 
-    // 3. Objek Misi Sampingan
     if (store.sideQuests.sq_pak_darman?.status === 'active' && store.sideQuests.sq_pak_darman.stage === 1) {
       consider(
         {
@@ -302,7 +470,6 @@ export const WorldInteractables: React.FC = () => {
       );
     }
 
-    // 4. NPC
     for (const npc of NPC_PLACEMENTS) {
       const profile = CHARACTERS[npc.id];
       const resolved = resolveNpcInteraction(npc.id);
@@ -313,13 +480,16 @@ export const WorldInteractables: React.FC = () => {
           label: `Bicara dengan ${profile.name}`,
           sublabel: resolved.sublabel,
           position: npc.pos,
-          onInteract: () => store.startDialogue(resolved.dialogueId),
+          onInteract: () => {
+            playerRuntime.activeSpeakerPos = [...npc.pos];
+            playerRuntime.activeSpeakerId = npc.id;
+            store.startDialogue(resolved.dialogueId);
+          },
         },
-        3.3,
+        3.6,
       );
     }
 
-    // 5. 15 Easter Egg Kenangan
     for (const ee of EASTER_EGGS) {
       const found = store.discoveredEasterEggs.includes(ee.id);
       consider(
@@ -329,7 +499,10 @@ export const WorldInteractables: React.FC = () => {
           label: ee.promptLabel,
           sublabel: found ? 'Kenangan Tersimpan' : 'Fragmen Memori',
           position: ee.position,
-          onInteract: () => store.discoverEasterEgg(ee.id),
+          onInteract: () => {
+            playerRuntime.activeSpeakerPos = [...ee.position];
+            store.discoverEasterEgg(ee.id);
+          },
         },
         2.9,
       );
@@ -346,27 +519,16 @@ export const WorldInteractables: React.FC = () => {
 
   return (
     <group>
-      {/* NPC 3D */}
       {NPC_PLACEMENTS.map((npc) => {
         const res = resolveNpcInteraction(npc.id);
-        return (
-          <NpcFigure
-            key={npc.id}
-            id={npc.id}
-            position={npc.pos}
-            rotation={npc.rot}
-            highlight={res.highlight}
-          />
-        );
+        return <NpcFigure key={npc.id} npc={npc} highlight={res.highlight} />;
       })}
 
-      {/* 15 Objek Visual Easter Egg di Seluruh Kota */}
       {EASTER_EGGS.map((ee) => {
         const found = discoveredEasterEggs.includes(ee.id);
         const yBase = ee.position[1];
         return (
           <group key={ee.id} position={[ee.position[0], yBase, ee.position[2]]}>
-            {/* Visual objek minimalis yang selaras dengan dunia nyata */}
             {ee.visualType !== 'cat' && (
               <mesh position={[0, 0.55, 0]} castShadow>
                 {ee.visualType === 'guitar' ? (
@@ -381,39 +543,35 @@ export const WorldInteractables: React.FC = () => {
                 <meshStandardMaterial
                   color={found ? '#b5a897' : '#f3cf8a'}
                   emissive={found ? '#000000' : '#e0a24a'}
-                  emissiveIntensity={found ? 0 : 0.45}
+                  emissiveIntensity={found ? 0 : 0.65}
                   roughness={0.65}
                 />
               </mesh>
             )}
-            {/* Pendar halus partikel memori jika belum ditemukan */}
             {!found && (
               <mesh position={[0, 1.05, 0]}>
                 <sphereGeometry args={[0.09, 8, 8]} />
-                <meshBasicMaterial color="#ffe4a3" transparent opacity={0.85} />
+                <meshBasicMaterial color="#ffe4a3" transparent opacity={0.9} />
               </mesh>
             )}
           </group>
         );
       })}
 
-      {/* Objek Misi Sampingan: Pembatas Buku Pak Darman */}
       {sideQuests.sq_pak_darman?.status === 'active' && sideQuests.sq_pak_darman.stage === 1 && (
         <mesh position={[-69.5, 0.55, -14.5]}>
           <boxGeometry args={[0.25, 0.06, 0.45]} />
-          <meshStandardMaterial color="#f5e6c8" emissive="#f0bd65" emissiveIntensity={1.1} />
+          <meshStandardMaterial color="#f5e6c8" emissive="#f0bd65" emissiveIntensity={1.6} />
         </mesh>
       )}
 
-      {/* Objek Misi Sampingan: Kotak Sakelar Bu Wati */}
       {sideQuests.sq_bu_wati?.status === 'active' && sideQuests.sq_bu_wati.stage === 1 && (
         <mesh position={[21.5, 1.35, 62.5]}>
           <boxGeometry args={[0.32, 0.42, 0.18]} />
-          <meshStandardMaterial color="#d9d5ce" emissive="#8ec5a3" emissiveIntensity={1.2} />
+          <meshStandardMaterial color="#d9d5ce" emissive="#8ec5a3" emissiveIntensity={1.6} />
         </mesh>
       )}
 
-      {/* Titik Interaksi Lift Rooftop (Lobi & Rooftop) */}
       <mesh position={[ELEVATOR_PORTALS.lobbyPos[0], 1.4, ELEVATOR_PORTALS.lobbyPos[2] - 2.6]}>
         <sphereGeometry args={[0.1, 8, 8]} />
         <meshBasicMaterial color="#f6d17a" />
@@ -423,7 +581,6 @@ export const WorldInteractables: React.FC = () => {
         <meshBasicMaterial color="#f6d17a" />
       </mesh>
 
-      {/* Lingkaran Panduan Cerita Jembatan & Rooftop */}
       {mainStepId === 'ch2_2_hujan_jembatan' && (
         <mesh position={[-48, 0.32, 0.5]} rotation={[-Math.PI / 2, 0, 0]}>
           <ringGeometry args={[0.85, 1.15, 24]} />

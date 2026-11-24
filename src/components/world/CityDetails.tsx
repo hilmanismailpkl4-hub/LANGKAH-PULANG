@@ -1,6 +1,7 @@
 import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { getTrafficSignalState } from '../../store/playerRuntime';
 import { GameSettings, TimeOfDay } from '../../types/game';
 import { getProceduralTextures } from './proceduralTextures';
 
@@ -229,19 +230,28 @@ export const CityDetails: React.FC<CityDetailsProps> = ({ timeOfDay, settings })
     [],
   );
 
-  // Lampu Lalu Lintas Persimpangan Utama animasi merah -> hijau
-  const nsGreenRef = useRef<THREE.MeshStandardMaterial>(null);
-  const ewGreenRef = useRef<THREE.MeshStandardMaterial>(null);
+  // Lampu Lalu Lintas Persimpangan Utama sinkron 100% dengan AI mobil (Hijau -> Kuning -> Merah)
+  const nsMatRefs = useRef<(THREE.MeshStandardMaterial | null)[]>([]);
+  const ewMatRefs = useRef<(THREE.MeshStandardMaterial | null)[]>([]);
   useFrame(({ clock }) => {
-    const phase = Math.floor(clock.getElapsedTime() / 8) % 2;
-    if (nsGreenRef.current) {
-      nsGreenRef.current.color.set(phase === 0 ? '#42e685' : '#ff4d45');
-      nsGreenRef.current.emissive.set(phase === 0 ? '#28d46e' : '#f0322b');
-    }
-    if (ewGreenRef.current) {
-      ewGreenRef.current.color.set(phase === 1 ? '#42e685' : '#ff4d45');
-      ewGreenRef.current.emissive.set(phase === 1 ? '#28d46e' : '#f0322b');
-    }
+    const sig = getTrafficSignalState(clock.getElapsedTime());
+    const colorOf = (s: 'green' | 'yellow' | 'red') =>
+      s === 'green' ? '#3ae882' : s === 'yellow' ? '#ffd24c' : '#ff4740';
+
+    const nsCol = colorOf(sig.ns);
+    const ewCol = colorOf(sig.ew);
+    nsMatRefs.current.forEach((m) => {
+      if (m) {
+        m.color.set(nsCol);
+        m.emissive.set(nsCol);
+      }
+    });
+    ewMatRefs.current.forEach((m) => {
+      if (m) {
+        m.color.set(ewCol);
+        m.emissive.set(ewCol);
+      }
+    });
   });
 
   const showRichDetails = settings.graphicsQuality !== 'low';
@@ -395,12 +405,15 @@ export const CityDetails: React.FC<CityDetailsProps> = ({ timeOfDay, settings })
                 <meshStandardMaterial color="#1a1e24" roughness={0.5} />
               </mesh>
               <mesh position={[0, 4.6, 0.44]}>
-                <sphereGeometry args={[0.13, 10, 10]} />
+                <sphereGeometry args={[0.14, 10, 10]} />
                 <meshStandardMaterial
-                  ref={idx === 0 ? nsGreenRef : idx === 2 ? ewGreenRef : undefined}
-                  color={tl.isNS ? '#42e685' : '#ff4d45'}
-                  emissive={tl.isNS ? '#28d46e' : '#f0322b'}
-                  emissiveIntensity={2.8}
+                  ref={(el) => {
+                    if (tl.isNS) nsMatRefs.current[idx] = el;
+                    else ewMatRefs.current[idx] = el;
+                  }}
+                  color={tl.isNS ? '#3ae882' : '#ff4740'}
+                  emissive={tl.isNS ? '#3ae882' : '#ff4740'}
+                  emissiveIntensity={3.0}
                 />
               </mesh>
             </group>

@@ -1,3 +1,4 @@
+import { playerRuntime } from '../store/playerRuntime';
 import { ColliderBox, LocationId, LocationInfo, SurfaceType } from '../types/game';
 
 export const WORLD_BOUNDS = {
@@ -276,8 +277,8 @@ export function resolvePlayerMovement(
   let rx = Math.max(WORLD_BOUNDS.minX, Math.min(WORLD_BOUNDS.maxX, nextX));
   let rz = Math.max(WORLD_BOUNDS.minZ, Math.min(WORLD_BOUNDS.maxZ, nextZ));
 
-  // Uji sumbu X dan Z terpisah agar bisa meluncur halus menyusuri tembok
-  const hitsBox = (px: number, pz: number) => {
+  // Uji sumbu X dan Z terpisah terhadap bangunan, mobil berjalan/berhenti, dan tubuh NPC
+  const hitsObstacle = (px: number, pz: number) => {
     for (const box of GROUND_COLLIDERS) {
       if (
         px + radius > box.minX &&
@@ -288,14 +289,56 @@ export function resolvePlayerMovement(
         return true;
       }
     }
+    // Kolisi solid dengan seluruh mobil kota (mobil berhenti & tidak bisa ditembus!)
+    for (const car of playerRuntime.dynamicCarBoxes) {
+      if (
+        px + radius > car.minX &&
+        px - radius < car.maxX &&
+        pz + radius > car.minZ &&
+        pz - radius < car.maxZ
+      ) {
+        return true;
+      }
+    }
+    // Kolisi lembut dengan tubuh NPC agar Damar tidak menembus karakter lain
+    for (const npc of playerRuntime.npcColliders) {
+      const dist = Math.hypot(px - npc.x, pz - npc.z);
+      if (dist < radius + npc.radius) {
+        return true;
+      }
+    }
     return false;
   };
 
-  if (hitsBox(rx, currentZ)) {
+  if (hitsObstacle(rx, currentZ)) {
     rx = currentX;
   }
-  if (hitsBox(rx, rz)) {
+  if (hitsObstacle(rx, rz)) {
     rz = currentZ;
+  }
+
+  // Dorong keluar lembut jika kebetulan terlalu dekat dengan mobil atau NPC
+  for (const car of playerRuntime.dynamicCarBoxes) {
+    if (
+      rx + radius > car.minX &&
+      rx - radius < car.maxX &&
+      rz + radius > car.minZ &&
+      rz - radius < car.maxZ
+    ) {
+      const cx = (car.minX + car.maxX) * 0.5;
+      const cz = (car.minZ + car.maxZ) * 0.5;
+      const dx = rx - cx;
+      const dz = rz - cz;
+      const halfW = (car.maxX - car.minX) * 0.5 + radius + 0.08;
+      const halfD = (car.maxZ - car.minZ) * 0.5 + radius + 0.08;
+      const penX = halfW - Math.abs(dx);
+      const penZ = halfD - Math.abs(dz);
+      if (penX < penZ) {
+        rx = cx + (dx >= 0 ? halfW : -halfW);
+      } else {
+        rz = cz + (dz >= 0 ? halfD : -halfD);
+      }
+    }
   }
 
   // Hitung elevasi halus (jembatan sedikit lebih tinggi, interior lantai kayu sedikit naik)

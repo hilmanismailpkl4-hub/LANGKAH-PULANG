@@ -171,6 +171,27 @@ class SfxEngine {
         this.softTone(ctx, 620, now + 0.04, 0.07, 0.06 * v, 'sine');
         break;
       }
+      case 'horn': {
+        // Klakson mobil kota pendek & sopan (dual-tone F4 + A4 terfilter hangat)
+        const freqs = [349.23, 440.0];
+        freqs.forEach((f) => {
+          const osc = ctx.createOscillator();
+          const filter = ctx.createBiquadFilter();
+          const g = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(f, now);
+          filter.type = 'lowpass';
+          filter.frequency.value = 950;
+          g.gain.setValueAtTime(0.001, now);
+          g.gain.linearRampToValueAtTime(0.055 * v, now + 0.02);
+          g.gain.setValueAtTime(0.05 * v, now + 0.16);
+          g.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
+          osc.connect(filter).connect(g).connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.26);
+        });
+        break;
+      }
     }
   }
 

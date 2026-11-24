@@ -226,6 +226,7 @@ export const PauseSettingsModal: React.FC = () => {
                 ['Klik 2x pada Layar 3D', 'Kunci kursor kamera penuh (tekan Esc untuk lepas)'],
                 ['Scroll Mouse', 'Mendekatkan atau menjauhkan jarak kamera'],
                 ['E', 'Berbicara dengan tokoh, memeriksa benda, atau naik lift Rooftop'],
+                ['F', 'Melambaikan tangan menyapa warga sekitar (NPC akan melambai balik!)'],
                 ['M / Tab / J', 'Membuka Peta Kota, Daftar Misi, & Catatan Harian'],
                 ['Spasi / Enter / Klik', 'Melanjutkan baris dialog'],
                 ['Esc', 'Membuka atau menutup Menu Jeda'],

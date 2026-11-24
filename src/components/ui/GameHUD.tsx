@@ -186,8 +186,8 @@ export const GameHUD: React.FC = () => {
             </div>
           )}
 
-          <div className="flex w-full items-center justify-between text-[11px] text-warm-200/50">
-            <span>WASD Jalan · Shift Cepat · Drag/Klik 2x Kamera · Scroll Zoom</span>
+          <div className="flex w-full items-center justify-between text-[11px] text-warm-200/55">
+            <span>WASD Jalan · Shift Cepat · F Sapa Warga · Drag/Klik 2x Kamera · Scroll Zoom</span>
             <span>Bebas menjelajah setiap sudut kota kapan saja</span>
           </div>
         </div>

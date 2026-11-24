@@ -48,7 +48,8 @@ export type SfxType =
   | 'cat'
   | 'guitar'
   | 'chime'
-  | 'switch';
+  | 'switch'
+  | 'horn';
 
 export type EmotionTone =
   | 'hangat'
