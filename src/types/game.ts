@@ -2,7 +2,11 @@ export type ChapterNumber = 1 | 2 | 3;
 
 export type TimeOfDay = 'morning' | 'sunset' | 'rain_dusk' | 'night';
 
-export type GraphicsQuality = 'low' | 'medium' | 'high';
+export type GraphicsQuality = 'low' | 'medium' | 'high' | 'ultra';
+
+export type ShadowQuality = 'off' | 'soft' | 'sharp';
+
+export type ParticleDensity = 'low' | 'medium' | 'high';
 
 export type SurfaceType = 'wood' | 'asphalt' | 'grass';
 
@@ -241,6 +245,13 @@ export interface GameSettings {
   sfxVolume: number;
   voiceEnabled: boolean;
   graphicsQuality: GraphicsQuality;
+  resolutionScale: number; // 0.75..2.0
+  shadowQuality: ShadowQuality;
+  cinematicGlow: boolean;
+  waterReflections: boolean;
+  particleDensity: ParticleDensity;
+  drawDistance: 'near' | 'medium' | 'far';
+  exposure: number; // 0.85..1.35
   mouseSensitivity: number;
   showWaypoint: boolean;
   showSubtitles: boolean;

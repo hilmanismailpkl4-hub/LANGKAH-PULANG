@@ -8,12 +8,15 @@ import { ELEVATOR_PORTALS } from '../../data/worldLocations';
 import { playerRuntime, setRuntimePosition } from '../../store/playerRuntime';
 import { useGameStore } from '../../store/useGameStore';
 import { CharacterId, InteractableTarget } from '../../types/game';
+import { HumanModel } from './HumanModel';
 
 interface NpcPlacement {
   id: CharacterId;
   pos: [number, number, number];
   rot: number;
 }
+
+const FEMALE_NPCS: CharacterId[] = ['nadia', 'nenek_sari', 'mbak_lilis', 'bu_wati'];
 
 const NPC_PLACEMENTS: NpcPlacement[] = [
   { id: 'nadia', pos: [-16.2, 0.08, 66.2], rot: -0.9 },
@@ -48,40 +51,11 @@ const NpcFigure: React.FC<{
 
   return (
     <group position={position} rotation={[0, rotation, 0]}>
-      <group scale={scale}>
-        {/* Kaki */}
-        <mesh position={[-0.12, 0.42, 0]} castShadow>
-          <boxGeometry args={[0.17, 0.82, 0.19]} />
-          <meshStandardMaterial color={profile.appearance.pantsColor} roughness={0.88} />
-        </mesh>
-        <mesh position={[0.12, 0.42, 0]} castShadow>
-          <boxGeometry args={[0.17, 0.82, 0.19]} />
-          <meshStandardMaterial color={profile.appearance.pantsColor} roughness={0.88} />
-        </mesh>
-        {/* Tubuh */}
-        <mesh position={[0, 1.12, 0]} castShadow>
-          <boxGeometry args={[0.46, 0.66, 0.26]} />
-          <meshStandardMaterial color={profile.appearance.shirtColor} roughness={0.82} />
-        </mesh>
-        {/* Lengan */}
-        <mesh position={[-0.3, 1.08, 0]} castShadow>
-          <boxGeometry args={[0.13, 0.54, 0.15]} />
-          <meshStandardMaterial color={profile.appearance.shirtColor} roughness={0.82} />
-        </mesh>
-        <mesh position={[0.3, 1.08, 0]} castShadow>
-          <boxGeometry args={[0.13, 0.54, 0.15]} />
-          <meshStandardMaterial color={profile.appearance.shirtColor} roughness={0.82} />
-        </mesh>
-        {/* Kepala & Rambut */}
-        <mesh position={[0, 1.62, 0]} castShadow>
-          <sphereGeometry args={[0.19, 12, 12]} />
-          <meshStandardMaterial color={profile.appearance.skinColor} roughness={0.78} />
-        </mesh>
-        <mesh position={[0, 1.71, -0.02]}>
-          <sphereGeometry args={[0.195, 10, 8, 0, Math.PI * 2, 0, Math.PI * 0.6]} />
-          <meshStandardMaterial color={profile.appearance.hairColor} roughness={0.9} />
-        </mesh>
-      </group>
+      <HumanModel
+        profile={profile}
+        isChild={id === 'kira'}
+        isFemale={FEMALE_NPCS.includes(id)}
+      />
 
       {/* Penanda halus di atas kepala jika NPC punya cerita utama atau misi sampingan */}
       {highlight && (
@@ -90,7 +64,7 @@ const NpcFigure: React.FC<{
           <meshStandardMaterial
             color={highlight === 'main' ? '#f6d17a' : '#8ec5a3'}
             emissive={highlight === 'main' ? '#e7a84a' : '#5ca378'}
-            emissiveIntensity={1.6}
+            emissiveIntensity={1.8}
           />
         </mesh>
       )}

@@ -1,16 +1,68 @@
-import { EndingId, GameSettings, SaveSlotData } from '../types/game';
+import { EndingId, GameSettings, GraphicsQuality, SaveSlotData } from '../types/game';
 import { deleteCloudSave, fetchCloudSaves, pushCloudSave } from './supabase';
 
 const SLOTS_STORAGE_KEY = 'langkah_pulang_slots_v1';
 const SETTINGS_STORAGE_KEY = 'langkah_pulang_settings_v1';
 const ENDINGS_STORAGE_KEY = 'langkah_pulang_endings_v1';
 
+export const GRAPHICS_PRESETS: Record<
+  GraphicsQuality,
+  Pick<
+    GameSettings,
+    | 'graphicsQuality'
+    | 'resolutionScale'
+    | 'shadowQuality'
+    | 'cinematicGlow'
+    | 'waterReflections'
+    | 'particleDensity'
+    | 'drawDistance'
+  >
+> = {
+  low: {
+    graphicsQuality: 'low',
+    resolutionScale: 0.85,
+    shadowQuality: 'off',
+    cinematicGlow: false,
+    waterReflections: false,
+    particleDensity: 'low',
+    drawDistance: 'near',
+  },
+  medium: {
+    graphicsQuality: 'medium',
+    resolutionScale: 1.2,
+    shadowQuality: 'soft',
+    cinematicGlow: true,
+    waterReflections: true,
+    particleDensity: 'medium',
+    drawDistance: 'medium',
+  },
+  high: {
+    graphicsQuality: 'high',
+    resolutionScale: 1.5,
+    shadowQuality: 'sharp',
+    cinematicGlow: true,
+    waterReflections: true,
+    particleDensity: 'high',
+    drawDistance: 'far',
+  },
+  ultra: {
+    graphicsQuality: 'ultra',
+    resolutionScale: 2.0,
+    shadowQuality: 'sharp',
+    cinematicGlow: true,
+    waterReflections: true,
+    particleDensity: 'high',
+    drawDistance: 'far',
+  },
+};
+
 export const DEFAULT_SETTINGS: GameSettings = {
   musicVolume: 0.55,
   voiceVolume: 0.88,
   sfxVolume: 0.72,
   voiceEnabled: true,
-  graphicsQuality: 'medium',
+  ...GRAPHICS_PRESETS.high,
+  exposure: 1.08,
   mouseSensitivity: 1.0,
   showWaypoint: true,
   showSubtitles: true,

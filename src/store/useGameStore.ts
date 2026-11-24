@@ -9,6 +9,7 @@ import { getLocationAtPosition } from '../data/worldLocations';
 import {
   createFreshSaveSlot,
   deleteSlotData,
+  GRAPHICS_PRESETS,
   loadGlobalUnlockedEndings,
   loadLocalSettings,
   loadLocalSlots,
@@ -25,6 +26,7 @@ import {
   EmotionMetrics,
   EndingId,
   GameSettings,
+  GraphicsQuality,
   JournalEntry,
   LocationId,
   PhoneMessage,
@@ -75,9 +77,14 @@ interface GameStoreState {
 
   // Settings
   settings: GameSettings;
+  isQuickGraphicsOpen: boolean;
+  titlePreviewTime: TimeOfDay;
 
   // Actions
   initApp: () => Promise<void>;
+  setQuickGraphicsOpen: (open: boolean) => void;
+  setTitlePreviewTime: (time: TimeOfDay) => void;
+  applyGraphicsPreset: (quality: GraphicsQuality) => void;
   setCloudUserEmail: (email: string | null) => void;
   refreshSlotsFromCloud: () => Promise<void>;
   startNewSlot: (slotId: string, journalName: string) => Promise<void>;
@@ -154,6 +161,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     lastSaveStatus: null,
 
     settings: initialSettings,
+    isQuickGraphicsOpen: false,
+    titlePreviewTime: 'sunset',
 
     initApp: async () => {
       const merged = await syncAndLoadAllSlots();
@@ -161,6 +170,18 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         slots: merged,
         unlockedEndings: loadGlobalUnlockedEndings(),
       });
+    },
+
+    setQuickGraphicsOpen: (open) => {
+      if (open && document.pointerLockElement) document.exitPointerLock();
+      set({ isQuickGraphicsOpen: open });
+    },
+
+    setTitlePreviewTime: (time) => set({ titlePreviewTime: time }),
+
+    applyGraphicsPreset: (quality) => {
+      const preset = GRAPHICS_PRESETS[quality];
+      get().updateSettings(preset);
     },
 
     setCloudUserEmail: (email) => set({ cloudUserEmail: email }),

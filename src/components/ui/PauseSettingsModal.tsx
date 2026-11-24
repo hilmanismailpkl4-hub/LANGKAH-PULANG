@@ -10,6 +10,8 @@ export const PauseSettingsModal: React.FC = () => {
   const setPauseOpen = useGameStore((s) => s.setPauseOpen);
   const settings = useGameStore((s) => s.settings);
   const updateSettings = useGameStore((s) => s.updateSettings);
+  const applyGraphicsPreset = useGameStore((s) => s.applyGraphicsPreset);
+  const setQuickGraphicsOpen = useGameStore((s) => s.setQuickGraphicsOpen);
   const saveCurrentGame = useGameStore((s) => s.saveCurrentGame);
   const returnToTitle = useGameStore((s) => s.returnToTitle);
   const lastSaveStatus = useGameStore((s) => s.lastSaveStatus);
@@ -136,19 +138,32 @@ export const PauseSettingsModal: React.FC = () => {
 
               {/* Preset Grafis */}
               <div>
-                <p className="text-xs text-warm-200">Preset Grafis 3D (Sesuaikan dengan Laptop)</p>
-                <div className="mt-2 grid grid-cols-3 gap-2">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-warm-200">Preset Grafis 3D</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPauseOpen(false);
+                      setQuickGraphicsOpen(true);
+                    }}
+                    className="text-[11px] text-warm-300 underline hover:text-warm-100"
+                  >
+                    Buka Pengaturan Grafis Lanjutan (Live)
+                  </button>
+                </div>
+                <div className="mt-2 grid grid-cols-4 gap-1.5">
                   {(
                     [
-                      { id: 'low', label: 'Rendah (Ringan)' },
+                      { id: 'low', label: 'Rendah' },
                       { id: 'medium', label: 'Sedang' },
                       { id: 'high', label: 'Tinggi' },
+                      { id: 'ultra', label: 'Ultra' },
                     ] as { id: GraphicsQuality; label: string }[]
                   ).map((q) => (
                     <button
                       key={q.id}
                       type="button"
-                      onClick={() => updateSettings({ graphicsQuality: q.id })}
+                      onClick={() => applyGraphicsPreset(q.id)}
                       className={`rounded-xl py-2 text-xs font-medium transition ${
                         settings.graphicsQuality === q.id
                           ? 'bg-warm-400 text-dusk-950'

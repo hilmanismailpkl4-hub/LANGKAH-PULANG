@@ -1,18 +1,21 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { playerRuntime } from '../../store/playerRuntime';
-import { GraphicsQuality, TimeOfDay } from '../../types/game';
+import { GameSettings, TimeOfDay } from '../../types/game';
+import { getProceduralTextures } from './proceduralTextures';
 
 interface AtmosphereProps {
   timeOfDay: TimeOfDay;
-  quality: GraphicsQuality;
+  settings: GameSettings;
 }
 
 const TIME_PRESETS: Record<
   TimeOfDay,
   {
-    sky: string;
+    zenith: string;
+    horizon: string;
+    ground: string;
     fog: string;
     fogNear: number;
     fogFar: number;
@@ -23,92 +26,168 @@ const TIME_PRESETS: Record<
     hemiGround: string;
     hemiIntensity: number;
     ambientIntensity: number;
+    sunGlow: string;
   }
 > = {
   morning: {
-    sky: '#bcd8ee',
-    fog: '#d7e4ec',
-    fogNear: 55,
-    fogFar: 210,
-    sunColor: '#fff1d0',
-    sunIntensity: 1.55,
-    sunPos: [55, 68, 42],
-    hemiSky: '#d4ecff',
-    hemiGround: '#8d7d69',
-    hemiIntensity: 0.72,
-    ambientIntensity: 0.35,
+    zenith: '#4a8ec9',
+    horizon: '#f7d8b5',
+    ground: '#b8c4c9',
+    fog: '#d8e3ea',
+    fogNear: 58,
+    fogFar: 235,
+    sunColor: '#ffeed1',
+    sunIntensity: 2.1,
+    sunPos: [68, 56, 48],
+    hemiSky: '#c6e4ff',
+    hemiGround: '#7a6957',
+    hemiIntensity: 0.9,
+    ambientIntensity: 0.36,
+    sunGlow: '#fff4d4',
   },
   sunset: {
-    sky: '#d9835b',
-    fog: '#c47664',
-    fogNear: 48,
-    fogFar: 195,
-    sunColor: '#ff9b54',
-    sunIntensity: 1.75,
-    sunPos: [-75, 24, -18],
-    hemiSky: '#ffbe8a',
-    hemiGround: '#4a3d49',
-    hemiIntensity: 0.68,
-    ambientIntensity: 0.28,
+    zenith: '#25264f',
+    horizon: '#f58653',
+    ground: '#47303c',
+    fog: '#c97257',
+    fogNear: 46,
+    fogFar: 215,
+    sunColor: '#ff964f',
+    sunIntensity: 2.4,
+    sunPos: [-92, 22, -16],
+    hemiSky: '#ffb885',
+    hemiGround: '#3d2d3d',
+    hemiIntensity: 0.85,
+    ambientIntensity: 0.3,
+    sunGlow: '#ffb76b',
   },
   rain_dusk: {
-    sky: '#364359',
-    fog: '#3d4a60',
-    fogNear: 32,
-    fogFar: 145,
-    sunColor: '#8ba4c7',
-    sunIntensity: 0.65,
-    sunPos: [-40, 38, -20],
-    hemiSky: '#6b82a4',
-    hemiGround: '#242b38',
-    hemiIntensity: 0.58,
-    ambientIntensity: 0.32,
+    zenith: '#1a2333',
+    horizon: '#4e5d73',
+    ground: '#1d2430',
+    fog: '#3b485c',
+    fogNear: 28,
+    fogFar: 155,
+    sunColor: '#8ea8cc',
+    sunIntensity: 0.85,
+    sunPos: [-45, 42, -24],
+    hemiSky: '#6a82a6',
+    hemiGround: '#1c222e',
+    hemiIntensity: 0.72,
+    ambientIntensity: 0.34,
+    sunGlow: '#9cb3cf',
   },
   night: {
-    sky: '#101728',
-    fog: '#141c2e',
-    fogNear: 38,
-    fogFar: 175,
-    sunColor: '#89a8d8',
-    sunIntensity: 0.45,
-    sunPos: [-45, 55, -35],
-    hemiSky: '#31446b',
-    hemiGround: '#16141a',
-    hemiIntensity: 0.46,
+    zenith: '#070b18',
+    horizon: '#1e2c48',
+    ground: '#0c101a',
+    fog: '#121b2e',
+    fogNear: 36,
+    fogFar: 195,
+    sunColor: '#9ab7e6',
+    sunIntensity: 0.65,
+    sunPos: [-58, 62, -45],
+    hemiSky: '#39517d',
+    hemiGround: '#1a1514',
+    hemiIntensity: 0.56,
     ambientIntensity: 0.28,
+    sunGlow: '#d7e6ff',
   },
 };
 
-const RainEffect: React.FC<{ quality: GraphicsQuality }> = ({ quality }) => {
-  const count = quality === 'low' ? 280 : quality === 'medium' ? 560 : 950;
+const SkyDome: React.FC<{ zenith: string; horizon: string; ground: string }> = ({
+  zenith,
+  horizon,
+  ground,
+}) => {
+  const matRef = useRef<THREE.ShaderMaterial>(null);
+  const uniforms = useMemo(
+    () => ({
+      uZenith: { value: new THREE.Color(zenith) },
+      uHorizon: { value: new THREE.Color(horizon) },
+      uGround: { value: new THREE.Color(ground) },
+    }),
+    [],
+  );
+
+  useEffect(() => {
+    if (!matRef.current) return;
+    matRef.current.uniforms.uZenith.value.set(zenith);
+    matRef.current.uniforms.uHorizon.value.set(horizon);
+    matRef.current.uniforms.uGround.value.set(ground);
+  }, [zenith, horizon, ground]);
+
+  return (
+    <mesh scale={[-1, 1, 1]} frustumCulled={false}>
+      <sphereGeometry args={[215, 28, 20]} />
+      <shaderMaterial
+        ref={matRef}
+        side={THREE.BackSide}
+        depthWrite={false}
+        fog={false}
+        uniforms={uniforms}
+        vertexShader={`
+          varying vec3 vWorldPos;
+          void main() {
+            vec4 wp = modelMatrix * vec4(position, 1.0);
+            vWorldPos = wp.xyz;
+            gl_Position = projectionMatrix * viewMatrix * wp;
+          }
+        `}
+        fragmentShader={`
+          uniform vec3 uZenith;
+          uniform vec3 uHorizon;
+          uniform vec3 uGround;
+          varying vec3 vWorldPos;
+          void main() {
+            float h = normalize(vWorldPos).y;
+            vec3 col;
+            if (h >= 0.0) {
+              float t = pow(clamp(h, 0.0, 1.0), 0.52);
+              col = mix(uHorizon, uZenith, t);
+            } else {
+              float t = clamp(-h * 3.5, 0.0, 1.0);
+              col = mix(uHorizon, uGround, t);
+            }
+            gl_FragColor = vec4(col, 1.0);
+          }
+        `}
+      />
+    </mesh>
+  );
+};
+
+const RainEffect: React.FC<{ density: GameSettings['particleDensity'] }> = ({ density }) => {
+  const count = density === 'low' ? 320 : density === 'medium' ? 750 : 1300;
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
-  const drops = useMemo(() => {
-    return Array.from({ length: count }, () => ({
-      ox: (Math.random() - 0.5) * 52,
-      oy: Math.random() * 24 + 1,
-      oz: (Math.random() - 0.5) * 52,
-      speed: 14 + Math.random() * 8,
-    }));
-  }, [count]);
+  const drops = useMemo(
+    () =>
+      Array.from({ length: count }, () => ({
+        ox: (Math.random() - 0.5) * 56,
+        oy: Math.random() * 24 + 1,
+        oz: (Math.random() - 0.5) * 56,
+        speed: 16 + Math.random() * 9,
+      })),
+    [count],
+  );
 
   useFrame((_, delta) => {
     const mesh = meshRef.current;
     if (!mesh) return;
     const [px, py, pz] = playerRuntime.position;
     const dt = Math.min(delta, 0.05);
-
     for (let i = 0; i < count; i++) {
       const d = drops[i];
       d.oy -= d.speed * dt;
-      if (d.oy < -1) {
-        d.oy = 23 + Math.random() * 4;
-        d.ox = (Math.random() - 0.5) * 52;
-        d.oz = (Math.random() - 0.5) * 52;
+      if (d.oy < -0.5) {
+        d.oy = 23 + Math.random() * 5;
+        d.ox = (Math.random() - 0.5) * 56;
+        d.oz = (Math.random() - 0.5) * 56;
       }
       dummy.position.set(px + d.ox, py + d.oy, pz + d.oz);
-      dummy.rotation.set(0.08, 0, 0.06);
+      dummy.rotation.set(0.11, 0, 0.07);
       dummy.updateMatrix();
       mesh.setMatrixAt(i, dummy.matrix);
     }
@@ -117,9 +196,53 @@ const RainEffect: React.FC<{ quality: GraphicsQuality }> = ({ quality }) => {
 
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, count]} frustumCulled={false}>
-      <boxGeometry args={[0.024, 0.85, 0.024]} />
-      <meshBasicMaterial color="#bfd4f0" transparent opacity={0.42} depthWrite={false} />
+      <boxGeometry args={[0.02, 0.95, 0.02]} />
+      <meshBasicMaterial color="#cde0f7" transparent opacity={0.44} depthWrite={false} />
     </instancedMesh>
+  );
+};
+
+const AmbientParticles: React.FC<{
+  timeOfDay: TimeOfDay;
+  density: GameSettings['particleDensity'];
+}> = ({ timeOfDay, density }) => {
+  const count = density === 'low' ? 40 : density === 'medium' ? 95 : 170;
+  const ref = useRef<THREE.Points>(null);
+
+  const positions = useMemo(() => {
+    const arr = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      arr[i * 3] = (Math.random() - 0.5) * 165;
+      arr[i * 3 + 1] = 0.8 + Math.random() * 14;
+      arr[i * 3 + 2] = (Math.random() - 0.5) * 145;
+    }
+    return arr;
+  }, [count]);
+
+  useFrame(({ clock }) => {
+    if (!ref.current) return;
+    ref.current.position.y = Math.sin(clock.getElapsedTime() * 0.65) * 0.35;
+  });
+
+  if (timeOfDay === 'rain_dusk') return null;
+
+  const color =
+    timeOfDay === 'night' ? '#ffe082' : timeOfDay === 'sunset' ? '#ffd194' : '#fff7db';
+
+  return (
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
+      </bufferGeometry>
+      <pointsMaterial
+        color={color}
+        size={timeOfDay === 'night' ? 0.32 : 0.24}
+        transparent
+        opacity={timeOfDay === 'night' ? 0.85 : 0.55}
+        blending={THREE.AdditiveBlending}
+        depthWrite={false}
+      />
+    </points>
   );
 };
 
@@ -127,21 +250,22 @@ const DriftingClouds: React.FC<{ timeOfDay: TimeOfDay }> = ({ timeOfDay }) => {
   const groupRef = useRef<THREE.Group>(null);
   const cloudColor =
     timeOfDay === 'morning'
-      ? '#f7f9fc'
+      ? '#ffffff'
       : timeOfDay === 'sunset'
-        ? '#f5b08c'
+        ? '#ffad85'
         : timeOfDay === 'rain_dusk'
-          ? '#5b677c'
-          : '#25314b';
+          ? '#4f5c70'
+          : '#212d47';
 
   const clouds = useMemo(
     () => [
-      { x: -70, y: 46, z: -60, s: 1.4 },
-      { x: -10, y: 52, z: -85, s: 1.8 },
-      { x: 55, y: 48, z: -40, s: 1.5 },
-      { x: 25, y: 54, z: 35, s: 1.6 },
-      { x: -55, y: 50, z: 45, s: 1.3 },
-      { x: 85, y: 45, z: 20, s: 1.5 },
+      { x: -85, y: 52, z: -68, s: 1.5 },
+      { x: -12, y: 58, z: -92, s: 2.1 },
+      { x: 64, y: 54, z: -42, s: 1.6 },
+      { x: 28, y: 60, z: 42, s: 1.8 },
+      { x: -62, y: 56, z: 50, s: 1.4 },
+      { x: 95, y: 50, z: 18, s: 1.7 },
+      { x: -35, y: 53, z: 4, s: 1.3 },
     ],
     [],
   );
@@ -149,8 +273,8 @@ const DriftingClouds: React.FC<{ timeOfDay: TimeOfDay }> = ({ timeOfDay }) => {
   useFrame((_, delta) => {
     if (!groupRef.current) return;
     groupRef.current.children.forEach((child, idx) => {
-      child.position.x += delta * (0.65 + (idx % 3) * 0.25);
-      if (child.position.x > 135) child.position.x = -135;
+      child.position.x += delta * (0.7 + (idx % 3) * 0.25);
+      if (child.position.x > 155) child.position.x = -155;
     });
   });
 
@@ -158,17 +282,32 @@ const DriftingClouds: React.FC<{ timeOfDay: TimeOfDay }> = ({ timeOfDay }) => {
     <group ref={groupRef}>
       {clouds.map((c, idx) => (
         <group key={idx} position={[c.x, c.y, c.z]} scale={c.s}>
-          <mesh position={[0, 0, 0]}>
-            <boxGeometry args={[14, 2.8, 6.5]} />
-            <meshBasicMaterial color={cloudColor} transparent opacity={timeOfDay === 'night' ? 0.35 : 0.72} />
+          <mesh>
+            <sphereGeometry args={[6.2, 10, 8]} />
+            <meshBasicMaterial
+              color={cloudColor}
+              transparent
+              opacity={timeOfDay === 'night' ? 0.24 : 0.58}
+              depthWrite={false}
+            />
           </mesh>
-          <mesh position={[4.5, 1.3, 0.8]}>
-            <boxGeometry args={[8.5, 2.6, 5.2]} />
-            <meshBasicMaterial color={cloudColor} transparent opacity={timeOfDay === 'night' ? 0.35 : 0.72} />
+          <mesh position={[5.8, -0.8, 0.8]} scale={[1.15, 0.62, 0.85]}>
+            <sphereGeometry args={[5.2, 10, 8]} />
+            <meshBasicMaterial
+              color={cloudColor}
+              transparent
+              opacity={timeOfDay === 'night' ? 0.24 : 0.58}
+              depthWrite={false}
+            />
           </mesh>
-          <mesh position={[-4.8, 0.9, -0.6]}>
-            <boxGeometry args={[7.2, 2.2, 4.8]} />
-            <meshBasicMaterial color={cloudColor} transparent opacity={timeOfDay === 'night' ? 0.35 : 0.72} />
+          <mesh position={[-5.4, -0.9, -0.6]} scale={[1.1, 0.58, 0.8]}>
+            <sphereGeometry args={[4.8, 10, 8]} />
+            <meshBasicMaterial
+              color={cloudColor}
+              transparent
+              opacity={timeOfDay === 'night' ? 0.24 : 0.58}
+              depthWrite={false}
+            />
           </mesh>
         </group>
       ))}
@@ -178,11 +317,14 @@ const DriftingClouds: React.FC<{ timeOfDay: TimeOfDay }> = ({ timeOfDay }) => {
 
 const StarField: React.FC = () => {
   const positions = useMemo(() => {
-    const arr = new Float32Array(260 * 3);
-    for (let i = 0; i < 260; i++) {
-      arr[i * 3] = (Math.random() - 0.5) * 320;
-      arr[i * 3 + 1] = 48 + Math.random() * 60;
-      arr[i * 3 + 2] = (Math.random() - 0.5) * 320;
+    const arr = new Float32Array(380 * 3);
+    for (let i = 0; i < 380; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.random() * Math.PI * 0.42;
+      const r = 185;
+      arr[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      arr[i * 3 + 1] = r * Math.cos(phi);
+      arr[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
     }
     return arr;
   }, []);
@@ -190,56 +332,78 @@ const StarField: React.FC = () => {
   return (
     <points>
       <bufferGeometry>
-        <bufferAttribute attach="attributes-position" count={260} array={positions} itemSize={3} />
+        <bufferAttribute attach="attributes-position" count={380} array={positions} itemSize={3} />
       </bufferGeometry>
-      <pointsMaterial color="#fff6df" size={0.85} transparent opacity={0.85} sizeAttenuation />
+      <pointsMaterial color="#fff7e3" size={1.15} transparent opacity={0.9} fog={false} />
     </points>
   );
 };
 
-export const Atmosphere: React.FC<AtmosphereProps> = ({ timeOfDay, quality }) => {
-  const { scene } = useThree();
+export const Atmosphere: React.FC<AtmosphereProps> = ({ timeOfDay, settings }) => {
+  const { scene, gl } = useThree();
   const preset = TIME_PRESETS[timeOfDay];
+  const textures = useMemo(() => getProceduralTextures(), []);
 
-  React.useEffect(() => {
-    scene.background = new THREE.Color(preset.sky);
-    scene.fog = new THREE.Fog(preset.fog, preset.fogNear, preset.fogFar);
-  }, [scene, preset]);
+  const fogScale =
+    settings.drawDistance === 'near' ? 0.72 : settings.drawDistance === 'medium' ? 1.0 : 1.32;
 
-  const shadowMapSize = quality === 'low' ? 512 : quality === 'medium' ? 1024 : 2048;
+  useEffect(() => {
+    scene.background = new THREE.Color(preset.horizon);
+    scene.fog = new THREE.Fog(preset.fog, preset.fogNear * fogScale, preset.fogFar * fogScale);
+    gl.toneMappingExposure = settings.exposure;
+  }, [scene, gl, preset, fogScale, settings.exposure]);
+
+  const castShadow = settings.shadowQuality !== 'off';
+  const shadowSize = settings.shadowQuality === 'sharp' ? 2048 : 1024;
 
   return (
     <>
+      <SkyDome zenith={preset.zenith} horizon={preset.horizon} ground={preset.ground} />
+
       <ambientLight intensity={preset.ambientIntensity} color={preset.hemiSky} />
       <hemisphereLight args={[preset.hemiSky, preset.hemiGround, preset.hemiIntensity]} />
       <directionalLight
         position={preset.sunPos}
         intensity={preset.sunIntensity}
         color={preset.sunColor}
-        castShadow={quality !== 'low'}
-        shadow-mapSize-width={shadowMapSize}
-        shadow-mapSize-height={shadowMapSize}
+        castShadow={castShadow}
+        shadow-mapSize-width={shadowSize}
+        shadow-mapSize-height={shadowSize}
         shadow-camera-near={5}
-        shadow-camera-far={220}
-        shadow-camera-left={-95}
-        shadow-camera-right={95}
-        shadow-camera-top={95}
-        shadow-camera-bottom={-95}
-        shadow-bias={-0.0005}
+        shadow-camera-far={240}
+        shadow-camera-left={-105}
+        shadow-camera-right={105}
+        shadow-camera-top={105}
+        shadow-camera-bottom={-105}
+        shadow-bias={-0.0004}
+        shadow-normalBias={0.04}
       />
 
-      {/* Matahari / Bulan Visual */}
-      <mesh position={preset.sunPos}>
-        <sphereGeometry args={[timeOfDay === 'night' ? 3.2 : 5.2, 16, 16]} />
-        <meshBasicMaterial
-          color={timeOfDay === 'sunset' ? '#ffbc73' : timeOfDay === 'night' ? '#eef4ff' : '#fff7dc'}
-          fog={false}
-        />
-      </mesh>
+      {/* Matahari / Bulan + Halo Sinematik */}
+      <group position={preset.sunPos}>
+        <mesh>
+          <sphereGeometry args={[timeOfDay === 'night' ? 3.5 : 6.0, 20, 20]} />
+          <meshBasicMaterial color={preset.sunGlow} fog={false} />
+        </mesh>
+        {settings.cinematicGlow && (
+          <sprite scale={[timeOfDay === 'sunset' ? 42 : 28, timeOfDay === 'sunset' ? 42 : 28, 1]}>
+            <spriteMaterial
+              map={textures.glowSprite}
+              color={preset.sunGlow}
+              transparent
+              opacity={timeOfDay === 'sunset' ? 0.78 : 0.48}
+              blending={THREE.AdditiveBlending}
+              depthWrite={false}
+              fog={false}
+            />
+          </sprite>
+        )}
+      </group>
 
       <DriftingClouds timeOfDay={timeOfDay} />
       {timeOfDay === 'night' && <StarField />}
-      {timeOfDay === 'rain_dusk' && <RainEffect quality={quality} />}
+      {timeOfDay === 'rain_dusk' && <RainEffect density={settings.particleDensity} />}
+      <AmbientParticles timeOfDay={timeOfDay} density={settings.particleDensity} />
     </>
   );
 };

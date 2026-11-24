@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BookOpen, Cloud, CloudOff, Play, Sparkles, Trash2, User as UserIcon, X } from 'lucide-react';
+import { BookOpen, Cloud, CloudOff, Play, Sliders, Sparkles, Trash2, User as UserIcon, X } from 'lucide-react';
 import { unlockAudio } from '../../audio/audioContext';
 import { musicEngine } from '../../audio/musicEngine';
 import { sfxEngine } from '../../audio/sfxEngine';
@@ -36,6 +36,8 @@ export const TitleScreen: React.FC = () => {
   const deleteSlot = useGameStore((s) => s.deleteSlot);
   const setCloudUserEmail = useGameStore((s) => s.setCloudUserEmail);
   const refreshSlotsFromCloud = useGameStore((s) => s.refreshSlotsFromCloud);
+  const setQuickGraphicsOpen = useGameStore((s) => s.setQuickGraphicsOpen);
+  const graphicsQuality = useGameStore((s) => s.settings.graphicsQuality);
 
   const [showSlotPanel, setShowSlotPanel] = useState(false);
   const [creatingSlotId, setCreatingSlotId] = useState<string | null>(null);
@@ -138,7 +140,28 @@ export const TitleScreen: React.FC = () => {
             <span>Cerita Solo 3D · Laptop & Desktop</span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <button
+              type="button"
+              onClick={() => {
+                handleStartInteraction();
+                setQuickGraphicsOpen(true);
+              }}
+              className="flex items-center gap-2 rounded-full border border-warm-300/35 bg-dusk-900/75 px-4 py-2 text-xs font-medium text-warm-100 backdrop-blur-md transition hover:border-warm-300/70 hover:bg-dusk-800/85"
+            >
+              <Sliders className="h-3.5 w-3.5 text-warm-300" />
+              <span>
+                Grafis:{' '}
+                {graphicsQuality === 'low'
+                  ? 'Rendah'
+                  : graphicsQuality === 'medium'
+                    ? 'Sedang'
+                    : graphicsQuality === 'high'
+                      ? 'Tinggi'
+                      : 'Ultra'}
+              </span>
+            </button>
+
             <button
               type="button"
               onClick={() => {

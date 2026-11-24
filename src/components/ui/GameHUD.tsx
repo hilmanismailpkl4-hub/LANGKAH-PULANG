@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BookOpen, Compass, Map as MapIcon, Menu } from 'lucide-react';
+import { BookOpen, Compass, Map as MapIcon, Menu, Sliders } from 'lucide-react';
 import { MAIN_STEP_BY_ID } from '../../data/dialogues';
 import { LOCATION_BY_ID } from '../../data/worldLocations';
 import { playerRuntime } from '../../store/playerRuntime';
@@ -27,6 +27,8 @@ export const GameHUD: React.FC = () => {
   const showWaypoint = useGameStore((s) => s.settings.showWaypoint);
   const toggleMapJournal = useGameStore((s) => s.toggleMapJournal);
   const setPauseOpen = useGameStore((s) => s.setPauseOpen);
+  const setQuickGraphicsOpen = useGameStore((s) => s.setQuickGraphicsOpen);
+  const isQuickGraphicsOpen = useGameStore((s) => s.isQuickGraphicsOpen);
 
   const [compassState, setCompassState] = useState({ offsetPercent: 50, distance: 0, cardinal: 'U' });
 
@@ -64,7 +66,7 @@ export const GameHUD: React.FC = () => {
     return () => window.clearInterval(id);
   }, [screen, step]);
 
-  if (screen !== 'playing' || activeDialogue || isMapJournalOpen || isPauseOpen) return null;
+  if (screen !== 'playing' || activeDialogue || isMapJournalOpen || isPauseOpen || isQuickGraphicsOpen) return null;
 
   return (
     <Portal>
@@ -130,6 +132,14 @@ export const GameHUD: React.FC = () => {
               >
                 <BookOpen className="h-3.5 w-3.5 text-warm-300" />
                 <span>Catatan [Tab]</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setQuickGraphicsOpen(true)}
+                className="flex items-center gap-1.5 rounded-xl border border-warm-100/15 bg-dusk-950/70 px-3 py-1.5 text-[11px] text-warm-100 backdrop-blur-md transition hover:border-warm-300/45"
+              >
+                <Sliders className="h-3.5 w-3.5 text-warm-300" />
+                <span>Grafis</span>
               </button>
               <button
                 type="button"

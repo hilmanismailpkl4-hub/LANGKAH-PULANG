@@ -3,6 +3,7 @@ import { ChapterTransition } from './components/ui/ChapterTransition';
 import { DialogueOverlay } from './components/ui/DialogueOverlay';
 import { EndingScreen } from './components/ui/EndingScreen';
 import { GameHUD } from './components/ui/GameHUD';
+import { GraphicsSettingsModal } from './components/ui/GraphicsSettingsModal';
 import { MapJournalModal } from './components/ui/MapJournalModal';
 import { PauseSettingsModal } from './components/ui/PauseSettingsModal';
 import { PhoneNotification } from './components/ui/PhoneNotification';
@@ -50,6 +51,7 @@ export function App() {
       <DialogueOverlay />
       <MapJournalModal />
       <PauseSettingsModal />
+      <GraphicsSettingsModal />
       <ChapterTransition />
       <EndingScreen />
     </main>
