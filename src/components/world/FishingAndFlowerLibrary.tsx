@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { playerRuntime } from '../../store/playerRuntime';
 import { useGameStore } from '../../store/useGameStore';
 import { GameSettings, TimeOfDay } from '../../types/game';
+import { getProceduralTextures } from './proceduralTextures';
 
 interface FishingAndFlowerLibraryProps {
   timeOfDay: TimeOfDay;
@@ -44,6 +45,7 @@ export const FishingAndFlowerLibrary: React.FC<FishingAndFlowerLibraryProps> = (
   const isEveningOrNight = timeOfDay !== 'morning';
   const isRain = timeOfDay === 'rain_dusk';
   const signTex = useMemo(() => createBookBoxSignTexture(), []);
+  const textures = useMemo(() => getProceduralTextures(), []);
 
   const activeRodRef = useRef<THREE.Group>(null);
   const bobberRef = useRef<THREE.Group>(null);
@@ -360,6 +362,135 @@ export const FishingAndFlowerLibrary: React.FC<FishingAndFlowerLibraryProps> = (
             </mesh>
           </group>
         ))}
+
+      {/* ================================================================= */}
+      {/* 3. GAZEBO PANGGUNG AKUSTIK TAMAN KOTA ([-68.0, 0, 19.5])          */}
+      {/* ================================================================= */}
+      <group position={[-68.0, 0, 19.5]}>
+        {/* Lantai Panggung Kayu Jati Berundak */}
+        <mesh position={[0, 0.11, 0]} receiveShadow castShadow>
+          <boxGeometry args={[5.1, 0.22, 5.1]} />
+          <meshStandardMaterial map={textures.woodFloor} roughness={0.72} />
+        </mesh>
+        <mesh position={[0, 0.05, -2.72]} receiveShadow>
+          <boxGeometry args={[2.6, 0.1, 0.38]} />
+          <meshStandardMaterial color="#704c30" roughness={0.8} />
+        </mesh>
+
+        {/* 4 Tiang Sudut Kayu Jati Solid */}
+        {[
+          [-2.3, 1.75, -2.3],
+          [2.3, 1.75, -2.3],
+          [-2.3, 1.75, 2.3],
+          [2.3, 1.75, 2.3],
+        ].map(([gx, gy, gz], idx) => (
+          <mesh key={`gp-${idx}`} position={[gx, gy, gz]} castShadow>
+            <boxGeometry args={[0.24, 3.1, 0.24]} />
+            <meshStandardMaterial color="#593a24" roughness={0.82} />
+          </mesh>
+        ))}
+
+        {/* Balok Penopang & Atap Limas Gazebo Hangat */}
+        <mesh position={[0, 3.3, 0]} castShadow>
+          <boxGeometry args={[5.3, 0.22, 5.3]} />
+          <meshStandardMaterial color="#4a301e" roughness={0.8} />
+        </mesh>
+        <mesh position={[0, 4.22, 0]} rotation={[0, Math.PI / 4, 0]} castShadow>
+          <coneGeometry args={[4.15, 1.65, 4]} />
+          <meshStandardMaterial map={textures.roofTile} color="#7d4332" roughness={0.8} />
+        </mesh>
+
+        {/* Untaian 8 Lampu Edison Gantung di Keempat Sisi Gazebo */}
+        {[
+          [-1.3, 3.12, -2.35],
+          [1.3, 3.12, -2.35],
+          [-1.3, 3.12, 2.35],
+          [1.3, 3.12, 2.35],
+          [-2.35, 3.12, -1.2],
+          [-2.35, 3.12, 1.2],
+          [2.35, 3.12, -1.2],
+          [2.35, 3.12, 1.2],
+        ].map(([lx, ly, lz], idx) => (
+          <group key={`gl-${idx}`} position={[lx, ly, lz]}>
+            <mesh>
+              <sphereGeometry args={[0.095, 8, 8]} />
+              <meshStandardMaterial
+                color="#fff0c2"
+                emissive="#ffb84d"
+                emissiveIntensity={isEveningOrNight ? 2.9 : 0.25}
+              />
+            </mesh>
+            {isEveningOrNight && settings.cinematicGlow && (
+              <sprite scale={[1.7, 1.7, 1]}>
+                <spriteMaterial
+                  map={textures.glowSprite}
+                  color="#ffc76e"
+                  transparent
+                  opacity={0.68}
+                  blending={THREE.AdditiveBlending}
+                  depthWrite={false}
+                />
+              </sprite>
+            )}
+          </group>
+        ))}
+        {isEveningOrNight && (
+          <pointLight position={[0, 2.9, 0]} color="#ffc770" intensity={16} distance={18} decay={1.7} />
+        )}
+
+        {/* Peralatan Akustik di Atas Panggung: Kursi Stool, Stand Mic & Gitar Akustik */}
+        <group position={[0, 0.22, 1.05]}>
+          {/* Kursi Stool Kayu Musisi */}
+          <mesh position={[-0.75, 0.56, 0.1]} castShadow>
+            <cylinderGeometry args={[0.24, 0.22, 0.08, 14]} />
+            <meshStandardMaterial color="#7d5334" roughness={0.68} />
+          </mesh>
+          <mesh position={[-0.75, 0.28, 0.1]}>
+            <cylinderGeometry args={[0.05, 0.14, 0.56, 8]} />
+            <meshStandardMaterial color="#272d36" metalness={0.6} roughness={0.4} />
+          </mesh>
+
+          {/* Stand Mikrofon Akustik */}
+          <mesh position={[0, 0.03, -0.35]}>
+            <cylinderGeometry args={[0.18, 0.2, 0.06, 12]} />
+            <meshStandardMaterial color="#1f242c" metalness={0.65} roughness={0.35} />
+          </mesh>
+          <mesh position={[0, 0.72, -0.35]} castShadow>
+            <cylinderGeometry args={[0.018, 0.022, 1.38, 8]} />
+            <meshStandardMaterial color="#2c3340" metalness={0.7} roughness={0.3} />
+          </mesh>
+          <mesh position={[0, 1.42, -0.25]} rotation={[0.45, 0, 0]}>
+            <capsuleGeometry args={[0.035, 0.09, 6, 8]} />
+            <meshStandardMaterial color="#94a3b8" metalness={0.8} roughness={0.25} />
+          </mesh>
+
+          {/* Gitar Akustik Bersandar pada Stand Kayu */}
+          <group position={[0.78, 0.62, 0.12]} rotation={[-0.14, -0.35, 0.06]}>
+            <mesh position={[0, -0.22, 0]} castShadow>
+              <cylinderGeometry args={[0.22, 0.22, 0.1, 16]} />
+              <meshStandardMaterial color="#b87035" roughness={0.4} />
+            </mesh>
+            <mesh position={[0, 0.04, 0]} castShadow>
+              <cylinderGeometry args={[0.16, 0.16, 0.1, 16]} />
+              <meshStandardMaterial color="#b87035" roughness={0.4} />
+            </mesh>
+            <mesh position={[0, -0.04, 0.056]} rotation={[Math.PI / 2, 0, 0]}>
+              <circleGeometry args={[0.065, 12]} />
+              <meshBasicMaterial color="#23140b" />
+            </mesh>
+            <mesh position={[0, 0.45, 0.01]} castShadow>
+              <boxGeometry args={[0.065, 0.65, 0.05]} />
+              <meshStandardMaterial color="#3c2618" roughness={0.6} />
+            </mesh>
+          </group>
+
+          {/* Speaker Akustik Kecil */}
+          <mesh position={[1.45, 0.28, 0.3]} rotation={[0, -0.45, 0]} castShadow>
+            <boxGeometry args={[0.52, 0.56, 0.42]} />
+            <meshStandardMaterial color="#232830" roughness={0.7} />
+          </mesh>
+        </group>
+      </group>
     </group>
   );
 };

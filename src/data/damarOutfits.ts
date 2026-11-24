@@ -61,3 +61,99 @@ export const DAMAR_OUTFIT_BY_ID: Record<DamarOutfitId, DamarOutfitDef> = DAMAR_O
   },
   {} as Record<DamarOutfitId, DamarOutfitDef>,
 );
+
+export type NadiaOutfitId = 'terracotta' | 'sage_evening' | 'sky_casual';
+export type KiraOutfitId = 'sunshine' | 'strawberry' | 'starry_blue';
+
+export interface FamilyOutfitDef<T extends string> {
+  id: T;
+  name: string;
+  subtitle: string;
+  description: string;
+  shirtColor: string;
+  pantsColor: string;
+  accentProp?: 'backpack' | 'apron' | 'tie' | 'cardigan' | 'vest' | 'scarf';
+  reactionLine: string;
+}
+
+export const NADIA_OUTFITS: FamilyOutfitDef<NadiaOutfitId>[] = [
+  {
+    id: 'terracotta',
+    name: 'Kardigan Terakota Hangat',
+    subtitle: 'Gaya Harian Favorit Nadia',
+    description: 'Blus krem lembut dengan kardigan bata hangat yang selalu terasa akrab di ruang tamu.',
+    shirtColor: '#d9c5b2',
+    pantsColor: '#3a3842',
+    accentProp: 'cardigan',
+    reactionLine: 'Kardigan ini memang paling nyaman buat jalan santai sore, Mas.',
+  },
+  {
+    id: 'sage_evening',
+    name: 'Blus Hijau Sage & Syal',
+    subtitle: 'Anggun & Teduh di Taman Kota',
+    description: 'Paduan hijau sage lembut dengan celana krem hangat dan syal tipis penahan angin danau.',
+    shirtColor: '#73917b',
+    pantsColor: '#8f7d69',
+    accentProp: 'scarf',
+    reactionLine: 'Wah, warna hijau ini cocok banget buat foto bareng di Taman Danau ya, Mas!',
+  },
+  {
+    id: 'sky_casual',
+    name: 'Kemeja Biru Langit Santai',
+    subtitle: 'Rapi & Segar untuk Jalan Kota',
+    description: 'Kemeja katun biru muda santai dengan celana gelap dan tas kecil untuk menyimpan camilan Kira.',
+    shirtColor: '#7ea3bf',
+    pantsColor: '#2d3340',
+    accentProp: 'backpack',
+    reactionLine: 'Siap jalan sore! Baju ini ringan banget, enak buat jalan jauh menyusuri kota.',
+  },
+];
+
+export const KIRA_OUTFITS: FamilyOutfitDef<KiraOutfitId>[] = [
+  {
+    id: 'sunshine',
+    name: 'Kaus Kuning Matahari',
+    subtitle: 'Baju Ceria Favorit Kira',
+    description: 'Kaus kuning hangat secerah gambar matahari krayon buatan Kira di kulkas rumah.',
+    shirtColor: '#e8b954',
+    pantsColor: '#485d78',
+    accentProp: undefined,
+    reactionLine: 'Yeay! Baju kuning matahari Kira bikin jalannya tambah semangat!',
+  },
+  {
+    id: 'strawberry',
+    name: 'Baju Stroberi Merah Muda',
+    subtitle: 'Semanis Es Krim Kios Harmoni',
+    description: 'Baju merah muda pastel dengan celana krem lembut dan kardigan mungil yang menggemaskan.',
+    shirtColor: '#e68aa1',
+    pantsColor: '#d4c8b8',
+    accentProp: 'cardigan',
+    reactionLine: 'Hihi, baju warna es krim stroberi! Ayah, Kira kelihatan cantik nggak?',
+  },
+  {
+    id: 'starry_blue',
+    name: 'Sweater Biru Bintang',
+    subtitle: 'Hangat untuk Sore & Hujan',
+    description: 'Sweater rajut biru cerah dengan syal kecil—cocok saat main ayunan atau naik ke Rooftop malam.',
+    shirtColor: '#5c94c4',
+    pantsColor: '#343c4a',
+    accentProp: 'scarf',
+    reactionLine: 'Hangat banget, Ayah! Cocok buat jalan-jalan sambil bawa payung bening!',
+  },
+];
+
+export const NADIA_OUTFIT_BY_ID: Record<NadiaOutfitId, FamilyOutfitDef<NadiaOutfitId>> = NADIA_OUTFITS.reduce(
+  (acc, item) => {
+    acc[item.id] = item;
+    return acc;
+  },
+  {} as Record<NadiaOutfitId, FamilyOutfitDef<NadiaOutfitId>>,
+);
+
+export const KIRA_OUTFIT_BY_ID: Record<KiraOutfitId, FamilyOutfitDef<KiraOutfitId>> = KIRA_OUTFITS.reduce(
+  (acc, item) => {
+    acc[item.id] = item;
+    return acc;
+  },
+  {} as Record<KiraOutfitId, FamilyOutfitDef<KiraOutfitId>>,
+);

@@ -3,6 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { sfxEngine } from '../../audio/sfxEngine';
 import { CHARACTERS } from '../../data/characters';
+import { KIRA_OUTFIT_BY_ID, KiraOutfitId, NADIA_OUTFIT_BY_ID, NadiaOutfitId } from '../../data/damarOutfits';
 import { EASTER_EGGS } from '../../data/easterEggs';
 import {
   EVENT_FAMILY_BANTERS,
@@ -79,9 +80,42 @@ const NpcFigure: React.FC<{
   highlight?: 'main' | 'side' | null;
   isFamilyCompanion?: boolean;
   timeOfDay: TimeOfDay;
-}> = ({ npc, highlight, isFamilyCompanion = false, timeOfDay }) => {
+  nadiaOutfitId?: NadiaOutfitId;
+  kiraOutfitId?: KiraOutfitId;
+}> = ({ npc, highlight, isFamilyCompanion = false, timeOfDay, nadiaOutfitId, kiraOutfitId }) => {
   const { camera } = useThree();
-  const profile = CHARACTERS[npc.id];
+  const baseProfile = CHARACTERS[npc.id];
+  const profile = useMemo(() => {
+    if (npc.id === 'nadia' && nadiaOutfitId) {
+      const o = NADIA_OUTFIT_BY_ID[nadiaOutfitId];
+      if (o) {
+        return {
+          ...baseProfile,
+          appearance: {
+            ...baseProfile.appearance,
+            shirtColor: o.shirtColor,
+            pantsColor: o.pantsColor,
+            accentProp: o.accentProp,
+          },
+        };
+      }
+    }
+    if (npc.id === 'kira' && kiraOutfitId) {
+      const o = KIRA_OUTFIT_BY_ID[kiraOutfitId];
+      if (o) {
+        return {
+          ...baseProfile,
+          appearance: {
+            ...baseProfile.appearance,
+            shirtColor: o.shirtColor,
+            pantsColor: o.pantsColor,
+            accentProp: o.accentProp,
+          },
+        };
+      }
+    }
+    return baseProfile;
+  }, [baseProfile, npc.id, nadiaOutfitId, kiraOutfitId]);
   const scale = profile.appearance.height / 1.74;
   const isChild = npc.id === 'kira';
 
@@ -441,6 +475,8 @@ export const WorldInteractables: React.FC = () => {
   const activeDialogue = useGameStore((s) => s.activeDialogue);
   const isFamilyWalkActive = useGameStore((s) => s.isFamilyWalkActive);
   const timeOfDay = useGameStore((s) => s.timeOfDay);
+  const nadiaOutfitId = useGameStore((s) => s.nadiaOutfitId);
+  const kiraOutfitId = useGameStore((s) => s.kiraOutfitId);
 
   const heardBantersRef = useRef<Set<string>>(new Set());
   const lastBanterTimeRef = useRef(0);
@@ -692,6 +728,7 @@ export const WorldInteractables: React.FC = () => {
       Boolean(store.activeCulinarySpot) ||
       store.isWardrobeOpen ||
       store.isLittleLibraryOpen ||
+      store.isBookStallOpen ||
       store.isRidingScooter ||
       store.isSitting ||
       store.isFlyingKite ||
@@ -956,6 +993,62 @@ export const WorldInteractables: React.FC = () => {
         },
       },
       2.4,
+    );
+
+    consider(
+      {
+        id: 'activity_gazebo_guitar',
+        kind: 'story_object',
+        label: 'Mainkan Gitar Akustik di Gazebo Panggung Taman',
+        sublabel: 'Gazebo Taman Kota · Panggung Terbuka',
+        position: [-67.5, 0.22, 20.4],
+        onInteract: () => {
+          sfxEngine.playGuitarChord(0);
+          store.setGuitarOpen(true);
+        },
+      },
+      2.6,
+    );
+
+    consider(
+      {
+        id: 'sit_gazebo_stage',
+        kind: 'story_object',
+        label: 'Duduk Santai Berteduh di Gazebo Taman',
+        sublabel: 'Gazebo Panggung Akustik',
+        position: [-69.1, 0.22, 18.6],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Gazebo Taman Kota',
+            seatPos: [-69.0, 0.36, 19.6],
+            lookAt: [-78.0, 1.4, 21.5],
+            standPos: [-68.8, 0.22, 18.4],
+            seatYaw: -Math.PI / 2,
+          };
+          store.setSitting(true);
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_bench, 'fw_gazebo');
+          }
+          store.showToast('Menikmati angin sore di bawah lampu Gazebo Panggung Taman... (WASD/E berdiri)');
+        },
+      },
+      2.4,
+    );
+
+    consider(
+      {
+        id: 'activity_darman_books',
+        kind: 'story_object',
+        label: 'Jelajahi Rak Buku Bekas Pak Darman',
+        sublabel: 'Stasiun Senja · 4 Buku Pilihan',
+        position: [75.8, 0.1, -1.2],
+        onInteract: () => {
+          store.setBookStallOpen(true);
+        },
+      },
+      2.5,
     );
 
     consider(
@@ -1445,6 +1538,8 @@ export const WorldInteractables: React.FC = () => {
             highlight={res.highlight}
             isFamilyCompanion={isComp}
             timeOfDay={timeOfDay}
+            nadiaOutfitId={npc.id === 'nadia' ? nadiaOutfitId : undefined}
+            kiraOutfitId={npc.id === 'kira' ? kiraOutfitId : undefined}
           />
         );
       })}
@@ -1567,6 +1662,14 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-72.5, 2.78, -8.2]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#6ee7b7" />
+      </mesh>
+      <mesh position={[-67.2, 1.85, 20.6]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#ffb84d" />
+      </mesh>
+      <mesh position={[75.8, 1.52, -2.1]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#fcd34d" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

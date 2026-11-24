@@ -11,7 +11,14 @@ import {
   CulinarySpotId,
   HeldDrinkVisual,
 } from '../data/culinaryMenu';
-import { DAMAR_OUTFIT_BY_ID, DamarOutfitId } from '../data/damarOutfits';
+import {
+  DAMAR_OUTFIT_BY_ID,
+  DamarOutfitId,
+  KIRA_OUTFIT_BY_ID,
+  KiraOutfitId,
+  NADIA_OUTFIT_BY_ID,
+  NadiaOutfitId,
+} from '../data/damarOutfits';
 import { LAKE_CATCHES, LakeCatchDef } from '../data/lakeAndBooks';
 import { evaluateEnding } from '../data/endings';
 import {
@@ -112,6 +119,7 @@ interface GameStoreState {
   fishingBiteReady: boolean;
   lastFishCatch: LakeCatchDef | null;
   isLittleLibraryOpen: boolean;
+  isBookStallOpen: boolean;
   isRidingScooter: boolean;
   isGuitarOpen: boolean;
   isBagOpen: boolean;
@@ -122,6 +130,8 @@ interface GameStoreState {
   heldDrink: { type: HeldDrinkVisual; isHot: boolean; label: string } | null;
   isWardrobeOpen: boolean;
   damarOutfitId: DamarOutfitId;
+  nadiaOutfitId: NadiaOutfitId;
+  kiraOutfitId: KiraOutfitId;
   livingRoomTvChannel: 0 | 1 | 2 | 3;
   catFed: boolean;
   paperBoatsLaunched: number;
@@ -151,6 +161,7 @@ interface GameStoreState {
   setFishingBiteReady: (ready: boolean) => void;
   reelFishingCatch: () => void;
   setLittleLibraryOpen: (open: boolean) => void;
+  setBookStallOpen: (open: boolean) => void;
   setRidingScooter: (riding: boolean) => void;
   setGuitarOpen: (open: boolean) => void;
   setBagOpen: (open: boolean) => void;
@@ -165,6 +176,8 @@ interface GameStoreState {
   clearHeldDrink: () => void;
   setWardrobeOpen: (open: boolean) => void;
   setDamarOutfit: (outfitId: DamarOutfitId) => void;
+  setNadiaOutfit: (outfitId: NadiaOutfitId) => void;
+  setKiraOutfit: (outfitId: KiraOutfitId) => void;
   cycleLivingRoomTv: () => void;
   markCatFed: () => void;
   incrementPaperBoats: () => void;
@@ -273,6 +286,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     fishingBiteReady: false,
     lastFishCatch: null,
     isLittleLibraryOpen: false,
+    isBookStallOpen: false,
     isRidingScooter: false,
     isGuitarOpen: false,
     isBagOpen: false,
@@ -283,6 +297,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     heldDrink: null,
     isWardrobeOpen: false,
     damarOutfitId: 'office',
+    nadiaOutfitId: 'terracotta',
+    kiraOutfitId: 'sunshine',
     livingRoomTvChannel: 1,
     catFed: false,
     paperBoatsLaunched: 0,
@@ -423,6 +439,26 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       if (open) sfxEngine.play('page');
       set({
         isLittleLibraryOpen: open,
+        isBookStallOpen: false,
+        isWardrobeOpen: false,
+        activeCulinarySpot: null,
+        isMapJournalOpen: false,
+        isPauseOpen: false,
+        isPhoneOpen: false,
+        isBagOpen: false,
+        isGuitarOpen: false,
+        isQuickGraphicsOpen: false,
+      });
+    },
+
+    setBookStallOpen: (open) => {
+      const s = get();
+      if (open && (s.screen !== 'playing' || s.activeDialogue)) return;
+      if (open && document.pointerLockElement) document.exitPointerLock();
+      if (open) sfxEngine.play('page');
+      set({
+        isBookStallOpen: open,
+        isLittleLibraryOpen: false,
         isWardrobeOpen: false,
         activeCulinarySpot: null,
         isMapJournalOpen: false,
@@ -684,9 +720,27 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       const outfit = DAMAR_OUTFIT_BY_ID[outfitId];
       if (!outfit) return;
       sfxEngine.play('chime');
-      set({ damarOutfitId: outfitId, isWardrobeOpen: false });
+      set({ damarOutfitId: outfitId });
       get().showToast(`Damar berganti mengenakan: ${outfit.name}`);
       get().playFamilyBanter([{ speaker: 'nadia', text: outfit.nadiaComment }], `fw_outfit_${outfitId}`);
+    },
+
+    setNadiaOutfit: (outfitId) => {
+      const outfit = NADIA_OUTFIT_BY_ID[outfitId];
+      if (!outfit) return;
+      sfxEngine.play('chime');
+      set({ nadiaOutfitId: outfitId });
+      get().showToast(`Nadia berganti mengenakan: ${outfit.name}`);
+      get().playFamilyBanter([{ speaker: 'nadia', text: outfit.reactionLine }], `fw_nadia_outfit_${outfitId}`);
+    },
+
+    setKiraOutfit: (outfitId) => {
+      const outfit = KIRA_OUTFIT_BY_ID[outfitId];
+      if (!outfit) return;
+      sfxEngine.play('chime');
+      set({ kiraOutfitId: outfitId });
+      get().showToast(`Kira berganti mengenakan: ${outfit.name}`);
+      get().playFamilyBanter([{ speaker: 'kira', text: outfit.reactionLine }], `fw_kira_outfit_${outfitId}`);
     },
 
     cycleLivingRoomTv: () => {
@@ -978,6 +1032,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         fishingBiteReady: false,
         lastFishCatch: null,
         isLittleLibraryOpen: false,
+        isBookStallOpen: false,
         isFamilyWalkActive: false,
         familyBanter: null,
         activeCulinarySpot: null,

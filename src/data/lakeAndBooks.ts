@@ -116,3 +116,59 @@ export const LITTLE_LIBRARY_BOOKS: LittleBookStory[] = [
     damarReflection: 'Anak-anak tidak pernah meminta dunia yang megah... mereka hanya meminta kita benar-benar hadir.',
   },
 ];
+
+export interface DarmanBookItem {
+  id: string;
+  title: string;
+  yearLabel: string;
+  genreLabel: string;
+  coverColor: string;
+  accentColor: string;
+  darmanNote: string;
+  passage: string;
+  kiraReaction?: string;
+}
+
+export const DARMAN_STALL_BOOKS: DarmanBookItem[] = [
+  {
+    id: 'db_peta_pulang',
+    title: 'Peta Jalan Pulang — Antologi Esai Kota',
+    yearLabel: 'Cetakan 2012 · Kondisi Baik',
+    genreLabel: 'Esai & Refleksi',
+    coverColor: '#3d4f63',
+    accentColor: '#f5cf82',
+    darmanNote: 'Buku ini dulu paling sering dicari pegawai yang baru pindah kota, Nak. Halamannya penuh garis bawah pensil.',
+    passage: 'Kita sering mengira rumah adalah alamat yang tertulis di kartu identitas. Baru setelah bertahun-tahun merantau di jalanan yang sibuk, kita sadar rumah adalah suara langkah orang-orang yang memanggil nama kita tanpa meminta kita menjadi siapa-siapa lagi.',
+  },
+  {
+    id: 'db_akord_gitar',
+    title: 'Buku Akord Gitar Rakyat (Edisi 1996)',
+    yearLabel: 'Cetakan 1996 · Sampul Klasik',
+    genreLabel: 'Musik & Akustik',
+    coverColor: '#753f2c',
+    accentColor: '#fcd34d',
+    darmanNote: 'Kertasnya sudah menguning, Mar, tapi akor Dmaj7 dan lagu-lagu senjanya masih lengkap semua.',
+    passage: 'Catatan tepi halaman 42: "Tidak perlu memetik terlalu keras. Biarkan kayu gitar bernapas di antara dua akor—di situlah kejujuran sebuah lagu tinggal."',
+  },
+  {
+    id: 'db_dongeng_bintang',
+    title: 'Dongeng Bintang & Perahu Kertas',
+    yearLabel: 'Cetakan 2019 · Bergambar Warna',
+    genreLabel: 'Cerita Anak',
+    coverColor: '#2e6158',
+    accentColor: '#a7f3d0',
+    darmanNote: 'Kalau Kira ikut mampir ke stasiun, buku bergambar ini pasti langsung jadi kesukaannya!',
+    passage: 'Pada suatu senja di tepi danau, selembar kertas lipat kecil bertanya pada bintang kuning: "Mengapa aku hanya terbuat dari kertas tipis?" Bintang itu tersenyum: "Karena hatimu ringan, kamu bisa mengapung membawa doa ke seberang air."',
+    kiraReaction: 'WAAAH!! Cerita tentang bintang sama perahu kertas!! Ayah bacain buat Kira nanti malam ya!!',
+  },
+  {
+    id: 'db_stasiun_senja',
+    title: 'Catatan Stasiun Tua Senja',
+    yearLabel: 'Arsip Lokal 2004',
+    genreLabel: 'Sejarah Kota',
+    coverColor: '#5c4638',
+    accentColor: '#fed7aa',
+    darmanNote: 'Ini buku kesayangan Bapak sendiri. Menceritakan peron ini sejak pertama kali dibangun puluhan tahun lalu.',
+    passage: 'Ribuan pasang sepatu telah melintasi peron Stasiun Senja—ada yang berangkat membawa ambisi, ada yang pulang membawa kelelahan. Namun satu hal yang tak pernah berubah sejak 1978: selalu ada bangku tua dan lampu kuning yang menyambut siapa pun yang akhirnya memilih kembali.',
+  },
+];

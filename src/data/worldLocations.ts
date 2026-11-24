@@ -185,6 +185,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= 18.5 && x <= 24.5 && z >= 9.6 && z <= 12.1) return true;
   // Kanopi Peron Stasiun Kereta Tua Senja
   if (x >= 75.5 && x <= 87.2 && z >= -21.0 && z <= 13.0) return true;
+  // Gazebo Panggung Akustik Taman Kota
+  if (x >= -70.6 && x <= -65.4 && z >= 16.9 && z <= 22.1) return true;
   return false;
 }
 
@@ -366,6 +368,12 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
 
   // Kucing Oranye "Sore"
   { x: 9.5, z: 56.5, r: 0.36 },
+
+  // 4 Tiang Sudut Gazebo Panggung Akustik Taman Kota + Stand Gitar
+  { x: -70.3, z: 17.2, r: 0.24 },
+  { x: -65.7, z: 17.2, r: 0.24 },
+  { x: -70.3, z: 21.8, r: 0.24 },
+  { x: -65.7, z: 21.8, r: 0.24 },
 ];
 
 export const ROOFTOP_BOUNDS = {
@@ -538,6 +546,8 @@ export function resolvePlayerMovement(
     ry = 0.1;
   } else if (rx >= -77 && rx <= -69 && rz >= -30.5 && rz <= -25.5) {
     ry = 0.12;
+  } else if (rx >= -70.5 && rx <= -65.5 && rz >= 17.0 && rz <= 22.0) {
+    ry = 0.22;
   }
 
   return [rx, ry, rz];
@@ -624,6 +634,8 @@ export function resolveCompanionMovement(
     ry = 0.1;
   } else if (rx >= -77 && rx <= -69 && rz >= -30.5 && rz <= -25.5) {
     ry = 0.12;
+  } else if (rx >= -70.5 && rx <= -65.5 && rz >= 17.0 && rz <= 22.0) {
+    ry = 0.22;
   }
 
   return [rx, ry, rz];

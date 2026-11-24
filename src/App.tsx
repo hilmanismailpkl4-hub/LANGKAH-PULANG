@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { BookStallModal } from './components/ui/BookStallModal';
 import { ChapterTransition } from './components/ui/ChapterTransition';
 import { CulinaryModal } from './components/ui/CulinaryModal';
 import { DialogueOverlay } from './components/ui/DialogueOverlay';
@@ -60,6 +61,7 @@ export function App() {
       <CulinaryModal />
       <WardrobeModal />
       <LittleLibraryModal />
+      <BookStallModal />
       <InventoryBagModal />
       <PhoneNotification />
       <DialogueOverlay />
