@@ -308,6 +308,9 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'bus_stop_back', minX: 18.6, maxX: 24.4, minZ: 11.65, maxZ: 12.15 },
   { id: 'bus_stop_bench', minX: 19.3, maxX: 23.0, minZ: 10.85, maxZ: 11.55 },
   { id: 'bus_stop_side_r', minX: 24.1, maxX: 24.55, minZ: 9.8, maxZ: 12.05 },
+
+  // === 14. Kotak Buku Jalanan ("Taman Baca Mini") di Taman Kota ===
+  { id: 'park_book_box', minX: -73.0, maxX: -72.0, minZ: -8.65, maxZ: -7.75 },
 ];
 
 /**

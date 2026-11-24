@@ -113,7 +113,9 @@ export const PlayerController: React.FC = () => {
 
       // Tutup overlay dengan Escape
       if (code === 'Escape') {
-        if (state.isWardrobeOpen) {
+        if (state.isLittleLibraryOpen) {
+          state.setLittleLibraryOpen(false);
+        } else if (state.isWardrobeOpen) {
           state.setWardrobeOpen(false);
         } else if (state.activeCulinarySpot) {
           state.openCulinarySpot(null);
@@ -129,6 +131,9 @@ export const PlayerController: React.FC = () => {
           state.setQuickGraphicsOpen(false);
         } else if (state.isMapJournalOpen) {
           state.closeMapJournal();
+        } else if (state.isFishing) {
+          state.setFishing(false);
+          state.showToast('Joran pancing diletakkan kembali di tepi dermaga.');
         } else if (state.isFlyingKite) {
           state.setFlyingKite(false);
           state.showToast('Benang layang-layang digulung rapi kembali.');
@@ -140,7 +145,7 @@ export const PlayerController: React.FC = () => {
         return;
       }
 
-      if (state.isGuitarOpen || state.activeCulinarySpot || state.isWardrobeOpen) return;
+      if (state.isGuitarOpen || state.activeCulinarySpot || state.isWardrobeOpen || state.isLittleLibraryOpen) return;
 
       // Tas Selempang Damar [I]
       if (
@@ -212,6 +217,26 @@ export const PlayerController: React.FC = () => {
       }
 
       if (state.isPhotoMode || state.isPhoneOpen) return;
+
+      // Saat memancing santai di dermaga: [Spasi] tarik kail saat ada tarikan, [WASD / E] selesai
+      if (state.isFishing) {
+        if (code === 'Space') {
+          e.preventDefault();
+          state.reelFishingCatch();
+        } else if (
+          code === 'KeyE' ||
+          code === 'KeyW' ||
+          code === 'KeyA' ||
+          code === 'KeyS' ||
+          code === 'KeyD' ||
+          code === 'ArrowUp' ||
+          code === 'ArrowDown'
+        ) {
+          state.setFishing(false);
+          state.showToast('Joran pancing diletakkan kembali di tepi dermaga.');
+        }
+        return;
+      }
 
       // Saat menerbangkan layang-layang: [Spasi] tarik benang makin tinggi, [WASD / E] selesai
       if (state.isFlyingKite) {
@@ -332,7 +357,8 @@ export const PlayerController: React.FC = () => {
         state.isPhoneOpen ||
         state.isGuitarOpen ||
         Boolean(state.activeCulinarySpot) ||
-        state.isWardrobeOpen
+        state.isWardrobeOpen ||
+        state.isLittleLibraryOpen
       )
         return;
       isDraggingRef.current = true;
@@ -354,7 +380,8 @@ export const PlayerController: React.FC = () => {
         state.isPhoneOpen ||
         state.isGuitarOpen ||
         Boolean(state.activeCulinarySpot) ||
-        state.isWardrobeOpen
+        state.isWardrobeOpen ||
+        state.isLittleLibraryOpen
       )
         return;
 
@@ -391,7 +418,8 @@ export const PlayerController: React.FC = () => {
         state.isPhoneOpen ||
         state.isGuitarOpen ||
         Boolean(state.activeCulinarySpot) ||
-        state.isWardrobeOpen
+        state.isWardrobeOpen ||
+        state.isLittleLibraryOpen
       )
         return;
       if (!document.pointerLockElement && dom.requestPointerLock) {
@@ -410,7 +438,8 @@ export const PlayerController: React.FC = () => {
         state.isPhoneOpen ||
         state.isGuitarOpen ||
         Boolean(state.activeCulinarySpot) ||
-        state.isWardrobeOpen
+        state.isWardrobeOpen ||
+        state.isLittleLibraryOpen
       )
         return;
       zoomRef.current = THREE.MathUtils.clamp(zoomRef.current + e.deltaY * 0.0038, 2.8, 12.0);
@@ -690,6 +719,55 @@ export const PlayerController: React.FC = () => {
       return;
     }
 
+    // === 2C. MODE MEMANCING SANTAI DI UJUNG DERMAGA DANAU SENJA ===
+    if (store.isFishing) {
+      const fishPos: [number, number, number] = [-76.2, 0.12, -29.2];
+      playerRuntime.position = fishPos;
+      const faceLakeYaw = Math.atan2(-2.6, -4.2);
+      playerRuntime.rotationY = faceLakeYaw;
+      if (groupRef.current) {
+        groupRef.current.position.set(fishPos[0], fishPos[1] + Math.sin(t * 1.9) * 0.012, fishPos[2]);
+        groupRef.current.rotation.y = faceLakeYaw;
+      }
+      if (leftLegRef.current) leftLegRef.current.rotation.x = THREE.MathUtils.lerp(leftLegRef.current.rotation.x, 0.06, dt * 8);
+      if (rightLegRef.current) rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, -0.06, dt * 8);
+      if (rightArmRef.current) {
+        rightArmRef.current.rotation.x = THREE.MathUtils.lerp(
+          rightArmRef.current.rotation.x,
+          -1.08 - playerRuntime.fishingTugAnim * 0.65,
+          dt * 10,
+        );
+        rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, 0.08, dt * 8);
+      }
+      if (leftArmRef.current) {
+        leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, -0.65, dt * 8);
+      }
+      if (headRef.current) {
+        headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, 0.12, dt * 6);
+        headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, 0, dt * 6);
+      }
+
+      if (!store.isPhotoMode) {
+        camDesiredVec.current.set(-73.4, 2.35, -26.4);
+        camera.position.lerp(camDesiredVec.current, Math.min(1, dt * 3.5));
+        lookTargetVec.current.lerp(new THREE.Vector3(-78.0, 0.55, -32.2), Math.min(1, dt * 3.5));
+        camera.lookAt(lookTargetVec.current);
+      } else {
+        const pitch = playerRuntime.cameraPitch;
+        const yaw = playerRuntime.cameraYaw;
+        const dist = zoomRef.current;
+        camDesiredVec.current.set(
+          fishPos[0] + Math.sin(yaw) * Math.cos(pitch) * dist,
+          fishPos[1] + Math.sin(pitch) * dist + 1.75,
+          fishPos[2] + Math.cos(yaw) * Math.cos(pitch) * dist,
+        );
+        camera.position.lerp(camDesiredVec.current, Math.min(1, dt * 8));
+        lookTargetVec.current.set(fishPos[0] - 0.8, fishPos[1] + 1.2, fishPos[2] - 1.2);
+        camera.lookAt(lookTargetVec.current);
+      }
+      return;
+    }
+
     // === 3. MODE JALAN KAKI NORMAL ===
     const canControl =
       store.screen === 'playing' &&
@@ -702,7 +780,8 @@ export const PlayerController: React.FC = () => {
       !store.isGuitarOpen &&
       !store.isBagOpen &&
       !store.activeCulinarySpot &&
-      !store.isWardrobeOpen;
+      !store.isWardrobeOpen &&
+      !store.isLittleLibraryOpen;
 
     let moveX = 0;
     let moveZ = 0;

@@ -691,9 +691,11 @@ export const WorldInteractables: React.FC = () => {
       store.isBagOpen ||
       Boolean(store.activeCulinarySpot) ||
       store.isWardrobeOpen ||
+      store.isLittleLibraryOpen ||
       store.isRidingScooter ||
       store.isSitting ||
-      store.isFlyingKite
+      store.isFlyingKite ||
+      store.isFishing
     ) {
       playerRuntime.nearestInteractable = null;
       store.setInteractPrompt(null);
@@ -936,6 +938,35 @@ export const WorldInteractables: React.FC = () => {
             store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_koi, 'fw_koi');
           }
           store.showToast('Kawanan ikan koi oranye & emas langsung berenang menghampiri pelet!');
+        },
+      },
+      2.5,
+    );
+
+    consider(
+      {
+        id: 'activity_lake_fishing',
+        kind: 'story_object',
+        label: 'Memancing Santai di Ujung Dermaga Danau',
+        sublabel: 'Danau Senja · Catch & Release',
+        position: [-76.0, 0.12, -29.3],
+        onInteract: () => {
+          store.setFishing(true);
+          store.showToast('Melempar pelampung ke Danau Senja... tunggu pelampung mencelup lalu tekan [Spasi]!');
+        },
+      },
+      2.4,
+    );
+
+    consider(
+      {
+        id: 'activity_little_library',
+        kind: 'story_object',
+        label: 'Buka Kotak Buku Jalanan ("Taman Baca Mini")',
+        sublabel: 'Taman Bunga · 5 Kisah Pendek Warga',
+        position: [-72.5, 0, -7.2],
+        onInteract: () => {
+          store.setLittleLibraryOpen(true);
         },
       },
       2.5,
@@ -1528,6 +1559,14 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[24.1, 2.35, 10.8]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#fbbf24" />
+      </mesh>
+      <mesh position={[-76.2, 1.52, -29.75]}>
+        <sphereGeometry args={[0.07, 8, 8]} />
+        <meshBasicMaterial color="#7dd3fc" />
+      </mesh>
+      <mesh position={[-72.5, 2.78, -8.2]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#6ee7b7" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

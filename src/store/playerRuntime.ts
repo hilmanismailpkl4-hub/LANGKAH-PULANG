@@ -100,6 +100,10 @@ export const playerRuntime = {
   swingBoostTimer: 0,
   kiteHeight: 0,
   kitePullBoost: 0,
+  fishingPhase: 'idle' as 'idle' | 'waiting' | 'bite',
+  fishingWaitTimer: 0,
+  fishingBiteTimer: 0,
+  fishingTugAnim: 0,
   trainZ: -80,
 
   // Posisi real-time Nadia & Kira (tetap akurat baik di rumah maupun saat jalan sore bersama!)
@@ -146,4 +150,8 @@ export function resetScooterToHome() {
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;
   playerRuntime.kitePullBoost = 0;
+  playerRuntime.fishingPhase = 'idle';
+  playerRuntime.fishingWaitTimer = 0;
+  playerRuntime.fishingBiteTimer = 0;
+  playerRuntime.fishingTugAnim = 0;
 }

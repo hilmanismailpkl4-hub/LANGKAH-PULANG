@@ -6,6 +6,7 @@ import { Atmosphere } from './Atmosphere';
 import { CityDetails } from './CityDetails';
 import { CityGeometry } from './CityGeometry';
 import { CityLife } from './CityLife';
+import { FishingAndFlowerLibrary } from './FishingAndFlowerLibrary';
 import { HomeLivingAndBusStop } from './HomeLivingAndBusStop';
 import { ParkPlaygroundAndKoi } from './ParkPlaygroundAndKoi';
 import { PlayerController } from './PlayerController';
@@ -50,6 +51,7 @@ export const GameCanvas: React.FC = () => {
           <CityDetails timeOfDay={effectiveTime} settings={settings} pierLampFixed={pierLampFixed} />
           <HomeLivingAndBusStop timeOfDay={effectiveTime} settings={settings} />
           <ParkPlaygroundAndKoi timeOfDay={effectiveTime} settings={settings} />
+          <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
           <CityLife timeOfDay={effectiveTime} settings={settings} />
           <ScooterEntity timeOfDay={effectiveTime} settings={settings} />
           <PlayerController />

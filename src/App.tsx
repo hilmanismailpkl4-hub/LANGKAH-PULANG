@@ -7,6 +7,7 @@ import { GameHUD } from './components/ui/GameHUD';
 import { GraphicsSettingsModal } from './components/ui/GraphicsSettingsModal';
 import { GuitarMinigameModal } from './components/ui/GuitarMinigameModal';
 import { InventoryBagModal } from './components/ui/InventoryBagModal';
+import { LittleLibraryModal } from './components/ui/LittleLibraryModal';
 import { MapJournalModal } from './components/ui/MapJournalModal';
 import { PauseSettingsModal } from './components/ui/PauseSettingsModal';
 import { PhoneNotification } from './components/ui/PhoneNotification';
@@ -58,6 +59,7 @@ export function App() {
       <GuitarMinigameModal />
       <CulinaryModal />
       <WardrobeModal />
+      <LittleLibraryModal />
       <InventoryBagModal />
       <PhoneNotification />
       <DialogueOverlay />

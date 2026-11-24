@@ -12,6 +12,7 @@ import {
   HeldDrinkVisual,
 } from '../data/culinaryMenu';
 import { DAMAR_OUTFIT_BY_ID, DamarOutfitId } from '../data/damarOutfits';
+import { LAKE_CATCHES, LakeCatchDef } from '../data/lakeAndBooks';
 import { evaluateEnding } from '../data/endings';
 import {
   CASUAL_FAMILY_BANTERS,
@@ -107,6 +108,10 @@ interface GameStoreState {
   isPhotoMode: boolean;
   isSitting: boolean;
   isFlyingKite: boolean;
+  isFishing: boolean;
+  fishingBiteReady: boolean;
+  lastFishCatch: LakeCatchDef | null;
+  isLittleLibraryOpen: boolean;
   isRidingScooter: boolean;
   isGuitarOpen: boolean;
   isBagOpen: boolean;
@@ -142,6 +147,10 @@ interface GameStoreState {
   setPhotoMode: (active: boolean) => void;
   setSitting: (sitting: boolean) => void;
   setFlyingKite: (flying: boolean) => void;
+  setFishing: (fishing: boolean) => void;
+  setFishingBiteReady: (ready: boolean) => void;
+  reelFishingCatch: () => void;
+  setLittleLibraryOpen: (open: boolean) => void;
   setRidingScooter: (riding: boolean) => void;
   setGuitarOpen: (open: boolean) => void;
   setBagOpen: (open: boolean) => void;
@@ -260,6 +269,10 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     isPhotoMode: false,
     isSitting: false,
     isFlyingKite: false,
+    isFishing: false,
+    fishingBiteReady: false,
+    lastFishCatch: null,
+    isLittleLibraryOpen: false,
     isRidingScooter: false,
     isGuitarOpen: false,
     isBagOpen: false,
@@ -332,6 +345,93 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         playerRuntime.kitePullBoost = 1.0;
       }
       set({ isFlyingKite: flying });
+    },
+
+    setFishing: (fishing) => {
+      if (fishing) {
+        sfxEngine.play('interact');
+        playerRuntime.fishingPhase = 'waiting';
+        playerRuntime.fishingWaitTimer = 3.2 + Math.random() * 2.8;
+        playerRuntime.fishingBiteTimer = 0;
+        playerRuntime.fishingTugAnim = 0;
+      } else {
+        playerRuntime.fishingPhase = 'idle';
+        playerRuntime.fishingWaitTimer = 0;
+        playerRuntime.fishingBiteTimer = 0;
+      }
+      set({ isFishing: fishing, fishingBiteReady: false, lastFishCatch: null });
+    },
+
+    setFishingBiteReady: (ready) => {
+      if (get().fishingBiteReady === ready) return;
+      if (ready) sfxEngine.play('chime');
+      set({ fishingBiteReady: ready });
+    },
+
+    reelFishingCatch: () => {
+      const s = get();
+      if (!s.isFishing) return;
+      playerRuntime.fishingTugAnim = 1.0;
+
+      if (!s.fishingBiteReady) {
+        sfxEngine.play('switch');
+        s.showToast('Belum ada tarikan—tunggu pelampung merah-putih mencelup air dulu ya!');
+        return;
+      }
+
+      const caught = LAKE_CATCHES[Math.floor(Math.random() * LAKE_CATCHES.length)];
+      sfxEngine.play('chime');
+      playerRuntime.fishingPhase = 'waiting';
+      playerRuntime.fishingWaitTimer = 4.2 + Math.random() * 2.8;
+      playerRuntime.fishingBiteTimer = 0;
+
+      set({ fishingBiteReady: false, lastFishCatch: caught });
+
+      if (!s.flags.includes('caught_first_lake_fish')) {
+        s.applyEffect({
+          kehadiranKeluarga: 1,
+          kejujuranDiri: 1,
+          setFlags: ['caught_first_lake_fish'],
+          journalEntry: {
+            id: 'je_lake_fishing',
+            title: 'Memancing Santai di Ujung Dermaga',
+            body: 'Di ujung dermaga Danau Senja, aku belajar lagi caranya menunggu tanpa gelisah. Saat ikan menyambar pelampung, aku mengaguminya sebentar lalu melepaskannya kembali ke air yang tenang.',
+            chapter: s.chapter,
+          },
+        });
+      }
+
+      if (s.isFamilyWalkActive) {
+        s.playFamilyBanter(
+          caught.isFunnyJunk
+            ? [{ speaker: 'kira', text: 'Hahaha!! Ayah malah mancing sandal jepit tua!! Lucu bangeeet!!' }]
+            : [
+                { speaker: 'kira', text: `WAAAH dapat ${caught.name}, Ayah!! Cantik banget sisiknya!!` },
+                { speaker: 'nadia', text: 'Dilepas lagi ke danau ya, Sayang, biar ikannya pulang ke keluarganya.' },
+              ],
+          `fw_fish_${caught.id}`,
+        );
+      }
+
+      s.showToast(`Mendapat ${caught.name} (${caught.weightLabel})! ${caught.releaseNote}`);
+    },
+
+    setLittleLibraryOpen: (open) => {
+      const s = get();
+      if (open && (s.screen !== 'playing' || s.activeDialogue)) return;
+      if (open && document.pointerLockElement) document.exitPointerLock();
+      if (open) sfxEngine.play('page');
+      set({
+        isLittleLibraryOpen: open,
+        isWardrobeOpen: false,
+        activeCulinarySpot: null,
+        isMapJournalOpen: false,
+        isPauseOpen: false,
+        isPhoneOpen: false,
+        isBagOpen: false,
+        isGuitarOpen: false,
+        isQuickGraphicsOpen: false,
+      });
     },
 
     setRidingScooter: (riding) => {
@@ -874,6 +974,10 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isMapJournalOpen: false,
         isPauseOpen: false,
         isFlyingKite: false,
+        isFishing: false,
+        fishingBiteReady: false,
+        lastFishCatch: null,
+        isLittleLibraryOpen: false,
         isFamilyWalkActive: false,
         familyBanter: null,
         activeCulinarySpot: null,

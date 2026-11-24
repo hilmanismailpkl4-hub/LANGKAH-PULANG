@@ -42,6 +42,7 @@ export const GameHUD: React.FC = () => {
   const isBagOpen = useGameStore((s) => s.isBagOpen);
   const activeCulinarySpot = useGameStore((s) => s.activeCulinarySpot);
   const isWardrobeOpen = useGameStore((s) => s.isWardrobeOpen);
+  const isLittleLibraryOpen = useGameStore((s) => s.isLittleLibraryOpen);
   const heldDrink = useGameStore((s) => s.heldDrink);
   const isRidingScooter = useGameStore((s) => s.isRidingScooter);
   const setBagOpen = useGameStore((s) => s.setBagOpen);
@@ -53,6 +54,9 @@ export const GameHUD: React.FC = () => {
   const triggerCasualFamilyChat = useGameStore((s) => s.triggerCasualFamilyChat);
   const isSitting = useGameStore((s) => s.isSitting);
   const isFlyingKite = useGameStore((s) => s.isFlyingKite);
+  const isFishing = useGameStore((s) => s.isFishing);
+  const fishingBiteReady = useGameStore((s) => s.fishingBiteReady);
+  const reelFishingCatch = useGameStore((s) => s.reelFishingCatch);
   const repliedPhonePrompts = useGameStore((s) => s.repliedPhonePrompts);
   const openPhone = useGameStore((s) => s.openPhone);
   const interactPrompt = useGameStore((s) => s.interactPrompt);
@@ -148,7 +152,8 @@ export const GameHUD: React.FC = () => {
     isGuitarOpen ||
     isBagOpen ||
     Boolean(activeCulinarySpot) ||
-    isWardrobeOpen
+    isWardrobeOpen ||
+    isLittleLibraryOpen
   ) {
     return null;
   }
@@ -481,7 +486,27 @@ export const GameHUD: React.FC = () => {
               </div>
             )}
 
-            {!isRidingScooter && isFlyingKite && (
+            {!isRidingScooter && isFishing && (
+              <div className="pointer-events-auto animate-fadeIn">
+                {fishingBiteReady ? (
+                  <button
+                    type="button"
+                    onClick={reelFishingCatch}
+                    className="rounded-full border border-emerald-300 bg-emerald-500/90 px-6 py-2.5 text-xs font-bold text-dusk-950 shadow-2xl animate-pulse hover:bg-emerald-400"
+                  >
+                    Ada Tarikan Halus di Pelampung! Tekan [Spasi] atau Klik Sekarang!
+                  </button>
+                ) : (
+                  <div className="rounded-full border border-sky-300/45 bg-dusk-950/88 px-5 py-2.5 text-xs text-warm-100 shadow-2xl backdrop-blur-md">
+                    Memancing Santai di Danau Senja · Menunggu pelampung mencelup... ·{' '}
+                    <strong className="text-warm-300">[P]</strong> Foto ·{' '}
+                    <strong className="text-warm-300">[WASD / E]</strong> Selesai
+                  </div>
+                )}
+              </div>
+            )}
+
+            {!isRidingScooter && !isFishing && isFlyingKite && (
               <div className="rounded-full border border-amber-300/50 bg-dusk-950/88 px-5 py-2.5 text-xs text-warm-100 shadow-2xl backdrop-blur-md animate-fadeIn">
                 Layang-Layang Mengudara · Tekan <strong className="text-warm-300">[Spasi]</strong> Tarik Lebih Tinggi ·{' '}
                 <strong className="text-warm-300">[P]</strong> Foto ·{' '}
@@ -489,7 +514,7 @@ export const GameHUD: React.FC = () => {
               </div>
             )}
 
-            {!isRidingScooter && !isFlyingKite && isSitting && (
+            {!isRidingScooter && !isFishing && !isFlyingKite && isSitting && (
               <div className="rounded-full border border-warm-300/40 bg-dusk-950/85 px-5 py-2 text-xs text-warm-100 shadow-xl backdrop-blur-md animate-fadeIn">
                 {heldDrink ? `Menikmati ${heldDrink.label}` : 'Damar sedang beristirahat tenang'} · Tekan{' '}
                 <strong className="text-warm-300">[WASD / E]</strong> berdiri ·{' '}
@@ -497,7 +522,7 @@ export const GameHUD: React.FC = () => {
               </div>
             )}
 
-            {!isRidingScooter && !isFlyingKite && !isSitting && interactPrompt && (
+            {!isRidingScooter && !isFishing && !isFlyingKite && !isSitting && interactPrompt && (
               <div className="pointer-events-auto animate-fadeIn">
                 <button
                   type="button"
