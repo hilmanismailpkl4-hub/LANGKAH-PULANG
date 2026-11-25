@@ -146,6 +146,8 @@ interface GameStoreState {
   isMailboxOpen: boolean;
   readMailIds: string[];
   gardenWatered: boolean;
+  vinylPlaying: boolean;
+  vinylTrackIdx: number;
   fridgeNotes: FridgeNote[];
   homeStoveLit: boolean;
   isRidingScooter: boolean;
@@ -204,6 +206,7 @@ interface GameStoreState {
   setMailboxOpen: (open: boolean) => void;
   markMailRead: (mailId: string) => void;
   waterHomeGarden: () => void;
+  cycleNadaLamaVinyl: () => void;
   addFridgeNote: (text: string, color: FridgeNoteColor) => void;
   deleteFridgeNote: (id: string) => void;
   cookHomeRecipe: (recipeId: string) => void;
@@ -370,6 +373,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     isMailboxOpen: false,
     readMailIds: [],
     gardenWatered: false,
+    vinylPlaying: false,
+    vinylTrackIdx: 0,
     fridgeNotes: [...INITIAL_FRIDGE_NOTES],
     homeStoveLit: false,
     isRidingScooter: false,
@@ -807,6 +812,53 @@ export const useGameStore = create<GameStoreState>((set, get) => {
           ? 'Merapikan dan menyiram sudut teduh pot bunga Nadia—kelopak melati & mawar tampak makin segar!'
           : 'Menyiram pot bunga Nadia dengan gembor hijau—kelopak melati, mawar & matahari mini langsung mekar segar!',
       );
+    },
+
+    cycleNadaLamaVinyl: () => {
+      const s = get();
+      const tracks: { title: string; station: 'senja_fm' | 'piano_hujan' | 'langkah_kecil' }[] = [
+        { title: 'Piringan Hitam "Senja di Jl. Kenangan" (Side A · Akustik Hangat)', station: 'senja_fm' },
+        { title: 'Piringan Hitam "Hujan di Atas Kaca" (Side B · Piano & Rintik)', station: 'piano_hujan' },
+        { title: 'Piringan Hitam "Langkah Kecil · Live 2018" (Edisi Kolektor)', station: 'langkah_kecil' },
+      ];
+
+      sfxEngine.play('switch');
+
+      // Bila belum berputar -> mulai dari Track 0; bila sudah di track terakhir -> hentikan putaran dengan elegan
+      if (!s.vinylPlaying) {
+        const chosen = tracks[0];
+        set({ vinylPlaying: true, vinylTrackIdx: 0 });
+        s.setRadioStation(chosen.station);
+        if (!s.flags.includes('played_vinyl_nada_lama')) {
+          s.applyEffect({
+            kejujuranDiri: 1,
+            setFlags: ['played_vinyl_nada_lama'],
+            journalEntry: {
+              id: 'je_vinyl_nada_lama',
+              title: 'Piringan Hitam yang Berputar di "Nada Lama"',
+              body: 'Begitu jarum turntable menyentuh alur piringan hitam di meja kasir Toko Musik "Nada Lama", suara hangat akustik langsung memenuhi ruangan. Di tengah kota yang selalu terburu-buru, musik analog mengajarkan caranya mendengarkan secara utuh.',
+              chapter: s.chapter,
+            },
+          });
+        }
+        if (s.isFamilyWalkActive) {
+          s.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_vinyl_turntable, 'fw_vinyl_play');
+        }
+        s.showToast(`Memutar ${chosen.title} di turntable "Nada Lama"!`);
+        return;
+      }
+
+      const nextIdx = s.vinylTrackIdx + 1;
+      if (nextIdx >= tracks.length) {
+        set({ vinylPlaying: false, vinylTrackIdx: 0 });
+        s.setRadioStation('auto');
+        s.showToast('Jarum turntable diangkat—piringan hitam di "Nada Lama" berhenti berputar.');
+      } else {
+        const chosen = tracks[nextIdx];
+        set({ vinylPlaying: true, vinylTrackIdx: nextIdx });
+        s.setRadioStation(chosen.station);
+        s.showToast(`Mengganti ke ${chosen.title}!`);
+      }
     },
 
     addFridgeNote: (text, color) => {
@@ -1481,6 +1533,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isMailboxOpen: false,
         readMailIds: [],
         gardenWatered: false,
+        vinylPlaying: false,
+        vinylTrackIdx: 0,
         stepCount: 0,
         transitionChapter: 1,
         screen: 'chapter_transition',
@@ -1554,6 +1608,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isMailboxOpen: false,
         readMailIds: slot.flags.includes('checked_home_mailbox') ? ['mail_ibu_bandung'] : [],
         gardenWatered: slot.flags.includes('watered_nadia_garden'),
+        vinylPlaying: false,
+        vinylTrackIdx: 0,
         stepCount: slot.stepCount ?? 0,
         screen: 'playing',
         loadingOverlay: {
@@ -1649,6 +1705,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isFridgeNotesOpen: false,
         isNewsstandOpen: false,
         isMailboxOpen: false,
+        vinylPlaying: false,
         homeStoveLit: false,
         isRidingScooter: false,
         isRidingBicycle: false,

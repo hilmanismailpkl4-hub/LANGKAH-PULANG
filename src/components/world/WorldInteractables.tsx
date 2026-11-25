@@ -1672,6 +1672,46 @@ export const WorldInteractables: React.FC = () => {
 
     consider(
       {
+        id: 'interior_music_vinyl',
+        kind: 'story_object',
+        label: store.vinylPlaying
+          ? 'Ganti Piringan Hitam / Hentikan Turntable'
+          : 'Putar Piringan Hitam di Turntable "Nada Lama"',
+        sublabel: 'Meja Kasir Toko Musik · Piringan Hitam Analog Live',
+        position: [-18.95, 0.08, -27.25],
+        onInteract: () => {
+          store.cycleNadaLamaVinyl();
+        },
+      },
+      2.2,
+    );
+
+    consider(
+      {
+        id: 'activity_kios_vending',
+        kind: 'story_object',
+        label: 'Ambil Minuman Kaleng Dingin di Mesin Teras',
+        sublabel: 'Kios 24 Jam Harmoni · Chiller 24 Jam Bercahaya',
+        position: [28.9, 0, 15.8],
+        onInteract: () => {
+          sfxEngine.play('switch');
+          sfxEngine.play('coffee');
+          const drinks = [
+            'Klung! Sekaleng Teh Melati Dingin jatuh segar dari mesin chiller Kios 24 Jam Harmoni.',
+            'Klung! Sekaleng Kopi Susu Gula Aren dingin siap menemani langkah sore di Jl. Kenangan.',
+            'Klung! Sebotol Susu Stroberi dingin manis—pasti bikin Kira langsung tersenyum!',
+          ];
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_kios_vending, 'fw_kios_vending');
+          }
+          store.showToast(drinks[Math.floor(Date.now() / 1000) % drinks.length]);
+        },
+      },
+      2.2,
+    );
+
+    consider(
+      {
         id: 'interior_kios_fridge',
         kind: 'story_object',
         label: 'Buka Lemari Es Minuman Kios Harmoni',
@@ -2166,6 +2206,14 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-84.5, 1.55, -9.8]}>
         <sphereGeometry args={[0.08, 8, 8]} />
         <meshBasicMaterial color="#86efac" />
+      </mesh>
+      <mesh position={[-18.95, 1.66, -28.55]}>
+        <sphereGeometry args={[0.07, 8, 8]} />
+        <meshBasicMaterial color="#fbbf24" />
+      </mesh>
+      <mesh position={[28.9, 2.24, 16.95]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#67e8f9" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

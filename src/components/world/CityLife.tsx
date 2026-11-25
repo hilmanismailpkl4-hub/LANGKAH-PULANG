@@ -13,7 +13,7 @@ interface CityLifeProps {
   settings: GameSettings;
 }
 
-type TrafficVehicleType = 'sedan' | 'angkot' | 'box_truck';
+type TrafficVehicleType = 'sedan' | 'angkot' | 'box_truck' | 'city_bus';
 
 interface TrafficCar {
   id: number;
@@ -30,6 +30,28 @@ interface TrafficCar {
   lastHornAt: number;
   color: string;
   accentColor?: string;
+  busStopTimer?: number;
+  busStopCooldown?: number;
+}
+
+function createBusRouteTexture(): THREE.CanvasTexture {
+  const c = document.createElement('canvas');
+  c.width = 512;
+  c.height = 96;
+  const ctx = c.getContext('2d')!;
+  ctx.fillStyle = '#0d1520';
+  ctx.fillRect(0, 0, 512, 96);
+  ctx.strokeStyle = '#334155';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(4, 4, 504, 88);
+  ctx.fillStyle = '#fbbf24';
+  ctx.font = 'bold 34px monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('TRANS SENJA · KORIDOR 1', 256, 48);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
 }
 
 interface PedestrianConfig {
@@ -382,6 +404,7 @@ const RainGroundSplashes: React.FC<{ active: boolean }> = ({ active }) => {
 export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
   const isLit = timeOfDay !== 'morning';
   const textures = useMemo(() => getProceduralTextures(), []);
+  const busRouteTex = useMemo(() => createBusRouteTexture(), []);
   const carsGroupRef = useRef<THREE.Group>(null);
   const brakeMatRefs = useRef<(THREE.MeshStandardMaterial | null)[]>([]);
   const brakeHaloRefs = useRef<(THREE.Sprite | null)[]>([]);
@@ -409,7 +432,7 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
       // Sedan Kota Biru Tua di Jl. Kenangan (Barat)
       { id: 1, type: 'sedan', axis: 'x', lane: -2.7, dir: -1, pos: 42, min: -92, max: 56, maxSpeed: 8.4, currentSpeed: 8.4, wheelAngle: 0, lastHornAt: -10, color: '#3b536b' },
       // Mobil Box Pengiriman Kota di Jl. Kenangan (Timur)
-      { id: 2, type: 'box_truck', axis: 'x', lane: 2.7, dir: 1, pos: 18, min: -92, max: 56, maxSpeed: 7.4, currentSpeed: 7.4, wheelAngle: 0, lastHornAt: -10, color: '#e38b34', accentColor: '#eef2f6' },
+      { id: 2, type: 'box_truck', axis: 'x', lane: 2.7, dir: 1, pos: 36, min: -92, max: 56, maxSpeed: 7.4, currentSpeed: 7.4, wheelAngle: 0, lastHornAt: -10, color: '#e38b34', accentColor: '#eef2f6' },
       // Angkot Biru Toska-Kuning di Jl. Cempaka (Selatan)
       { id: 3, type: 'angkot', axis: 'z', lane: 2.7, dir: 1, pos: -46, min: -58, max: 42, maxSpeed: 7.6, currentSpeed: 7.6, wheelAngle: 0, lastHornAt: -10, color: '#1f8a9c', accentColor: '#f5c242' },
       // Sedan Krem Hangat di Jl. Cempaka (Utara)
@@ -418,6 +441,25 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
       { id: 5, type: 'box_truck', axis: 'z', lane: 64 + 2.2, dir: 1, pos: -48, min: -58, max: 54, maxSpeed: 7.6, currentSpeed: 7.6, wheelAngle: 0, lastHornAt: -10, color: '#355c7d', accentColor: '#f4f6f9' },
       // Angkot Biru-Kuning arah Barat menuju Jembatan & Taman Kota
       { id: 6, type: 'angkot', axis: 'x', lane: -2.7, dir: -1, pos: -22, min: -92, max: 56, maxSpeed: 8.0, currentSpeed: 8.0, wheelAngle: 0, lastHornAt: -10, color: '#2980b9', accentColor: '#f5c242' },
+      // Bus Kota Modern "Trans Senja" melintas Jl. Kenangan & berhenti sejenak di Halte Jl. Kenangan!
+      {
+        id: 7,
+        type: 'city_bus',
+        axis: 'x',
+        lane: 2.7,
+        dir: 1,
+        pos: -26,
+        min: -92,
+        max: 56,
+        maxSpeed: 6.8,
+        currentSpeed: 6.8,
+        wheelAngle: 0,
+        lastHornAt: -10,
+        color: '#1d568f',
+        accentColor: '#f5b82e',
+        busStopTimer: 0,
+        busStopCooldown: 0,
+      },
     ],
     [],
   );
@@ -485,12 +527,33 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
           if (other.id === car.id) continue;
           if (other.axis === car.axis && Math.abs(other.lane - car.lane) < 1.2) {
             const ahead = (other.pos - car.pos) * car.dir;
-            if (ahead > 0 && ahead < 8.5) shouldStop = true;
+            const minFollow = other.type === 'city_bus' || car.type === 'city_bus' ? 11.6 : 8.5;
+            if (ahead > 0 && ahead < minFollow) shouldStop = true;
           }
           if (other.axis !== car.axis && Math.abs(other.lane) < 6 && Math.abs(car.lane) < 6) {
-            const otherInCenter = Math.abs(other.pos) < 7.5;
-            const approachCenter = car.dir === 1 ? -8.2 - car.pos : car.pos - 8.2;
-            if (otherInCenter && approachCenter >= -0.5 && approachCenter < 4.5) shouldStop = true;
+            const otherInCenter = Math.abs(other.pos) < 7.8;
+            const approachCenter = car.dir === 1 ? -8.4 - car.pos : car.pos - 8.4;
+            if (otherInCenter && approachCenter >= -0.5 && approachCenter < 4.8) shouldStop = true;
+          }
+        }
+
+        // Bus Kota Trans Senja berhenti sejenak naik-turun penumpang tepat di depan Halte Bus Jl. Kenangan (x ≈ 21.4)
+        if (car.type === 'city_bus') {
+          if ((car.busStopCooldown ?? 0) > 0) {
+            car.busStopCooldown = Math.max(0, (car.busStopCooldown ?? 0) - dt);
+          }
+          if ((car.busStopTimer ?? 0) > 0) {
+            car.busStopTimer = Math.max(0, (car.busStopTimer ?? 0) - dt);
+            shouldStop = true;
+            if (car.busStopTimer <= 0) {
+              car.busStopCooldown = 14.0;
+            }
+          } else if ((car.busStopCooldown ?? 0) <= 0 && car.pos >= 19.6 && car.pos <= 22.0) {
+            car.busStopTimer = 4.6;
+            shouldStop = true;
+            if (playerOnGround && Math.hypot(px - 21.4, pz - 9.0) < 16) {
+              sfxEngine.play('switch');
+            }
           }
         }
 
@@ -550,8 +613,15 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
           }
         }
 
-        const halfLen = car.type === 'box_truck' ? 2.58 : car.type === 'angkot' ? 2.18 : 2.12;
-        const halfWid = car.type === 'box_truck' ? 1.12 : 1.05;
+        const halfLen =
+          car.type === 'city_bus'
+            ? 3.72
+            : car.type === 'box_truck'
+              ? 2.58
+              : car.type === 'angkot'
+                ? 2.18
+                : 2.12;
+        const halfWid = car.type === 'city_bus' ? 1.24 : car.type === 'box_truck' ? 1.12 : 1.05;
         const halfX = car.axis === 'x' ? halfLen : halfWid;
         const halfZ = car.axis === 'x' ? halfWid : halfLen;
         nextBoxes.push({
@@ -672,17 +742,20 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
           if (!wheelRefs.current[i]) wheelRefs.current[i] = [];
           const isAngkot = car.type === 'angkot';
           const isTruck = car.type === 'box_truck';
-          const wheelZFront = isTruck ? 1.62 : 1.28;
-          const wheelZRear = isTruck ? -1.48 : -1.28;
-          const headZ = isTruck ? 2.48 : isAngkot ? 2.08 : 2.05;
-          const tailZ = isTruck ? -2.54 : isAngkot ? -2.1 : -2.04;
-          const tailY = isTruck ? 0.62 : isAngkot ? 0.68 : 0.58;
+          const isBus = car.type === 'city_bus';
+          const wheelZFront = isBus ? 2.18 : isTruck ? 1.62 : 1.28;
+          const wheelZRear = isBus ? -2.18 : isTruck ? -1.48 : -1.28;
+          const wheelX = isBus ? 1.08 : 0.92;
+          const wheelRadius = isBus ? 0.36 : 0.3;
+          const headZ = isBus ? 3.62 : isTruck ? 2.48 : isAngkot ? 2.08 : 2.05;
+          const tailZ = isBus ? -3.64 : isTruck ? -2.54 : isAngkot ? -2.1 : -2.04;
+          const tailY = isBus ? 0.72 : isTruck ? 0.62 : isAngkot ? 0.68 : 0.58;
 
           return (
             <group key={`car-${i}`}>
               {/* Bayangan kontak lembut di aspal */}
               <mesh position={[0, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-                <planeGeometry args={[isTruck ? 2.3 : 2.1, isTruck ? 5.2 : 4.35]} />
+                <planeGeometry args={[isBus ? 2.55 : isTruck ? 2.3 : 2.1, isBus ? 7.45 : isTruck ? 5.2 : 4.35]} />
                 <meshBasicMaterial color="#090b0f" transparent opacity={0.44} depthWrite={false} />
               </mesh>
 
@@ -765,8 +838,78 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
                 </group>
               )}
 
-              {/* === BENTUK 3: SEDAN MODERN === */}
-              {!isAngkot && !isTruck && (
+              {/* === BENTUK 3: BUS KOTA MODERN ("TRANS SENJA") === */}
+              {isBus && (
+                <group>
+                  {/* Bodi Bawah Biru Royal & Putih Bersih */}
+                  <mesh position={[0, 0.82, 0]} castShadow>
+                    <boxGeometry args={[2.22, 1.02, 7.2]} />
+                    <meshStandardMaterial color={car.color} roughness={0.3} metalness={0.32} />
+                  </mesh>
+                  {/* Strip Kuning Hangat Memanjang di Kedua Sisi */}
+                  <mesh position={[0, 1.24, 0]}>
+                    <boxGeometry args={[2.26, 0.16, 7.22]} />
+                    <meshStandardMaterial color={car.accentColor ?? '#f5b82e'} roughness={0.4} />
+                  </mesh>
+                  {/* Kabin Atas Putih & Jendela Penumpang Bercahaya Hangat saat Malam */}
+                  <mesh position={[0, 1.88, 0]} castShadow>
+                    <boxGeometry args={[2.18, 1.12, 7.12]} />
+                    <meshStandardMaterial color="#eef2f6" roughness={0.35} metalness={0.18} />
+                  </mesh>
+                  {/* Deretan 5 Jendela Kiri & Kanan */}
+                  {[-2.35, -1.18, 0, 1.18, 2.35].map((wz, wi) => (
+                    <React.Fragment key={`bw-${wi}`}>
+                      <mesh position={[1.1, 1.86, wz]} rotation={[0, Math.PI / 2, 0]}>
+                        <planeGeometry args={[1.02, 0.82]} />
+                        <meshStandardMaterial
+                          color={isLit ? '#ffe9b8' : '#243447'}
+                          emissive={isLit ? '#ffca78' : '#000000'}
+                          emissiveIntensity={isLit ? 0.95 : 0}
+                          roughness={0.15}
+                          metalness={0.45}
+                        />
+                      </mesh>
+                      <mesh position={[-1.1, 1.86, wz]} rotation={[0, -Math.PI / 2, 0]}>
+                        <planeGeometry args={[1.02, 0.82]} />
+                        <meshStandardMaterial
+                          color={isLit ? '#ffe9b8' : '#243447'}
+                          emissive={isLit ? '#ffca78' : '#000000'}
+                          emissiveIntensity={isLit ? 0.95 : 0}
+                          roughness={0.15}
+                          metalness={0.45}
+                        />
+                      </mesh>
+                    </React.Fragment>
+                  ))}
+                  {/* Kaca Depan Panoramik & Papan LED Rute "TRANS SENJA · KORIDOR 1" */}
+                  <mesh position={[0, 1.72, 3.57]}>
+                    <planeGeometry args={[1.92, 1.05]} />
+                    <meshStandardMaterial color="#182433" roughness={0.12} metalness={0.68} />
+                  </mesh>
+                  <mesh position={[0, 2.34, 3.58]}>
+                    <planeGeometry args={[1.65, 0.28]} />
+                    <meshStandardMaterial
+                      map={busRouteTex}
+                      emissiveMap={busRouteTex}
+                      emissive="#ffffff"
+                      emissiveIntensity={isLit ? 1.3 : 0.45}
+                    />
+                  </mesh>
+                  {/* Unit AC Atap Bus */}
+                  <mesh position={[0, 2.58, -0.2]} castShadow>
+                    <boxGeometry args={[1.45, 0.28, 3.4]} />
+                    <meshStandardMaterial color="#dce3ec" roughness={0.45} />
+                  </mesh>
+                  {/* Pintu Lipat Penumpang Sisi Kiri (menghadap Halte) */}
+                  <mesh position={[-1.11, 1.28, 1.65]} rotation={[0, -Math.PI / 2, 0]}>
+                    <planeGeometry args={[0.92, 1.88]} />
+                    <meshStandardMaterial color="#1f2937" roughness={0.25} metalness={0.5} />
+                  </mesh>
+                </group>
+              )}
+
+              {/* === BENTUK 4: SEDAN MODERN === */}
+              {!isAngkot && !isTruck && !isBus && (
                 <group>
                   <mesh position={[0, 0.56, 0]} castShadow>
                     <boxGeometry args={[1.88, 0.58, 4.05]} />
@@ -781,10 +924,10 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
 
               {/* 4 Roda Berputar */}
               {[
-                [-0.92, 0.3, wheelZFront],
-                [0.92, 0.3, wheelZFront],
-                [-0.92, 0.3, wheelZRear],
-                [0.92, 0.3, wheelZRear],
+                [-wheelX, wheelRadius, wheelZFront],
+                [wheelX, wheelRadius, wheelZFront],
+                [-wheelX, wheelRadius, wheelZRear],
+                [wheelX, wheelRadius, wheelZRear],
               ].map(([wx, wy, wz], wi) => (
                 <group
                   key={`w-${wi}`}
@@ -794,19 +937,19 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
                   position={[wx, wy, wz]}
                 >
                   <mesh rotation={[0, 0, Math.PI / 2]}>
-                    <cylinderGeometry args={[0.3, 0.3, 0.22, 12]} />
+                    <cylinderGeometry args={[wheelRadius, wheelRadius, 0.24, 12]} />
                     <meshStandardMaterial color="#1b1e23" roughness={0.85} />
                   </mesh>
                   <mesh rotation={[0, 0, Math.PI / 2]}>
-                    <cylinderGeometry args={[0.16, 0.16, 0.24, 8]} />
+                    <cylinderGeometry args={[wheelRadius * 0.54, wheelRadius * 0.54, 0.26, 8]} />
                     <meshStandardMaterial color="#9ea6b2" metalness={0.7} roughness={0.3} />
                   </mesh>
                 </group>
               ))}
 
               {/* Lampu Depan + Pendaran */}
-              {[-0.62, 0.62].map((hx, hi) => (
-                <group key={`hl-${hi}`} position={[hx, isTruck ? 0.72 : 0.58, headZ]}>
+              {[-0.68, 0.68].map((hx, hi) => (
+                <group key={`hl-${hi}`} position={[hx, isBus ? 0.72 : isTruck ? 0.72 : 0.58, headZ]}>
                   <mesh>
                     <boxGeometry args={[0.38, 0.16, 0.05]} />
                     <meshStandardMaterial
@@ -832,7 +975,7 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
 
               {/* Lampu Rem Belakang Realistis (Menyala Terang Merah + Halo Glow Saat Mengerem!) */}
               <mesh position={[0, tailY, tailZ]}>
-                <boxGeometry args={[isTruck ? 1.76 : 1.56, 0.17, 0.06]} />
+                <boxGeometry args={[isBus ? 1.98 : isTruck ? 1.76 : 1.56, 0.17, 0.06]} />
                 <meshStandardMaterial
                   ref={(el) => {
                     brakeMatRefs.current[i] = el;

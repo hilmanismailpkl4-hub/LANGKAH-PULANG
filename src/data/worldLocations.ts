@@ -254,6 +254,7 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'kios_shelf_2', minX: 24.35, maxX: 25.65, minZ: 21.3, maxZ: 24.9 },
   { id: 'kios_cashier', minX: 28.5, maxX: 30.15, minZ: 20.6, maxZ: 24.6 },
   { id: 'kios_table', minX: 19.75, maxX: 21.25, minZ: 13.45, maxZ: 14.95 },
+  { id: 'kios_vending_chiller', minX: 28.25, maxX: 29.55, minZ: 16.45, maxZ: 17.45 },
 
   // === 5. Toko Musik "Nada Lama" (Interior Terbuka + Dinding, Kasir, Rak Kaset & Sofa Solid) ===
   { id: 'music_back', minX: -29.6, maxX: -14.4, minZ: -31.6, maxZ: -31.0 },
@@ -262,6 +263,8 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'music_front_l', minX: -29.6, maxX: -23.78, minZ: -19.9, maxZ: -19.35 },
   { id: 'music_front_r', minX: -20.22, maxX: -14.4, minZ: -19.9, maxZ: -19.35 },
   { id: 'music_counter', minX: -20.3, maxX: -15.7, minZ: -29.35, maxZ: -27.85 },
+  { id: 'music_hifi_l', minX: -21.02, maxX: -20.42, minZ: -28.9, maxZ: -28.3 },
+  { id: 'music_hifi_r', minX: -15.62, maxX: -15.02, minZ: -28.9, maxZ: -28.3 },
   { id: 'music_cassette_rack', minX: -27.15, maxX: -25.65, minZ: -27.65, maxZ: -23.15 },
   { id: 'music_amp_sofa', minX: -17.6, maxX: -16.0, minZ: -25.4, maxZ: -22.1 },
 

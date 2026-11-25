@@ -312,4 +312,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'Sssst!! Pelan-pelan jalannya, Bunda, nanti ikan yang mau dipancing Pak Karno kabur!' },
     { speaker: 'nadia', text: 'Tenang banget ya lihat warga duduk santai memancing di pinggir sungai begini.' },
   ],
+  activity_vinyl_turntable: [
+    { speaker: 'kira', text: 'Waaah piringan hitamnya muter-muter terus jarumnya gerak sendiri, Ayah!! Keren bangeeet!' },
+    { speaker: 'nadia', text: 'Suara piringan hitam di Toko Nada Lama memang beda ya, Mas... hangat dan bikin betah lama-lama.' },
+  ],
+  activity_kios_vending: [
+    { speaker: 'kira', text: 'KLUNG!! Minuman dinginnya jatuh dari mesin bercahaya! Kira suka banget lampu biru Kios Harmoni malam-malam!' },
+    { speaker: 'nadia', text: 'Segar ya, Mas, mampir sebentar beli minuman dingin di pinggir jalan sambil lihat bus kota lewat.' },
+  ],
 };
