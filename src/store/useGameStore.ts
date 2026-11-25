@@ -142,6 +142,7 @@ interface GameStoreState {
   isKitchenOpen: boolean;
   isPhotoAlbumOpen: boolean;
   isFridgeNotesOpen: boolean;
+  isNewsstandOpen: boolean;
   fridgeNotes: FridgeNote[];
   homeStoveLit: boolean;
   isRidingScooter: boolean;
@@ -196,6 +197,7 @@ interface GameStoreState {
   setKitchenOpen: (open: boolean) => void;
   setPhotoAlbumOpen: (open: boolean) => void;
   setFridgeNotesOpen: (open: boolean) => void;
+  setNewsstandOpen: (open: boolean) => void;
   addFridgeNote: (text: string, color: FridgeNoteColor) => void;
   deleteFridgeNote: (id: string) => void;
   cookHomeRecipe: (recipeId: string) => void;
@@ -358,6 +360,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     isKitchenOpen: false,
     isPhotoAlbumOpen: false,
     isFridgeNotesOpen: false,
+    isNewsstandOpen: false,
     fridgeNotes: [...INITIAL_FRIDGE_NOTES],
     homeStoveLit: false,
     isRidingScooter: false,
@@ -668,6 +671,44 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       if (open) sfxEngine.play('page');
       set({
         isFridgeNotesOpen: open,
+        isNewsstandOpen: false,
+        isPhotoAlbumOpen: false,
+        isKitchenOpen: false,
+        isBookStallOpen: false,
+        isLittleLibraryOpen: false,
+        isWardrobeOpen: false,
+        activeCulinarySpot: null,
+        isMapJournalOpen: false,
+        isPauseOpen: false,
+        isPhoneOpen: false,
+        isBagOpen: false,
+        isGuitarOpen: false,
+        isQuickGraphicsOpen: false,
+      });
+    },
+
+    setNewsstandOpen: (open) => {
+      const s = get();
+      if (open && (s.screen !== 'playing' || s.activeDialogue)) return;
+      if (open && document.pointerLockElement) document.exitPointerLock();
+      if (open) {
+        sfxEngine.play('page');
+        if (!s.flags.includes('read_station_newspaper')) {
+          s.applyEffect({
+            kejujuranDiri: 1,
+            setFlags: ['read_station_newspaper'],
+            journalEntry: {
+              id: 'je_station_newspaper',
+              title: 'Membaca Harian Warta Senja di Peron',
+              body: 'Sambil mendengar sinyal kereta di Stasiun Senja, aku membaca selembar koran lokal di Kios Warta Senja. Ternyata banyak hal hangat yang diam-diam tumbuh di sudut-sudut kota ini.',
+              chapter: s.chapter,
+            },
+          });
+        }
+      }
+      set({
+        isNewsstandOpen: open,
+        isFridgeNotesOpen: false,
         isPhotoAlbumOpen: false,
         isKitchenOpen: false,
         isBookStallOpen: false,
@@ -1515,6 +1556,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isKitchenOpen: false,
         isPhotoAlbumOpen: false,
         isFridgeNotesOpen: false,
+        isNewsstandOpen: false,
         homeStoveLit: false,
         isRidingScooter: false,
         isRidingBicycle: false,

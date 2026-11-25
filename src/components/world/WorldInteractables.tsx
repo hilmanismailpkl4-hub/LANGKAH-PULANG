@@ -732,6 +732,7 @@ export const WorldInteractables: React.FC = () => {
       store.isKitchenOpen ||
       store.isPhotoAlbumOpen ||
       store.isFridgeNotesOpen ||
+      store.isNewsstandOpen ||
       store.isRidingScooter ||
       store.isRidingBicycle ||
       store.isSitting ||
@@ -1195,6 +1196,53 @@ export const WorldInteractables: React.FC = () => {
       },
       2.5,
     );
+
+    consider(
+      {
+        id: 'activity_station_newsstand',
+        kind: 'story_object',
+        label: 'Baca Koran & Majalah di Kios Warta Senja',
+        sublabel: 'Stasiun Senja · 4 Berita & Rubrik Kota Hari Ini',
+        position: [77.05, 0.1, 8.8],
+        onInteract: () => {
+          store.setNewsstandOpen(true);
+        },
+      },
+      2.6,
+    );
+
+    if (store.timeOfDay !== 'rain_dusk') {
+      consider(
+        {
+          id: 'activity_riverside_busker',
+          kind: 'story_object',
+          label: 'Dengarkan & Beri Apresiasi untuk Mas Seno',
+          sublabel: 'Pemusik Akustik Tepi Sungai · Petikan Gitar Sore',
+          position: [-58.6, 0, 14.5],
+          onInteract: () => {
+            sfxEngine.playBuskerStrum(1, true);
+            if (!store.flags.includes('appreciated_riverside_busker')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                kehadiranKeluarga: 1,
+                setFlags: ['appreciated_riverside_busker'],
+                journalEntry: {
+                  id: 'je_riverside_busker',
+                  title: 'Petikan Gitar di Tepi Sungai Lampion',
+                  body: 'Di sisi barat sungai, seorang pemusik jalanan bernama Mas Seno memetik gitar akustik di bawah untaian lampion. Melihatnya bermain dengan hati tenang mengingatkanku bahwa musik tidak pernah menuntut apa pun selain kejujuran.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_busker, 'fw_busker');
+            }
+            store.showToast('Mas Seno tersenyum hangat: "Terima kasih banyak, Mas! Semoga lagunya menemani langkah pulang."');
+          },
+        },
+        3.0,
+      );
+    }
 
     consider(
       {

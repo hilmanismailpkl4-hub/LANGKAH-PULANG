@@ -14,6 +14,7 @@ import { InventoryBagModal } from './components/ui/InventoryBagModal';
 import { LittleLibraryModal } from './components/ui/LittleLibraryModal';
 import { LoadingScreenOverlay } from './components/ui/LoadingScreenOverlay';
 import { MapJournalModal } from './components/ui/MapJournalModal';
+import { NewsstandModal } from './components/ui/NewsstandModal';
 import { PauseSettingsModal } from './components/ui/PauseSettingsModal';
 import { PhoneNotification } from './components/ui/PhoneNotification';
 import { PhotoModeOverlay } from './components/ui/PhotoModeOverlay';
@@ -69,6 +70,7 @@ export function App() {
       <WardrobeModal />
       <LittleLibraryModal />
       <BookStallModal />
+      <NewsstandModal />
       <InventoryBagModal />
       <PhoneNotification />
       <DialogueOverlay />

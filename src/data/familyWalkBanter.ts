@@ -278,4 +278,8 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'Kira udah lempar koin harapan ke air mancur! Kira doain Ayah sehat terus sama sering jalan bareng Kira!' },
     { speaker: 'nadia', text: 'Aamiin, Sayang... dengar suara percikan air mancur di sore hari bikin adem banget.' },
   ],
+  activity_busker: [
+    { speaker: 'kira', text: 'Waaah petikan gitar Om Seno di tepi sungai enak banget, Yah! Mirip lagu yang Ayah mainin di rumah!' },
+    { speaker: 'nadia', text: 'Sore di tepi sungai sambil dengar gitar akustik begini bikin langkah terasa ringan banget ya, Mas.' },
+  ],
 };

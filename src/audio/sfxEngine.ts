@@ -215,6 +215,28 @@ class SfxEngine {
   }
 
   /**
+   * Petikan gitar akustik lembut dari pemusik jalanan tepi sungai.
+   */
+  public playBuskerStrum(distanceFactor = 1, celebrate = false) {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume * Math.max(0.14, Math.min(1, distanceFactor));
+    const progressions: number[][] = [
+      [196.0, 246.94, 293.66, 369.99, 493.88], // Gmaj7
+      [164.81, 246.94, 293.66, 392.0, 493.88], // Em9
+      [130.81, 196.0, 246.94, 329.63, 392.0], // Cmaj7
+      [146.83, 220.0, 293.66, 369.99, 440.0], // D6
+    ];
+    const chord = progressions[Math.floor(Date.now() / 4000) % progressions.length];
+    const step = celebrate ? 0.055 : 0.11;
+    chord.forEach((freq, idx) => {
+      this.pluckedNote(ctx, freq, now + idx * step, celebrate ? 2.2 : 1.7, (celebrate ? 0.075 : 0.048) * v);
+    });
+  }
+
+  /**
    * Memetik 6 akor gitar akustik hangat untuk mini-game gitar di Kedai Kopi Bima.
    */
   public playGuitarChord(chordIdx: number) {

@@ -323,6 +323,9 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
 
   // === 16. Gerobak Sepeda Roti Hangat Pak Joko (Gang Perumahan Melati) ===
   { id: 'bread_vendor_cart', minX: 1.9, maxX: 4.15, minZ: 52.6, maxZ: 53.8 },
+
+  // === 17. Kios Koran & Majalah "Warta Senja" (Peron Stasiun Senja) ===
+  { id: 'station_newsstand', minX: 74.5, maxX: 76.35, minZ: 7.55, maxZ: 10.05 },
 ];
 
 /**
@@ -400,6 +403,12 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   // Air Mancur Batu Mini Taman Kota & Keranjang Piknik Rotan
   { x: -65.5, z: 10.5, r: 1.74 },
   { x: -71.0, z: 29.15, r: 0.36 },
+
+  // Tiang Sinyal Rel Stasiun Senja & Pemusik Akustik Tepi Sungai (Mas Seno)
+  { x: 88.65, z: -18.5, r: 0.22 },
+  { x: 88.65, z: 12.5, r: 0.22 },
+  { x: -58.0, z: 14.5, r: 0.52 },
+  { x: -57.2, z: 14.5, r: 0.32 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
     [-39.75, -9.5], [-39.75, -19.5], [-39.75, -29.5],
