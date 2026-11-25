@@ -545,6 +545,50 @@ class SfxEngine {
   }
 
   /**
+   * Suara koin jatuh "kling!" + nada dial-tone hangat telepon umum retro 90-an Indonesia.
+   */
+  public playRetroPayphoneDial() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // Suara koin logam masuk ke celah telepon umum
+    this.softTone(ctx, 2480, now, 0.09, 0.062 * v, 'sine');
+    this.softTone(ctx, 3120, now + 0.06, 0.11, 0.048 * v, 'sine');
+
+    // Nada dial-tone klasik (425 Hz halus) lalu 3 nada DTMF pendek penuh nostalgia
+    this.softTone(ctx, 425, now + 0.24, 0.42, 0.042 * v, 'sine');
+    const dtmf: [number, number][] = [
+      [697, 1209],
+      [770, 1336],
+      [852, 1477],
+    ];
+    dtmf.forEach(([f1, f2], idx) => {
+      const t = now + 0.72 + idx * 0.14;
+      this.softTone(ctx, f1, t, 0.09, 0.036 * v, 'sine');
+      this.softTone(ctx, f2, t, 0.09, 0.036 * v, 'sine');
+    });
+  }
+
+  /**
+   * Denting ceria ringan saat membeli balon gas warna-warni dari Mang Dedi untuk Kira.
+   */
+  public playBalloonCheer() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // Arpeggio ceria mengapung ke atas (C5 -> E5 -> G5 -> C6)
+    [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+      this.softTone(ctx, freq, now + i * 0.075, 0.22, 0.06 * v, 'triangle');
+    });
+  }
+
+  /**
    * Petikan gitar akustik lembut dari pemusik jalanan tepi sungai.
    */
   public playBuskerStrum(distanceFactor = 1, celebrate = false) {

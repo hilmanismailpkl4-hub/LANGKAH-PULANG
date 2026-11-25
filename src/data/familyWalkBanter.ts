@@ -430,4 +430,16 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'nadia', text: 'Abang-abang ojek di depan stasiun ini ramah banget ya, Mas... dari dulu selalu hafal alamat Jl. Melati.' },
     { speaker: 'kira', text: 'Halo Om Hendra!! Motornya helmnya ada dua biar penumpang nggak kehujanan ya!' },
   ],
+  activity_park_balloon: [
+    { speaker: 'kira', text: 'WAAAH!! BALONNYA TERBANG NGIKUTIN KIRA, AYAH!! Makasih banyak, Kira pegang talinya erat-erat!' },
+    { speaker: 'nadia', text: 'Lucu banget lihatnya, Mas... senyum Kira langsung selebar langit sore!' },
+  ],
+  activity_retro_payphone: [
+    { speaker: 'nadia', text: 'Ya ampun, boks telepon umum sama bis surat oranye ini masih awet ya, Mas! Ingat dulu kamu nelepon aku pakai koin gopean?' },
+    { speaker: 'kira', text: 'Teleponnya ada kabel keritingnya, Bunda!! Terus suratnya dimasukin ke kotak oranye besar itu?' },
+  ],
+  activity_garden_swing: [
+    { speaker: 'nadia', text: 'Adem banget ya Mas berayun pelan di kursi kayu ini sambil memandang Danau Senja...' },
+    { speaker: 'kira', text: 'Ayun pelan-pelan ya Ayah! Enak banget anginnya, kayak lagi liburan!' },
+  ],
 };

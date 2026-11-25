@@ -2473,6 +2473,91 @@ export const WorldInteractables: React.FC = () => {
         2.6,
       );
 
+      consider(
+        {
+          id: 'activity_park_balloon_vendor',
+          kind: 'story_object',
+          label: 'Belikan Balon Gas Warna-Warni untuk Kira',
+          sublabel: 'Mang Dedi · Tepi Taman Bermain (Ganti Warna)',
+          position: [-85.5, 0, 17.6],
+          onInteract: () => {
+            store.buyBalloonForKira();
+          },
+        },
+        2.6,
+      );
+
+      consider(
+        {
+          id: 'activity_retro_payphone_pos',
+          kind: 'story_object',
+          label: 'Angkat Telepon Umum & Cek Bis Surat PT Pos',
+          sublabel: 'Sudut Jl. Cempaka · Kenangan 90-an',
+          position: [-8.6, 0, -15.0],
+          onInteract: () => {
+            sfxEngine.playRetroPayphoneDial();
+            if (!store.flags.includes('used_retro_payphone_pos')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                setFlags: ['used_retro_payphone_pos'],
+                journalEntry: {
+                  id: 'je_retro_payphone_pos',
+                  title: 'Telepon Umum & Bis Surat Oranye Jl. Cempaka',
+                  body: 'Aku mengangkat gagang telepon umum klasik di sudut Jl. Cempaka dan memandang bis surat oranye di sebelahnya. Rasanya begitu hangat mengingat masa ketika kabar rindu selalu disampaikan dengan sabar lewat koin dan perangko.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_retro_payphone, 'fw_retro_payphone');
+            }
+            store.showToast('Kling! Nada sambung telepon umum retro berbunyi hangat—di sampingnya bis surat oranye PT Pos berdiri setia.');
+          },
+        },
+        2.5,
+      );
+
+      consider(
+        {
+          id: 'sit_park_garden_swing',
+          kind: 'story_object',
+          label: 'Duduk Berayun Santai di Ayunan Kayu Taman',
+          sublabel: 'Tepi Danau Senja · Pergola Kayu Teduh',
+          position: [-65.4, 0, -27.6],
+          onInteract: () => {
+            sfxEngine.play('interact');
+            playerRuntime.gardenSwingTimer = 10;
+            playerRuntime.sitState = {
+              active: true,
+              label: 'Ayunan Kayu Taman Danau Senja',
+              seatPos: [-64.2, 0.24, -27.6],
+              lookAt: [-78.0, 1.35, -27.6],
+              standPos: [-65.5, 0, -27.6],
+              seatYaw: -Math.PI / 2,
+            };
+            store.setSitting(true);
+            if (!store.flags.includes('sat_park_garden_swing')) {
+              store.applyEffect({
+                kehadiranKeluarga: 1,
+                kejujuranDiri: 1,
+                setFlags: ['sat_park_garden_swing'],
+                journalEntry: {
+                  id: 'je_park_garden_swing',
+                  title: 'Berayun Pelan Menghadap Danau Senja',
+                  body: 'Di kursi ayunan kayu beratap bougenville di tepi Taman Kota, aku duduk berayun pelan memandang dermaga dan riak air Danau Senja. Angin sore membawa pergi segala riuh yang tak perlu.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_garden_swing, 'fw_garden_swing');
+            }
+            store.showToast('Damar duduk berayun lembut menghadap Danau Senja... (Tekan WASD/E untuk berdiri)');
+          },
+        },
+        2.5,
+      );
+
     consider(
       {
         id: 'portal_up',
@@ -3036,6 +3121,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[76.5, 1.85, 19.15]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#4ade80" />
+      </mesh>
+      <mesh position={[-86.4, 2.35, 17.6]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#fb7185" />
+      </mesh>
+      <mesh position={[-9.8, 1.88, -15.4]}>
+        <sphereGeometry args={[0.07, 8, 8]} />
+        <meshBasicMaterial color="#fb923c" />
+      </mesh>
+      <mesh position={[-64.2, 1.45, -27.6]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#fde047" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

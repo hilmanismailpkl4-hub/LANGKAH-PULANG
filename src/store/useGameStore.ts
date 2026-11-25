@@ -171,6 +171,7 @@ interface GameStoreState {
   livingRoomTvChannel: 0 | 1 | 2 | 3;
   melatiProjectorReel: 0 | 1 | 2 | 3;
   melatiProjectorManualOn: boolean;
+  kiraBalloonColor: string | null;
   rainbowActiveUntil: number;
   catFed: boolean;
   paperBoatsLaunched: number;
@@ -242,6 +243,7 @@ interface GameStoreState {
   setKiraOutfit: (outfitId: KiraOutfitId) => void;
   cycleLivingRoomTv: () => void;
   cycleMelatiProjector: () => void;
+  buyBalloonForKira: () => void;
   markCatFed: () => void;
   incrementPaperBoats: () => void;
   openPhone: (app?: 'home' | 'chat' | 'calls' | 'gallery' | 'radio' | 'notes' | 'weather', threadId?: string) => void;
@@ -411,6 +413,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     livingRoomTvChannel: 1,
     melatiProjectorReel: 1,
     melatiProjectorManualOn: false,
+    kiraBalloonColor: null,
     rainbowActiveUntil: 0,
     catFed: false,
     paperBoatsLaunched: 0,
@@ -1563,6 +1566,40 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       }
     },
 
+    buyBalloonForKira: () => {
+      const s = get();
+      const palette: { hex: string; name: string }[] = [
+        { hex: '#f43f5e', name: 'Merah Stroberi' },
+        { hex: '#facc15', name: 'Kuning Matahari' },
+        { hex: '#38bdf8', name: 'Biru Langit' },
+        { hex: '#a855f7', name: 'Ungu Lavender' },
+        { hex: '#34d399', name: 'Hijau Mint' },
+      ];
+      const curIdx = palette.findIndex((p) => p.hex === s.kiraBalloonColor);
+      const next = palette[(curIdx + 1) % palette.length];
+      sfxEngine.playBalloonCheer();
+      set({ kiraBalloonColor: next.hex });
+
+      if (!s.flags.includes('bought_balloon_kira')) {
+        s.applyEffect({
+          kehadiranKeluarga: 2,
+          kejujuranDiri: 1,
+          setFlags: ['bought_balloon_kira'],
+          journalEntry: {
+            id: 'je_park_balloon_kira',
+            title: 'Balon Gas Warna-Warni untuk Kira',
+            body: 'Di tepi Taman Bermain Anak, aku membelikan balon gas warna-warni dari Mang Dedi untuk Kira. Melihat balon itu melayang riang di atas kepalanya sepanjang langkah kami terasa begitu membahagiakan.',
+            chapter: s.chapter,
+          },
+        });
+      }
+
+      if (s.isFamilyWalkActive) {
+        s.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_park_balloon, `fw_balloon_${next.name}`);
+      }
+      s.showToast(`Balon gas ${next.name} dari Mang Dedi kini melayang ceria di dekat Kira!`);
+    },
+
     markCatFed: () => {
       const already = get().catFed;
       set({ catFed: true });
@@ -1745,6 +1782,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isRtBoardOpen: false,
         melatiProjectorReel: 1,
         melatiProjectorManualOn: false,
+        kiraBalloonColor: null,
         readMailIds: [],
         gardenWatered: false,
         vinylPlaying: false,
@@ -1827,6 +1865,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isRtBoardOpen: false,
         melatiProjectorReel: 1,
         melatiProjectorManualOn: false,
+        kiraBalloonColor: slot.flags.includes('bought_balloon_kira') ? '#f43f5e' : null,
         readMailIds: slot.flags.includes('checked_home_mailbox') ? ['mail_ibu_bandung'] : [],
         gardenWatered: slot.flags.includes('watered_nadia_garden'),
         vinylPlaying: false,
@@ -1932,6 +1971,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isRtBoardOpen: false,
         melatiProjectorReel: 1,
         melatiProjectorManualOn: false,
+        kiraBalloonColor: null,
         vinylPlaying: false,
         kiraToyTrainOn: false,
         workLaptopClosed: false,

@@ -28,6 +28,7 @@ import { ParkFountainPicnicAndJoggers } from './ParkFountainPicnicAndJoggers';
 import { ParkPlaygroundAndKoi } from './ParkPlaygroundAndKoi';
 import { PlayerController } from './PlayerController';
 import { PostEffects } from './PostEffects';
+import { RetroStreetAndParkSwing } from './RetroStreetAndParkSwing';
 import { RiverAndParkLife } from './RiverAndParkLife';
 import { RiversideNightMarket } from './RiversideNightMarket';
 import { RooftopLakeAndRtBoard } from './RooftopLakeAndRtBoard';
@@ -103,6 +104,7 @@ export const GameCanvas: React.FC = () => {
             <ArtisticAndStationDetails timeOfDay={effectiveTime} settings={settings} />
             <CraftAndPingPongLife timeOfDay={effectiveTime} settings={settings} />
             <NightDiningAtmAndOpang timeOfDay={effectiveTime} settings={settings} />
+            <RetroStreetAndParkSwing timeOfDay={effectiveTime} settings={settings} />
             <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
             <CityLife timeOfDay={effectiveTime} settings={settings} />
             <ScooterEntity timeOfDay={effectiveTime} settings={settings} />

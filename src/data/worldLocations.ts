@@ -205,6 +205,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   // Tenda Warung Pecel Lele Lamongan (Jl. Kenangan) & Kanopi Pangkalan Ojek Stasiun Senja
   if (x >= 40.8 && x <= 45.6 && z >= 10.4 && z <= 13.6) return true;
   if (x >= 74.4 && x <= 78.6 && z >= 18.4 && z <= 21.4) return true;
+  // Kanopi Pergola Kursi Ayunan Kayu Taman Kota
+  if (x >= -65.2 && x <= -63.2 && z >= -29.0 && z <= -26.2) return true;
   return false;
 }
 
@@ -407,6 +409,12 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'opang_shelter_bench', minX: 75.2, maxX: 77.8, minZ: 19.75, maxZ: 20.65 },
   { id: 'opang_bike_l', minX: 74.55, maxX: 75.75, minZ: 18.1, maxZ: 19.65 },
   { id: 'opang_bike_r', minX: 77.3, maxX: 78.5, minZ: 18.2, maxZ: 19.7 },
+
+  // === 30. Boks Telepon Umum, Bis Surat PT Pos & Pergola Kursi Ayunan Kayu Taman ===
+  { id: 'retro_payphone_pos', minX: -10.35, maxX: -9.25, minZ: -15.95, maxZ: -13.95 },
+  { id: 'park_garden_swing_l', minX: -64.95, maxX: -63.45, minZ: -29.0, maxZ: -28.65 },
+  { id: 'park_garden_swing_r', minX: -64.95, maxX: -63.45, minZ: -26.55, maxZ: -26.2 },
+  { id: 'park_garden_swing_seat', minX: -64.62, maxX: -63.78, minZ: -28.55, maxZ: -26.65 },
 ];
 
 /**
@@ -540,6 +548,7 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: 33.2, z: 60.05, r: 0.2 },
   { x: 41.65, z: 13.48, r: 0.42 },
   { x: 76.5, z: 19.15, r: 0.42 },
+  { x: -86.4, z: 17.6, r: 0.62 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
