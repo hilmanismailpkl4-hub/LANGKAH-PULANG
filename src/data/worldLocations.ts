@@ -197,6 +197,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= 25.3 && x <= 29.1 && z >= 55.2 && z <= 58.4) return true;
   // Payung Teduh Gerobak Es Dawet Ayu Pak Darmo (Plaza Menara Nusantara)
   if (x >= 40.2 && x <= 44.8 && z >= -15.4 && z <= -12.0) return true;
+  // Tenda Kanopi Gerobak Siomay Bandung Mang Asep (Tepi Taman Kota)
+  if (x >= -80.8 && x <= -77.2 && z >= 10.6 && z <= 14.2) return true;
   return false;
 }
 
@@ -366,6 +368,19 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
 
   // === 23. Papan Pengumuman RT 04 Perumahan Melati ===
   { id: 'melati_rt_board', minX: 7.85, maxX: 9.75, minZ: 52.05, maxZ: 52.75 },
+
+  // === 24. Gerobak Siomay Bandung Mang Asep (Tepi Taman Kota) ===
+  { id: 'siomay_cart', minX: -80.1, maxX: -77.9, minZ: 12.0, maxZ: 13.2 },
+  { id: 'siomay_bench', minX: -79.82, maxX: -78.18, minZ: 10.68, maxZ: 11.22 },
+
+  // === 25. Layar Proyektor Warga Malam RT 04 Melati ===
+  { id: 'melati_projector_screen', minX: 14.15, maxX: 18.25, minZ: 61.95, maxZ: 62.65 },
+  { id: 'melati_projector_stool', minX: 15.82, maxX: 16.58, minZ: 57.98, maxZ: 58.72 },
+  { id: 'melati_projector_bench', minX: 14.8, maxX: 17.6, minZ: 56.38, maxZ: 57.02 },
+
+  // === 26. Rak Parkir Sepeda Kota & Motor Kurir Kopi Depan Kedai Bima ===
+  { id: 'cafe_bike_rack', minX: -25.05, maxX: -22.15, minZ: 10.52, maxZ: 12.28 },
+  { id: 'cafe_delivery_scooter', minX: -17.05, maxX: -15.35, minZ: 10.25, maxZ: 12.15 },
 ];
 
 /**
@@ -491,8 +506,9 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
     [15.8, -19.5], [-62.8, 8.2], [74.8, 3.2],
   ] as [number, number][]).map(([x, z]) => ({ x, z, r: 0.36 })),
 
-  // Pak Darmo Dawet Ayu & Taman Bundar Tugu "Kota Senja"
+  // Pak Darmo Dawet Ayu, Mang Asep Siomay Bandung & Taman Bundar Tugu "Kota Senja"
   { x: 42.8, z: -14.7, r: 0.42 },
+  { x: -79.0, z: 13.75, r: 0.42 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],

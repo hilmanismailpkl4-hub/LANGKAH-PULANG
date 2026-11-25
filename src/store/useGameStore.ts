@@ -169,6 +169,8 @@ interface GameStoreState {
   nadiaOutfitId: NadiaOutfitId;
   kiraOutfitId: KiraOutfitId;
   livingRoomTvChannel: 0 | 1 | 2 | 3;
+  melatiProjectorReel: 0 | 1 | 2 | 3;
+  melatiProjectorManualOn: boolean;
   rainbowActiveUntil: number;
   catFed: boolean;
   paperBoatsLaunched: number;
@@ -239,6 +241,7 @@ interface GameStoreState {
   setNadiaOutfit: (outfitId: NadiaOutfitId) => void;
   setKiraOutfit: (outfitId: KiraOutfitId) => void;
   cycleLivingRoomTv: () => void;
+  cycleMelatiProjector: () => void;
   markCatFed: () => void;
   incrementPaperBoats: () => void;
   openPhone: (app?: 'home' | 'chat' | 'calls' | 'gallery' | 'radio' | 'notes' | 'weather', threadId?: string) => void;
@@ -406,6 +409,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     nadiaOutfitId: 'terracotta',
     kiraOutfitId: 'sunshine',
     livingRoomTvChannel: 1,
+    melatiProjectorReel: 1,
+    melatiProjectorManualOn: false,
     rainbowActiveUntil: 0,
     catFed: false,
     paperBoatsLaunched: 0,
@@ -1519,6 +1524,45 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       }
     },
 
+    cycleMelatiProjector: () => {
+      const s = get();
+      const isCurrentlyOn = s.melatiProjectorReel > 0 && (s.timeOfDay !== 'morning' || s.melatiProjectorManualOn);
+      const next: 0 | 1 | 2 | 3 = !isCurrentlyOn
+        ? 1
+        : (((s.melatiProjectorReel + 1) % 4) as 0 | 1 | 2 | 3);
+
+      sfxEngine.play(next === 0 ? 'switch' : 'chime');
+      set({
+        melatiProjectorReel: next,
+        melatiProjectorManualOn: next !== 0,
+      });
+
+      const labels: Record<0 | 1 | 2 | 3, string> = {
+        0: 'Proyektor Layar Warga RT 04 dimatikan (mode siaga).',
+        1: 'Layar Proyektor RT 04 memutar Film Pendek: “Sore di Kota Senja”.',
+        2: 'Layar Proyektor RT 04 berganti ke: “Wayang Bayangan & Dongeng Malam”.',
+        3: 'Layar Proyektor RT 04 memutar: “Arsip Kerja Bakti & 17-an Perumahan Melati”.',
+      };
+      s.showToast(labels[next]);
+
+      if (next !== 0 && !s.flags.includes('used_melati_projector')) {
+        s.applyEffect({
+          kehadiranKeluarga: 1,
+          kejujuranDiri: 1,
+          setFlags: ['used_melati_projector'],
+          journalEntry: {
+            id: 'je_melati_projector',
+            title: 'Layar Proyektor Warga Perumahan Melati',
+            body: 'Di halaman teduh Perumahan Melati, warga memasang layar proyektor kain putih lengkap dengan tikar dan gorengan hangat. Menonton siluet film pendek bersama tetangga membuat malam kompleks terasa seperti rumah besar.',
+            chapter: s.chapter,
+          },
+        });
+      }
+      if (next !== 0 && s.isFamilyWalkActive) {
+        s.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_melati_projector, `fw_projector_${next}`);
+      }
+    },
+
     markCatFed: () => {
       const already = get().catFed;
       set({ catFed: true });
@@ -1699,6 +1743,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isTelescopeOpen: false,
         telescopeTargetIdx: 0,
         isRtBoardOpen: false,
+        melatiProjectorReel: 1,
+        melatiProjectorManualOn: false,
         readMailIds: [],
         gardenWatered: false,
         vinylPlaying: false,
@@ -1779,6 +1825,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isTelescopeOpen: false,
         telescopeTargetIdx: 0,
         isRtBoardOpen: false,
+        melatiProjectorReel: 1,
+        melatiProjectorManualOn: false,
         readMailIds: slot.flags.includes('checked_home_mailbox') ? ['mail_ibu_bandung'] : [],
         gardenWatered: slot.flags.includes('watered_nadia_garden'),
         vinylPlaying: false,
@@ -1882,6 +1930,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isMailboxOpen: false,
         isTelescopeOpen: false,
         isRtBoardOpen: false,
+        melatiProjectorReel: 1,
+        melatiProjectorManualOn: false,
         vinylPlaying: false,
         kiraToyTrainOn: false,
         workLaptopClosed: false,

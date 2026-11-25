@@ -32,7 +32,10 @@ export const CulinaryModal: React.FC = () => {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-warm-400/20 text-warm-300">
                 {activeSpot === 'cafe' || activeSpot === 'office_pantry' ? (
                   <Coffee className="h-5 w-5" />
-                ) : activeSpot === 'martabak' || activeSpot === 'bakso' || activeSpot === 'sate' ? (
+                ) : activeSpot === 'martabak' ||
+                  activeSpot === 'bakso' ||
+                  activeSpot === 'sate' ||
+                  activeSpot === 'siomay' ? (
                   <Flame className="h-5 w-5" />
                 ) : activeSpot === 'coconut' || activeSpot === 'dawet' ? (
                   <Droplets className="h-5 w-5" />

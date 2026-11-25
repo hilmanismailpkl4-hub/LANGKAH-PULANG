@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import * as THREE from 'three';
 import { PHOTO_FILTER_BY_ID } from '../../data/photoFilters';
 import { useGameStore } from '../../store/useGameStore';
+import { AfternoonAndCreativeLife } from './AfternoonAndCreativeLife';
 import { Atmosphere } from './Atmosphere';
 import { BicycleEntity } from './BicycleEntity';
 import { CafeAndNightStreetLife } from './CafeAndNightStreetLife';
@@ -95,6 +96,7 @@ export const GameCanvas: React.FC = () => {
             <StationAndBuskerLife timeOfDay={effectiveTime} settings={settings} />
             <StreetRealismAndSate timeOfDay={effectiveTime} settings={settings} />
             <TropicalLandmarkAndDawet timeOfDay={effectiveTime} settings={settings} />
+            <AfternoonAndCreativeLife timeOfDay={effectiveTime} settings={settings} />
             <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
             <CityLife timeOfDay={effectiveTime} settings={settings} />
             <ScooterEntity timeOfDay={effectiveTime} settings={settings} />

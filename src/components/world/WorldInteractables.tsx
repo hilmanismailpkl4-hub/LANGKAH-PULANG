@@ -2124,6 +2124,97 @@ export const WorldInteractables: React.FC = () => {
       );
     }
 
+      consider(
+        {
+          id: 'activity_siomay_mang_asep',
+          kind: 'story_object',
+          label: 'Pesan Siomay Bandung & Batagor Mang Asep',
+          sublabel: 'Tepi Taman Kota · Kukus Hangat & Bumbu Kacang',
+          position: [-79.0, 0, 11.4],
+          onInteract: () => {
+            store.openCulinarySpot('siomay');
+          },
+        },
+        2.8,
+      );
+
+      consider(
+        {
+          id: 'activity_melati_projector_ctrl',
+          kind: 'story_object',
+          label: 'Putar / Ganti Film Proyektor Warga RT 04',
+          sublabel: 'Perumahan Melati · Layar Nobar Malam (3 Film)',
+          position: [16.2, 0, 58.35],
+          onInteract: () => {
+            store.cycleMelatiProjector();
+          },
+        },
+        2.3,
+      );
+
+      consider(
+        {
+          id: 'sit_melati_projector_bench',
+          kind: 'story_object',
+          label: 'Duduk Nonton Layar Proyektor Warga',
+          sublabel: 'Perumahan Melati · Bangku Nobar RT 04',
+          position: [16.2, 0, 56.0],
+          onInteract: () => {
+            sfxEngine.play('interact');
+            playerRuntime.sitState = {
+              active: true,
+              label: 'Layar Proyektor Warga RT 04 Melati',
+              seatPos: [16.2, 0.14, 56.7],
+              lookAt: [16.2, 1.78, 62.2],
+              standPos: [16.2, 0, 55.6],
+              seatYaw: 0,
+            };
+            store.setSitting(true);
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_melati_projector, 'fw_projector_sit');
+            }
+            store.showToast('Damar duduk santai di bangku nobar warga menghadap layar proyektor... (WASD/E berdiri)');
+          },
+        },
+        2.3,
+      );
+
+      consider(
+        {
+          id: 'inspect_cafe_bike_rack',
+          kind: 'story_object',
+          label: 'Periksa Rak Parkir Sepeda Pengunjung Kafe',
+          sublabel: 'Depan Kedai Kopi Bima · Komunitas Gowes Sore',
+          position: [-23.6, 0, 10.2],
+          onInteract: () => {
+            sfxEngine.playBicycleBell();
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_cafe_bikes, 'fw_cafe_bikes');
+            }
+            store.showToast('Kring-kring! Dua sepeda pengunjung terparkir rapi di rak depan Kedai Bima—masih ada satu slot kosong untuk pesepeda sore.');
+          },
+        },
+        2.4,
+      );
+
+      consider(
+        {
+          id: 'inspect_cafe_delivery_scooter',
+          kind: 'story_object',
+          label: 'Periksa Motor Kurir Kopi Sudut Express',
+          sublabel: 'Depan Kedai Kopi Bima · Boks Termal Antar Kopi',
+          position: [-16.2, 0, 10.0],
+          onInteract: () => {
+            sfxEngine.play('interact');
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_cafe_bikes, 'fw_cafe_delivery');
+            }
+            store.showToast('Boks termal “Kopi Sudut · Antar Hangat” terpasang rapi di belakang motor plat B 4128 KOP—siap mengantar kopi aren keliling kota.');
+          },
+        },
+        2.4,
+      );
+
     consider(
       {
         id: 'portal_up',
@@ -2635,6 +2726,22 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[8.8, 2.52, 52.4]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#86efac" />
+      </mesh>
+      <mesh position={[-79.0, 1.88, 12.6]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#38bdf8" />
+      </mesh>
+      <mesh position={[16.2, 1.32, 58.35]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#fde047" />
+      </mesh>
+      <mesh position={[-23.6, 1.35, 11.4]}>
+        <sphereGeometry args={[0.065, 8, 8]} />
+        <meshBasicMaterial color="#fbbf24" />
+      </mesh>
+      <mesh position={[-16.2, 1.56, 11.2]}>
+        <sphereGeometry args={[0.065, 8, 8]} />
+        <meshBasicMaterial color="#fbbf24" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

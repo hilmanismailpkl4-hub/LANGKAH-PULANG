@@ -10,7 +10,8 @@ export type CulinarySpotId =
   | 'coconut'
   | 'bakso'
   | 'sate'
-  | 'dawet';
+  | 'dawet'
+  | 'siomay';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -23,7 +24,8 @@ export type HeldDrinkVisual =
   | 'roti'
   | 'coconut'
   | 'sate'
-  | 'dawet';
+  | 'dawet'
+  | 'siomay';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -162,6 +164,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [40.4, 0, -12.3],
     seatYaw: Math.PI / 2,
     tablePropPos: [42.2, 1.12, -13.6],
+  },
+  siomay: {
+    id: 'siomay',
+    title: 'Siomay Bandung Mang Asep',
+    hostName: 'Mang Asep',
+    subtitle: 'Tepi Taman Kota · Siomay Ikan Tenggiri, Bumbu Kacang & Jeruk Limau',
+    seatPos: [-79.0, 0.14, 10.95],
+    lookAt: [-79.0, 1.35, 12.6],
+    standPos: [-79.0, 0, 9.75],
+    seatYaw: 0,
+    tablePropPos: [-79.0, 1.16, 12.05],
   },
 };
 
@@ -613,6 +626,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Slurppp!! Cendol hijaunya naik lewat sedotan, Ayah!! Enak bangettt es dawetnya Pak Darmo!' },
       { speaker: 'nadia', text: 'Segar banget ya Mas... senang deh lihat kamu masih sempat mampir jajan manis begini sepulang kerja.' },
+    ],
+  },
+
+  // === 11. GEROBAK SIOMAY BANDUNG MANG ASEP (TEPI TAMAN KOTA) ===
+  {
+    id: 'siomay_komplit',
+    spot: 'siomay',
+    name: 'Siomay Bandung Komplit Bumbu Kacang',
+    priceLabel: 'Rp 15.000',
+    tagline: 'Siomay ikan tenggiri kukus, tahu putih, kentang, kol gulung, telur rebus & perasan jeruk limau.',
+    tasteNote: 'Lembut gurih ikan tenggiri berpadu bumbu kacang kental dan wangi jeruk limau—pas banget untuk sore di tepi taman.',
+    drinkVisual: 'siomay',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Wangi kukusan siomay sama jeruk limaunya Mang Asep langsung bikin lapar lagi ya, Mas.' },
+    ],
+  },
+  {
+    id: 'siomay_batagor',
+    spot: 'siomay',
+    name: 'Campur Batagor Renyah & Siomay Hangat',
+    priceLabel: 'Rp 16.000',
+    tagline: 'Perpaduan batagor pangsit renyah dan siomay kukus empuk dengan kecap manis & sambal kacang.',
+    tasteNote: 'Kriuk hangat di gigitan pertama, diikuti gurih lembut siomay—jajan sore taman yang selalu bikin betah.',
+    drinkVisual: 'siomay',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'kira', text: 'Kriuk-kriuk!! Pangsit batagornya renyah banget, Ayah! Kira suka banget bumbu kacangnya!' },
+    ],
+  },
+  {
+    id: 'siomay_family',
+    spot: 'siomay',
+    name: 'Traktir Keluarga Siomay Bandung (Paket Sore Taman)',
+    priceLabel: 'Rp 42.000',
+    tagline: 'Tiga piring siomay & batagor hangat (versi bumbu manis tanpa pedas untuk Kira) plus kerupuk.',
+    tasteNote: 'Mang Asep cekatan memotong siomay hangat dari panci kukus mengepul sambil menyapa Kira—sore di Taman Kota terasa penuh tawa.',
+    drinkVisual: 'siomay',
+    isHot: true,
+    isFamilyTreat: true,
+    journalTitle: 'Sore Hangat Bersama Siomay Mang Asep di Taman Kota',
+    journalBody: 'Di tepi Taman Kota dekat taman bermain dan gazebo, kami bertiga duduk di bangku kayu gerobak Mang Asep menyantap Siomay Bandung komplit yang masih mengepul. Sambil ditemani semilir angin sore, jajan sederhana ini terasa begitu lengkap.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Yeeey!! Kira dapat telur rebus sama kentang kukus paling besar dari Mang Asep! Makasih, Ayaah!' },
+      { speaker: 'nadia', text: 'Enak banget ya Mas, apalagi dimakan sore-sore sambil melihat taman begini. Terima kasih sudah traktir.' },
     ],
   },
 ];

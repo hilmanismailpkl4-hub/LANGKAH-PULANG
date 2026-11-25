@@ -394,4 +394,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'nadia', text: 'Eh, lihat tuh Mas di papan pengumuman RT, nama kamu masuk jadwal ronda malam Sabtu lho!' },
     { speaker: 'kira', text: 'Hihi, ada tulisan tentang kucing oranye "Sore" juga di papan pengumuman, Bunda!' },
   ],
+  activity_melati_projector: [
+    { speaker: 'kira', text: 'WAAAH!! Layar tancap di kompleks kita nyala, Ayah!! Kayak bioskop di bawah bintang!' },
+    { speaker: 'nadia', text: 'Lucu ya Mas, duduk di tikar bareng tetangga sambil nonton proyektor begini rasanya hangat banget.' },
+  ],
+  activity_cafe_bikes: [
+    { speaker: 'nadia', text: 'Keren ya sekarang Kedai Bima makin ramai sampai ada rak sepeda khusus sama motor antar kopi segala.' },
+    { speaker: 'kira', text: 'Kring-kring!! Nanti kalau Kira udah gede, Kira mau gowes sepeda sendiri ke kedai Om Bima ah!' },
+  ],
 };
