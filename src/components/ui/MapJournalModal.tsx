@@ -19,6 +19,7 @@ import { LOCATION_BY_ID, WORLD_LOCATIONS } from '../../data/worldLocations';
 import { playerRuntime } from '../../store/playerRuntime';
 import { useGameStore } from '../../store/useGameStore';
 import { LocationId } from '../../types/game';
+import { useMobileViewport } from '../../utils/mobileUtils';
 import { Portal } from './Portal';
 
 // Konversi koordinat dunia 3D (x: -112..102, z: -68..92) ke viewBox SVG 800x600
@@ -51,6 +52,8 @@ export const MapJournalModal: React.FC = () => {
     z: playerRuntime.position[2],
     yaw: playerRuntime.cameraYaw,
   });
+  const { isMobile, isCompactLandscape } = useMobileViewport();
+  const compact = isMobile || isCompactLandscape;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -88,25 +91,47 @@ export const MapJournalModal: React.FC = () => {
 
   return (
     <Portal>
-      <div className="fixed inset-0 z-[9996] flex items-center justify-center bg-dusk-950/84 p-4 md:p-7 backdrop-blur-md">
-        <div className="flex h-[88vh] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-warm-200/20 bg-dusk-900/96 text-warm-50 shadow-2xl animate-fadeIn">
+      <div
+        className={`fixed inset-0 z-[9996] flex items-center justify-center bg-dusk-950/84 backdrop-blur-md ${
+          compact ? 'p-2' : 'p-4 md:p-7'
+        }`}
+      >
+        <div
+          className={`flex w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-warm-200/20 bg-dusk-900/96 text-warm-50 shadow-2xl animate-fadeIn ${
+            compact ? 'h-[94dvh]' : 'h-[88vh]'
+          }`}
+        >
           {/* Header & Tab */}
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-warm-100/10 px-6 py-4">
+          <div
+            className={`flex flex-wrap items-center justify-between gap-2 border-b border-warm-100/10 ${
+              compact ? 'px-4 py-2' : 'px-6 py-4 gap-4'
+            }`}
+          >
             <div>
-              <p className="text-[11px] uppercase tracking-[0.2em] text-warm-300/80">
-                Bab {chapter} · {journalName}
-              </p>
-              <h2 className="font-serif text-xl text-warm-50">Peta Kota & Catatan Perjalanan</h2>
+              {!compact && (
+                <p className="text-[11px] uppercase tracking-[0.2em] text-warm-300/80">
+                  Bab {chapter} · {journalName}
+                </p>
+              )}
+              <h2 className={`font-serif text-warm-50 ${compact ? 'text-sm' : 'text-xl'}`}>
+                {compact ? `Bab ${chapter} · Peta & Catatan` : 'Peta Kota & Catatan Perjalanan'}
+              </h2>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               {(
                 [
-                  { id: 'map', label: 'Peta Kota', icon: MapIcon },
-                  { id: 'quests', label: `Misi (${completedSideCount}/${SIDE_QUESTS.length})`, icon: Compass },
+                  { id: 'map', label: compact ? 'Peta' : 'Peta Kota', icon: MapIcon },
+                  {
+                    id: 'quests',
+                    label: compact ? `Misi (${completedSideCount}/${SIDE_QUESTS.length})` : `Misi (${completedSideCount}/${SIDE_QUESTS.length})`,
+                    icon: Compass,
+                  },
                   {
                     id: 'journal',
-                    label: `Catatan & Memori (${discoveredEasterEggs.length}/${EASTER_EGGS.length})`,
+                    label: compact
+                      ? `Catatan (${discoveredEasterEggs.length}/${EASTER_EGGS.length})`
+                      : `Catatan & Memori (${discoveredEasterEggs.length}/${EASTER_EGGS.length})`,
                     icon: BookOpen,
                   },
                 ] as const
@@ -115,7 +140,9 @@ export const MapJournalModal: React.FC = () => {
                   key={id}
                   type="button"
                   onClick={() => toggleMapJournal(id)}
-                  className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-medium transition ${
+                  className={`flex items-center gap-1.5 rounded-xl font-medium transition ${
+                    compact ? 'px-2.5 py-1.5 text-[11px]' : 'px-3.5 py-2 text-xs'
+                  } ${
                     tab === id
                       ? 'bg-warm-400 text-dusk-950'
                       : 'border border-warm-100/15 bg-dusk-950/60 text-warm-200 hover:border-warm-300/40'
@@ -129,7 +156,7 @@ export const MapJournalModal: React.FC = () => {
               <button
                 type="button"
                 onClick={closeMapJournal}
-                className="ml-2 rounded-xl p-2 text-warm-200/70 hover:bg-warm-100/10 hover:text-warm-50"
+                className="ml-1 rounded-xl p-1.5 text-warm-200/70 hover:bg-warm-100/10 hover:text-warm-50"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -137,14 +164,22 @@ export const MapJournalModal: React.FC = () => {
           </div>
 
           {/* Konten Utama */}
-          <div className="flex-1 overflow-y-auto subtle-scroll p-5 md:p-6">
+          <div className={`flex-1 ${tab === 'map' && compact ? 'overflow-hidden p-2.5' : compact ? 'overflow-y-auto subtle-scroll p-3' : 'overflow-y-auto subtle-scroll p-5 md:p-6'}`}>
             {/* === TAB 1: PETA KOTA MODERN SVG === */}
             {tab === 'map' && (
-              <div className="grid h-full grid-cols-1 gap-5 lg:grid-cols-12">
+              <div className={`grid h-full ${compact ? 'grid-cols-12 gap-2.5' : 'grid-cols-1 gap-5 lg:grid-cols-12'}`}>
                 {/* Kanvas Peta Vektor Modern */}
-                <div className="relative flex min-h-[420px] flex-col overflow-hidden rounded-2xl border border-warm-200/20 bg-[#101622] lg:col-span-8">
+                <div
+                  className={`relative flex flex-col overflow-hidden rounded-2xl border border-warm-200/20 bg-[#101622] ${
+                    compact ? 'col-span-7 min-h-0' : 'min-h-[420px] lg:col-span-8'
+                  }`}
+                >
                   {/* Toolbar atas peta */}
-                  <div className="z-20 flex flex-wrap items-center justify-between gap-2 border-b border-warm-100/10 bg-dusk-950/85 px-4 py-2.5 text-[11px]">
+                  <div
+                    className={`z-20 flex flex-wrap items-center justify-between gap-2 border-b border-warm-100/10 bg-dusk-950/85 text-[11px] ${
+                      compact ? 'px-2.5 py-1.5' : 'px-4 py-2.5'
+                    }`}
+                  >
                     <div className="flex items-center gap-1.5">
                       {(
                         [
@@ -195,7 +230,9 @@ export const MapJournalModal: React.FC = () => {
                   <div className="relative flex-1 overflow-auto subtle-scroll bg-[#0f1520]">
                     <svg
                       viewBox="0 0 800 600"
-                      className="h-full w-full min-h-[380px] transition-transform duration-200 origin-center"
+                      className={`h-full w-full transition-transform duration-200 origin-center ${
+                        compact ? '' : 'min-h-[380px]'
+                      }`}
                       style={{ transform: `scale(${zoom})` }}
                     >
                       <defs>
@@ -652,7 +689,11 @@ export const MapJournalModal: React.FC = () => {
                 </div>
 
                 {/* Panel Detail Lokasi & Pasang GPS */}
-                <div className="flex flex-col justify-between rounded-2xl border border-warm-200/15 bg-dusk-950/75 p-5 lg:col-span-4">
+                <div
+                  className={`flex flex-col justify-between rounded-2xl border border-warm-200/15 bg-dusk-950/75 ${
+                    compact ? 'col-span-5 overflow-y-auto subtle-scroll p-3' : 'p-5 lg:col-span-4'
+                  }`}
+                >
                   <div className="space-y-4">
                     <div>
                       <div className="flex items-center justify-between">
@@ -760,7 +801,7 @@ export const MapJournalModal: React.FC = () => {
                   <h3 className="mb-3 font-serif text-lg text-warm-100">
                     Kisah Warga Kota ({completedSideCount}/{SIDE_QUESTS.length} Selesai)
                   </h3>
-                  <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     {SIDE_QUESTS.map((sq) => {
                       const prog = Object.prototype.hasOwnProperty.call(sideQuests, sq.id)
                         ? sideQuests[sq.id]
@@ -834,7 +875,7 @@ export const MapJournalModal: React.FC = () => {
 
             {/* === TAB 3: CATATAN HARIAN & FRAGMEN MEMORI === */}
             {tab === 'journal' && (
-              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-3.5">
                   <div className="flex items-center gap-2">
                     <BookOpen className="h-4 w-4 text-warm-300" />

@@ -44,6 +44,7 @@ import {
 } from '../../data/phoneContent';
 import { LOCATION_BY_ID } from '../../data/worldLocations';
 import { useGameStore } from '../../store/useGameStore';
+import { useMobileViewport } from '../../utils/mobileUtils';
 import { Portal } from './Portal';
 
 const CLOCK_BY_TIME = {
@@ -204,6 +205,7 @@ export const SmartphoneModal: React.FC = () => {
   const [selectedMemory, setSelectedMemory] = useState<MemoryPhotoItem | null>(null);
   const [selectedCaptureUrl, setSelectedCaptureUrl] = useState<{ url: string; title: string; caption: string } | null>(null);
   const [noteInput, setNoteInput] = useState('');
+  const { isCompactLandscape } = useMobileViewport();
 
   useEffect(() => {
     if (!activeCall) return;
@@ -293,18 +295,28 @@ export const SmartphoneModal: React.FC = () => {
   return (
     <Portal>
       <div
-        className="fixed inset-0 z-[9996] flex items-center justify-center bg-dusk-950/72 p-4 backdrop-blur-sm"
+        className={`fixed inset-0 z-[9996] flex items-center justify-center bg-dusk-950/72 backdrop-blur-sm ${
+          isCompactLandscape ? 'p-2' : 'p-4'
+        }`}
         onClick={closePhone}
       >
-        {/* Bingkai Smartphone Modern */}
+        {/* Bingkai Smartphone Modern — otomatis melebar 2-kolom pada layar Landscape HP! */}
         <div
           onClick={(e) => e.stopPropagation()}
-          className="relative flex h-[640px] max-h-[90vh] w-[356px] max-w-[94vw] flex-col overflow-hidden rounded-[40px] border-[6px] border-[#242a36] bg-dusk-950 text-warm-50 shadow-[0_25px_70px_rgba(0,0,0,0.75)] animate-fadeIn"
+          className={`relative flex flex-col overflow-hidden border-[#242a36] bg-dusk-950 text-warm-50 shadow-[0_25px_70px_rgba(0,0,0,0.75)] animate-fadeIn ${
+            isCompactLandscape
+              ? 'h-[94dvh] max-h-[380px] w-[min(94vw,680px)] rounded-[24px] border-[4px]'
+              : 'h-[640px] max-h-[90vh] w-[356px] max-w-[94vw] rounded-[40px] border-[6px]'
+          }`}
         >
           {/* Status Bar Realistis */}
-          <div className="z-20 flex items-center justify-between bg-black/35 px-6 pt-3 pb-2 text-[11px] font-medium text-warm-100/90">
+          <div
+            className={`z-20 flex items-center justify-between bg-black/35 text-[11px] font-medium text-warm-100/90 ${
+              isCompactLandscape ? 'px-5 py-1.5' : 'px-6 pt-3 pb-2'
+            }`}
+          >
             <span>{meta.time}</span>
-            <div className="h-4 w-20 rounded-full bg-black/80" />
+            <div className={`rounded-full bg-black/80 ${isCompactLandscape ? 'h-2.5 w-14' : 'h-4 w-20'}`} />
             <div className="flex items-center gap-1.5">
               <Wifi className="h-3 w-3" />
               <span className="text-[10px]">74%</span>
@@ -316,23 +328,33 @@ export const SmartphoneModal: React.FC = () => {
           <div className={`relative flex-1 overflow-hidden bg-gradient-to-b ${wallpaperClass}`}>
             {/* === LAYAR PANGGILAN AKTIF === */}
             {activeCall && (
-              <div className="absolute inset-0 z-30 flex flex-col items-center justify-between bg-dusk-950/95 p-6 text-center backdrop-blur-xl animate-fadeIn">
-                <div className="mt-6 space-y-2">
+              <div
+                className={`absolute inset-0 z-30 flex bg-dusk-950/95 text-center backdrop-blur-xl animate-fadeIn ${
+                  isCompactLandscape
+                    ? 'flex-row items-center justify-between gap-4 px-6 py-4'
+                    : 'flex-col items-center justify-between p-6'
+                }`}
+              >
+                <div className={isCompactLandscape ? 'shrink-0 space-y-1.5' : 'mt-6 space-y-2'}>
                   <div
-                    className="mx-auto flex h-20 w-20 items-center justify-center rounded-full text-2xl font-bold text-white shadow-xl"
+                    className={`mx-auto flex items-center justify-center rounded-full font-bold text-white shadow-xl ${
+                      isCompactLandscape ? 'h-14 w-14 text-lg' : 'h-20 w-20 text-2xl'
+                    }`}
                     style={{ backgroundColor: activeCall.contact.avatarColor }}
                   >
                     {activeCall.contact.initials}
                   </div>
-                  <h3 className="font-serif text-xl text-warm-50">{activeCall.contact.name}</h3>
+                  <h3 className={`font-serif text-warm-50 ${isCompactLandscape ? 'text-base' : 'text-xl'}`}>
+                    {activeCall.contact.name}
+                  </h3>
                   <p className="text-xs text-emerald-300">
                     Tersambung · 00:{String(activeCall.seconds).padStart(2, '0')}
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-warm-200/20 bg-dusk-900/90 p-4 text-left">
+                <div className="flex-1 rounded-2xl border border-warm-200/20 bg-dusk-900/90 p-3.5 text-left">
                   <p className="text-[10px] uppercase tracking-wider text-warm-300/80">Suara Panggilan</p>
-                  <p className="mt-1.5 font-serif text-sm leading-relaxed text-warm-100">
+                  <p className={`mt-1 font-serif leading-relaxed text-warm-100 ${isCompactLandscape ? 'text-xs' : 'text-sm'}`}>
                     "{activeCall.line}"
                   </p>
                 </div>
@@ -340,71 +362,105 @@ export const SmartphoneModal: React.FC = () => {
                 <button
                   type="button"
                   onClick={endQuickCall}
-                  className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-500 text-white shadow-lg transition hover:bg-red-400"
+                  className={`flex shrink-0 items-center justify-center rounded-full bg-red-500 text-white shadow-lg transition hover:bg-red-400 ${
+                    isCompactLandscape ? 'h-12 w-12' : 'mb-4 h-14 w-14'
+                  }`}
                   title="Tutup Panggilan"
                 >
-                  <PhoneOff className="h-6 w-6" />
+                  <PhoneOff className="h-5 w-5" />
                 </button>
               </div>
             )}
 
             {/* === 0. HOME SCREEN PONSEL === */}
-            {app === 'home' && (
-              <div className="flex h-full flex-col justify-between p-5">
-                <div className="space-y-4">
-                  {/* Widget Cuaca & Pedometer */}
-                  <div className="rounded-2xl border border-white/15 bg-black/30 p-4 backdrop-blur-md">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <p className="text-[11px] text-warm-200/75">{loc.name}</p>
-                        <p className="mt-0.5 font-serif text-3xl font-medium text-warm-50">{meta.temp}</p>
-                        <p className="text-xs text-warm-200/80">{meta.desc}</p>
+            {app === 'home' &&
+              (isCompactLandscape ? (
+                /* Tata Letak 2-Kolom Mendatar Khusus HP Landscape (Semua Muat Tanpa Scroll!) */
+                <div className="grid h-full grid-cols-12 gap-3 p-3.5">
+                  {/* Kolom Kiri (5/12): Widget Cuaca, Ajak Keluarga & Dock Cepat */}
+                  <div className="col-span-5 flex flex-col justify-between gap-2">
+                    <div className="rounded-2xl border border-white/15 bg-black/30 p-3 backdrop-blur-md">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <p className="truncate text-[10px] text-warm-200/75">{loc.name}</p>
+                          <p className="font-serif text-2xl font-medium text-warm-50">{meta.temp}</p>
+                          <p className="text-[11px] text-warm-200/80">{meta.desc}</p>
+                        </div>
+                        <div className="rounded-xl bg-warm-400/20 p-2 text-warm-300">
+                          {timeOfDay === 'morning' ? (
+                            <Sun className="h-5 w-5" />
+                          ) : timeOfDay === 'sunset' ? (
+                            <Sunset className="h-5 w-5" />
+                          ) : timeOfDay === 'rain_dusk' ? (
+                            <CloudRain className="h-5 w-5" />
+                          ) : (
+                            <Moon className="h-5 w-5" />
+                          )}
+                        </div>
                       </div>
-                      <div className="rounded-xl bg-warm-400/20 p-2.5 text-warm-300">
-                        {timeOfDay === 'morning' ? (
-                          <Sun className="h-6 w-6" />
-                        ) : timeOfDay === 'sunset' ? (
-                          <Sunset className="h-6 w-6" />
-                        ) : timeOfDay === 'rain_dusk' ? (
-                          <CloudRain className="h-6 w-6" />
-                        ) : (
-                          <Moon className="h-6 w-6" />
-                        )}
+                      <div className="mt-2 flex items-center justify-between border-t border-white/10 pt-1.5 text-[10px] text-warm-200/80">
+                        <span className="flex items-center gap-1">
+                          <Footprints className="h-3 w-3 text-warm-300" />
+                          {stepCount.toLocaleString('id-ID')} langkah
+                        </span>
+                        <span className="text-warm-300">Bab {chapter}</span>
                       </div>
                     </div>
-                    <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-2.5 text-[11px] text-warm-200/80">
-                      <span className="flex items-center gap-1.5">
-                        <Footprints className="h-3.5 w-3.5 text-warm-300" />
-                        {stepCount.toLocaleString('id-ID')} langkah hari ini
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        closePhone();
+                        toggleFamilyWalk();
+                      }}
+                      className={`flex w-full items-center justify-between rounded-xl border px-3 py-2 text-left text-[11px] transition ${
+                        isFamilyWalkActive
+                          ? 'border-rose-300/45 bg-rose-500/20 text-rose-100'
+                          : 'border-white/15 bg-black/30 text-warm-100'
+                      }`}
+                    >
+                      <span className="flex items-center gap-1.5 font-medium">
+                        <Heart className={`h-3.5 w-3.5 text-rose-300 ${isFamilyWalkActive ? 'fill-rose-300' : ''}`} />
+                        <span>{isFamilyWalkActive ? 'Antar Keluarga Pulang' : 'Ajak Keluarga Jalan'}</span>
                       </span>
-                      <span className="text-warm-300">Bab {chapter}</span>
+                    </button>
+
+                    <div className="flex items-center justify-around rounded-xl border border-white/10 bg-black/35 px-2 py-1.5 backdrop-blur-md">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          closePhone();
+                          setPhotoMode(true);
+                        }}
+                        className="flex items-center gap-1 text-[10px] text-warm-200 hover:text-warm-50"
+                      >
+                        <Camera className="h-4 w-4 text-warm-300" />
+                        <span>Kamera</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          closePhone();
+                          toggleMapJournal('map');
+                        }}
+                        className="flex items-center gap-1 text-[10px] text-warm-200 hover:text-warm-50"
+                      >
+                        <MapIcon className="h-4 w-4 text-sky-300" />
+                        <span>Peta</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={closePhone}
+                        className="flex items-center gap-1 text-[10px] text-warm-200 hover:text-warm-50"
+                      >
+                        <X className="h-4 w-4 text-warm-200/75" />
+                        <span>Tutup</span>
+                      </button>
                     </div>
                   </div>
 
-                  {/* Tombol Cepat Jalan Sore Bersama Nadia & Kira */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      closePhone();
-                      toggleFamilyWalk();
-                    }}
-                    className={`flex w-full items-center justify-between rounded-2xl border px-3.5 py-2.5 text-left text-xs transition ${
-                      isFamilyWalkActive
-                        ? 'border-rose-300/45 bg-rose-500/20 text-rose-100 hover:bg-rose-500/30'
-                        : 'border-white/15 bg-black/30 text-warm-100 hover:border-rose-300/45 hover:bg-rose-500/15'
-                    }`}
-                  >
-                    <span className="flex items-center gap-2 font-medium">
-                      <Heart className={`h-4 w-4 text-rose-300 ${isFamilyWalkActive ? 'fill-rose-300' : ''}`} />
-                      <span>
-                        {isFamilyWalkActive ? 'Antar Nadia & Kira Pulang' : 'Ajak Nadia & Kira Jalan Sore'}
-                      </span>
-                    </span>
-                    <span className="text-[10px] font-semibold text-rose-200/80">[G]</span>
-                  </button>
-
-                  {/* Grid 6 Aplikasi Interaktif */}
-                  <div className="grid grid-cols-3 gap-3.5 pt-1">
+                  {/* Kolom Kanan (7/12): Grid 6 Aplikasi Lega 3x2 */}
+                  <div className="col-span-7 grid grid-cols-3 content-center gap-3 rounded-2xl border border-white/10 bg-black/20 p-3">
                     {(
                       [
                         { id: 'chat', label: 'Pesan', icon: MessageCircle, bg: 'bg-emerald-500/85', badge: pendingReplyCount },
@@ -421,60 +477,150 @@ export const SmartphoneModal: React.FC = () => {
                           key={item.id}
                           type="button"
                           onClick={() => openPhone(item.id, undefined)}
-                          className="group flex flex-col items-center gap-1.5"
+                          className="group flex flex-col items-center gap-1 active:scale-95"
                         >
                           <div
-                            className={`relative flex h-14 w-14 items-center justify-center rounded-2xl ${item.bg} text-white shadow-lg transition group-hover:scale-105`}
+                            className={`relative flex h-12 w-12 items-center justify-center rounded-2xl ${item.bg} text-white shadow-lg transition group-hover:scale-105`}
                           >
-                            <Icon className="h-6 w-6" />
+                            <Icon className="h-5 w-5" />
                             {item.badge > 0 && (
-                              <span className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white shadow">
+                              <span className="absolute -right-1 -top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white shadow">
                                 {item.badge}
                               </span>
                             )}
                           </div>
-                          <span className="text-[11px] font-medium text-warm-100/90">{item.label}</span>
+                          <span className="text-[10px] font-medium text-warm-100/90">{item.label}</span>
                         </button>
                       );
                     })}
                   </div>
                 </div>
+              ) : (
+                <div className="flex h-full flex-col justify-between p-5">
+                  <div className="space-y-4">
+                    {/* Widget Cuaca & Pedometer */}
+                    <div className="rounded-2xl border border-white/15 bg-black/30 p-4 backdrop-blur-md">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="text-[11px] text-warm-200/75">{loc.name}</p>
+                          <p className="mt-0.5 font-serif text-3xl font-medium text-warm-50">{meta.temp}</p>
+                          <p className="text-xs text-warm-200/80">{meta.desc}</p>
+                        </div>
+                        <div className="rounded-xl bg-warm-400/20 p-2.5 text-warm-300">
+                          {timeOfDay === 'morning' ? (
+                            <Sun className="h-6 w-6" />
+                          ) : timeOfDay === 'sunset' ? (
+                            <Sunset className="h-6 w-6" />
+                          ) : timeOfDay === 'rain_dusk' ? (
+                            <CloudRain className="h-6 w-6" />
+                          ) : (
+                            <Moon className="h-6 w-6" />
+                          )}
+                        </div>
+                      </div>
+                      <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-2.5 text-[11px] text-warm-200/80">
+                        <span className="flex items-center gap-1.5">
+                          <Footprints className="h-3.5 w-3.5 text-warm-300" />
+                          {stepCount.toLocaleString('id-ID')} langkah hari ini
+                        </span>
+                        <span className="text-warm-300">Bab {chapter}</span>
+                      </div>
+                    </div>
 
-                {/* Dock Pintasan Cepat Bawah */}
-                <div className="flex items-center justify-around rounded-2xl border border-white/10 bg-black/35 px-3 py-2.5 backdrop-blur-md">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      closePhone();
-                      setPhotoMode(true);
-                    }}
-                    className="flex flex-col items-center gap-0.5 text-[10px] text-warm-200 hover:text-warm-50"
-                  >
-                    <Camera className="h-5 w-5 text-warm-300" />
-                    <span>Kamera</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      closePhone();
-                      toggleMapJournal('map');
-                    }}
-                    className="flex flex-col items-center gap-0.5 text-[10px] text-warm-200 hover:text-warm-50"
-                  >
-                    <MapIcon className="h-5 w-5 text-sky-300" />
-                    <span>Peta</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={closePhone}
-                    className="flex flex-col items-center gap-0.5 text-[10px] text-warm-200 hover:text-warm-50"
-                  >
-                    <X className="h-5 w-5 text-warm-200/75" />
-                    <span>Simpan HP</span>
-                  </button>
+                    {/* Tombol Cepat Jalan Sore Bersama Nadia & Kira */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        closePhone();
+                        toggleFamilyWalk();
+                      }}
+                      className={`flex w-full items-center justify-between rounded-2xl border px-3.5 py-2.5 text-left text-xs transition ${
+                        isFamilyWalkActive
+                          ? 'border-rose-300/45 bg-rose-500/20 text-rose-100 hover:bg-rose-500/30'
+                          : 'border-white/15 bg-black/30 text-warm-100 hover:border-rose-300/45 hover:bg-rose-500/15'
+                      }`}
+                    >
+                      <span className="flex items-center gap-2 font-medium">
+                        <Heart className={`h-4 w-4 text-rose-300 ${isFamilyWalkActive ? 'fill-rose-300' : ''}`} />
+                        <span>
+                          {isFamilyWalkActive ? 'Antar Nadia & Kira Pulang' : 'Ajak Nadia & Kira Jalan Sore'}
+                        </span>
+                      </span>
+                      <span className="text-[10px] font-semibold text-rose-200/80">[G]</span>
+                    </button>
+
+                    {/* Grid 6 Aplikasi Interaktif */}
+                    <div className="grid grid-cols-3 gap-3.5 pt-1">
+                      {(
+                        [
+                          { id: 'chat', label: 'Pesan', icon: MessageCircle, bg: 'bg-emerald-500/85', badge: pendingReplyCount },
+                          { id: 'calls', label: 'Telepon', icon: Phone, bg: 'bg-sky-500/85', badge: 0 },
+                          { id: 'gallery', label: 'Galeri', icon: ImageIcon, bg: 'bg-amber-500/85', badge: playerPhotos.length },
+                          { id: 'radio', label: 'Nada FM', icon: Music, bg: 'bg-violet-500/85', badge: 0 },
+                          { id: 'notes', label: 'Catatan', icon: CheckSquare, bg: 'bg-orange-500/85', badge: 0 },
+                          { id: 'weather', label: 'Kota', icon: CloudSun, bg: 'bg-teal-500/85', badge: 0 },
+                        ] as const
+                      ).map((item) => {
+                        const Icon = item.icon;
+                        return (
+                          <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => openPhone(item.id, undefined)}
+                            className="group flex flex-col items-center gap-1.5"
+                          >
+                            <div
+                              className={`relative flex h-14 w-14 items-center justify-center rounded-2xl ${item.bg} text-white shadow-lg transition group-hover:scale-105`}
+                            >
+                              <Icon className="h-6 w-6" />
+                              {item.badge > 0 && (
+                                <span className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white shadow">
+                                  {item.badge}
+                                </span>
+                              )}
+                            </div>
+                            <span className="text-[11px] font-medium text-warm-100/90">{item.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Dock Pintasan Cepat Bawah */}
+                  <div className="flex items-center justify-around rounded-2xl border border-white/10 bg-black/35 px-3 py-2.5 backdrop-blur-md">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        closePhone();
+                        setPhotoMode(true);
+                      }}
+                      className="flex flex-col items-center gap-0.5 text-[10px] text-warm-200 hover:text-warm-50"
+                    >
+                      <Camera className="h-5 w-5 text-warm-300" />
+                      <span>Kamera</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        closePhone();
+                        toggleMapJournal('map');
+                      }}
+                      className="flex flex-col items-center gap-0.5 text-[10px] text-warm-200 hover:text-warm-50"
+                    >
+                      <MapIcon className="h-5 w-5 text-sky-300" />
+                      <span>Peta</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={closePhone}
+                      className="flex flex-col items-center gap-0.5 text-[10px] text-warm-200 hover:text-warm-50"
+                    >
+                      <X className="h-5 w-5 text-warm-200/75" />
+                      <span>Simpan HP</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
+              ))}
 
             {/* === 1. APLIKASI PESAN (WHATSAPP-STYLE INTERAKTIF) === */}
             {app === 'chat' && !activeThread && (
@@ -1153,7 +1299,11 @@ export const SmartphoneModal: React.FC = () => {
           </div>
 
           {/* Bar Navigasi Bawah Smartphone */}
-          <div className="flex items-center justify-around border-t border-white/10 bg-[#0d111a] py-2.5 text-warm-200/70">
+          <div
+            className={`flex items-center justify-around border-t border-white/10 bg-[#0d111a] text-warm-200/70 ${
+              isCompactLandscape ? 'py-1.5' : 'py-2.5'
+            }`}
+          >
             <button
               type="button"
               onClick={() => {

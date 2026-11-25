@@ -3,6 +3,7 @@ import { Music, RotateCcw, Sparkles, X } from 'lucide-react';
 import { sfxEngine } from '../../audio/sfxEngine';
 import { EVENT_FAMILY_BANTERS } from '../../data/familyWalkBanter';
 import { useGameStore } from '../../store/useGameStore';
+import { useMobileViewport } from '../../utils/mobileUtils';
 import { Portal } from './Portal';
 
 const CHORDS = [
@@ -48,6 +49,8 @@ export const GuitarMinigameModal: React.FC = () => {
   const [completedSong, setCompletedSong] = useState(false);
   const [vibrating, setVibrating] = useState(false);
   const [lastPlayedIdx, setLastPlayedIdx] = useState<number | null>(null);
+  const { isMobile, isCompactLandscape } = useMobileViewport();
+  const compact = isMobile || isCompactLandscape;
 
   const playChord = (chordIdx: number) => {
     sfxEngine.playGuitarChord(chordIdx);
@@ -125,27 +128,47 @@ export const GuitarMinigameModal: React.FC = () => {
 
   return (
     <Portal>
-      <div className="fixed inset-0 z-[9996] flex items-center justify-center bg-dusk-950/84 p-4 backdrop-blur-md">
-        <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-warm-300/25 bg-dusk-900/96 text-warm-50 shadow-2xl animate-fadeIn">
+      <div
+        className={`fixed inset-0 z-[9996] flex items-center justify-center bg-dusk-950/84 backdrop-blur-md ${
+          compact ? 'p-2' : 'p-4'
+        }`}
+      >
+        <div
+          className={`flex max-h-[94dvh] w-full flex-col overflow-hidden rounded-2xl border border-warm-300/25 bg-dusk-900/96 text-warm-50 shadow-2xl animate-fadeIn ${
+            compact ? 'max-w-4xl' : 'max-w-2xl'
+          }`}
+        >
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-warm-100/10 px-6 py-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-warm-400/20 text-warm-300">
-                <Music className="h-5 w-5" />
+          <div
+            className={`flex items-center justify-between border-b border-warm-100/10 ${
+              compact ? 'px-4 py-2' : 'px-6 py-4'
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <div
+                className={`flex shrink-0 items-center justify-center rounded-xl bg-warm-400/20 text-warm-300 ${
+                  compact ? 'h-8 w-8' : 'h-9 w-9'
+                }`}
+              >
+                <Music className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
               <div>
-                <h2 className="font-serif text-xl text-warm-50">{venueTitle}</h2>
-                <p className="text-xs text-warm-200/65">
-                  {isAtHome ? (
-                    <>Nadia & Kira ikut mendengarkan · tekan <strong>1–6</strong> atau klik akor</>
-                  ) : (
-                    <>Gunakan tombol keyboard <strong>1–6</strong> atau klik akor di bawah</>
-                  )}
-                </p>
+                <h2 className={`font-serif text-warm-50 ${compact ? 'text-sm sm:text-base' : 'text-xl'}`}>
+                  {venueTitle}
+                </h2>
+                {!compact && (
+                  <p className="text-xs text-warm-200/65">
+                    {isAtHome ? (
+                      <>Nadia &amp; Kira ikut mendengarkan · tekan <strong>1–6</strong> atau klik akor</>
+                    ) : (
+                      <>Gunakan tombol keyboard <strong>1–6</strong> atau klik akor di bawah</>
+                    )}
+                  </p>
+                )}
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <div className="flex rounded-xl bg-dusk-950 p-1 text-xs">
+              <div className="flex rounded-xl bg-dusk-950 p-1 text-[11px] sm:text-xs">
                 <button
                   type="button"
                   onClick={() => {
@@ -153,7 +176,7 @@ export const GuitarMinigameModal: React.FC = () => {
                     setStepIdx(0);
                     setCompletedSong(false);
                   }}
-                  className={`rounded-lg px-3 py-1 transition ${
+                  className={`rounded-lg px-2.5 py-1 transition ${
                     mode === 'guided' ? 'bg-warm-400 font-semibold text-dusk-950' : 'text-warm-200/70'
                   }`}
                 >
@@ -162,7 +185,7 @@ export const GuitarMinigameModal: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setMode('free')}
-                  className={`rounded-lg px-3 py-1 transition ${
+                  className={`rounded-lg px-2.5 py-1 transition ${
                     mode === 'free' ? 'bg-warm-400 font-semibold text-dusk-950' : 'text-warm-200/70'
                   }`}
                 >
@@ -179,79 +202,97 @@ export const GuitarMinigameModal: React.FC = () => {
             </div>
           </div>
 
-          {/* Badan Gitar Visual + 6 Senar Bergetar */}
-          <div className="px-6 pt-5 pb-6 space-y-5">
-            <div className="relative overflow-hidden rounded-2xl border border-warm-300/20 bg-gradient-to-r from-[#3a2417] via-[#593722] to-[#3a2417] px-6 py-6 shadow-inner">
-              {/* Lubang suara gitar */}
-              <div className="pointer-events-none absolute left-1/2 top-1/2 h-32 w-32 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-warm-300/35 bg-[#1b100a] shadow-inner" />
+          {/* Badan Gitar + Lirik (2 Kolom Mendatar pada Landscape HP agar 6 Akor Muat Penuh di Bawah!) */}
+          <div className={compact ? 'space-y-3 px-4 py-3' : 'space-y-5 px-6 pt-5 pb-6'}>
+            <div className={compact ? 'grid grid-cols-12 items-stretch gap-3' : 'space-y-5'}>
+              <div
+                className={`relative overflow-hidden rounded-2xl border border-warm-300/20 bg-gradient-to-r from-[#3a2417] via-[#593722] to-[#3a2417] shadow-inner ${
+                  compact ? 'col-span-5 flex flex-col justify-center px-4 py-3' : 'px-6 py-6'
+                }`}
+              >
+                {/* Lubang suara gitar */}
+                <div
+                  className={`pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-warm-300/35 bg-[#1b100a] shadow-inner ${
+                    compact ? 'h-20 w-20' : 'h-32 w-32'
+                  }`}
+                />
 
-              {/* 6 Senar Akustik */}
-              <div className="relative z-10 space-y-2.5">
-                {[0, 1, 2, 3, 4, 5].map((s) => (
-                  <div
-                    key={s}
-                    className={`h-[1.5px] w-full rounded-full transition-all duration-150 ${
-                      vibrating
-                        ? 'bg-warm-200 shadow-[0_0_10px_#ffdf9e] scale-y-150'
-                        : 'bg-warm-200/55'
-                    }`}
-                    style={{
-                      transform: vibrating
-                        ? `translateY(${(s % 2 === 0 ? 1 : -1) * 1.5}px)`
-                        : 'none',
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Lirik & Progres Lagu "Pulang" */}
-            <div className="rounded-xl border border-warm-100/10 bg-dusk-950/70 px-5 py-4 text-center">
-              {mode === 'guided' && (
-                <div className="mb-2 flex items-center justify-center gap-1.5">
-                  {SONG_SEQUENCE.map((_, idx) => (
-                    <span
-                      key={idx}
-                      className={`h-1.5 w-6 rounded-full transition ${
-                        completedSong || idx < stepIdx
-                          ? 'bg-warm-400'
-                          : idx === stepIdx
-                            ? 'bg-warm-200 animate-pulse'
-                            : 'bg-warm-100/15'
+                {/* 6 Senar Akustik */}
+                <div className={`relative z-10 ${compact ? 'space-y-2' : 'space-y-2.5'}`}>
+                  {[0, 1, 2, 3, 4, 5].map((s) => (
+                    <div
+                      key={s}
+                      className={`h-[1.5px] w-full rounded-full transition-all duration-150 ${
+                        vibrating
+                          ? 'bg-warm-200 shadow-[0_0_10px_#ffdf9e] scale-y-150'
+                          : 'bg-warm-200/55'
                       }`}
+                      style={{
+                        transform: vibrating
+                          ? `translateY(${(s % 2 === 0 ? 1 : -1) * 1.5}px)`
+                          : 'none',
+                      }}
                     />
                   ))}
                 </div>
-              )}
-              <p className="font-serif italic text-sm md:text-base text-warm-100">
-                {mode === 'guided'
-                  ? activeLyric
-                  : lastPlayedIdx !== null
-                    ? `Akor ${CHORDS[lastPlayedIdx].name} (${CHORDS[lastPlayedIdx].mood}) bergetar lembut di ruang kedai...`
-                    : 'Petik senar sesukamu dengan tombol [1] hingga [6].'}
-              </p>
+              </div>
 
-              {completedSong && mode === 'guided' && (
-                <div className="mt-3 flex items-center justify-center gap-3 text-xs text-warm-300 animate-fadeIn">
-                  <span className="flex items-center gap-1 font-medium">
-                    <Sparkles className="h-3.5 w-3.5" /> Bait lagu "Pulang" selesai dimainkan!
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setStepIdx(0);
-                      setCompletedSong(false);
-                    }}
-                    className="flex items-center gap-1 rounded-lg border border-warm-300/30 px-2.5 py-1 text-[11px] hover:bg-warm-400/15"
-                  >
-                    <RotateCcw className="h-3 w-3" /> Mainkan Lagi
-                  </button>
-                </div>
-              )}
+              {/* Lirik & Progres Lagu "Pulang" */}
+              <div
+                className={`flex flex-col justify-center rounded-xl border border-warm-100/10 bg-dusk-950/70 text-center ${
+                  compact ? 'col-span-7 px-3.5 py-2.5' : 'px-5 py-4'
+                }`}
+              >
+                {mode === 'guided' && (
+                  <div className="mb-1.5 flex items-center justify-center gap-1.5">
+                    {SONG_SEQUENCE.map((_, idx) => (
+                      <span
+                        key={idx}
+                        className={`h-1.5 rounded-full transition ${
+                          compact ? 'w-4' : 'w-6'
+                        } ${
+                          completedSong || idx < stepIdx
+                            ? 'bg-warm-400'
+                            : idx === stepIdx
+                              ? 'bg-warm-200 animate-pulse'
+                              : 'bg-warm-100/15'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                )}
+                <p className={`font-serif italic text-warm-100 ${compact ? 'text-xs sm:text-sm' : 'text-sm md:text-base'}`}>
+                  {mode === 'guided'
+                    ? activeLyric
+                    : lastPlayedIdx !== null
+                      ? `Akor ${CHORDS[lastPlayedIdx].name} (${CHORDS[lastPlayedIdx].mood}) bergetar lembut di ruang kedai...`
+                      : isMobile
+                        ? 'Ketuk tombol akor di bawah untuk memetik senar gitar.'
+                        : 'Petik senar sesukamu dengan tombol [1] hingga [6].'}
+                </p>
+
+                {completedSong && mode === 'guided' && (
+                  <div className="mt-2 flex flex-wrap items-center justify-center gap-2 text-xs text-warm-300 animate-fadeIn">
+                    <span className="flex items-center gap-1 font-medium">
+                      <Sparkles className="h-3.5 w-3.5" /> Bait lagu "Pulang" selesai!
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setStepIdx(0);
+                        setCompletedSong(false);
+                      }}
+                      className="flex items-center gap-1 rounded-lg border border-warm-300/30 px-2.5 py-1 text-[11px] hover:bg-warm-400/15"
+                    >
+                      <RotateCcw className="h-3 w-3" /> Mainkan Lagi
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* 6 Tombol Akor */}
-            <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-6">
+            {/* 6 Tombol Akor — Penuh 6 Kolom Lebar untuk Jempol di Landscape HP */}
+            <div className={`grid gap-2 ${compact ? 'grid-cols-6' : 'grid-cols-3 gap-2.5 sm:grid-cols-6'}`}>
               {CHORDS.map((ch) => {
                 const isTarget = targetChordIdx === ch.idx;
                 const isLast = lastPlayedIdx === ch.idx && vibrating;
@@ -260,7 +301,9 @@ export const GuitarMinigameModal: React.FC = () => {
                     key={ch.key}
                     type="button"
                     onClick={() => playChord(ch.idx)}
-                    className={`flex flex-col items-center rounded-xl border px-3 py-3 transition ${
+                    className={`flex flex-col items-center rounded-xl border transition active:scale-95 ${
+                      compact ? 'px-2 py-2.5' : 'px-3 py-3'
+                    } ${
                       isTarget
                         ? 'border-warm-300 bg-warm-400 text-dusk-950 shadow-lg shadow-warm-400/30 scale-[1.03]'
                         : isLast
@@ -268,16 +311,20 @@ export const GuitarMinigameModal: React.FC = () => {
                           : 'border-warm-100/15 bg-dusk-950/75 text-warm-100 hover:border-warm-300/50 hover:bg-dusk-800'
                     }`}
                   >
-                    <span
-                      className={`text-[10px] font-bold ${
-                        isTarget ? 'text-dusk-900' : 'text-warm-300/80'
-                      }`}
-                    >
-                      [{ch.key}]
+                    {!isMobile && (
+                      <span
+                        className={`text-[10px] font-bold ${
+                          isTarget ? 'text-dusk-900' : 'text-warm-300/80'
+                        }`}
+                      >
+                        [{ch.key}]
+                      </span>
+                    )}
+                    <span className={`font-serif font-semibold ${compact ? 'text-sm sm:text-base' : 'mt-1 text-base'}`}>
+                      {ch.name}
                     </span>
-                    <span className="mt-1 font-serif text-base font-semibold">{ch.name}</span>
                     <span
-                      className={`mt-0.5 text-[10px] ${
+                      className={`mt-0.5 text-[9px] sm:text-[10px] ${
                         isTarget ? 'text-dusk-950/80' : 'text-warm-200/55'
                       }`}
                     >
