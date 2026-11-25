@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import * as THREE from 'three';
 import { PHOTO_FILTER_BY_ID } from '../../data/photoFilters';
 import { useGameStore } from '../../store/useGameStore';
+import { detectIsMobileDevice } from '../../utils/mobileUtils';
 import { AfternoonAndCreativeLife } from './AfternoonAndCreativeLife';
 import { ArtisticAndStationDetails } from './ArtisticAndStationDetails';
 import { Atmosphere } from './Atmosphere';
@@ -26,6 +27,7 @@ import { NightNeighborhoodAndClock } from './NightNeighborhoodAndClock';
 import { OfficeLobbyLife } from './OfficeLobbyLife';
 import { ParkFountainPicnicAndJoggers } from './ParkFountainPicnicAndJoggers';
 import { ParkPlaygroundAndKoi } from './ParkPlaygroundAndKoi';
+import { PerformanceOptimizer } from './PerformanceOptimizer';
 import { PlayerController } from './PlayerController';
 import { PostEffects } from './PostEffects';
 import { RetroStreetAndParkSwing } from './RetroStreetAndParkSwing';
@@ -49,7 +51,9 @@ export const GameCanvas: React.FC = () => {
   const photoFilter = useGameStore((s) => s.photoFilter);
 
   const effectiveTime = screen === 'title' ? titlePreviewTime : timeOfDay;
-  const dpr = Math.max(0.7, Math.min(2, settings.resolutionScale));
+  const isMobile = detectIsMobileDevice();
+  const maxDpr = isMobile ? (settings.graphicsQuality === 'low' ? 0.95 : 1.15) : 2.0;
+  const dpr = Math.max(0.55, Math.min(maxDpr, settings.resolutionScale));
   const buWatiLampFixed = flags.includes('bu_wati_lamp_fixed');
   const pierLampFixed = flags.includes('pier_lamp_fixed');
 
@@ -62,18 +66,19 @@ export const GameCanvas: React.FC = () => {
         style={activeFilter && activeFilter.cssFilter !== 'none' ? { filter: activeFilter.cssFilter } : undefined}
       >
         <Canvas
-          shadows={settings.shadowQuality !== 'off'}
+          shadows={!isMobile && settings.shadowQuality !== 'off' ? true : settings.shadowQuality === 'sharp'}
           dpr={dpr}
-          camera={{ fov: 52, near: 0.2, far: 300, position: [-20, 4, 73] }}
+          camera={{ fov: isMobile ? 58 : 52, near: 0.25, far: isMobile ? 145 : 300, position: [-20, 4, 73] }}
           gl={{
-            antialias: settings.graphicsQuality !== 'low',
-            powerPreference: 'high-performance',
+            antialias: !isMobile && settings.graphicsQuality !== 'low',
+            powerPreference: isMobile ? 'default' : 'high-performance',
             preserveDrawingBuffer: true,
             toneMapping: THREE.ACESFilmicToneMapping,
             toneMappingExposure: settings.exposure,
           }}
         >
           <Suspense fallback={null}>
+            <PerformanceOptimizer settings={settings} timeOfDay={effectiveTime} />
             <Atmosphere timeOfDay={effectiveTime} settings={settings} />
             <NatureAndRainbow timeOfDay={effectiveTime} settings={settings} />
             <CityGeometry

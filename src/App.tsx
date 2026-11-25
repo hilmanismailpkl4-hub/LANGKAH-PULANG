@@ -15,6 +15,8 @@ import { LittleLibraryModal } from './components/ui/LittleLibraryModal';
 import { LoadingScreenOverlay } from './components/ui/LoadingScreenOverlay';
 import { MailboxModal } from './components/ui/MailboxModal';
 import { MapJournalModal } from './components/ui/MapJournalModal';
+import { MobileLandscapeOverlay } from './components/ui/MobileLandscapeOverlay';
+import { MobileTouchControls } from './components/ui/MobileTouchControls';
 import { NewsstandModal } from './components/ui/NewsstandModal';
 import { PauseSettingsModal } from './components/ui/PauseSettingsModal';
 import { PhoneNotification } from './components/ui/PhoneNotification';
@@ -56,13 +58,15 @@ export function App() {
   }, [tickPlayTime, saveCurrentGame]);
 
   return (
-    <main className="relative h-screen w-screen overflow-hidden bg-dusk-950">
+    <main className="relative h-[100dvh] w-[100dvw] overflow-hidden bg-dusk-950">
       {/* Dunia Kota 3D Modern */}
       <GameCanvas />
 
       {/* Seluruh UI dirender lewat React Portal dengan z-index tertinggi */}
       <TitleScreen />
       <GameHUD />
+      <MobileTouchControls />
+      <MobileLandscapeOverlay />
       <PhotoModeOverlay />
       <SmartphoneModal />
       <GuitarMinigameModal />

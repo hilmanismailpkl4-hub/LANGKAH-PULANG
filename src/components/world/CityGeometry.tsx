@@ -80,12 +80,13 @@ const LAMP_POSITIONS: [number, number, number][] = [
 /**
  * Pepohonan tropis berlapis (batang meruncing + 3 kanopi daun organik berbeda nuansa hijau).
  */
-const SwayingTrees: React.FC = () => {
+const SwayingTrees: React.FC<{ lowPerf?: boolean }> = ({ lowPerf = false }) => {
   const trunkRef = useRef<THREE.InstancedMesh>(null);
   const crownARef = useRef<THREE.InstancedMesh>(null);
   const crownBRef = useRef<THREE.InstancedMesh>(null);
   const crownCRef = useRef<THREE.InstancedMesh>(null);
   const dummy = useMemo(() => new THREE.Object3D(), []);
+  const lastUpdateRef = useRef(-1);
 
   React.useEffect(() => {
     if (!trunkRef.current) return;
@@ -105,6 +106,11 @@ const SwayingTrees: React.FC = () => {
     const cC = crownCRef.current;
     if (!cA || !cB || !cC) return;
     const t = clock.getElapsedTime();
+    // Pada mode Hemat HP / Rendah, batasi pembaruan matrix pohon ~12 fps agar CPU jauh lebih ringan!
+    if (lowPerf && lastUpdateRef.current >= 0 && t - lastUpdateRef.current < 0.085) {
+      return;
+    }
+    lastUpdateRef.current = t;
     for (let i = 0; i < TREE_POSITIONS.length; i++) {
       const [x, y, z, s] = TREE_POSITIONS[i];
       const sway = Math.sin(t * 1.15 + i * 0.85) * 0.055;
@@ -1464,7 +1470,7 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
         </group>
       ))}
 
-      <SwayingTrees />
+      <SwayingTrees lowPerf={settings.graphicsQuality === 'low'} />
       <StreetLamps lit={isEveningOrNight} glow={settings.cinematicGlow} />
     </group>
   );

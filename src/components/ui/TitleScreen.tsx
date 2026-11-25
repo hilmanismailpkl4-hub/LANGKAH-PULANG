@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BookOpen, Cloud, CloudOff, Play, Sliders, Sparkles, Trash2, User as UserIcon, X } from 'lucide-react';
+import { BookOpen, Cloud, CloudOff, Maximize2, Minimize2, Play, Sliders, Sparkles, Trash2, User as UserIcon, X } from 'lucide-react';
 import { unlockAudio } from '../../audio/audioContext';
 import { musicEngine } from '../../audio/musicEngine';
 import { sfxEngine } from '../../audio/sfxEngine';
@@ -14,6 +14,7 @@ import {
 } from '../../services/supabase';
 import { useGameStore } from '../../store/useGameStore';
 import { EndingId } from '../../types/game';
+import { requestLandscapeFullscreen, toggleFullscreenLandscape, useMobileViewport } from '../../utils/mobileUtils';
 import { Portal } from './Portal';
 
 const SLOT_IDS = ['slot_1', 'slot_2', 'slot_3'];
@@ -42,6 +43,7 @@ export const TitleScreen: React.FC = () => {
   const hideLoadingOverlay = useGameStore((s) => s.hideLoadingOverlay);
   const showToast = useGameStore((s) => s.showToast);
   const graphicsQuality = useGameStore((s) => s.settings.graphicsQuality);
+  const { isMobile, isCompactLandscape, isFullscreen } = useMobileViewport();
 
   const [showSlotPanel, setShowSlotPanel] = useState(false);
   const [creatingSlotId, setCreatingSlotId] = useState<string | null>(null);
@@ -186,33 +188,56 @@ export const TitleScreen: React.FC = () => {
   return (
     <Portal>
       <div
-        className="fixed inset-0 z-[9992] flex flex-col justify-between bg-gradient-to-t from-dusk-950/92 via-dusk-950/55 to-dusk-950/45 p-8 md:p-14 text-warm-50"
+        className={`fixed inset-0 z-[9992] flex flex-col justify-between overflow-y-auto subtle-scroll bg-gradient-to-t from-dusk-950/92 via-dusk-950/55 to-dusk-950/45 text-warm-50 ${
+          isCompactLandscape ? 'px-5 py-3.5' : 'p-6 md:p-14'
+        }`}
+        style={
+          isMobile
+            ? {
+                paddingLeft: 'max(18px, env(safe-area-inset-left))',
+                paddingRight: 'max(18px, env(safe-area-inset-right))',
+              }
+            : undefined
+        }
         onClick={() => {
           unlockAudio();
           musicEngine.start();
         }}
       >
         {/* Baris Atas */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5 text-xs tracking-[0.2em] uppercase text-warm-200/80">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2 text-[10px] sm:text-xs tracking-[0.18em] uppercase text-warm-200/80">
             <span className="h-2 w-2 rounded-full bg-warm-400 animate-gentlePulse" />
-            <span>Cerita Solo 3D · Laptop & Desktop</span>
+            <span>{isMobile ? 'Cerita Solo 3D · Landscape HP' : 'Cerita Solo 3D · HP, Laptop & Desktop'}</span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
+            {isMobile && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  void toggleFullscreenLandscape();
+                }}
+                className="flex items-center gap-1.5 rounded-full border border-warm-300/35 bg-dusk-900/75 px-3 py-1.5 text-[11px] font-medium text-warm-100 backdrop-blur-md"
+              >
+                {isFullscreen ? <Minimize2 className="h-3.5 w-3.5 text-warm-300" /> : <Maximize2 className="h-3.5 w-3.5 text-warm-300" />}
+                <span>{isFullscreen ? 'Keluar Penuh' : 'Layar Penuh'}</span>
+              </button>
+            )}
             <button
               type="button"
               onClick={() => {
                 handleStartInteraction();
                 setQuickGraphicsOpen(true);
               }}
-              className="flex items-center gap-2 rounded-full border border-warm-300/35 bg-dusk-900/75 px-4 py-2 text-xs font-medium text-warm-100 backdrop-blur-md transition hover:border-warm-300/70 hover:bg-dusk-800/85"
+              className="flex items-center gap-1.5 rounded-full border border-warm-300/35 bg-dusk-900/75 px-3 py-1.5 text-[11px] sm:text-xs font-medium text-warm-100 backdrop-blur-md transition hover:border-warm-300/70 hover:bg-dusk-800/85"
             >
               <Sliders className="h-3.5 w-3.5 text-warm-300" />
               <span>
                 Grafis:{' '}
                 {graphicsQuality === 'low'
-                  ? 'Rendah'
+                  ? 'Hemat HP'
                   : graphicsQuality === 'medium'
                     ? 'Sedang'
                     : graphicsQuality === 'high'
@@ -269,29 +294,36 @@ export const TitleScreen: React.FC = () => {
         </div>
 
         {/* Bagian Tengah: Judul Sinematik */}
-        <div className="max-w-2xl space-y-6 animate-fadeIn">
-          <div className="space-y-3">
-            <p className="font-serif italic text-warm-300/95 text-base md:text-lg tracking-wide">
+        <div className={`max-w-2xl animate-fadeIn ${isCompactLandscape ? 'space-y-3 my-2' : 'space-y-6'}`}>
+          <div className={isCompactLandscape ? 'space-y-1.5' : 'space-y-3'}>
+            <p className={`font-serif italic text-warm-300/95 tracking-wide ${isCompactLandscape ? 'text-sm' : 'text-base md:text-lg'}`}>
               Steps Home
             </p>
-            <h1 className="font-serif text-5xl md:text-7xl font-medium tracking-tight text-warm-50 drop-shadow-lg">
+            <h1
+              className={`font-serif font-medium tracking-tight text-warm-50 drop-shadow-lg ${
+                isCompactLandscape ? 'text-4xl' : 'text-5xl md:text-7xl'
+              }`}
+            >
               LANGKAH PULANG
             </h1>
-            <p className="max-w-xl text-sm md:text-base leading-relaxed text-warm-100/80">
+            <p className={`max-w-xl leading-relaxed text-warm-100/80 ${isCompactLandscape ? 'text-xs' : 'text-sm md:text-base'}`}>
               Kisah tentang Damar Pratama—seorang ayah muda yang berjalan menyusuri kota modern demi
               menemukan kembali kejujuran, jati diri, dan arti sebuah rumah yang menunggunya pulang.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 pt-2">
+          <div className="flex flex-wrap items-center gap-2.5 pt-1">
             {latestSlot && (
               <button
                 type="button"
                 onClick={() => {
                   handleStartInteraction();
+                  if (isMobile) void requestLandscapeFullscreen();
                   loadSlot(latestSlot.slotId);
                 }}
-                className="flex items-center gap-3 rounded-xl bg-warm-400 px-6 py-3.5 text-sm font-semibold text-dusk-950 shadow-lg shadow-warm-500/20 transition hover:bg-warm-300"
+                className={`flex items-center gap-2.5 rounded-xl bg-warm-400 font-semibold text-dusk-950 shadow-lg shadow-warm-500/20 transition hover:bg-warm-300 ${
+                  isCompactLandscape ? 'px-4 py-2.5 text-xs' : 'px-6 py-3.5 text-sm'
+                }`}
               >
                 <Play className="h-4 w-4 fill-current" />
                 <span>Lanjutkan · {latestSlot.journalName} (Bab {latestSlot.chapter})</span>
@@ -302,9 +334,12 @@ export const TitleScreen: React.FC = () => {
               type="button"
               onClick={() => {
                 handleStartInteraction();
+                if (isMobile) void requestLandscapeFullscreen();
                 setShowSlotPanel(true);
               }}
-              className={`flex items-center gap-2.5 rounded-xl px-6 py-3.5 text-sm font-medium transition backdrop-blur-md ${
+              className={`flex items-center gap-2 rounded-xl font-medium transition backdrop-blur-md ${
+                isCompactLandscape ? 'px-4 py-2.5 text-xs' : 'px-6 py-3.5 text-sm'
+              } ${
                 latestSlot
                   ? 'border border-warm-200/30 bg-dusk-900/70 text-warm-50 hover:border-warm-300/60 hover:bg-dusk-800/80'
                   : 'bg-warm-400 text-dusk-950 font-semibold shadow-lg shadow-warm-500/20 hover:bg-warm-300'
@@ -317,26 +352,49 @@ export const TitleScreen: React.FC = () => {
         </div>
 
         {/* Baris Bawah: Panduan Kontrol Ringkas */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-warm-100/10 pt-5 text-xs text-warm-200/70">
-          <div className="flex flex-wrap items-center gap-5">
-            <span>
-              <strong className="text-warm-100">WASD</strong> Berjalan
-            </span>
-            <span>
-              <strong className="text-warm-100">Shift</strong> Jalan Cepat
-            </span>
-            <span>
-              <strong className="text-warm-100">Mouse Drag / Klik 2x</strong> Kamera
-            </span>
-            <span>
-              <strong className="text-warm-100">E</strong> Bicara & Periksa
-            </span>
-            <span>
-              <strong className="text-warm-100">M / Tab</strong> Peta & Catatan
-            </span>
-          </div>
+        <div
+          className={`flex flex-wrap items-center justify-between gap-2 border-t border-warm-100/10 text-warm-200/70 ${
+            isCompactLandscape ? 'pt-2.5 text-[10px]' : 'pt-5 text-xs'
+          }`}
+        >
+          {isMobile ? (
+            <div className="flex flex-wrap items-center gap-3">
+              <span>
+                <strong className="text-warm-100">Joystick Kiri</strong> Berjalan / Kemudi
+              </span>
+              <span>
+                <strong className="text-warm-100">Geser Layar</strong> Putar Kamera
+              </span>
+              <span>
+                <strong className="text-warm-100">Cubit 2 Jari</strong> Zoom
+              </span>
+              <span>
+                <strong className="text-warm-100">Tombol Kanan</strong> Interaksi
+              </span>
+            </div>
+          ) : (
+            <div className="flex flex-wrap items-center gap-5">
+              <span>
+                <strong className="text-warm-100">WASD</strong> Berjalan
+              </span>
+              <span>
+                <strong className="text-warm-100">Shift</strong> Jalan Cepat
+              </span>
+              <span>
+                <strong className="text-warm-100">Mouse Drag / Klik 2x</strong> Kamera
+              </span>
+              <span>
+                <strong className="text-warm-100">E</strong> Bicara & Periksa
+              </span>
+              <span>
+                <strong className="text-warm-100">M / Tab</strong> Peta & Catatan
+              </span>
+            </div>
+          )}
           <span className="font-serif italic text-warm-200/60">
-            Disarankan menggunakan headphone untuk suasana paling hangat.
+            {isMobile
+              ? 'Mode Landscape & Hemat GPU aktif otomatis agar lancar di HP.'
+              : 'Disarankan menggunakan headphone untuk suasana paling hangat.'}
           </span>
         </div>
 

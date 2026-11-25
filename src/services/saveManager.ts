@@ -1,9 +1,11 @@
 import { EndingId, GameSettings, GraphicsQuality, SaveSlotData } from '../types/game';
+import { detectIsMobileDevice } from '../utils/mobileUtils';
 import { deleteCloudSave, fetchCloudSaves, pushCloudSave } from './supabase';
 
 const SLOTS_STORAGE_KEY = 'langkah_pulang_slots_v1';
 const SETTINGS_STORAGE_KEY = 'langkah_pulang_settings_v1';
 const ENDINGS_STORAGE_KEY = 'langkah_pulang_endings_v1';
+const MOBILE_OPT_FLAG_KEY = 'langkah_pulang_mobile_opt_v1';
 
 export const GRAPHICS_PRESETS: Record<
   GraphicsQuality,
@@ -21,7 +23,7 @@ export const GRAPHICS_PRESETS: Record<
 > = {
   low: {
     graphicsQuality: 'low',
-    resolutionScale: 0.85,
+    resolutionScale: 0.78,
     shadowQuality: 'off',
     cinematicGlow: false,
     bloomIntensity: 0,
@@ -75,12 +77,44 @@ export const DEFAULT_SETTINGS: GameSettings = {
 };
 
 export function loadLocalSettings(): GameSettings {
+  const isMobile = detectIsMobileDevice();
+  const baseDefaults: GameSettings = isMobile
+    ? {
+        ...DEFAULT_SETTINGS,
+        ...GRAPHICS_PRESETS.low,
+        resolutionScale: 0.78,
+        exposure: 1.12,
+      }
+    : { ...DEFAULT_SETTINGS };
+
   try {
     const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
-    if (!raw) return { ...DEFAULT_SETTINGS };
-    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+    if (!raw) {
+      if (isMobile) {
+        localStorage.setItem(MOBILE_OPT_FLAG_KEY, '1');
+      }
+      return baseDefaults;
+    }
+    const merged: GameSettings = { ...baseDefaults, ...JSON.parse(raw) };
+
+    // Migrasi otomatis satu kali untuk pemain HP lama agar langsung ringan & bebas lag
+    if (isMobile && !localStorage.getItem(MOBILE_OPT_FLAG_KEY)) {
+      localStorage.setItem(MOBILE_OPT_FLAG_KEY, '1');
+      if (merged.graphicsQuality === 'high' || merged.graphicsQuality === 'ultra') {
+        const optimized: GameSettings = {
+          ...merged,
+          ...GRAPHICS_PRESETS.low,
+          resolutionScale: 0.78,
+          exposure: 1.12,
+        };
+        localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(optimized));
+        return optimized;
+      }
+    }
+
+    return merged;
   } catch {
-    return { ...DEFAULT_SETTINGS };
+    return baseDefaults;
   }
 }
 

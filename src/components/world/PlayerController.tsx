@@ -17,6 +17,7 @@ import {
 } from '../../data/worldLocations';
 import { playerRuntime } from '../../store/playerRuntime';
 import { useGameStore } from '../../store/useGameStore';
+import { detectIsMobileDevice } from '../../utils/mobileUtils';
 import { HumanModel } from './HumanModel';
 
 export const PlayerController: React.FC = () => {
@@ -32,6 +33,9 @@ export const PlayerController: React.FC = () => {
   const keysRef = useRef<Record<string, boolean>>({});
   const isDraggingRef = useRef(false);
   const lastMouseRef = useRef({ x: 0, y: 0 });
+  const touchCamIdRef = useRef<number | null>(null);
+  const lastTouchRef = useRef({ x: 0, y: 0 });
+  const pinchDistRef = useRef<number | null>(null);
   const zoomRef = useRef(5.2);
   const velocityRef = useRef({ x: 0, z: 0 });
   const strideTimerRef = useRef(0);
@@ -569,6 +573,96 @@ export const PlayerController: React.FC = () => {
     const onBlur = () => {
       keysRef.current = {};
       isDraggingRef.current = false;
+      touchCamIdRef.current = null;
+      pinchDistRef.current = null;
+      playerRuntime.touchInput.moveX = 0;
+      playerRuntime.touchInput.moveZ = 0;
+    };
+
+    const isCameraBlockedForTouch = () => {
+      const state = useGameStore.getState();
+      return (
+        state.screen !== 'playing' ||
+        Boolean(state.activeDialogue) ||
+        state.isMapJournalOpen ||
+        state.isPauseOpen ||
+        state.isQuickGraphicsOpen ||
+        state.isPhoneOpen ||
+        state.isGuitarOpen ||
+        Boolean(state.activeCulinarySpot) ||
+        state.isWardrobeOpen ||
+        state.isLittleLibraryOpen ||
+        state.isBookStallOpen ||
+        state.isKitchenOpen ||
+        state.isPhotoAlbumOpen ||
+        state.isFridgeNotesOpen ||
+        state.isNewsstandOpen ||
+        state.isMailboxOpen ||
+        state.isRtBoardOpen ||
+        state.isTelescopeOpen
+      );
+    };
+
+    const onTouchStart = (e: TouchEvent) => {
+      if (isCameraBlockedForTouch()) return;
+      if (e.touches.length === 2) {
+        const a = e.touches[0];
+        const b = e.touches[1];
+        pinchDistRef.current = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+        touchCamIdRef.current = null;
+        return;
+      }
+      if (touchCamIdRef.current === null && e.changedTouches.length > 0) {
+        const t = e.changedTouches[0];
+        touchCamIdRef.current = t.identifier;
+        lastTouchRef.current = { x: t.clientX, y: t.clientY };
+      }
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (isCameraBlockedForTouch()) return;
+      // Cubit dua jari untuk zoom kamera halus di layar HP
+      if (e.touches.length === 2 && pinchDistRef.current !== null) {
+        e.preventDefault();
+        const a = e.touches[0];
+        const b = e.touches[1];
+        const dist = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+        const delta = pinchDistRef.current - dist;
+        pinchDistRef.current = dist;
+        zoomRef.current = THREE.MathUtils.clamp(zoomRef.current + delta * 0.015, 2.8, 12.0);
+        return;
+      }
+      if (touchCamIdRef.current === null) return;
+      for (let i = 0; i < e.changedTouches.length; i++) {
+        const t = e.changedTouches[i];
+        if (t.identifier === touchCamIdRef.current) {
+          e.preventDefault();
+          const dx = t.clientX - lastTouchRef.current.x;
+          const dy = t.clientY - lastTouchRef.current.y;
+          lastTouchRef.current = { x: t.clientX, y: t.clientY };
+          const sens = 0.0056 * useGameStore.getState().settings.mouseSensitivity;
+          playerRuntime.cameraYaw -= dx * sens;
+          playerRuntime.cameraPitch = THREE.MathUtils.clamp(
+            playerRuntime.cameraPitch + dy * sens * 0.85,
+            0.06,
+            0.95,
+          );
+          break;
+        }
+      }
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      if (e.touches.length < 2) {
+        pinchDistRef.current = null;
+      }
+      if (touchCamIdRef.current === null) return;
+      for (let i = 0; i < e.changedTouches.length; i++) {
+        if (e.changedTouches[i].identifier === touchCamIdRef.current) {
+          touchCamIdRef.current = null;
+          break;
+        }
+      }
     };
 
     window.addEventListener('keydown', onKeyDown);
@@ -579,6 +673,10 @@ export const PlayerController: React.FC = () => {
     dom.addEventListener('mousedown', onMouseDown);
     dom.addEventListener('dblclick', onDoubleClick);
     dom.addEventListener('wheel', onWheel, { passive: true });
+    dom.addEventListener('touchstart', onTouchStart, { passive: true });
+    dom.addEventListener('touchmove', onTouchMove, { passive: false });
+    dom.addEventListener('touchend', onTouchEnd, { passive: true });
+    dom.addEventListener('touchcancel', onTouchEnd, { passive: true });
 
     return () => {
       sfxEngine.setScooterEngine(false, 0);
@@ -590,6 +688,10 @@ export const PlayerController: React.FC = () => {
       dom.removeEventListener('mousedown', onMouseDown);
       dom.removeEventListener('dblclick', onDoubleClick);
       dom.removeEventListener('wheel', onWheel);
+      dom.removeEventListener('touchstart', onTouchStart);
+      dom.removeEventListener('touchmove', onTouchMove);
+      dom.removeEventListener('touchend', onTouchEnd);
+      dom.removeEventListener('touchcancel', onTouchEnd);
     };
   }, [gl]);
 
@@ -640,9 +742,10 @@ export const PlayerController: React.FC = () => {
       }
       return;
     }
-    if (Math.abs(pCam.fov - 52) > 0.06) {
-      pCam.fov = THREE.MathUtils.lerp(pCam.fov, 52, Math.min(1, dt * 8));
-      if (Math.abs(pCam.fov - 52) <= 0.08) pCam.fov = 52;
+    const baseFov = detectIsMobileDevice() ? 58 : 52;
+    if (Math.abs(pCam.fov - baseFov) > 0.06) {
+      pCam.fov = THREE.MathUtils.lerp(pCam.fov, baseFov, Math.min(1, dt * 8));
+      if (Math.abs(pCam.fov - baseFov) <= 0.08) pCam.fov = baseFov;
       pCam.updateProjectionMatrix();
     }
 
@@ -657,12 +760,13 @@ export const PlayerController: React.FC = () => {
         !store.isQuickGraphicsOpen &&
         !store.isPhotoMode;
 
-      const gas = canDrive && (keys['KeyW'] || keys['ArrowUp']) ? 1 : 0;
-      const brake = canDrive && (keys['KeyS'] || keys['ArrowDown']) ? 1 : 0;
-      const steerIn =
-        canDrive
-          ? (keys['KeyA'] || keys['ArrowLeft'] ? 1 : 0) - (keys['KeyD'] || keys['ArrowRight'] ? 1 : 0)
-          : 0;
+      const touch = playerRuntime.touchInput;
+      const gas = canDrive && (keys['KeyW'] || keys['ArrowUp'] || touch.moveZ < -0.18) ? 1 : 0;
+      const brake = canDrive && (keys['KeyS'] || keys['ArrowDown'] || touch.moveZ > 0.22) ? 1 : 0;
+      const kbSteer = (keys['KeyA'] || keys['ArrowLeft'] ? 1 : 0) - (keys['KeyD'] || keys['ArrowRight'] ? 1 : 0);
+      const steerIn = canDrive
+        ? THREE.MathUtils.clamp(kbSteer - touch.moveX, -1, 1)
+        : 0;
 
       sc.isBraking = brake > 0;
       sc.steer = THREE.MathUtils.lerp(sc.steer, steerIn, dt * 8);
@@ -799,12 +903,13 @@ export const PlayerController: React.FC = () => {
         !store.isQuickGraphicsOpen &&
         !store.isPhotoMode;
 
-      const pedalFwd = canRide && (keys['KeyW'] || keys['ArrowUp']) ? 1 : 0;
-      const brakeRev = canRide && (keys['KeyS'] || keys['ArrowDown']) ? 1 : 0;
-      const steerIn =
-        canRide
-          ? (keys['KeyA'] || keys['ArrowLeft'] ? 1 : 0) - (keys['KeyD'] || keys['ArrowRight'] ? 1 : 0)
-          : 0;
+      const touch = playerRuntime.touchInput;
+      const pedalFwd = canRide && (keys['KeyW'] || keys['ArrowUp'] || touch.moveZ < -0.18) ? 1 : 0;
+      const brakeRev = canRide && (keys['KeyS'] || keys['ArrowDown'] || touch.moveZ > 0.22) ? 1 : 0;
+      const kbSteer = (keys['KeyA'] || keys['ArrowLeft'] ? 1 : 0) - (keys['KeyD'] || keys['ArrowRight'] ? 1 : 0);
+      const steerIn = canRide
+        ? THREE.MathUtils.clamp(kbSteer - touch.moveX, -1, 1)
+        : 0;
 
       bk.steer = THREE.MathUtils.lerp(bk.steer, steerIn, dt * 9);
 
@@ -1085,16 +1190,24 @@ export const PlayerController: React.FC = () => {
     let moveX = 0;
     let moveZ = 0;
     const keys = keysRef.current;
+    const touch = playerRuntime.touchInput;
 
     if (canControl) {
       if (keys['KeyW'] || keys['ArrowUp']) moveZ -= 1;
       if (keys['KeyS'] || keys['ArrowDown']) moveZ += 1;
       if (keys['KeyA'] || keys['ArrowLeft']) moveX -= 1;
       if (keys['KeyD'] || keys['ArrowRight']) moveX += 1;
+      moveX += touch.moveX;
+      moveZ += touch.moveZ;
     }
 
-    const hasInput = moveX !== 0 || moveZ !== 0;
-    const isRunning = hasInput && Boolean(keys['ShiftLeft'] || keys['ShiftRight']);
+    const inputMag = Math.hypot(moveX, moveZ);
+    const hasInput = inputMag > 0.08;
+    const isRunning =
+      hasInput &&
+      (Boolean(keys['ShiftLeft'] || keys['ShiftRight']) ||
+        touch.sprint ||
+        Math.hypot(touch.moveX, touch.moveZ) > 0.86);
 
     let desiredVx = 0;
     let desiredVz = 0;

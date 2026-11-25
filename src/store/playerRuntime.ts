@@ -142,6 +142,13 @@ export const playerRuntime = {
   trainSpeed: 12,
   trainAtPlatform: false,
 
+  // Input kontrol sentuh layar HP (Virtual Joystick kiri + tombol Lari)
+  touchInput: {
+    moveX: 0,
+    moveZ: 0,
+    sprint: false,
+  },
+
   // Posisi real-time Nadia & Kira (tetap akurat baik di rumah maupun saat jalan sore bersama!)
   companions: {
     nadia: { pos: [-16.2, 0.08, 66.2] as [number, number, number], yaw: -0.9 },
@@ -161,6 +168,8 @@ export function setRuntimePosition(pos: [number, number, number], rot?: number) 
   playerRuntime.scooter.speed = 0;
   playerRuntime.bicycle.isRiding = false;
   playerRuntime.bicycle.speed = 0;
+  playerRuntime.touchInput.moveX = 0;
+  playerRuntime.touchInput.moveZ = 0;
   playerRuntime.teleportPending = { pos: [pos[0], pos[1], pos[2]], rot };
   playerRuntime.companions.snapPending = true;
 }

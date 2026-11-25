@@ -3,6 +3,7 @@ import { ChevronRight, RotateCcw, Volume2, VolumeX } from 'lucide-react';
 import { voiceManager } from '../../audio/voiceManager';
 import { CHARACTERS } from '../../data/characters';
 import { useGameStore } from '../../store/useGameStore';
+import { useMobileViewport } from '../../utils/mobileUtils';
 import { Portal } from './Portal';
 
 export const DialogueOverlay: React.FC = () => {
@@ -15,6 +16,8 @@ export const DialogueOverlay: React.FC = () => {
   const updateSettings = useGameStore((s) => s.updateSettings);
 
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const { isMobile, isCompactLandscape } = useMobileViewport();
+  const compact = isMobile || isCompactLandscape;
 
   useEffect(() => {
     return voiceManager.onSpeakingChange(setIsSpeaking);
@@ -45,25 +48,31 @@ export const DialogueOverlay: React.FC = () => {
 
   return (
     <Portal>
-      <div className="fixed inset-0 z-[9995] flex flex-col justify-end bg-gradient-to-t from-dusk-950/88 via-dusk-950/20 to-transparent p-4 md:p-8">
-        <div className="mx-auto w-full max-w-3xl space-y-3 animate-fadeIn">
+      <div
+        className={`fixed inset-0 z-[9995] flex flex-col justify-end bg-gradient-to-t from-dusk-950/88 via-dusk-950/20 to-transparent ${
+          compact ? 'px-4 py-2.5' : 'p-4 md:p-8'
+        }`}
+      >
+        <div className={`mx-auto w-full max-w-3xl animate-fadeIn ${compact ? 'space-y-1.5' : 'space-y-3'}`}>
           {/* Pilihan Dialog Bercabang (jika ada) */}
           {visibleChoices.length > 0 && (
-            <div className="space-y-2 pb-1">
+            <div className={`space-y-1.5 pb-0.5 ${compact ? 'max-h-[42dvh] overflow-y-auto subtle-scroll' : ''}`}>
               {visibleChoices.map((choice, idx) => (
                 <button
                   key={choice.id}
                   type="button"
                   onClick={() => chooseDialogueOption(choice)}
-                  className="group flex w-full items-center justify-between gap-4 rounded-xl border border-warm-200/25 bg-dusk-900/92 px-5 py-3.5 text-left shadow-lg backdrop-blur-md transition hover:border-warm-300/75 hover:bg-dusk-800/95"
+                  className={`group flex w-full items-center justify-between gap-3 rounded-xl border border-warm-200/25 bg-dusk-900/92 text-left shadow-lg backdrop-blur-md transition hover:border-warm-300/75 hover:bg-dusk-800/95 ${
+                    compact ? 'px-3.5 py-2' : 'px-5 py-3.5'
+                  }`}
                 >
                   <div>
-                    <p className="text-sm font-medium text-warm-50 group-hover:text-warm-200">
-                      <span className="mr-2.5 text-xs text-warm-300/80">{idx + 1}.</span>
+                    <p className={`font-medium text-warm-50 group-hover:text-warm-200 ${compact ? 'text-xs' : 'text-sm'}`}>
+                      <span className="mr-2 text-xs text-warm-300/80">{idx + 1}.</span>
                       {choice.text}
                     </p>
                     {choice.subtext && (
-                      <p className="mt-0.5 pl-5 text-[11px] italic text-warm-200/60">{choice.subtext}</p>
+                      <p className="mt-0.5 pl-4 text-[10px] italic text-warm-200/60">{choice.subtext}</p>
                     )}
                   </div>
                   <ChevronRight className="h-4 w-4 shrink-0 text-warm-300/60 transition group-hover:translate-x-0.5 group-hover:text-warm-300" />
@@ -77,7 +86,9 @@ export const DialogueOverlay: React.FC = () => {
             onClick={() => {
               if (visibleChoices.length === 0) advanceDialogue();
             }}
-            className={`rounded-2xl border border-warm-100/15 bg-dusk-950/92 px-6 py-5 shadow-2xl backdrop-blur-xl ${
+            className={`rounded-2xl border border-warm-100/15 bg-dusk-950/92 shadow-2xl backdrop-blur-xl ${
+              compact ? 'px-4 py-3' : 'px-6 py-5'
+            } ${
               visibleChoices.length === 0 ? 'cursor-pointer hover:border-warm-200/30' : ''
             }`}
           >
@@ -134,9 +145,9 @@ export const DialogueOverlay: React.FC = () => {
             {/* Teks Dialog */}
             {settings.showSubtitles && (
               <p
-                className={`mt-2.5 text-base md:text-[17px] leading-relaxed ${
-                  isThought ? 'font-serif italic text-warm-100/90' : 'text-warm-50'
-                }`}
+                className={`leading-relaxed ${
+                  compact ? 'mt-1.5 text-sm' : 'mt-2.5 text-base md:text-[17px]'
+                } ${isThought ? 'font-serif italic text-warm-100/90' : 'text-warm-50'}`}
               >
                 {node.text}
               </p>
@@ -144,8 +155,8 @@ export const DialogueOverlay: React.FC = () => {
 
             {/* Footer Lanjut */}
             {visibleChoices.length === 0 && (
-              <div className="mt-4 flex items-center justify-end gap-1.5 text-[11px] text-warm-300/75">
-                <span>Klik atau tekan [Spasi] untuk lanjut</span>
+              <div className={`flex items-center justify-end gap-1.5 text-[11px] text-warm-300/75 ${compact ? 'mt-2' : 'mt-4'}`}>
+                <span>{isMobile ? 'Ketuk kotak dialog untuk lanjut' : 'Klik atau tekan [Spasi] untuk lanjut'}</span>
                 <ChevronRight className="h-3.5 w-3.5" />
               </div>
             )}

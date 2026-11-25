@@ -6,10 +6,10 @@ import { GraphicsQuality, ParticleDensity, ShadowQuality, TimeOfDay } from '../.
 import { Portal } from './Portal';
 
 const PRESET_LIST: { id: GraphicsQuality; label: string; desc: string }[] = [
-  { id: 'low', label: 'Rendah', desc: 'Paling ringan & hemat baterai' },
-  { id: 'medium', label: 'Sedang', desc: 'Seimbang untuk laptop standar' },
-  { id: 'high', label: 'Tinggi', desc: 'Bayangan tajam & refleksi penuh' },
-  { id: 'ultra', label: 'Ultra', desc: 'Ketajaman maksimum & sinematik' },
+  { id: 'low', label: 'Hemat HP / Anti-Lag', desc: 'Super lancar untuk HP & baterai hemat' },
+  { id: 'medium', label: 'Sedang', desc: 'Seimbang untuk HP flagship & laptop' },
+  { id: 'high', label: 'Tinggi', desc: 'Bayangan tajam & refleksi penuh (PC)' },
+  { id: 'ultra', label: 'Ultra', desc: 'Ketajaman maksimum & sinematik (PC)' },
 ];
 
 const TIME_PREVIEW_LIST: { id: TimeOfDay; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
@@ -143,7 +143,7 @@ export const GraphicsSettingsModal: React.FC = () => {
               </div>
               <input
                 type="range"
-                min={0.75}
+                min={0.55}
                 max={2.0}
                 step={0.05}
                 value={settings.resolutionScale}
