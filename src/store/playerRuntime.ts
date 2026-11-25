@@ -131,6 +131,8 @@ export const playerRuntime = {
   fishingBiteTimer: 0,
   fishingTugAnim: 0,
   trainZ: -80,
+  trainSpeed: 12,
+  trainAtPlatform: false,
 
   // Posisi real-time Nadia & Kira (tetap akurat baik di rumah maupun saat jalan sore bersama!)
   companions: {

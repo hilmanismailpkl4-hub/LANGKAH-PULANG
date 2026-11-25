@@ -11,6 +11,7 @@ import { CityLife } from './CityLife';
 import { FishingAndFlowerLibrary } from './FishingAndFlowerLibrary';
 import { HomeKitchenAndParkNature } from './HomeKitchenAndParkNature';
 import { HomeLivingAndBusStop } from './HomeLivingAndBusStop';
+import { NatureAndRainbow } from './NatureAndRainbow';
 import { ParkPlaygroundAndKoi } from './ParkPlaygroundAndKoi';
 import { PlayerController } from './PlayerController';
 import { PostEffects } from './PostEffects';
@@ -55,6 +56,7 @@ export const GameCanvas: React.FC = () => {
         >
           <Suspense fallback={null}>
             <Atmosphere timeOfDay={effectiveTime} settings={settings} />
+            <NatureAndRainbow timeOfDay={effectiveTime} settings={settings} />
             <CityGeometry
               timeOfDay={effectiveTime}
               buWatiLampFixed={buWatiLampFixed}

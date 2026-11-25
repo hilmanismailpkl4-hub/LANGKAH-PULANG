@@ -1,3 +1,4 @@
+import { playerRuntime } from '../store/playerRuntime';
 import { TimeOfDay } from '../types/game';
 import { getAudioContext } from './audioContext';
 
@@ -173,9 +174,10 @@ class SpatialAmbientEngine {
     const roofLevel = py > 14 ? 0.34 : 0.0001;
     this.rooftopGain?.gain.setTargetAtTime(roofLevel, now, 0.45);
 
-    // 4. Kereta Komuter: jarak 3D real-time ke posisi kereta di rel x=94.3
+    // 4. Kereta Komuter: jarak 3D real-time & kecepatan gerak (tenang saat berhenti di peron!)
     const distTrain = Math.hypot(px - 94.3, pz - trainZ);
-    const trainLevel = Math.max(0.0001, (1 - Math.min(1, distTrain / 46)) * 0.36);
+    const speedFactor = Math.max(0.08, Math.min(1, playerRuntime.trainSpeed / 12.5));
+    const trainLevel = Math.max(0.0001, (1 - Math.min(1, distTrain / 46)) * 0.36 * speedFactor);
     this.trainGain?.gain.setTargetAtTime(trainLevel, now, 0.25);
   }
 

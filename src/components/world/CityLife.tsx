@@ -387,6 +387,17 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
   const brakeHaloRefs = useRef<(THREE.Sprite | null)[]>([]);
   const wheelRefs = useRef<THREE.Group[][]>([]);
   const trainRef = useRef<THREE.Group>(null);
+  const trainDoorLRefs = useRef<(THREE.Mesh | null)[]>([]);
+  const trainDoorRRefs = useRef<(THREE.Mesh | null)[]>([]);
+  const trainStateRef = useRef({
+    z: -110,
+    speed: 14.0,
+    phase: 'approaching' as 'approaching' | 'boarding' | 'departing' | 'away',
+    dwellTimer: 0,
+    doorOpen: 0,
+    arriveBellPlayed: false,
+    departBellPlayed: false,
+  });
   const walkerPositionsRef = useRef<{ id: string; x: number; z: number; radius: number }[]>([]);
   const catTailRef = useRef<THREE.Mesh>(null);
   const catHeadRef = useRef<THREE.Group>(null);
@@ -557,11 +568,84 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
       playerRuntime.dynamicCarBoxes = nextBoxes;
     }
 
-    // === 2. KERETA KOMUTER STASIUN SENJA ===
+    // === 2. KERETA KOMUTER STASIUN SENJA (MELAMBAT, BERHENTI DI PERON + BEL + PINTU GESER!) ===
     if (trainRef.current) {
-      const cycle = ((t * 11) % 240) - 120;
-      trainRef.current.position.set(94.3, 1.35, cycle);
-      playerRuntime.trainZ = cycle;
+      const tr = trainStateRef.current;
+      const stopZ = -4.0;
+      const distPlayerToStation = Math.hypot(px - 84, pz - stopZ);
+      const nearStation = py < 12 && distPlayerToStation < 58;
+      const bellGain = Math.max(0.22, 1 - distPlayerToStation / 62);
+
+      if (tr.phase === 'approaching') {
+        const distToStop = stopZ - tr.z;
+        if (!tr.arriveBellPlayed && distToStop < 38) {
+          tr.arriveBellPlayed = true;
+          if (nearStation) sfxEngine.playStationBell('arrive', bellGain);
+        }
+        // Pengereman halus menjelang peron Stasiun Senja
+        const desiredSpd = distToStop > 40 ? 14.5 : Math.max(0.65, Math.sqrt(Math.max(0, distToStop) * 5.2));
+        tr.speed = THREE.MathUtils.lerp(tr.speed, desiredSpd, Math.min(1, dt * 4.5));
+        tr.z += tr.speed * dt;
+
+        if (tr.z >= stopZ) {
+          tr.z = stopZ;
+          tr.speed = 0;
+          tr.phase = 'boarding';
+          tr.dwellTimer = 7.6;
+          tr.departBellPlayed = false;
+        }
+      } else if (tr.phase === 'boarding') {
+        tr.speed = 0;
+        tr.dwellTimer -= dt;
+
+        // Buka pintu geser selama naik-turun penumpang, tutup saat bel keberangkatan berbunyi
+        if (tr.dwellTimer > 2.0) {
+          tr.doorOpen = THREE.MathUtils.lerp(tr.doorOpen, 1, Math.min(1, dt * 3.8));
+        } else {
+          if (!tr.departBellPlayed) {
+            tr.departBellPlayed = true;
+            if (nearStation) sfxEngine.playStationBell('depart', bellGain);
+          }
+          tr.doorOpen = THREE.MathUtils.lerp(tr.doorOpen, 0, Math.min(1, dt * 4.2));
+        }
+
+        if (tr.dwellTimer <= 0) {
+          tr.doorOpen = 0;
+          tr.phase = 'departing';
+        }
+      } else if (tr.phase === 'departing') {
+        tr.speed = Math.min(16.2, tr.speed + 4.4 * dt);
+        tr.z += tr.speed * dt;
+        if (tr.z > 132) {
+          tr.phase = 'away';
+          tr.dwellTimer = 4.2;
+          tr.speed = 0;
+        }
+      } else {
+        tr.dwellTimer -= dt;
+        if (tr.dwellTimer <= 0) {
+          tr.z = -126;
+          tr.speed = 14.5;
+          tr.phase = 'approaching';
+          tr.arriveBellPlayed = false;
+          tr.departBellPlayed = false;
+        }
+      }
+
+      // Animasi 6 pasang pintu geser di sisi peron kereta
+      const slide = tr.doorOpen * 0.56;
+      for (let di = 0; di < 6; di++) {
+        const dL = trainDoorLRefs.current[di];
+        const dR = trainDoorRRefs.current[di];
+        const baseZ = di % 2 === 0 ? -2.9 : 2.9;
+        if (dL) dL.position.z = baseZ - 0.34 - slide;
+        if (dR) dR.position.z = baseZ + 0.34 + slide;
+      }
+
+      trainRef.current.position.set(94.3, 1.35, tr.z);
+      playerRuntime.trainZ = tr.z;
+      playerRuntime.trainSpeed = tr.speed;
+      playerRuntime.trainAtPlatform = tr.phase === 'boarding';
     }
 
     // === 3. KUCING ORANYE "SORE" ===
@@ -780,10 +864,11 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
         })}
       </group>
 
-      {/* Kereta Komuter */}
-      <group ref={trainRef} position={[94.3, 1.35, -80]}>
+      {/* Kereta Komuter KRL Indonesia (3 Gerbong, Lampu Depan/Belakang, & Pintu Geser Peron) */}
+      <group ref={trainRef} position={[94.3, 1.35, -110]}>
         {[-13, 0, 13].map((cz, idx) => (
           <group key={`coach-${idx}`} position={[0, 0, cz]}>
+            {/* Badan Gerbong Putih-Silver + Garis Merah Khas KRL */}
             <mesh castShadow>
               <boxGeometry args={[2.75, 2.55, 12.2]} />
               <meshStandardMaterial color="#e0dcd2" roughness={0.35} metalness={0.25} />
@@ -792,15 +877,87 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
               <boxGeometry args={[2.79, 0.48, 12.26]} />
               <meshStandardMaterial color="#b24438" roughness={0.4} />
             </mesh>
-            <mesh position={[-1.39, 0.3, 0]} rotation={[0, -Math.PI / 2, 0]}>
-              <planeGeometry args={[10.5, 0.92]} />
+            {/* Jendela Gerbong Bercahaya Hangat */}
+            <mesh position={[-1.39, 0.36, 0]} rotation={[0, -Math.PI / 2, 0]}>
+              <planeGeometry args={[10.5, 0.86]} />
               <meshStandardMaterial
                 color="#ffebb8"
                 emissive="#ffc266"
-                emissiveIntensity={isLit ? 2.1 : 0.15}
+                emissiveIntensity={isLit ? 2.1 : 0.18}
                 roughness={0.2}
               />
             </mesh>
+
+            {/* 2 Pasang Pintu Geser Otomatis Sisi Peron (X = -1.40) + Rongga Kabin Hangat */}
+            {[-2.9, 2.9].map((doorZ, dSub) => {
+              const slotIdx = idx * 2 + dSub;
+              return (
+                <group key={`tdoor-${slotIdx}`}>
+                  {/* Bukaan Kabin Dalam Bercahaya saat Pintu Terbuka */}
+                  <mesh position={[-1.392, -0.08, doorZ]} rotation={[0, -Math.PI / 2, 0]}>
+                    <planeGeometry args={[1.3, 1.92]} />
+                    <meshStandardMaterial
+                      color="#ffe8b8"
+                      emissive="#ffca75"
+                      emissiveIntensity={isLit ? 1.85 : 0.55}
+                    />
+                  </mesh>
+                  {/* Daun Pintu Kiri */}
+                  <mesh
+                    ref={(el) => {
+                      trainDoorLRefs.current[slotIdx] = el;
+                    }}
+                    position={[-1.405, -0.08, doorZ - 0.34]}
+                  >
+                    <boxGeometry args={[0.04, 1.94, 0.66]} />
+                    <meshStandardMaterial color="#cbd2db" metalness={0.45} roughness={0.35} />
+                  </mesh>
+                  {/* Daun Pintu Kanan */}
+                  <mesh
+                    ref={(el) => {
+                      trainDoorRRefs.current[slotIdx] = el;
+                    }}
+                    position={[-1.405, -0.08, doorZ + 0.34]}
+                  >
+                    <boxGeometry args={[0.04, 1.94, 0.66]} />
+                    <meshStandardMaterial color="#cbd2db" metalness={0.45} roughness={0.35} />
+                  </mesh>
+                </group>
+              );
+            })}
+
+            {/* Lampu Depan Kabin Masinis (Gerbong Paling Depan +Z) */}
+            {idx === 2 && (
+              <>
+                {[-0.72, 0.72].map((hx, hi) => (
+                  <mesh key={`thl-${hi}`} position={[hx, -0.42, 6.13]}>
+                    <circleGeometry args={[0.2, 10]} />
+                    <meshStandardMaterial color="#fff8de" emissive="#ffe599" emissiveIntensity={3.5} />
+                  </mesh>
+                ))}
+                {isLit && settings.cinematicGlow && (
+                  <sprite position={[0, -0.35, 6.3]} scale={[4.2, 3.0, 1]}>
+                    <spriteMaterial
+                      map={textures.glowSprite}
+                      color="#ffe8a8"
+                      transparent
+                      opacity={0.75}
+                      blending={THREE.AdditiveBlending}
+                      depthWrite={false}
+                    />
+                  </sprite>
+                )}
+              </>
+            )}
+
+            {/* Lampu Merah Ekor Kereta (Gerbong Paling Belakang -Z) */}
+            {idx === 0 &&
+              [-0.78, 0.78].map((rx, ri) => (
+                <mesh key={`ttl-${ri}`} position={[rx, -0.45, -6.13]} rotation={[0, Math.PI, 0]}>
+                  <circleGeometry args={[0.16, 10]} />
+                  <meshStandardMaterial color="#ff473d" emissive="#ff2a1f" emissiveIntensity={3.0} />
+                </mesh>
+              ))}
           </group>
         ))}
       </group>

@@ -191,6 +191,7 @@ export const SmartphoneModal: React.FC = () => {
   const settings = useGameStore((s) => s.settings);
   const updateSettings = useGameStore((s) => s.updateSettings);
   const setFreeTimeOfDay = useGameStore((s) => s.setFreeTimeOfDay);
+  const rainbowActiveUntil = useGameStore((s) => s.rainbowActiveUntil);
   const umbrellaForcedOff = useGameStore((s) => s.umbrellaForcedOff);
   const toggleUmbrella = useGameStore((s) => s.toggleUmbrella);
   const isFamilyWalkActive = useGameStore((s) => s.isFamilyWalkActive);
@@ -1085,6 +1086,15 @@ export const SmartphoneModal: React.FC = () => {
                         </span>
                       </button>
                     )}
+                    {rainbowActiveUntil > Date.now() && (timeOfDay === 'morning' || timeOfDay === 'sunset') ? (
+                      <p className="mt-2.5 rounded-xl border border-amber-300/35 bg-gradient-to-r from-rose-500/15 via-amber-400/15 to-sky-400/15 px-3 py-1.5 text-[10px] leading-relaxed text-warm-100">
+                        Pelangi tipis sedang melengkung di langit barat di atas Danau Senja!
+                      </p>
+                    ) : timeOfDay === 'rain_dusk' ? (
+                      <p className="mt-2 text-[10px] leading-relaxed text-warm-200/65">
+                        Tips: Ubah cuaca ke Pagi atau Senja setelah hujan untuk melihat pelangi tipis di langit barat.
+                      </p>
+                    ) : null}
                   </div>
 
                   <div className="grid grid-cols-2 gap-2.5 text-xs">

@@ -153,6 +153,7 @@ interface GameStoreState {
   nadiaOutfitId: NadiaOutfitId;
   kiraOutfitId: KiraOutfitId;
   livingRoomTvChannel: 0 | 1 | 2 | 3;
+  rainbowActiveUntil: number;
   catFed: boolean;
   paperBoatsLaunched: number;
 
@@ -341,6 +342,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     nadiaOutfitId: 'terracotta',
     kiraOutfitId: 'sunshine',
     livingRoomTvChannel: 1,
+    rainbowActiveUntil: 0,
     catFed: false,
     paperBoatsLaunched: 0,
 
@@ -705,10 +707,41 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     },
 
     setFreeTimeOfDay: (time) => {
+      const prevTime = get().timeOfDay;
       sfxEngine.play('switch');
       const loc = getLocationAtPosition(playerRuntime.position);
       musicEngine.setContext(loc.musicMood, time);
-      set({ timeOfDay: time });
+
+      const rainJustCleared = prevTime === 'rain_dusk' && (time === 'morning' || time === 'sunset');
+      const nextRainbowUntil = rainJustCleared
+        ? Date.now() + 120000
+        : time === 'rain_dusk' || time === 'night'
+          ? 0
+          : get().rainbowActiveUntil;
+
+      set({ timeOfDay: time, rainbowActiveUntil: nextRainbowUntil });
+
+      if (rainJustCleared) {
+        sfxEngine.play('chime');
+        if (!get().flags.includes('saw_after_rain_rainbow')) {
+          get().applyEffect({
+            kejujuranDiri: 1,
+            setFlags: ['saw_after_rain_rainbow'],
+            journalEntry: {
+              id: 'je_after_rain_rainbow',
+              title: 'Pelangi Tipis Sehabis Hujan',
+              body: 'Begitu rintik hujan reda dan langit kembali terbuka, seberkas pelangi pastel tipis melengkung tenang di atas Danau Senja. Hal-hal baik sering kali hanya muncul setelah kita berani melewati hujan.',
+              chapter: get().chapter,
+            },
+          });
+        }
+        if (get().isFamilyWalkActive) {
+          get().playFamilyBanter(EVENT_FAMILY_BANTERS.after_rain_rainbow, 'fw_rainbow');
+        }
+        get().showToast('Hujan reda—lihat ke langit barat di atas Danau Senja, pelangi tipis mulai muncul!');
+        return;
+      }
+
       const labels: Record<TimeOfDay, string> = {
         morning: 'Pagi Cerah',
         sunset: 'Senja Keemasan',
@@ -1459,6 +1492,12 @@ export const useGameStore = create<GameStoreState>((set, get) => {
 
         const nextTimeOfDay = effect.setTimeOfDay ?? state.timeOfDay;
         const nextMainStep = effect.advanceMainStep ?? state.mainStepId;
+        const nextRainbowUntil =
+          state.timeOfDay === 'rain_dusk' && (nextTimeOfDay === 'morning' || nextTimeOfDay === 'sunset')
+            ? Date.now() + 120000
+            : nextTimeOfDay === 'rain_dusk' || nextTimeOfDay === 'night'
+              ? 0
+              : state.rainbowActiveUntil;
 
         return {
           emotions: nextEmotions,
@@ -1466,6 +1505,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
           sideQuests: nextSideQuests,
           journalEntries: nextJournal,
           timeOfDay: nextTimeOfDay,
+          rainbowActiveUntil: nextRainbowUntil,
           mainStepId: nextMainStep,
           phoneMessage: effect.phoneMessage ?? state.phoneMessage,
         };

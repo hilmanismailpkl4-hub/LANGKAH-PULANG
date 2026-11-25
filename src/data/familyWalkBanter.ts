@@ -266,4 +266,8 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'WAAAH!! Burung merpatinya datang semua makan remah roti dari Ayah!! Gemes bangettt!' },
     { speaker: 'nadia', text: 'Pelan-pelan geraknya ya Sayang, biar burungnya nggak kaget terbang lagi.' },
   ],
+  after_rain_rainbow: [
+    { speaker: 'kira', text: 'AYAAAH!! BUNDAAA!! Lihat ke langit barat di atas danau ada PELANGI!!' },
+    { speaker: 'nadia', text: 'Cantik banget ya, Mas... sehabis hujan reda, langit kota ini selalu terasa baru lagi.' },
+  ],
 };

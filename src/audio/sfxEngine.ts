@@ -162,6 +162,36 @@ class SfxEngine {
   }
 
   /**
+   * Bel peron Stasiun Senja (khas stasiun komuter Indonesia: melodi 3 nada kedatangan & bel peringatan keberangkatan).
+   */
+  public playStationBell(kind: 'arrive' | 'depart', distanceFactor = 1) {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume * Math.max(0.18, Math.min(1, distanceFactor));
+
+    if (kind === 'arrive') {
+      // Melodi ramah 3 nada kedatangan peron ("ding-dong-ding" hangat)
+      const chimeNotes = [
+        { freq: 659.25, t: 0.0, dur: 0.48 },
+        { freq: 523.25, t: 0.28, dur: 0.48 },
+        { freq: 783.99, t: 0.56, dur: 0.85 },
+      ];
+      chimeNotes.forEach((n) => {
+        this.softTone(ctx, n.freq, now + n.t, n.dur, 0.095 * v, 'sine');
+        this.softTone(ctx, n.freq * 2, now + n.t, n.dur * 0.6, 0.028 * v, 'triangle');
+      });
+    } else {
+      // Bel pintu akan ditutup / kereta berangkat ("ting-ting-ting" tegas lembut)
+      [0, 0.24, 0.48].forEach((offset) => {
+        this.softTone(ctx, 880, now + offset, 0.22, 0.085 * v, 'sine');
+        this.softTone(ctx, 1318.5, now + offset, 0.18, 0.04 * v, 'triangle');
+      });
+    }
+  }
+
+  /**
    * Memetik 6 akor gitar akustik hangat untuk mini-game gitar di Kedai Kopi Bima.
    */
   public playGuitarChord(chordIdx: number) {
