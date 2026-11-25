@@ -13,6 +13,7 @@ import { HomeKitchenAndParkNature } from './HomeKitchenAndParkNature';
 import { HomeLivingAndBusStop } from './HomeLivingAndBusStop';
 import { NatureAndRainbow } from './NatureAndRainbow';
 import { NeighborhoodMorningAndFridge } from './NeighborhoodMorningAndFridge';
+import { OfficeLobbyLife } from './OfficeLobbyLife';
 import { ParkFountainPicnicAndJoggers } from './ParkFountainPicnicAndJoggers';
 import { ParkPlaygroundAndKoi } from './ParkPlaygroundAndKoi';
 import { PlayerController } from './PlayerController';
@@ -69,6 +70,7 @@ export const GameCanvas: React.FC = () => {
             <RiversideNightMarket timeOfDay={effectiveTime} settings={settings} />
             <HomeKitchenAndParkNature timeOfDay={effectiveTime} settings={settings} />
             <NeighborhoodMorningAndFridge timeOfDay={effectiveTime} settings={settings} />
+            <OfficeLobbyLife timeOfDay={effectiveTime} settings={settings} />
             <HomeLivingAndBusStop timeOfDay={effectiveTime} settings={settings} />
             <ParkPlaygroundAndKoi timeOfDay={effectiveTime} settings={settings} />
             <ParkFountainPicnicAndJoggers timeOfDay={effectiveTime} settings={settings} />

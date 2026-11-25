@@ -1,6 +1,6 @@
 import { FamilyBanterLine } from './familyWalkBanter';
 
-export type CulinarySpotId = 'angkringan' | 'cafe' | 'kios' | 'martabak' | 'roti';
+export type CulinarySpotId = 'angkringan' | 'cafe' | 'kios' | 'martabak' | 'roti' | 'office_pantry';
 export type HeldDrinkVisual = 'wedang' | 'coffee' | 'tea' | 'icecream' | 'cocoa' | 'martabak' | 'peanuts' | 'soup' | 'roti';
 
 export interface CulinaryMenuItem {
@@ -85,6 +85,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [0.8, 0, 52.3],
     seatYaw: Math.PI / 2,
     tablePropPos: [2.3, 1.12, 53.2],
+  },
+  office_pantry: {
+    id: 'office_pantry',
+    title: 'Pantry Lobi Menara Nusantara',
+    hostName: 'Pantry Karyawan',
+    subtitle: 'Sudut Kopi & Teh Lobi · Duduk Menghadap Jl. Kenangan',
+    seatPos: [31.2, 0.16, -20.2],
+    lookAt: [31.2, 1.4, -4.0],
+    standPos: [31.2, 0.08, -21.2],
+    seatYaw: 0,
+    tablePropPos: [32.82, 0.62, -20.18],
   },
 };
 
@@ -311,6 +322,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'YEEEY roti hangat bertiga!! Kira mau bagian yang ada cokelat paling banyak ya, Yah!' },
       { speaker: 'nadia', text: 'Enak banget wangi rotinya, Mas... besok pagi kalau dengar bel Pak Joko kita mampir lagi yuk.' },
+    ],
+  },
+
+  // === 6. PANTRY LOBI MENARA NUSANTARA ===
+  {
+    id: 'office_americano',
+    spot: 'office_pantry',
+    name: 'Kopi Hitam Mesin Pantry (Americano)',
+    priceLabel: 'Gratis · Pantry',
+    tagline: 'Seduhan kopi hitam pekat dari mesin espresso lobi—teman setia rapat siang dan lembur.',
+    tasteNote: 'Pahit hangat di gelas kertas—duduk sebentar menghadap kaca Jl. Kenangan membuat kepala terasa jauh lebih jernih.',
+    drinkVisual: 'coffee',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Jangan kebanyakan kopi hitam kalau perut belum diisi ya, Mas. Pelan-pelan aja minumnya.' },
+    ],
+  },
+  {
+    id: 'office_jasminetea',
+    spot: 'office_pantry',
+    name: 'Teh Melati Hangat Gelas Kertas',
+    priceLabel: 'Gratis · Pantry',
+    tagline: 'Seduhan teh melati ringan untuk jeda sepuluh menit jauh dari layar laptop.',
+    tasteNote: 'Kadang keputusan paling jernih bukan datang di ruang rapat, melainkan saat duduk diam menatap jalanan di luar kaca lobi.',
+    drinkVisual: 'tea',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'kira', text: 'Lobi kantor Ayah lantainya mengilap banget kayak cermin! Enak lihat mobil lewat dari kursi ini!' },
+    ],
+  },
+  {
+    id: 'office_family_cocoa',
+    spot: 'office_pantry',
+    name: 'Cokelat Hangat Pantry Bersama Keluarga',
+    priceLabel: 'Gratis · Pantry',
+    tagline: 'Tiga gelas cokelat susu hangat untuk dinikmati di kursi jendela lobi sambil memandangi Jl. Kenangan.',
+    tasteNote: 'Untuk pertama kalinya lobi kantor yang biasanya dingin terasa begitu hangat—karena ada tawa Nadia dan Kira di sisimu.',
+    drinkVisual: 'cocoa',
+    isHot: true,
+    isFamilyTreat: true,
+    journalTitle: 'Jeda Hangat di Lobi Menara Nusantara',
+    journalBody: 'Aku mengajak Nadia dan Kira duduk sejenak di kursi jendela lobi kantor sambil menyeruput cokelat hangat dari mesin pantry. Tempat yang dulu terasa penuh tekanan kini terasa jauh lebih bersahabat.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Waaah mesin cokelat di kantor Ayah canggih banget!! Enak banget lagi rasanya!' },
+      { speaker: 'nadia', text: 'Ternyata pemandangan dari lobi kantormu adem juga ya, Mas... apalagi kalau nggak sedang dikejar tenggat.' },
     ],
   },
 ];

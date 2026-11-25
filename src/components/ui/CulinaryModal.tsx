@@ -30,7 +30,7 @@ export const CulinaryModal: React.FC = () => {
           <div className="flex items-center justify-between border-b border-warm-100/10 bg-dusk-950/60 px-6 py-4">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-warm-400/20 text-warm-300">
-                {activeSpot === 'cafe' ? (
+                {activeSpot === 'cafe' || activeSpot === 'office_pantry' ? (
                   <Coffee className="h-5 w-5" />
                 ) : activeSpot === 'martabak' ? (
                   <Flame className="h-5 w-5" />

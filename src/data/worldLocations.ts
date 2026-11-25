@@ -187,6 +187,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= 75.5 && x <= 87.2 && z >= -21.0 && z <= 13.0) return true;
   // Gazebo Panggung Akustik Taman Kota
   if (x >= -70.6 && x <= -65.4 && z >= 16.9 && z <= 22.1) return true;
+  // Lobi Beratap Menara Nusantara
+  if (x >= 17.5 && x <= 40.5 && z >= -26.0 && z <= -19.0) return true;
   return false;
 }
 
@@ -260,11 +262,13 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'music_cassette_rack', minX: -27.15, maxX: -25.65, minZ: -27.65, maxZ: -23.15 },
   { id: 'music_amp_sofa', minX: -17.6, maxX: -16.0, minZ: -25.4, maxZ: -22.1 },
 
-  // === 6. Menara Nusantara + Meja Lobi ===
+  // === 6. Menara Nusantara + Meja Lobi, Pantry Kopi & Kursi Jendela ===
   { id: 'office_core', minX: 16.5, maxX: 41.5, minZ: -43.5, maxZ: -25.7 },
   { id: 'office_pillar_l', minX: 16.4, maxX: 18.0, minZ: -25.8, maxZ: -19.2 },
   { id: 'office_pillar_r', minX: 40.0, maxX: 41.6, minZ: -25.8, maxZ: -19.2 },
   { id: 'office_lobby_desk', minX: 33.0, maxX: 35.4, minZ: -24.05, maxZ: -22.75 },
+  { id: 'office_pantry_counter', minX: 36.7, maxX: 38.9, minZ: -25.35, maxZ: -24.35 },
+  { id: 'office_window_bench', minX: 29.95, maxX: 32.45, minZ: -20.58, maxZ: -19.82 },
 
   // === 7. Seluruh Gedung Skyline Sekitar ===
   { id: 'city_block_ne', minX: 45.6, maxX: 56.4, minZ: -43.7, maxZ: -22.3 },
@@ -409,6 +413,11 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: 88.65, z: 12.5, r: 0.22 },
   { x: -58.0, z: 14.5, r: 0.52 },
   { x: -57.2, z: 14.5, r: 0.32 },
+
+  // Meja Samping & Tanaman Indoor Lobi Menara Nusantara
+  { x: 32.82, z: -20.18, r: 0.38 },
+  { x: 39.45, z: -24.6, r: 0.34 },
+  { x: 18.65, z: -20.1, r: 0.34 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
     [-39.75, -9.5], [-39.75, -19.5], [-39.75, -29.5],

@@ -282,4 +282,8 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'Waaah petikan gitar Om Seno di tepi sungai enak banget, Yah! Mirip lagu yang Ayah mainin di rumah!' },
     { speaker: 'nadia', text: 'Sore di tepi sungai sambil dengar gitar akustik begini bikin langkah terasa ringan banget ya, Mas.' },
   ],
+  activity_office_lounge: [
+    { speaker: 'kira', text: 'Dari kursi jendela kantor Ayah kelihatan semua angkot sama halte bus di seberang jalan!' },
+    { speaker: 'nadia', text: 'Istirahat sebentar di sini enak ya, Mas... menarik napas dulu sebelum melangkah lagi.' },
+  ],
 };

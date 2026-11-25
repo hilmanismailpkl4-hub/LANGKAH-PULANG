@@ -1646,6 +1646,63 @@ export const WorldInteractables: React.FC = () => {
 
     consider(
       {
+        id: 'activity_office_pantry',
+        kind: 'story_object',
+        label: 'Seduh Kopi / Teh / Cokelat di Pantry Lobi',
+        sublabel: 'Menara Nusantara · Pantry Karyawan Gratis',
+        position: [37.8, 0.08, -23.65],
+        onInteract: () => {
+          store.openCulinarySpot('office_pantry');
+        },
+      },
+      2.5,
+    );
+
+    consider(
+      {
+        id: 'sit_office_window_lounge',
+        kind: 'story_object',
+        label: 'Duduk Merenung di Kursi Jendela Lobi',
+        sublabel: 'Menara Nusantara · Menghadap Jl. Kenangan',
+        position: [31.2, 0.08, -21.15],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Kursi Jendela Lobi Menara Nusantara',
+            seatPos: [31.2, 0.16, -20.2],
+            lookAt: [31.2, 1.4, -4.0],
+            standPos: [31.2, 0.08, -21.2],
+            seatYaw: 0,
+          };
+          store.setSitting(true);
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_office_lounge, 'fw_office_lounge');
+          }
+          store.showToast('Duduk sejenak di tepi jendela lobi memandangi hiruk-pikuk Jl. Kenangan... (WASD/E berdiri)');
+        },
+      },
+      2.2,
+    );
+
+    consider(
+      {
+        id: 'inspect_office_info_screen',
+        kind: 'story_object',
+        label: 'Periksa Layar Info Cuaca & Kota Digital',
+        sublabel: 'Lobi Menara Nusantara · Info Cuaca & Lalu Lintas',
+        position: [23.5, 0.08, -24.55],
+        onInteract: () => {
+          sfxEngine.play('switch');
+          store.openPhone('weather');
+          store.showToast('Menampilkan info cuaca & suasana kota dari Layar Digital Menara Nusantara.');
+        },
+      },
+      2.3,
+    );
+
+    consider(
+      {
         id: 'portal_down',
         kind: 'portal',
         label: 'Turun Lift ke Lobi Menara Nusantara',
