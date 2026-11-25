@@ -74,6 +74,39 @@ export function getTrafficSignalState(elapsedSec: number): {
   return { ns: 'red', ew: 'yellow' };
 }
 
+/**
+ * Helper hemat CPU ultra-ringan (zero allocation) untuk komponen 3D:
+ * Memangkas eksekusi animasi useFrame pada properti yang jauh dari Damar
+ * atau membatasi laju update di mode Hemat HP / HP Kentang (60 FPS).
+ */
+export function shouldSkipPerfFrame(
+  worldX: number,
+  worldZ: number,
+  activeRadius = 52,
+  allowHalfRate = true,
+): boolean {
+  const perf = playerRuntime.perf;
+  const dx = playerRuntime.position[0] - worldX;
+  const dz = playerRuntime.position[2] - worldZ;
+  const distSq = dx * dx + dz * dz;
+
+  if (perf.isPotato) {
+    const r = activeRadius * 0.78;
+    if (distSq > r * r) return true;
+    if (allowHalfRate && (perf.frameIndex & 1) === 1) return true;
+    return false;
+  }
+
+  if (perf.isLowPerf) {
+    if (distSq > activeRadius * activeRadius) return true;
+    if (allowHalfRate && distSq > 22 * 22 && (perf.frameIndex & 1) === 1) return true;
+    return false;
+  }
+
+  const farR = activeRadius * 1.45;
+  return distSq > farR * farR;
+}
+
 export const playerRuntime = {
   position: [-19.5, 0.08, 67.5] as [number, number, number],
   rotationY: Math.PI,
@@ -147,6 +180,22 @@ export const playerRuntime = {
     moveX: 0,
     moveZ: 0,
     sprint: false,
+  },
+
+  // Telemetri & throttle performa 3D real-time (tanpa React re-render per frame!)
+  perf: {
+    fps: 60,
+    frameMs: 16.6,
+    drawCalls: 0,
+    triangles: 0,
+    culledProps: 0,
+    totalProps: 0,
+    activeLights: 0,
+    totalLights: 0,
+    cullRadius: 58,
+    frameIndex: 0,
+    isPotato: false,
+    isLowPerf: false,
   },
 
   // Posisi real-time Nadia & Kira (tetap akurat baik di rumah maupun saat jalan sore bersama!)

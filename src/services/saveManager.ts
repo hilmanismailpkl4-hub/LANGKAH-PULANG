@@ -19,8 +19,20 @@ export const GRAPHICS_PRESETS: Record<
     | 'waterReflections'
     | 'particleDensity'
     | 'drawDistance'
+    | 'districtCulling'
   >
 > = {
+  potato: {
+    graphicsQuality: 'potato',
+    resolutionScale: 0.62,
+    shadowQuality: 'off',
+    cinematicGlow: false,
+    bloomIntensity: 0,
+    waterReflections: false,
+    particleDensity: 'low',
+    drawDistance: 'near',
+    districtCulling: true,
+  },
   low: {
     graphicsQuality: 'low',
     resolutionScale: 0.78,
@@ -30,6 +42,7 @@ export const GRAPHICS_PRESETS: Record<
     waterReflections: false,
     particleDensity: 'low',
     drawDistance: 'near',
+    districtCulling: true,
   },
   medium: {
     graphicsQuality: 'medium',
@@ -40,6 +53,7 @@ export const GRAPHICS_PRESETS: Record<
     waterReflections: true,
     particleDensity: 'medium',
     drawDistance: 'medium',
+    districtCulling: false,
   },
   high: {
     graphicsQuality: 'high',
@@ -50,6 +64,7 @@ export const GRAPHICS_PRESETS: Record<
     waterReflections: true,
     particleDensity: 'high',
     drawDistance: 'far',
+    districtCulling: false,
   },
   ultra: {
     graphicsQuality: 'ultra',
@@ -60,6 +75,7 @@ export const GRAPHICS_PRESETS: Record<
     waterReflections: true,
     particleDensity: 'high',
     drawDistance: 'far',
+    districtCulling: false,
   },
 };
 
@@ -69,6 +85,7 @@ export const DEFAULT_SETTINGS: GameSettings = {
   sfxVolume: 0.72,
   voiceEnabled: true,
   ...GRAPHICS_PRESETS.high,
+  showFps: false,
   exposure: 1.08,
   mouseSensitivity: 1.0,
   showWaypoint: true,
@@ -95,7 +112,15 @@ export function loadLocalSettings(): GameSettings {
       }
       return baseDefaults;
     }
-    const merged: GameSettings = { ...baseDefaults, ...JSON.parse(raw) };
+    const parsed = JSON.parse(raw);
+    const merged: GameSettings = { ...baseDefaults, ...parsed };
+    if (typeof parsed.districtCulling !== 'boolean') {
+      merged.districtCulling =
+        isMobile || merged.graphicsQuality === 'low' || merged.graphicsQuality === 'potato';
+    }
+    if (typeof parsed.showFps !== 'boolean') {
+      merged.showFps = false;
+    }
 
     // Migrasi otomatis satu kali untuk pemain HP lama agar langsung ringan & bebas lag
     if (isMobile && !localStorage.getItem(MOBILE_OPT_FLAG_KEY)) {

@@ -5,6 +5,7 @@ import { CulinaryModal } from './components/ui/CulinaryModal';
 import { DialogueOverlay } from './components/ui/DialogueOverlay';
 import { EndingScreen } from './components/ui/EndingScreen';
 import { FamilyPhotoAlbumModal } from './components/ui/FamilyPhotoAlbumModal';
+import { FpsOverlay } from './components/ui/FpsOverlay';
 import { FridgeNotesModal } from './components/ui/FridgeNotesModal';
 import { GameHUD } from './components/ui/GameHUD';
 import { GraphicsSettingsModal } from './components/ui/GraphicsSettingsModal';
@@ -65,6 +66,7 @@ export function App() {
       {/* Seluruh UI dirender lewat React Portal dengan z-index tertinggi */}
       <TitleScreen />
       <GameHUD />
+      <FpsOverlay />
       <MobileTouchControls />
       <MobileLandscapeOverlay />
       <PhotoModeOverlay />

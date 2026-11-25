@@ -2,7 +2,7 @@ import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { CharacterProfile } from '../../data/characters';
-import { playerRuntime } from '../../store/playerRuntime';
+import { playerRuntime, shouldSkipPerfFrame } from '../../store/playerRuntime';
 import { GameSettings, TimeOfDay } from '../../types/game';
 import { HumanModel } from './HumanModel';
 
@@ -228,7 +228,7 @@ const AnimatedJogger: React.FC<{ cfg: JoggerConfig }> = ({ cfg }) => {
   });
 
   return (
-    <group ref={rootRef}>
+    <group ref={rootRef} userData={{ noCull: true }}>
       <HumanModel
         profile={cfg.profile}
         torsoRef={torsoRef}
@@ -272,6 +272,7 @@ export const ParkFountainPicnicAndJoggers: React.FC<ParkFountainPicnicAndJoggers
   );
 
   useFrame(({ clock }) => {
+    if (shouldSkipPerfFrame(-65.5, 10.5, 42)) return;
     const t = clock.getElapsedTime();
 
     // Animasi percikan lengkung air mancur mini

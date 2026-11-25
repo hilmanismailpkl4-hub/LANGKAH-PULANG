@@ -2,6 +2,7 @@ import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { ROOFTOP_TELESCOPE_TARGETS } from '../../data/rooftopAndRtData';
+import { shouldSkipPerfFrame } from '../../store/playerRuntime';
 import { useGameStore } from '../../store/useGameStore';
 import { GameSettings, TimeOfDay } from '../../types/game';
 import { getProceduralTextures } from './proceduralTextures';
@@ -104,6 +105,7 @@ const WoodenSampanBoat: React.FC<SampanBoatProps> = ({
   const textures = useMemo(() => getProceduralTextures(), []);
 
   useFrame(({ clock }) => {
+    if (shouldSkipPerfFrame(position[0], position[2], 54)) return;
     const t = clock.getElapsedTime();
     if (!boatRef.current) return;
     boatRef.current.position.y = Math.sin(t * 1.45 + phase) * 0.045;

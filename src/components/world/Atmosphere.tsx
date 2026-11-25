@@ -158,8 +158,11 @@ const SkyDome: React.FC<{ zenith: string; horizon: string; ground: string }> = (
   );
 };
 
-const RainEffect: React.FC<{ density: GameSettings['particleDensity'] }> = ({ density }) => {
-  const count = density === 'low' ? 320 : density === 'medium' ? 750 : 1300;
+const RainEffect: React.FC<{ density: GameSettings['particleDensity']; potatoMode?: boolean }> = ({
+  density,
+  potatoMode = false,
+}) => {
+  const count = potatoMode ? 140 : density === 'low' ? 300 : density === 'medium' ? 750 : 1300;
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
@@ -273,8 +276,10 @@ const DriftingClouds: React.FC<{ timeOfDay: TimeOfDay }> = ({ timeOfDay }) => {
 
   useFrame((_, delta) => {
     if (!groupRef.current) return;
+    if (playerRuntime.perf.isLowPerf && (playerRuntime.perf.frameIndex & 1) === 1) return;
+    const stepDt = playerRuntime.perf.isLowPerf ? delta * 2 : delta;
     groupRef.current.children.forEach((child, idx) => {
-      child.position.x += delta * (0.7 + (idx % 3) * 0.25);
+      child.position.x += stepDt * (0.7 + (idx % 3) * 0.25);
       if (child.position.x > 155) child.position.x = -155;
     });
   });
@@ -465,8 +470,14 @@ export const Atmosphere: React.FC<AtmosphereProps> = ({ timeOfDay, settings }) =
   const textures = useMemo(() => getProceduralTextures(), []);
   const crescentMoonTex = useMemo(() => createCrescentMoonTexture(), []);
 
-  const fogScale =
-    settings.drawDistance === 'near' ? 0.72 : settings.drawDistance === 'medium' ? 1.0 : 1.32;
+  const isPotato = settings.graphicsQuality === 'potato';
+  const fogScale = isPotato
+    ? 0.56
+    : settings.drawDistance === 'near'
+      ? 0.72
+      : settings.drawDistance === 'medium'
+        ? 1.0
+        : 1.32;
 
   useEffect(() => {
     scene.background = new THREE.Color(preset.horizon);
@@ -567,11 +578,11 @@ export const Atmosphere: React.FC<AtmosphereProps> = ({ timeOfDay, settings }) =
       {timeOfDay === 'night' && (
         <>
           <StarField />
-          <ShootingStars />
+          {!isPotato && <ShootingStars />}
         </>
       )}
-      {timeOfDay === 'rain_dusk' && <RainEffect density={settings.particleDensity} />}
-      <AmbientParticles timeOfDay={timeOfDay} density={settings.particleDensity} />
+      {timeOfDay === 'rain_dusk' && <RainEffect density={settings.particleDensity} potatoMode={isPotato} />}
+      {!isPotato && <AmbientParticles timeOfDay={timeOfDay} density={settings.particleDensity} />}
     </>
   );
 };

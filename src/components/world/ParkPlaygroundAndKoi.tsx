@@ -492,7 +492,7 @@ export const ParkPlaygroundAndKoi: React.FC<ParkPlaygroundAndKoiProps> = ({
       {/* ================================================================= */}
       {/* 3. LAYANG-LAYANG SORE INDONESIA DI LAPANGAN TAMAN ([-87.5, 22.5]) */}
       {/* ================================================================= */}
-      <group>
+      <group userData={{ noCull: true }}>
         {/* Patok & Gulungan Benang di Lapangan Taman */}
         <group position={[-87.5, 0, 22.5]}>
           <mesh position={[0, 0.25, 0]} castShadow>

@@ -1,7 +1,7 @@
 import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { getTrafficSignalState, playerRuntime } from '../../store/playerRuntime';
+import { getTrafficSignalState, playerRuntime, shouldSkipPerfFrame } from '../../store/playerRuntime';
 import { useGameStore } from '../../store/useGameStore';
 import { GameSettings, TimeOfDay } from '../../types/game';
 import { getProceduralTextures } from './proceduralTextures';
@@ -15,6 +15,7 @@ const RisingSteamPlume: React.FC<{ position: [number, number, number]; scale?: n
 }) => {
   const puffs = useRef<(THREE.Mesh | null)[]>([]);
   useFrame(({ clock }) => {
+    if (playerRuntime.perf.isPotato || shouldSkipPerfFrame(position[0], position[2], 26)) return;
     const t = clock.getElapsedTime();
     for (let i = 0; i < 4; i++) {
       const m = puffs.current[i];

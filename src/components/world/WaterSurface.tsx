@@ -8,6 +8,7 @@ interface WaterSurfaceProps {
   size: [number, number];
   timeOfDay: TimeOfDay;
   highQuality: boolean;
+  potatoMode?: boolean;
 }
 
 const WATER_PALETTES: Record<
@@ -53,6 +54,7 @@ export const WaterSurface: React.FC<WaterSurfaceProps> = ({
   size,
   timeOfDay,
   highQuality,
+  potatoMode = false,
 }) => {
   const matRef = useRef<THREE.ShaderMaterial>(null);
   const palette = WATER_PALETTES[timeOfDay];
@@ -67,6 +69,7 @@ export const WaterSurface: React.FC<WaterSurfaceProps> = ({
       uSunDir: { value: new THREE.Vector3(...palette.sunDir).normalize() },
       uReflectStrength: { value: highQuality ? 1.0 : 0.45 },
       uRainRipple: { value: timeOfDay === 'rain_dusk' ? 1.0 : 0.0 },
+      uPotato: { value: potatoMode ? 1.0 : 0.0 },
     }),
     [],
   );
@@ -80,7 +83,8 @@ export const WaterSurface: React.FC<WaterSurfaceProps> = ({
     matRef.current.uniforms.uSunDir.value.set(...palette.sunDir).normalize();
     matRef.current.uniforms.uReflectStrength.value = highQuality ? 1.0 : 0.45;
     matRef.current.uniforms.uRainRipple.value = timeOfDay === 'rain_dusk' ? 1.0 : 0.0;
-  }, [palette, highQuality, timeOfDay]);
+    matRef.current.uniforms.uPotato.value = potatoMode ? 1.0 : 0.0;
+  }, [palette, highQuality, timeOfDay, potatoMode]);
 
   useFrame((_, delta) => {
     if (matRef.current) {
@@ -113,6 +117,7 @@ export const WaterSurface: React.FC<WaterSurfaceProps> = ({
           uniform vec3 uSunDir;
           uniform float uReflectStrength;
           uniform float uRainRipple;
+          uniform float uPotato;
 
           varying vec3 vWorldPos;
           varying vec2 vUv;
@@ -130,6 +135,17 @@ export const WaterSurface: React.FC<WaterSurfaceProps> = ({
 
           void main() {
             vec2 wp = vWorldPos.xz;
+            // Mode HP Kentang: jalur shader air super-ringan (1 gelombang tunggal tanpa finite-difference 3x)
+            if (uPotato > 0.5) {
+              float edge = min(min(vUv.x, 1.0 - vUv.x), min(vUv.y, 1.0 - vUv.y));
+              float shoreMix = smoothstep(0.0, 0.14, edge);
+              vec3 col = mix(uShallow, uDeep, shoreMix);
+              float ripple = sin(wp.x * 0.9 + uTime * 1.5) * cos(wp.y * 0.8 - uTime * 1.2) * 0.5 + 0.5;
+              col = mix(col, uSky, 0.18 + ripple * 0.12);
+              gl_FragColor = vec4(col, 1.0);
+              return;
+            }
+
             float e = 0.18;
             float hC = wave(wp, uTime);
             float hX = wave(wp + vec2(e, 0.0), uTime);

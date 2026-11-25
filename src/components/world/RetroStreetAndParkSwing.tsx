@@ -2,7 +2,7 @@ import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { CharacterProfile } from '../../data/characters';
-import { playerRuntime } from '../../store/playerRuntime';
+import { playerRuntime, shouldSkipPerfFrame } from '../../store/playerRuntime';
 import { useGameStore } from '../../store/useGameStore';
 import { GameSettings, TimeOfDay } from '../../types/game';
 import { HumanModel } from './HumanModel';
@@ -150,8 +150,10 @@ const KiraFloatingBalloon: React.FC<{ color: string }> = ({ color }) => {
     const [kx, ky, kz] = walking ? playerRuntime.companions.kira.pos : [-18.7, 0.08, 65.0];
 
     // Ikuti posisi Kira dengan sedikit inersia elastis agar terasa seperti balon gas sungguhan
-    const distJump = curPosRef.current.distanceTo(new THREE.Vector3(kx, ky, kz));
-    if (distJump > 8) {
+    const dx = curPosRef.current.x - kx;
+    const dy = curPosRef.current.y - ky;
+    const dz = curPosRef.current.z - kz;
+    if (dx * dx + dy * dy + dz * dz > 64) {
       curPosRef.current.set(kx, ky, kz);
     } else {
       curPosRef.current.x = THREE.MathUtils.lerp(curPosRef.current.x, kx, Math.min(1, dt * 6));
@@ -173,7 +175,7 @@ const KiraFloatingBalloon: React.FC<{ color: string }> = ({ color }) => {
   });
 
   return (
-    <group ref={grpRef} position={[-18.4, 0.9, 65.1]}>
+    <group ref={grpRef} position={[-18.4, 0.9, 65.1]} userData={{ noCull: true }}>
       {/* Tali Balon Putih Tipis */}
       <mesh position={[0, 0.58, 0]}>
         <cylinderGeometry args={[0.005, 0.005, 1.16, 5]} />
@@ -228,32 +230,34 @@ export const RetroStreetAndParkSwing: React.FC<RetroStreetAndParkSwingProps> = (
     const [px, py, pz] = playerRuntime.position;
 
     // 1. Animasi Mang Dedi & 11 Balon Gas Mengayun Ceria
-    const distDedi = py > 4 ? 99 : Math.hypot(px - -86.4, pz - 17.6);
-    if (dediHeadRef.current) {
-      dediHeadRef.current.rotation.y = Math.sin(t * 0.9) * 0.25;
+    if (!shouldSkipPerfFrame(-86.4, 17.6, 48)) {
+      const distDedi = py > 4 ? 99 : Math.hypot(px - -86.4, pz - 17.6);
+      if (dediHeadRef.current) {
+        dediHeadRef.current.rotation.y = Math.sin(t * 0.9) * 0.25;
+      }
+      if (dediRightArmRef.current) {
+        dediRightArmRef.current.rotation.x =
+          distDedi < 6.0 ? -1.85 + Math.sin(t * 6.5) * 0.2 : -0.95;
+      }
+      const windMult = isRain ? 1.8 : 1.0;
+      VENDOR_BALLOONS.forEach((b, i) => {
+        const grp = balloonRefs.current[i];
+        if (!grp) return;
+        grp.position.x = b.x + Math.sin(t * 2.1 + b.phase) * 0.075 * windMult;
+        grp.position.y = b.y + Math.cos(t * 1.8 + b.phase) * 0.05;
+        grp.position.z = b.z + Math.cos(t * 1.6 + b.phase * 1.2) * 0.065 * windMult;
+        grp.rotation.z = Math.sin(t * 1.9 + b.phase) * 0.14 * windMult;
+      });
     }
-    if (dediRightArmRef.current) {
-      dediRightArmRef.current.rotation.x =
-        distDedi < 6.0 ? -1.85 + Math.sin(t * 6.5) * 0.2 : -0.95;
-    }
-    const windMult = isRain ? 1.8 : 1.0;
-    VENDOR_BALLOONS.forEach((b, i) => {
-      const grp = balloonRefs.current[i];
-      if (!grp) return;
-      grp.position.x = b.x + Math.sin(t * 2.1 + b.phase) * 0.075 * windMult;
-      grp.position.y = b.y + Math.cos(t * 1.8 + b.phase) * 0.05;
-      grp.position.z = b.z + Math.cos(t * 1.6 + b.phase * 1.2) * 0.065 * windMult;
-      grp.rotation.z = Math.sin(t * 1.9 + b.phase) * 0.14 * windMult;
-    });
 
     // 2. Animasi Kursi Ayunan Kayu Taman Berayun Tenang
     if (playerRuntime.gardenSwingTimer > 0) {
       playerRuntime.gardenSwingTimer = Math.max(0, playerRuntime.gardenSwingTimer - dt);
     }
-    const sittingHere =
-      useGameStore.getState().isSitting &&
-      playerRuntime.sitState?.label === 'Ayunan Kayu Taman Danau Senja';
-    if (gardenSwingSeatRef.current) {
+    if (!shouldSkipPerfFrame(-64.2, -27.6, 45) && gardenSwingSeatRef.current) {
+      const sittingHere =
+        useGameStore.getState().isSitting &&
+        playerRuntime.sitState?.label === 'Ayunan Kayu Taman Danau Senja';
       const amp = sittingHere ? 0.17 : playerRuntime.gardenSwingTimer > 0 ? 0.14 : 0.045;
       gardenSwingSeatRef.current.rotation.x = Math.sin(t * 1.65) * amp;
     }

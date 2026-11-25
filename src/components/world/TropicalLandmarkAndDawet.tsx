@@ -2,7 +2,7 @@ import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { CharacterProfile } from '../../data/characters';
-import { playerRuntime } from '../../store/playerRuntime';
+import { playerRuntime, shouldSkipPerfFrame } from '../../store/playerRuntime';
 import { GameSettings, TimeOfDay } from '../../types/game';
 import { HumanModel } from './HumanModel';
 import { getProceduralTextures } from './proceduralTextures';
@@ -175,6 +175,7 @@ export const TropicalLandmarkAndDawet: React.FC<TropicalLandmarkAndDawetProps> =
         const s = DRAGONFLY_SEEDS[i];
         const grp = dfRefs.current[i];
         if (!grp) continue;
+        if (shouldSkipPerfFrame(s.homeX, s.homeZ, 38)) continue;
 
         // Siklus 4.8 detik: 0..2.8 melayang tenang, 2.8..4.8 meluncur cepat ke titik baru
         const cycle = t * 0.45 + s.phase;

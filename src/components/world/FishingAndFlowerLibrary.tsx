@@ -1,7 +1,7 @@
 import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { playerRuntime } from '../../store/playerRuntime';
+import { playerRuntime, shouldSkipPerfFrame } from '../../store/playerRuntime';
 import { useGameStore } from '../../store/useGameStore';
 import { GameSettings, TimeOfDay } from '../../types/game';
 import { getProceduralTextures } from './proceduralTextures';
@@ -155,7 +155,7 @@ export const FishingAndFlowerLibrary: React.FC<FishingAndFlowerLibraryProps> = (
     }
 
     // === 2. ANIMASI 4 KUPU-KUPU DI TAMAN BUNGA & KOTAK BUKU ===
-    if (!isRain) {
+    if (!isRain && !shouldSkipPerfFrame(-72.5, -8.2, 38)) {
       for (let i = 0; i < 4; i++) {
         const bf = butterflyRefs.current[i];
         if (!bf) continue;
@@ -195,7 +195,7 @@ export const FishingAndFlowerLibrary: React.FC<FishingAndFlowerLibraryProps> = (
       </group>
 
       {/* Joran Pancing Aktif di Tangan Damar */}
-      <group ref={activeRodRef} visible={false}>
+      <group ref={activeRodRef} visible={false} userData={{ noCull: true }}>
         <mesh position={[0, 1.32, 0]} rotation={[0.42, 0, 0]} castShadow>
           <cylinderGeometry args={[0.012, 0.03, 2.8, 8]} />
           <meshStandardMaterial color="#966638" roughness={0.72} />
@@ -212,7 +212,7 @@ export const FishingAndFlowerLibrary: React.FC<FishingAndFlowerLibraryProps> = (
         <cylinderGeometry args={[0.005, 0.005, 1, 6]} />
         <meshBasicMaterial color="#eef6ff" transparent opacity={0.72} />
       </mesh>
-      <group ref={bobberRef} visible={false}>
+      <group ref={bobberRef} visible={false} userData={{ noCull: true }}>
         <mesh position={[0, 0.04, 0]}>
           <sphereGeometry args={[0.065, 10, 10]} />
           <meshStandardMaterial color="#ef4444" emissive="#ef4444" emissiveIntensity={0.35} roughness={0.3} />

@@ -232,7 +232,13 @@ const AnimatedPedestrian: React.FC<{
 
     positionsOut.current[index] = { id: cfg.id, x: nx, z: nz, radius: 0.42 };
 
+    // Hemat CPU/GPU pada mode HP Kentang & Hemat HP: sembunyikan & skip animasi anggota tubuh pejalan kaki yang sangat jauh
+    const farHideDist = playerRuntime.perf.isPotato ? 44 : playerRuntime.perf.isLowPerf ? 62 : 120;
     if (rootRef.current) {
+      const shouldShow = distToPlayer <= farHideDist;
+      rootRef.current.visible = shouldShow;
+      if (!shouldShow) return;
+
       const bob = paused ? Math.sin(t * 2.1 + index) * 0.01 : Math.abs(Math.sin(s.stride)) * 0.048;
       rootRef.current.position.set(nx, bob, nz);
 
@@ -1143,8 +1149,8 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
       </group>
 
       {/* Bonus Suasana Hidup: Burung Kota & Percikan Hujan */}
-      <CityBirds visible={timeOfDay === 'morning' || timeOfDay === 'sunset'} />
-      <RainGroundSplashes active={timeOfDay === 'rain_dusk' && settings.particleDensity !== 'low'} />
+      <CityBirds visible={settings.graphicsQuality !== 'potato' && (timeOfDay === 'morning' || timeOfDay === 'sunset')} />
+      <RainGroundSplashes active={settings.graphicsQuality !== 'potato' && timeOfDay === 'rain_dusk' && settings.particleDensity !== 'low'} />
     </group>
   );
 };

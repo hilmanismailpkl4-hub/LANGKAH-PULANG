@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { CharacterProfile } from '../../data/characters';
 import { HeldDrinkVisual } from '../../data/culinaryMenu';
+import { playerRuntime } from '../../store/playerRuntime';
 
 /**
  * Kepulan uap asap tipis yang naik perlahan dari gelas wedang, kopi, atau teh hangat.
@@ -10,6 +11,8 @@ import { HeldDrinkVisual } from '../../data/culinaryMenu';
 const CupSteam: React.FC<{ position?: [number, number, number] }> = ({ position = [0, 0.12, 0] }) => {
   const puffsRef = useRef<(THREE.Mesh | null)[]>([]);
   useFrame(({ clock }) => {
+    if (playerRuntime.perf.isPotato) return;
+    if (playerRuntime.perf.isLowPerf && (playerRuntime.perf.frameIndex & 1) === 1) return;
     const t = clock.getElapsedTime();
     for (let i = 0; i < 3; i++) {
       const m = puffsRef.current[i];

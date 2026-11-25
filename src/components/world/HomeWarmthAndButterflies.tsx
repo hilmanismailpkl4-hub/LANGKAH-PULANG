@@ -1,6 +1,7 @@
 import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { shouldSkipPerfFrame } from '../../store/playerRuntime';
 import { useGameStore } from '../../store/useGameStore';
 import { GameSettings, TimeOfDay } from '../../types/game';
 
@@ -140,6 +141,7 @@ export const HomeWarmthAndButterflies: React.FC<HomeWarmthAndButterfliesProps> =
         const seed = BUTTERFLY_SEEDS[i];
         const grp = butterflyRefs.current[i];
         if (!grp) continue;
+        if (shouldSkipPerfFrame(seed.homeX, seed.homeZ, 36)) continue;
 
         const u = t * seed.speed + seed.phase;
         const x = seed.homeX + Math.sin(u) * seed.ampX;

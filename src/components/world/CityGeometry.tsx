@@ -80,7 +80,10 @@ const LAMP_POSITIONS: [number, number, number][] = [
 /**
  * Pepohonan tropis berlapis (batang meruncing + 3 kanopi daun organik berbeda nuansa hijau).
  */
-const SwayingTrees: React.FC<{ lowPerf?: boolean }> = ({ lowPerf = false }) => {
+const SwayingTrees: React.FC<{ lowPerf?: boolean; staticMode?: boolean }> = ({
+  lowPerf = false,
+  staticMode = false,
+}) => {
   const trunkRef = useRef<THREE.InstancedMesh>(null);
   const crownARef = useRef<THREE.InstancedMesh>(null);
   const crownBRef = useRef<THREE.InstancedMesh>(null);
@@ -98,16 +101,19 @@ const SwayingTrees: React.FC<{ lowPerf?: boolean }> = ({ lowPerf = false }) => {
       trunkRef.current!.setMatrixAt(i, dummy.matrix);
     });
     trunkRef.current.instanceMatrix.needsUpdate = true;
-  }, [dummy]);
+    lastUpdateRef.current = -1;
+  }, [dummy, staticMode]);
 
   useFrame(({ clock }) => {
     const cA = crownARef.current;
     const cB = crownBRef.current;
     const cC = crownCRef.current;
     if (!cA || !cB || !cC) return;
+    // Pada mode HP Kentang (60 FPS), inisialisasi matriks kanopi sekali lalu nol beban CPU tiap frame!
+    if (staticMode && lastUpdateRef.current >= 0) return;
     const t = clock.getElapsedTime();
-    // Pada mode Hemat HP / Rendah, batasi pembaruan matrix pohon ~12 fps agar CPU jauh lebih ringan!
-    if (lowPerf && lastUpdateRef.current >= 0 && t - lastUpdateRef.current < 0.085) {
+    // Pada mode Hemat HP / Rendah, batasi pembaruan matrix pohon ~10 fps agar CPU jauh lebih ringan!
+    if (lowPerf && lastUpdateRef.current >= 0 && t - lastUpdateRef.current < 0.1) {
       return;
     }
     lastUpdateRef.current = t;
@@ -386,6 +392,7 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
         size={[15.8, 210]}
         timeOfDay={timeOfDay}
         highQuality={settings.waterReflections}
+        potatoMode={settings.graphicsQuality === 'potato'}
       />
       <mesh position={[-56.2, -0.02, 10]} receiveShadow>
         <boxGeometry args={[1.1, 0.58, 210]} />
@@ -402,6 +409,7 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
         size={[28, 30]}
         timeOfDay={timeOfDay}
         highQuality={settings.waterReflections}
+        potatoMode={settings.graphicsQuality === 'potato'}
       />
       {/* Dermaga Kayu & Tiang Lampu Dermaga */}
       <group>
@@ -1470,7 +1478,10 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
         </group>
       ))}
 
-      <SwayingTrees lowPerf={settings.graphicsQuality === 'low'} />
+      <SwayingTrees
+        lowPerf={settings.graphicsQuality === 'low'}
+        staticMode={settings.graphicsQuality === 'potato'}
+      />
       <StreetLamps lit={isEveningOrNight} glow={settings.cinematicGlow} />
     </group>
   );

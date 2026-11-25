@@ -1,12 +1,13 @@
 import React from 'react';
-import { CloudRain, Moon, Sliders, Sparkles, Sun, Sunset, X } from 'lucide-react';
+import { Activity, CloudRain, Moon, Sliders, Sparkles, Sun, Sunset, X, Zap } from 'lucide-react';
 import { sfxEngine } from '../../audio/sfxEngine';
 import { useGameStore } from '../../store/useGameStore';
 import { GraphicsQuality, ParticleDensity, ShadowQuality, TimeOfDay } from '../../types/game';
+import { useMobileViewport } from '../../utils/mobileUtils';
 import { Portal } from './Portal';
 
 const PRESET_LIST: { id: GraphicsQuality; label: string; desc: string }[] = [
-  { id: 'low', label: 'Hemat HP / Anti-Lag', desc: 'Super lancar untuk HP & baterai hemat' },
+  { id: 'low', label: 'Hemat HP / Anti-Lag', desc: 'Lancar di HP, culling >58m & hemat baterai' },
   { id: 'medium', label: 'Sedang', desc: 'Seimbang untuk HP flagship & laptop' },
   { id: 'high', label: 'Tinggi', desc: 'Bayangan tajam & refleksi penuh (PC)' },
   { id: 'ultra', label: 'Ultra', desc: 'Ketajaman maksimum & sinematik (PC)' },
@@ -30,24 +31,31 @@ export const GraphicsSettingsModal: React.FC = () => {
   const setTitlePreviewTime = useGameStore((s) => s.setTitlePreviewTime);
   const timeOfDay = useGameStore((s) => s.timeOfDay);
   const setFreeTimeOfDay = useGameStore((s) => s.setFreeTimeOfDay);
+  const { isMobile, isCompactLandscape } = useMobileViewport();
 
   if (!isOpen) return null;
 
   const activeTime = screen === 'title' ? titlePreviewTime : timeOfDay;
+  const compact = isMobile || isCompactLandscape;
+  const isPotato = settings.graphicsQuality === 'potato';
 
   return (
     <Portal>
       {/* Panel geser kanan dengan latar tipis agar perubahan grafik 3D terlihat LIVE di kiri */}
-      <div className="pointer-events-none fixed inset-0 z-[9998] flex justify-end p-4 md:p-6">
-        <div className="pointer-events-auto flex h-full max-h-[90vh] w-full max-w-md flex-col overflow-hidden rounded-2xl border border-warm-200/25 bg-dusk-950/88 text-warm-50 shadow-2xl backdrop-blur-xl animate-fadeIn">
+      <div className={`pointer-events-none fixed inset-0 z-[9998] flex justify-end ${compact ? 'p-2' : 'p-4 md:p-6'}`}>
+        <div
+          className={`pointer-events-auto flex h-full w-full flex-col overflow-hidden rounded-2xl border border-warm-200/25 bg-dusk-950/90 text-warm-50 shadow-2xl backdrop-blur-xl animate-fadeIn ${
+            compact ? 'max-h-[95dvh] max-w-[390px]' : 'max-h-[90vh] max-w-md'
+          }`}
+        >
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-warm-100/10 px-5 py-4">
+          <div className={`flex items-center justify-between border-b border-warm-100/10 ${compact ? 'px-4 py-2.5' : 'px-5 py-4'}`}>
             <div className="flex items-center gap-2.5">
               <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-warm-400/20 text-warm-300">
                 <Sliders className="h-4 w-4" />
               </div>
               <div>
-                <h2 className="font-serif text-lg text-warm-50">Pengaturan Grafis 3D</h2>
+                <h2 className={`font-serif text-warm-50 ${compact ? 'text-base' : 'text-lg'}`}>Pengaturan Grafis 3D</h2>
                 <p className="text-[11px] text-warm-200/65">
                   Perubahan langsung diterapkan secara real-time
                 </p>
@@ -63,12 +71,42 @@ export const GraphicsSettingsModal: React.FC = () => {
           </div>
 
           {/* Konten Scrollable */}
-          <div className="flex-1 space-y-5 overflow-y-auto subtle-scroll px-5 py-4 text-xs">
+          <div className={`flex-1 overflow-y-auto subtle-scroll text-xs ${compact ? 'space-y-3.5 px-4 py-3' : 'space-y-5 px-5 py-4'}`}>
             {/* Preset Cepat */}
             <div>
               <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-warm-300">
                 Preset Kualitas
               </p>
+
+              {/* Tombol Khusus Mode HP Kentang (60 FPS) */}
+              <button
+                type="button"
+                onClick={() => {
+                  sfxEngine.play('switch');
+                  applyGraphicsPreset('potato');
+                }}
+                className={`mb-2 flex w-full items-center justify-between gap-2 rounded-xl border p-2.5 text-left transition ${
+                  isPotato
+                    ? 'border-emerald-300 bg-emerald-500/20 text-emerald-50'
+                    : 'border-emerald-400/25 bg-emerald-950/35 text-emerald-100/90 hover:border-emerald-300/60'
+                }`}
+              >
+                <div>
+                  <div className="flex items-center gap-1.5 font-semibold">
+                    <Zap className="h-3.5 w-3.5 text-emerald-300" />
+                    <span>Mode HP Kentang (Target 60 FPS)</span>
+                  </div>
+                  <p className="mt-0.5 text-[10px] text-emerald-100/70">
+                    Super-ringan: culling distrik &gt;42m, maks 2 lampu, air &amp; pohon ringan, tanpa partikel berat
+                  </p>
+                </div>
+                {isPotato && (
+                  <span className="shrink-0 rounded-full bg-emerald-400 px-2 py-0.5 text-[10px] font-bold text-dusk-950">
+                    Aktif
+                  </span>
+                )}
+              </button>
+
               <div className="grid grid-cols-2 gap-2">
                 {PRESET_LIST.map((p) => {
                   const active = settings.graphicsQuality === p.id;
@@ -272,10 +310,44 @@ export const GraphicsSettingsModal: React.FC = () => {
               </div>
             </div>
 
-            {/* Sakelar Efek Visual */}
+            {/* Sakelar Efek Visual & Optimasi HP */}
             <div className="space-y-2 pt-1">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-warm-300">
+                Optimasi HP &amp; Monitor Performa
+              </p>
+              <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-cyan-300/20 bg-cyan-950/25 px-3.5 py-2.5">
+                <div>
+                  <span className="font-medium text-warm-50">Distance Culling Detail Distrik</span>
+                  <p className="text-[10px] text-warm-200/65">
+                    Sembunyikan properti kecil distrik jauh ({isPotato ? '>42m' : '>58m'} dari Damar) agar hemat draw call
+                  </p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={settings.districtCulling}
+                  onChange={(e) => updateSettings({ districtCulling: e.target.checked })}
+                  className="h-4 w-4 shrink-0 accent-cyan-400"
+                />
+              </label>
+              <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-emerald-300/20 bg-emerald-950/25 px-3.5 py-2.5">
+                <div className="flex items-start gap-2">
+                  <Activity className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-300" />
+                  <div>
+                    <span className="font-medium text-warm-50">Tampilkan Indikator FPS &amp; Performa</span>
+                    <p className="text-[10px] text-warm-200/65">
+                      Tampilkan FPS real-time, latensi frame &amp; jumlah grup yang di-cull
+                    </p>
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={settings.showFps}
+                  onChange={(e) => updateSettings({ showFps: e.target.checked })}
+                  className="h-4 w-4 shrink-0 accent-emerald-400"
+                />
+              </label>
               <label className="flex cursor-pointer items-center justify-between rounded-xl border border-warm-100/10 bg-dusk-900/65 px-3.5 py-2.5">
-                <span>Pendar Cahaya Lampu & Matahari (Cinematic Glow)</span>
+                <span>Pendar Cahaya Lampu &amp; Matahari (Cinematic Glow)</span>
                 <input
                   type="checkbox"
                   checked={settings.cinematicGlow}
@@ -284,7 +356,7 @@ export const GraphicsSettingsModal: React.FC = () => {
                 />
               </label>
               <label className="flex cursor-pointer items-center justify-between rounded-xl border border-warm-100/10 bg-dusk-900/65 px-3.5 py-2.5">
-                <span>Refleksi Sungai, Danau & Aspal Basah</span>
+                <span>Refleksi Sungai, Danau &amp; Aspal Basah</span>
                 <input
                   type="checkbox"
                   checked={settings.waterReflections}

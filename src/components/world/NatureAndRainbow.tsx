@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { playerRuntime } from '../../store/playerRuntime';
 import { useGameStore } from '../../store/useGameStore';
 import { GameSettings, TimeOfDay } from '../../types/game';
 
@@ -54,7 +55,8 @@ const LEAF_COLORS = ['#d4903b', '#b85d38', '#e5bc5b', '#8c9648', '#a85f32', '#cf
  */
 export const NatureAndRainbow: React.FC<NatureAndRainbowProps> = ({ timeOfDay, settings }) => {
   const rainbowActiveUntil = useGameStore((s) => s.rainbowActiveUntil);
-  const leafCount = settings.particleDensity === 'low' ? 28 : settings.particleDensity === 'medium' ? 46 : 64;
+  const isPotato = settings.graphicsQuality === 'potato';
+  const leafCount = isPotato ? 0 : settings.particleDensity === 'low' ? 24 : settings.particleDensity === 'medium' ? 46 : 64;
 
   const leafMeshRef = useRef<THREE.InstancedMesh>(null);
   const dummy = useMemo(() => new THREE.Object3D(), []);
@@ -124,14 +126,16 @@ export const NatureAndRainbow: React.FC<NatureAndRainbowProps> = ({ timeOfDay, s
     // === 1. ANIMASI DAUN GUGUR MELAYANG TERTIUP ANGIN ===
     const mesh = leafMeshRef.current;
     const leaves = leavesRef.current;
-    if (mesh && leaves) {
+    const skipLeafFrame = playerRuntime.perf.isLowPerf && (playerRuntime.perf.frameIndex & 1) === 1;
+    if (mesh && leaves && leafCount > 0 && !skipLeafFrame) {
+      const leafDt = playerRuntime.perf.isLowPerf ? dt * 2 : dt;
       const windX = timeOfDay === 'rain_dusk' ? 1.55 : timeOfDay === 'sunset' ? 0.92 : 0.48;
       const windZ = timeOfDay === 'rain_dusk' ? 0.65 : 0.28;
 
       for (let i = 0; i < leafCount; i++) {
         const lf = leaves[i];
         if (lf.restTimer > 0) {
-          lf.restTimer -= dt;
+          lf.restTimer -= leafDt;
           if (lf.restTimer <= 0) {
             lf.x = lf.originX + Math.sin(t + i) * 1.4;
             lf.z = lf.originZ + Math.cos(t + i) * 1.4;
@@ -141,9 +145,9 @@ export const NatureAndRainbow: React.FC<NatureAndRainbowProps> = ({ timeOfDay, s
           dummy.rotation.set(Math.PI / 2, lf.phase, 0);
           dummy.scale.set(lf.scale, lf.scale, lf.scale);
         } else {
-          lf.y -= lf.fallSpeed * dt;
-          lf.x += (windX + Math.cos(t * lf.swayFreq + lf.phase) * lf.swayAmp) * dt;
-          lf.z += (windZ + Math.sin(t * lf.swayFreq * 0.8 + lf.phase) * lf.swayAmp * 0.6) * dt;
+          lf.y -= lf.fallSpeed * leafDt;
+          lf.x += (windX + Math.cos(t * lf.swayFreq + lf.phase) * lf.swayAmp) * leafDt;
+          lf.z += (windZ + Math.sin(t * lf.swayFreq * 0.8 + lf.phase) * lf.swayAmp * 0.6) * leafDt;
 
           if (lf.y <= 0.04) {
             lf.y = 0.035;
@@ -226,15 +230,17 @@ export const NatureAndRainbow: React.FC<NatureAndRainbowProps> = ({ timeOfDay, s
   return (
     <group>
       {/* Daun Kering Gugur di Taman Kota & Perumahan */}
-      <instancedMesh ref={leafMeshRef} args={[undefined, undefined, leafCount]} frustumCulled={false}>
-        <planeGeometry args={[0.16, 0.1]} />
-        <meshStandardMaterial
-          roughness={0.85}
-          side={THREE.DoubleSide}
-          transparent
-          opacity={0.92}
-        />
-      </instancedMesh>
+      {leafCount > 0 && (
+        <instancedMesh ref={leafMeshRef} args={[undefined, undefined, leafCount]} frustumCulled={false}>
+          <planeGeometry args={[0.16, 0.1]} />
+          <meshStandardMaterial
+            roughness={0.85}
+            side={THREE.DoubleSide}
+            transparent
+            opacity={0.92}
+          />
+        </instancedMesh>
+      )}
 
       {/* Pelangi Tipis Melengkung di Langit Barat Atas Danau Senja (Setelah Hujan Reda) */}
       <group position={[-86, -4, -56]} rotation={[0, 0.54, 0]}>

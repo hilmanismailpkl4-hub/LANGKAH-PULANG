@@ -2,7 +2,7 @@ export type ChapterNumber = 1 | 2 | 3;
 
 export type TimeOfDay = 'morning' | 'sunset' | 'rain_dusk' | 'night';
 
-export type GraphicsQuality = 'low' | 'medium' | 'high' | 'ultra';
+export type GraphicsQuality = 'potato' | 'low' | 'medium' | 'high' | 'ultra';
 
 export type ShadowQuality = 'off' | 'soft' | 'sharp';
 
@@ -289,6 +289,8 @@ export interface GameSettings {
   waterReflections: boolean;
   particleDensity: ParticleDensity;
   drawDistance: 'near' | 'medium' | 'far';
+  districtCulling: boolean;
+  showFps: boolean;
   exposure: number; // 0.85..1.35
   mouseSensitivity: number;
   showWaypoint: boolean;

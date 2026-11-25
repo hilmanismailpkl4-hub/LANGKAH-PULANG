@@ -236,13 +236,15 @@ export const TitleScreen: React.FC = () => {
               <Sliders className="h-3.5 w-3.5 text-warm-300" />
               <span>
                 Grafis:{' '}
-                {graphicsQuality === 'low'
-                  ? 'Hemat HP'
-                  : graphicsQuality === 'medium'
-                    ? 'Sedang'
-                    : graphicsQuality === 'high'
-                      ? 'Tinggi'
-                      : 'Ultra'}
+                {graphicsQuality === 'potato'
+                  ? 'HP Kentang'
+                  : graphicsQuality === 'low'
+                    ? 'Hemat HP'
+                    : graphicsQuality === 'medium'
+                      ? 'Sedang'
+                      : graphicsQuality === 'high'
+                        ? 'Tinggi'
+                        : 'Ultra'}
               </span>
             </button>
 

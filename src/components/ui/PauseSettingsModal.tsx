@@ -151,10 +151,11 @@ export const PauseSettingsModal: React.FC = () => {
                     Buka Pengaturan Grafis Lanjutan (Live)
                   </button>
                 </div>
-                <div className="mt-2 grid grid-cols-4 gap-1.5">
+                <div className="mt-2 grid grid-cols-5 gap-1.5">
                   {(
                     [
-                      { id: 'low', label: 'Rendah' },
+                      { id: 'potato', label: '60 FPS' },
+                      { id: 'low', label: 'Hemat HP' },
                       { id: 'medium', label: 'Sedang' },
                       { id: 'high', label: 'Tinggi' },
                       { id: 'ultra', label: 'Ultra' },
@@ -164,9 +165,11 @@ export const PauseSettingsModal: React.FC = () => {
                       key={q.id}
                       type="button"
                       onClick={() => applyGraphicsPreset(q.id)}
-                      className={`rounded-xl py-2 text-xs font-medium transition ${
+                      className={`rounded-xl py-2 text-[11px] font-medium transition ${
                         settings.graphicsQuality === q.id
-                          ? 'bg-warm-400 text-dusk-950'
+                          ? q.id === 'potato'
+                            ? 'bg-emerald-400 text-dusk-950 font-semibold'
+                            : 'bg-warm-400 text-dusk-950'
                           : 'border border-warm-200/20 bg-dusk-950/60 text-warm-200 hover:border-warm-300/45'
                       }`}
                     >
@@ -212,6 +215,15 @@ export const PauseSettingsModal: React.FC = () => {
                     checked={settings.showMinimap}
                     onChange={(e) => updateSettings({ showMinimap: e.target.checked })}
                     className="h-4 w-4 accent-warm-400"
+                  />
+                </label>
+                <label className="flex items-center justify-between rounded-xl border border-emerald-300/15 bg-emerald-950/20 px-3.5 py-2.5">
+                  <span>Tampilkan Indikator FPS &amp; Performa</span>
+                  <input
+                    type="checkbox"
+                    checked={settings.showFps}
+                    onChange={(e) => updateSettings({ showFps: e.target.checked })}
+                    className="h-4 w-4 accent-emerald-400"
                   />
                 </label>
               </div>

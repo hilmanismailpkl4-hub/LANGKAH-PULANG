@@ -52,7 +52,14 @@ export const GameCanvas: React.FC = () => {
 
   const effectiveTime = screen === 'title' ? titlePreviewTime : timeOfDay;
   const isMobile = detectIsMobileDevice();
-  const maxDpr = isMobile ? (settings.graphicsQuality === 'low' ? 0.95 : 1.15) : 2.0;
+  const isPotato = settings.graphicsQuality === 'potato';
+  const maxDpr = isPotato
+    ? 0.72
+    : isMobile
+      ? settings.graphicsQuality === 'low'
+        ? 0.95
+        : 1.15
+      : 2.0;
   const dpr = Math.max(0.55, Math.min(maxDpr, settings.resolutionScale));
   const buWatiLampFixed = flags.includes('bu_wati_lamp_fixed');
   const pierLampFixed = flags.includes('pier_lamp_fixed');
@@ -66,12 +73,12 @@ export const GameCanvas: React.FC = () => {
         style={activeFilter && activeFilter.cssFilter !== 'none' ? { filter: activeFilter.cssFilter } : undefined}
       >
         <Canvas
-          shadows={!isMobile && settings.shadowQuality !== 'off' ? true : settings.shadowQuality === 'sharp'}
+          shadows={!isPotato && (!isMobile && settings.shadowQuality !== 'off' ? true : settings.shadowQuality === 'sharp')}
           dpr={dpr}
-          camera={{ fov: isMobile ? 58 : 52, near: 0.25, far: isMobile ? 145 : 300, position: [-20, 4, 73] }}
+          camera={{ fov: isMobile ? 58 : 52, near: 0.25, far: isPotato ? 96 : isMobile ? 132 : 300, position: [-20, 4, 73] }}
           gl={{
-            antialias: !isMobile && settings.graphicsQuality !== 'low',
-            powerPreference: isMobile ? 'default' : 'high-performance',
+            antialias: !isMobile && !isPotato && settings.graphicsQuality !== 'low',
+            powerPreference: isMobile || isPotato ? 'default' : 'high-performance',
             preserveDrawingBuffer: true,
             toneMapping: THREE.ACESFilmicToneMapping,
             toneMappingExposure: settings.exposure,
@@ -87,30 +94,35 @@ export const GameCanvas: React.FC = () => {
               settings={settings}
             />
             <CityDetails timeOfDay={effectiveTime} settings={settings} pierLampFixed={pierLampFixed} />
-            <RiversideNightMarket timeOfDay={effectiveTime} settings={settings} />
-            <RiverAndParkLife timeOfDay={effectiveTime} settings={settings} />
-            <RooftopLakeAndRtBoard timeOfDay={effectiveTime} settings={settings} />
-            <HomeKitchenAndParkNature timeOfDay={effectiveTime} settings={settings} />
-            <NeighborhoodMorningAndFridge timeOfDay={effectiveTime} settings={settings} />
-            <NightNeighborhoodAndClock timeOfDay={effectiveTime} settings={settings} />
-            <OfficeLobbyLife timeOfDay={effectiveTime} settings={settings} />
-            <MusicAndKiosLife timeOfDay={effectiveTime} settings={settings} />
-            <CafeAndNightStreetLife timeOfDay={effectiveTime} settings={settings} />
-            <HomeLivingAndBusStop timeOfDay={effectiveTime} settings={settings} />
-            <HomeWarmthAndButterflies timeOfDay={effectiveTime} settings={settings} />
-            <HomeYardLife timeOfDay={effectiveTime} settings={settings} />
-            <ParkPlaygroundAndKoi timeOfDay={effectiveTime} settings={settings} />
-            <ParkFountainPicnicAndJoggers timeOfDay={effectiveTime} settings={settings} />
-            <MorningParkAndBadminton timeOfDay={effectiveTime} settings={settings} />
-            <StationAndBuskerLife timeOfDay={effectiveTime} settings={settings} />
-            <StreetRealismAndSate timeOfDay={effectiveTime} settings={settings} />
-            <TropicalLandmarkAndDawet timeOfDay={effectiveTime} settings={settings} />
-            <AfternoonAndCreativeLife timeOfDay={effectiveTime} settings={settings} />
-            <ArtisticAndStationDetails timeOfDay={effectiveTime} settings={settings} />
-            <CraftAndPingPongLife timeOfDay={effectiveTime} settings={settings} />
-            <NightDiningAtmAndOpang timeOfDay={effectiveTime} settings={settings} />
-            <RetroStreetAndParkSwing timeOfDay={effectiveTime} settings={settings} />
-            <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
+
+            {/* Grup Detail Distrik yang dikelola otomatis oleh Distance Culler pada mode Hemat HP / HP Kentang */}
+            <group name="__district_detail_root__">
+              <RiversideNightMarket timeOfDay={effectiveTime} settings={settings} />
+              <RiverAndParkLife timeOfDay={effectiveTime} settings={settings} />
+              <RooftopLakeAndRtBoard timeOfDay={effectiveTime} settings={settings} />
+              <HomeKitchenAndParkNature timeOfDay={effectiveTime} settings={settings} />
+              <NeighborhoodMorningAndFridge timeOfDay={effectiveTime} settings={settings} />
+              <NightNeighborhoodAndClock timeOfDay={effectiveTime} settings={settings} />
+              <OfficeLobbyLife timeOfDay={effectiveTime} settings={settings} />
+              <MusicAndKiosLife timeOfDay={effectiveTime} settings={settings} />
+              <CafeAndNightStreetLife timeOfDay={effectiveTime} settings={settings} />
+              <HomeLivingAndBusStop timeOfDay={effectiveTime} settings={settings} />
+              <HomeWarmthAndButterflies timeOfDay={effectiveTime} settings={settings} />
+              <HomeYardLife timeOfDay={effectiveTime} settings={settings} />
+              <ParkPlaygroundAndKoi timeOfDay={effectiveTime} settings={settings} />
+              <ParkFountainPicnicAndJoggers timeOfDay={effectiveTime} settings={settings} />
+              <MorningParkAndBadminton timeOfDay={effectiveTime} settings={settings} />
+              <StationAndBuskerLife timeOfDay={effectiveTime} settings={settings} />
+              <StreetRealismAndSate timeOfDay={effectiveTime} settings={settings} />
+              <TropicalLandmarkAndDawet timeOfDay={effectiveTime} settings={settings} />
+              <AfternoonAndCreativeLife timeOfDay={effectiveTime} settings={settings} />
+              <ArtisticAndStationDetails timeOfDay={effectiveTime} settings={settings} />
+              <CraftAndPingPongLife timeOfDay={effectiveTime} settings={settings} />
+              <NightDiningAtmAndOpang timeOfDay={effectiveTime} settings={settings} />
+              <RetroStreetAndParkSwing timeOfDay={effectiveTime} settings={settings} />
+              <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
+            </group>
+
             <CityLife timeOfDay={effectiveTime} settings={settings} />
             <ScooterEntity timeOfDay={effectiveTime} settings={settings} />
             <BicycleEntity timeOfDay={effectiveTime} settings={settings} />
