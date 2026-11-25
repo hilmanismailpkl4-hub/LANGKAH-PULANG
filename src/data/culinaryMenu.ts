@@ -1,7 +1,7 @@
 import { FamilyBanterLine } from './familyWalkBanter';
 
-export type CulinarySpotId = 'angkringan' | 'cafe' | 'kios' | 'martabak';
-export type HeldDrinkVisual = 'wedang' | 'coffee' | 'tea' | 'icecream' | 'cocoa' | 'martabak' | 'peanuts' | 'soup';
+export type CulinarySpotId = 'angkringan' | 'cafe' | 'kios' | 'martabak' | 'roti';
+export type HeldDrinkVisual = 'wedang' | 'coffee' | 'tea' | 'icecream' | 'cocoa' | 'martabak' | 'peanuts' | 'soup' | 'roti';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -74,6 +74,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [-36.6, 0, 20.5],
     seatYaw: -Math.PI / 2,
     tablePropPos: [-38.92, 0.56, 20.5],
+  },
+  roti: {
+    id: 'roti',
+    title: 'Gerobak Roti Hangat Pak Joko',
+    hostName: 'Pak Joko',
+    subtitle: 'Gang Perumahan Melati · Roti Panggang Pagi & Sore',
+    seatPos: [1.1, 0.12, 53.5],
+    lookAt: [2.8, 1.35, 53.2],
+    standPos: [0.8, 0, 52.3],
+    seatYaw: Math.PI / 2,
+    tablePropPos: [2.3, 1.12, 53.2],
   },
 };
 
@@ -255,6 +266,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Ayah! Bunda! Lihat lampion-lampionnya mantul di air sungai sambil makan martabak!! Seru bangeeet!' },
       { speaker: 'nadia', text: 'Malam yang hangat banget ya, Mas... nggak nyangka jajan martabak pinggir sungai bisa seindah ini.' },
+    ],
+  },
+
+  // === 5. GEROBAK ROTI HANGAT KELILING PAK JOKO (PERUMAHAN MELATI) ===
+  {
+    id: 'roti_cokelat',
+    spot: 'roti',
+    name: 'Roti Cokelat Lumer Panggang Pagi',
+    priceLabel: 'Rp 6.000',
+    tagline: 'Roti sobek lembut isi pasta cokelat hangat baru keluar dari oven pagi.',
+    tasteNote: 'Empuk dan wangi mentega—bunyi bel gerobak Pak Joko selalu membuat pagi di Gang Melati terasa akrab.',
+    drinkVisual: 'roti',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'kira', text: 'Mmm!! Roti cokelat Pak Joko empuk banget kayak bantal awan, Yah!' },
+    ],
+  },
+  {
+    id: 'roti_srikaya',
+    spot: 'roti',
+    name: 'Roti Srikaya Pandan & Keju Parut',
+    priceLabel: 'Rp 7.000',
+    tagline: 'Olesan selai srikaya pandan harum dipadu parutan keju gurih.',
+    tasteNote: 'Manis lembut pandannya membawa kembali ingatan sarapan sederhana sebelum berangkat sekolah dulu.',
+    drinkVisual: 'roti',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Kesukaanku banget nih roti srikaya pandan! Makasih ya Mas sudah ingat.' },
+    ],
+  },
+  {
+    id: 'roti_family',
+    spot: 'roti',
+    name: 'Bungkus Roti Sobek Keluarga (3 Rasa Hangat)',
+    priceLabel: 'Rp 18.000',
+    tagline: 'Isi cokelat, keju, dan srikaya pandan—cukup untuk dinikmati bertiga di teras rumah.',
+    tasteNote: 'Pak Joko membungkus roti hangat sambil tersenyum ramah—pagi di perumahan terasa penuh kehidupan.',
+    drinkVisual: 'roti',
+    isHot: true,
+    isFamilyTreat: true,
+    journalTitle: 'Pagi Wangi Roti di Gang Melati',
+    journalBody: 'Begitu mendengar melodi bel gerobak roti Pak Joko di depan gang, aku langsung mengajak Nadia dan Kira membeli sebungkus roti sobek hangat aneka rasa. Hal sederhana seperti ini rupanya yang membuat sebuah perumahan terasa seperti rumah.',
+    familyReaction: [
+      { speaker: 'kira', text: 'YEEEY roti hangat bertiga!! Kira mau bagian yang ada cokelat paling banyak ya, Yah!' },
+      { speaker: 'nadia', text: 'Enak banget wangi rotinya, Mas... besok pagi kalau dengar bel Pak Joko kita mampir lagi yuk.' },
     ],
   },
 ];

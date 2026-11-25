@@ -92,6 +92,17 @@ export interface PlayerNote {
   createdAt: string;
 }
 
+export type FridgeNoteColor = 'yellow' | 'pink' | 'mint' | 'sky';
+
+export interface FridgeNote {
+  id: string;
+  author: 'damar' | 'nadia' | 'kira';
+  text: string;
+  color: FridgeNoteColor;
+  createdAt: string;
+  tiltDeg: number;
+}
+
 export type RadioStationId = 'auto' | 'senja_fm' | 'langkah_kecil' | 'piano_hujan' | 'malam_rooftop';
 
 export interface JournalEntry {
@@ -261,6 +272,7 @@ export interface SaveSlotData {
   repliedPhonePrompts?: Record<string, string>;
   readPhoneThreads?: string[];
   playerNotes?: PlayerNote[];
+  fridgeNotes?: FridgeNote[];
   stepCount?: number;
 }
 

@@ -731,6 +731,7 @@ export const WorldInteractables: React.FC = () => {
       store.isBookStallOpen ||
       store.isKitchenOpen ||
       store.isPhotoAlbumOpen ||
+      store.isFridgeNotesOpen ||
       store.isRidingScooter ||
       store.isRidingBicycle ||
       store.isSitting ||
@@ -1325,6 +1326,35 @@ export const WorldInteractables: React.FC = () => {
         },
       },
       2.1,
+    );
+
+    consider(
+      {
+        id: 'interior_fridge_notes',
+        kind: 'story_object',
+        label: 'Buka Papan Catatan Magnet Kulkas',
+        sublabel: 'Pintu Kulkas · Tulis & Baca Pesan Nadia & Kira',
+        position: [-13.95, 0.08, 71.25],
+        onInteract: () => {
+          store.setFridgeNotesOpen(true);
+        },
+      },
+      1.75,
+    );
+
+    consider(
+      {
+        id: 'activity_bread_vendor',
+        kind: 'story_object',
+        label: 'Beli Roti Hangat dari Gerobak Pak Joko',
+        sublabel: 'Perumahan Melati · Roti Cokelat, Keju & Srikaya',
+        position: [2.45, 0, 52.15],
+        onInteract: () => {
+          sfxEngine.playBreadVendorBell(0.95);
+          store.openCulinarySpot('roti');
+        },
+      },
+      2.9,
     );
 
     if (store.timeOfDay !== 'rain_dusk') {

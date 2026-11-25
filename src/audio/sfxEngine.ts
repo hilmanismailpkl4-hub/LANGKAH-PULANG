@@ -192,6 +192,29 @@ class SfxEngine {
   }
 
   /**
+   * Bunyi melodi bel penjual roti keliling pagi khas perumahan Indonesia!
+   */
+  public playBreadVendorBell(distanceFactor = 1) {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume * Math.max(0.16, Math.min(1, distanceFactor));
+    // Melodi ceria 5 nada ala bel roti pagi (C5 - E5 - G5 - E5 - C6)
+    const notes = [
+      { freq: 523.25, t: 0.0, dur: 0.16 },
+      { freq: 659.25, t: 0.16, dur: 0.16 },
+      { freq: 783.99, t: 0.32, dur: 0.18 },
+      { freq: 659.25, t: 0.52, dur: 0.16 },
+      { freq: 1046.5, t: 0.68, dur: 0.36 },
+    ];
+    notes.forEach((n) => {
+      this.softTone(ctx, n.freq, now + n.t, n.dur, 0.072 * v, 'triangle');
+      this.softTone(ctx, n.freq * 2, now + n.t, n.dur * 0.7, 0.022 * v, 'sine');
+    });
+  }
+
+  /**
    * Memetik 6 akor gitar akustik hangat untuk mini-game gitar di Kedai Kopi Bima.
    */
   public playGuitarChord(chordIdx: number) {

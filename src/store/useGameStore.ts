@@ -50,6 +50,8 @@ import {
   DialogueScript,
   EmotionMetrics,
   EndingId,
+  FridgeNote,
+  FridgeNoteColor,
   GameSettings,
   GraphicsQuality,
   JournalEntry,
@@ -139,6 +141,8 @@ interface GameStoreState {
   isBookStallOpen: boolean;
   isKitchenOpen: boolean;
   isPhotoAlbumOpen: boolean;
+  isFridgeNotesOpen: boolean;
+  fridgeNotes: FridgeNote[];
   homeStoveLit: boolean;
   isRidingScooter: boolean;
   isRidingBicycle: boolean;
@@ -191,6 +195,9 @@ interface GameStoreState {
   setBookStallOpen: (open: boolean) => void;
   setKitchenOpen: (open: boolean) => void;
   setPhotoAlbumOpen: (open: boolean) => void;
+  setFridgeNotesOpen: (open: boolean) => void;
+  addFridgeNote: (text: string, color: FridgeNoteColor) => void;
+  deleteFridgeNote: (id: string) => void;
   cookHomeRecipe: (recipeId: string) => void;
   cycleKitchenRadio: () => void;
   setRidingScooter: (riding: boolean) => void;
@@ -253,6 +260,25 @@ interface GameStoreState {
   showToast: (text: string) => void;
   updateSettings: (partial: Partial<GameSettings>) => void;
 }
+
+const INITIAL_FRIDGE_NOTES: FridgeNote[] = [
+  {
+    id: 'fn_init_nadia',
+    author: 'nadia',
+    text: 'Mas, sup ayam & buah potong ada di rak tengah ya. Jangan lupa istirahat sebentar.',
+    color: 'pink',
+    createdAt: '07:20',
+    tiltDeg: -1.8,
+  },
+  {
+    id: 'fn_init_kira',
+    author: 'kira',
+    text: 'Ayah jangan lupa main gitar lagi sama Kira di ruang tamu yaa!!',
+    color: 'yellow',
+    createdAt: '07:35',
+    tiltDeg: 1.6,
+  },
+];
 
 let toastCounter = 0;
 let banterTimers: number[] = [];
@@ -331,6 +357,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     isBookStallOpen: false,
     isKitchenOpen: false,
     isPhotoAlbumOpen: false,
+    isFridgeNotesOpen: false,
+    fridgeNotes: [...INITIAL_FRIDGE_NOTES],
     homeStoveLit: false,
     isRidingScooter: false,
     isRidingBicycle: false,
@@ -618,6 +646,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       if (open) sfxEngine.play('page');
       set({
         isPhotoAlbumOpen: open,
+        isFridgeNotesOpen: false,
         isKitchenOpen: false,
         isBookStallOpen: false,
         isLittleLibraryOpen: false,
@@ -630,6 +659,112 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isGuitarOpen: false,
         isQuickGraphicsOpen: false,
       });
+    },
+
+    setFridgeNotesOpen: (open) => {
+      const s = get();
+      if (open && (s.screen !== 'playing' || s.activeDialogue)) return;
+      if (open && document.pointerLockElement) document.exitPointerLock();
+      if (open) sfxEngine.play('page');
+      set({
+        isFridgeNotesOpen: open,
+        isPhotoAlbumOpen: false,
+        isKitchenOpen: false,
+        isBookStallOpen: false,
+        isLittleLibraryOpen: false,
+        isWardrobeOpen: false,
+        activeCulinarySpot: null,
+        isMapJournalOpen: false,
+        isPauseOpen: false,
+        isPhoneOpen: false,
+        isBagOpen: false,
+        isGuitarOpen: false,
+        isQuickGraphicsOpen: false,
+      });
+    },
+
+    addFridgeNote: (text, color) => {
+      const clean = text.trim();
+      if (!clean) return;
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      const tilt = ((Date.now() % 7) - 3) * 0.65;
+
+      const damarNote: FridgeNote = {
+        id: `fn_damar_${Date.now()}`,
+        author: 'damar',
+        text: clean,
+        color,
+        createdAt: timeStr,
+        tiltDeg: tilt,
+      };
+
+      // Balasan catatan kecil hangat dari Nadia atau Kira menyesuaikan isi pesan Damar!
+      const low = clean.toLowerCase();
+      let replyAuthor: 'nadia' | 'kira' = 'nadia';
+      let replyColor: FridgeNoteColor = 'pink';
+      let replyText = 'Bacanya aja sudah bikin tersenyum, Mas. Hati-hati di jalan, rumah selalu menunggumu.';
+
+      if (low.includes('gitar') || low.includes('lagu') || low.includes('musik') || low.includes('layang') || low.includes('merpati')) {
+        replyAuthor = 'kira';
+        replyColor = 'sky';
+        replyText = 'YEEEY!! Kira tunggu ya, Ayah! Janji jangan lupa nanti Kira ingetin lagi!!';
+      } else if (low.includes('martabak') || low.includes('roti') || low.includes('es krim') || low.includes('sup') || low.includes('makan')) {
+        replyAuthor = 'kira';
+        replyColor = 'mint';
+        replyText = 'Asyiiik makan enak bareng Ayah sama Bunda!! Kira sisain tempat paling nyaman di meja makan!';
+      } else if (low.includes('pulang') || low.includes('rindu') || low.includes('kangen') || low.includes('terima kasih') || low.includes('maaf')) {
+        replyAuthor = 'nadia';
+        replyColor = 'pink';
+        replyText = 'Terima kasih ya Mas... kalimat kecil begini di pintu kulkas rasanya jauh lebih hangat dari apa pun.';
+      } else if (Date.now() % 2 === 0) {
+        replyAuthor = 'kira';
+        replyColor = 'mint';
+        replyText = 'Kira tempel stiker bintang di samping catatan Ayah biar pintu kulkasnya makin keren!';
+      }
+
+      const replyNote: FridgeNote = {
+        id: `fn_reply_${Date.now() + 1}`,
+        author: replyAuthor,
+        text: replyText,
+        color: replyColor,
+        createdAt: timeStr,
+        tiltDeg: -tilt * 0.85,
+      };
+
+      sfxEngine.play('page');
+      set((s) => ({
+        fridgeNotes: [replyNote, damarNote, ...s.fridgeNotes].slice(0, 12),
+      }));
+
+      const s = get();
+      if (!s.flags.includes('wrote_fridge_note')) {
+        s.applyEffect({
+          kehadiranKeluarga: 2,
+          kejujuranDiri: 1,
+          setFlags: ['wrote_fridge_note'],
+          journalEntry: {
+            id: 'je_fridge_notes',
+            title: 'Catatan Kecil di Pintu Kulkas',
+            body: 'Aku menempelkan selembar catatan kecil dengan magnet di pintu kulkas rumah. Ternyata tidak butuh percakapan panjang untuk membuat Nadia dan Kira tahu bahwa aku selalu memikirkan mereka.',
+            chapter: s.chapter,
+          },
+        });
+      }
+
+      s.playFamilyBanter([{ speaker: replyAuthor, text: replyText }], `fw_fridge_${Date.now()}`);
+      s.showToast(
+        `${replyAuthor === 'nadia' ? 'Nadia' : 'Kira'} langsung menempelkan balasan catatan di pintu kulkas!`,
+      );
+      void s.saveCurrentGame(true);
+    },
+
+    deleteFridgeNote: (id) => {
+      sfxEngine.play('switch');
+      set((s) => ({
+        fridgeNotes: s.fridgeNotes.filter((n) => n.id !== id),
+      }));
+      void get().saveCurrentGame(true);
     },
 
     cycleKitchenRadio: () => {
@@ -1216,6 +1351,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
             createdAt: '07:30',
           },
         ],
+        fridgeNotes: [...INITIAL_FRIDGE_NOTES],
         stepCount: 0,
         transitionChapter: 1,
         screen: 'chapter_transition',
@@ -1285,6 +1421,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
             createdAt: '07:30',
           },
         ],
+        fridgeNotes: slot.fridgeNotes && slot.fridgeNotes.length > 0 ? [...slot.fridgeNotes] : [...INITIAL_FRIDGE_NOTES],
         stepCount: slot.stepCount ?? 0,
         screen: 'playing',
         loadingOverlay: {
@@ -1344,6 +1481,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         repliedPhonePrompts: { ...s.repliedPhonePrompts },
         readPhoneThreads: [...s.readPhoneThreads],
         playerNotes: [...s.playerNotes],
+        fridgeNotes: [...s.fridgeNotes],
         stepCount: s.stepCount,
       };
 
@@ -1376,6 +1514,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isBookStallOpen: false,
         isKitchenOpen: false,
         isPhotoAlbumOpen: false,
+        isFridgeNotesOpen: false,
         homeStoveLit: false,
         isRidingScooter: false,
         isRidingBicycle: false,

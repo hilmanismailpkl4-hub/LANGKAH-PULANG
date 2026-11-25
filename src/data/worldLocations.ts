@@ -320,6 +320,9 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'martabak_cart', minX: -37.28, maxX: -35.92, minZ: 22.5, maxZ: 25.1 },
   { id: 'martabak_bench', minX: -38.55, maxX: -37.88, minZ: 19.4, maxZ: 21.6 },
   { id: 'martabak_table', minX: -39.25, maxX: -38.6, minZ: 19.85, maxZ: 21.15 },
+
+  // === 16. Gerobak Sepeda Roti Hangat Pak Joko (Gang Perumahan Melati) ===
+  { id: 'bread_vendor_cart', minX: 1.9, maxX: 4.15, minZ: 52.6, maxZ: 53.8 },
 ];
 
 /**
@@ -385,6 +388,14 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
 
   // Penjual Martabak Bang Udin & Tiang Lampion Tepi Sungai
   { x: -37.55, z: 23.8, r: 0.42 },
+  // Penjual Roti Pak Joko, Tiang Jemuran Perumahan & Pot Gerbang Rumah Damar
+  { x: 3.32, z: 53.85, r: 0.42 },
+  { x: -29.2, z: 62.8, r: 0.14 },
+  { x: -29.2, z: 67.6, r: 0.14 },
+  { x: 7.5, z: 66.8, r: 0.14 },
+  { x: 7.5, z: 71.6, r: 0.14 },
+  { x: -21.85, z: 54.45, r: 0.24 },
+  { x: -18.15, z: 54.45, r: 0.24 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
     [-39.75, -9.5], [-39.75, -19.5], [-39.75, -29.5],

@@ -5,6 +5,7 @@ import { CulinaryModal } from './components/ui/CulinaryModal';
 import { DialogueOverlay } from './components/ui/DialogueOverlay';
 import { EndingScreen } from './components/ui/EndingScreen';
 import { FamilyPhotoAlbumModal } from './components/ui/FamilyPhotoAlbumModal';
+import { FridgeNotesModal } from './components/ui/FridgeNotesModal';
 import { GameHUD } from './components/ui/GameHUD';
 import { GraphicsSettingsModal } from './components/ui/GraphicsSettingsModal';
 import { GuitarMinigameModal } from './components/ui/GuitarMinigameModal';
@@ -64,6 +65,7 @@ export function App() {
       <CulinaryModal />
       <HomeKitchenModal />
       <FamilyPhotoAlbumModal />
+      <FridgeNotesModal />
       <WardrobeModal />
       <LittleLibraryModal />
       <BookStallModal />

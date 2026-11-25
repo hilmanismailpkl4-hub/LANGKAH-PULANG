@@ -12,6 +12,7 @@ import { FishingAndFlowerLibrary } from './FishingAndFlowerLibrary';
 import { HomeKitchenAndParkNature } from './HomeKitchenAndParkNature';
 import { HomeLivingAndBusStop } from './HomeLivingAndBusStop';
 import { NatureAndRainbow } from './NatureAndRainbow';
+import { NeighborhoodMorningAndFridge } from './NeighborhoodMorningAndFridge';
 import { ParkPlaygroundAndKoi } from './ParkPlaygroundAndKoi';
 import { PlayerController } from './PlayerController';
 import { PostEffects } from './PostEffects';
@@ -65,6 +66,7 @@ export const GameCanvas: React.FC = () => {
             <CityDetails timeOfDay={effectiveTime} settings={settings} pierLampFixed={pierLampFixed} />
             <RiversideNightMarket timeOfDay={effectiveTime} settings={settings} />
             <HomeKitchenAndParkNature timeOfDay={effectiveTime} settings={settings} />
+            <NeighborhoodMorningAndFridge timeOfDay={effectiveTime} settings={settings} />
             <HomeLivingAndBusStop timeOfDay={effectiveTime} settings={settings} />
             <ParkPlaygroundAndKoi timeOfDay={effectiveTime} settings={settings} />
             <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
