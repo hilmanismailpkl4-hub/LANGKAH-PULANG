@@ -28,9 +28,20 @@ const SONG_SEQUENCE: { chordIdx: number; lyric: string }[] = [
 export const GuitarMinigameModal: React.FC = () => {
   const isOpen = useGameStore((s) => s.isGuitarOpen);
   const setOpen = useGameStore((s) => s.setGuitarOpen);
+  const currentLocation = useGameStore((s) => s.currentLocation);
   const flags = useGameStore((s) => s.flags);
   const applyEffect = useGameStore((s) => s.applyEffect);
   const showToast = useGameStore((s) => s.showToast);
+
+  const isAtHome = currentLocation === 'rumah_damar';
+  const venueTitle =
+    currentLocation === 'rumah_damar'
+      ? 'Gitar Akustik Ruang Tamu · Jl. Melati No. 14'
+      : currentLocation === 'taman_danau'
+        ? 'Gitar Akustik Gazebo Taman Kota'
+        : currentLocation === 'toko_musik'
+          ? 'Gitar Etalase Toko Musik "Nada Lama"'
+          : 'Gitar Akustik Kedai Sudut';
 
   const [mode, setMode] = useState<'guided' | 'free'>('guided');
   const [stepIdx, setStepIdx] = useState(0);
@@ -50,21 +61,39 @@ export const GuitarMinigameModal: React.FC = () => {
         if (stepIdx + 1 >= SONG_SEQUENCE.length) {
           setCompletedSong(true);
           sfxEngine.play('chime');
-          if (!flags.includes('played_guitar_pulang')) {
-            applyEffect({
-              kejujuranDiri: 2,
-              setFlags: ['played_guitar_pulang'],
-              journalEntry: {
-                id: 'je_guitar_cafe',
-                title: 'Petikan Gitar di Kedai Bima',
-                body: 'Untuk pertama kalinya setelah enam tahun, jariku kembali memetik senar gitar akustik di Kedai Kopi Sudut. Bima tersenyum dari balik meja bar sambil berkata bahwa tanganku ternyata tidak pernah lupa lagu "Pulang".',
-                chapter: useGameStore.getState().chapter,
-              },
-            });
-          }
-          showToast('Bima: "Tuh kan, jarimu nggak pernah lupa nadanya, Mar..."');
-          if (useGameStore.getState().isFamilyWalkActive) {
-            useGameStore.getState().playFamilyBanter(EVENT_FAMILY_BANTERS.activity_guitar, 'fw_guitar');
+          if (isAtHome) {
+            if (!flags.includes('played_guitar_home')) {
+              applyEffect({
+                kehadiranKeluarga: 2,
+                kejujuranDiri: 1,
+                setFlags: ['played_guitar_home'],
+                journalEntry: {
+                  id: 'je_guitar_home',
+                  title: 'Konser Kecil di Ruang Tamu Jl. Melati',
+                  body: 'Aku memetik gitar akustik di ruang tamu rumah sendiri sambil dilihat Kira dan Nadia. Tidak ada lampu sorot megah—hanya tepuk tangan kecil Kira yang terasa jauh lebih berharga dari panggung mana pun.',
+                  chapter: useGameStore.getState().chapter,
+                },
+              });
+            }
+            showToast('Kira bertepuk tangan ceria sambil memeluk gitar kecilnya di ruang tamu!');
+            useGameStore.getState().playFamilyBanter(EVENT_FAMILY_BANTERS.activity_guitar, 'fw_guitar_home');
+          } else {
+            if (!flags.includes('played_guitar_pulang')) {
+              applyEffect({
+                kejujuranDiri: 2,
+                setFlags: ['played_guitar_pulang'],
+                journalEntry: {
+                  id: 'je_guitar_cafe',
+                  title: 'Petikan Gitar di Kedai Bima',
+                  body: 'Untuk pertama kalinya setelah enam tahun, jariku kembali memetik senar gitar akustik di Kedai Kopi Sudut. Bima tersenyum dari balik meja bar sambil berkata bahwa tanganku ternyata tidak pernah lupa lagu "Pulang".',
+                  chapter: useGameStore.getState().chapter,
+                },
+              });
+            }
+            showToast('Bima: "Tuh kan, jarimu nggak pernah lupa nadanya, Mar..."');
+            if (useGameStore.getState().isFamilyWalkActive) {
+              useGameStore.getState().playFamilyBanter(EVENT_FAMILY_BANTERS.activity_guitar, 'fw_guitar');
+            }
           }
         } else {
           setStepIdx((prev) => prev + 1);
@@ -105,9 +134,13 @@ export const GuitarMinigameModal: React.FC = () => {
                 <Music className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="font-serif text-xl text-warm-50">Gitar Akustik Kedai Sudut</h2>
+                <h2 className="font-serif text-xl text-warm-50">{venueTitle}</h2>
                 <p className="text-xs text-warm-200/65">
-                  Gunakan tombol keyboard <strong>1–6</strong> atau klik akor di bawah
+                  {isAtHome ? (
+                    <>Nadia & Kira ikut mendengarkan · tekan <strong>1–6</strong> atau klik akor</>
+                  ) : (
+                    <>Gunakan tombol keyboard <strong>1–6</strong> atau klik akor di bawah</>
+                  )}
                 </p>
               </div>
             </div>

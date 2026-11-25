@@ -730,6 +730,7 @@ export const WorldInteractables: React.FC = () => {
       store.isLittleLibraryOpen ||
       store.isBookStallOpen ||
       store.isKitchenOpen ||
+      store.isPhotoAlbumOpen ||
       store.isRidingScooter ||
       store.isRidingBicycle ||
       store.isSitting ||
@@ -1272,12 +1273,58 @@ export const WorldInteractables: React.FC = () => {
         kind: 'story_object',
         label: 'Masak & Seduh Hangat di Dapur Rumah',
         sublabel: 'Dapur Jl. Melati No. 14 · Teh Melati, Sup Ayam & Nasi Goreng',
-        position: [-16.9, 0.08, 71.95],
+        position: [-16.55, 0.08, 71.95],
         onInteract: () => {
           store.setKitchenOpen(true);
         },
       },
-      2.3,
+      1.95,
+    );
+
+    consider(
+      {
+        id: 'interior_kitchen_radio',
+        kind: 'story_object',
+        label:
+          !store.radioPaused && store.radioStation !== 'auto'
+            ? 'Ganti Saluran / Matikan Radio Kayu Dapur'
+            : 'Nyalakan Radio Kayu Dapur',
+        sublabel: 'Radio Retro · Musik Langsung di Rumah',
+        position: [-18.08, 0.08, 71.95],
+        onInteract: () => {
+          store.cycleKitchenRadio();
+        },
+      },
+      1.45,
+    );
+
+    consider(
+      {
+        id: 'interior_home_guitar',
+        kind: 'story_object',
+        label: 'Petik Gitar Akustik Bersama Nadia & Kira',
+        sublabel: 'Ruang Tamu · Rumah Jl. Melati No. 14',
+        position: [-23.45, 0.08, 63.25],
+        onInteract: () => {
+          sfxEngine.playGuitarChord(0);
+          store.setGuitarOpen(true);
+        },
+      },
+      2.2,
+    );
+
+    consider(
+      {
+        id: 'interior_photo_album',
+        kind: 'story_object',
+        label: 'Buka Buku Album Foto Keluarga',
+        sublabel: 'Meja Ruang Tamu · Kenangan & Jepretan Mode Foto [P]',
+        position: [-21.45, 0.08, 65.6],
+        onInteract: () => {
+          store.setPhotoAlbumOpen(true);
+        },
+      },
+      2.1,
     );
 
     if (store.timeOfDay !== 'rain_dusk') {

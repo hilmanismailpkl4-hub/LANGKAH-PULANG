@@ -218,6 +218,7 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'rumah_desk', minX: -26.25, maxX: -23.75, minZ: 71.5, maxZ: 72.75 },
   { id: 'rumah_fridge', minX: -15.15, maxX: -13.85, minZ: 71.8, maxZ: 73.0 },
   { id: 'rumah_sofa', minX: -24.95, maxX: -23.5, minZ: 64.1, maxZ: 67.1 },
+  { id: 'rumah_coffee_table', minX: -22.76, maxX: -21.94, minZ: 64.88, maxZ: 66.32 },
   { id: 'rumah_kira_corner', minX: -20.85, maxX: -18.75, minZ: 71.85, maxZ: 73.65 },
   { id: 'rumah_kitchen_counter', minX: -18.25, maxX: -15.55, minZ: 72.52, maxZ: 73.65 },
   { id: 'rumah_wardrobe', minX: -26.85, maxX: -25.85, minZ: 68.35, maxZ: 70.15 },
@@ -372,8 +373,9 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
     [16.5, -18.5], [41.5, -18.5], [-67, -24], [-67, -31],
   ] as [number, number][]).map(([x, z]) => ({ x, z, r: 0.56 })),
 
-  // Kucing Oranye "Sore"
+  // Kucing Oranye "Sore" & Stand Gitar Ruang Tamu Rumah Damar
   { x: 9.5, z: 56.5, r: 0.36 },
+  { x: -24.2, z: 63.1, r: 0.38 },
 
   // 4 Tiang Sudut Gazebo Panggung Akustik Taman Kota + Stand Gitar
   { x: -70.3, z: 17.2, r: 0.24 },

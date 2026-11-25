@@ -138,6 +138,7 @@ interface GameStoreState {
   isLittleLibraryOpen: boolean;
   isBookStallOpen: boolean;
   isKitchenOpen: boolean;
+  isPhotoAlbumOpen: boolean;
   homeStoveLit: boolean;
   isRidingScooter: boolean;
   isRidingBicycle: boolean;
@@ -189,7 +190,9 @@ interface GameStoreState {
   setLittleLibraryOpen: (open: boolean) => void;
   setBookStallOpen: (open: boolean) => void;
   setKitchenOpen: (open: boolean) => void;
+  setPhotoAlbumOpen: (open: boolean) => void;
   cookHomeRecipe: (recipeId: string) => void;
+  cycleKitchenRadio: () => void;
   setRidingScooter: (riding: boolean) => void;
   setRidingBicycle: (riding: boolean) => void;
   setGuitarOpen: (open: boolean) => void;
@@ -327,6 +330,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     isLittleLibraryOpen: false,
     isBookStallOpen: false,
     isKitchenOpen: false,
+    isPhotoAlbumOpen: false,
     homeStoveLit: false,
     isRidingScooter: false,
     isRidingBicycle: false,
@@ -593,6 +597,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       if (open) sfxEngine.play('interact');
       set({
         isKitchenOpen: open,
+        isPhotoAlbumOpen: false,
         isBookStallOpen: false,
         isLittleLibraryOpen: false,
         isWardrobeOpen: false,
@@ -604,6 +609,50 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isGuitarOpen: false,
         isQuickGraphicsOpen: false,
       });
+    },
+
+    setPhotoAlbumOpen: (open) => {
+      const s = get();
+      if (open && (s.screen !== 'playing' || s.activeDialogue)) return;
+      if (open && document.pointerLockElement) document.exitPointerLock();
+      if (open) sfxEngine.play('page');
+      set({
+        isPhotoAlbumOpen: open,
+        isKitchenOpen: false,
+        isBookStallOpen: false,
+        isLittleLibraryOpen: false,
+        isWardrobeOpen: false,
+        activeCulinarySpot: null,
+        isMapJournalOpen: false,
+        isPauseOpen: false,
+        isPhoneOpen: false,
+        isBagOpen: false,
+        isGuitarOpen: false,
+        isQuickGraphicsOpen: false,
+      });
+    },
+
+    cycleKitchenRadio: () => {
+      const s = get();
+      const order: RadioStationId[] = ['senja_fm', 'langkah_kecil', 'piano_hujan', 'malam_rooftop', 'auto'];
+      sfxEngine.play('switch');
+
+      if (s.radioPaused || s.radioStation === 'auto') {
+        s.setRadioStation('senja_fm');
+        s.showToast('Radio Dapur menyala: Radio Senja 98.4 FM (Akustik Sore).');
+        return;
+      }
+
+      const curIdx = order.indexOf(s.radioStation);
+      const next = order[(curIdx + 1) % order.length];
+      if (next === 'auto') {
+        s.setRadioStation('auto');
+        s.showToast('Radio Dapur dimatikan — suasana rumah kembali hening.');
+      } else {
+        s.setRadioStation(next);
+        const info = RADIO_STATIONS.find((r) => r.id === next);
+        s.showToast(`Radio Dapur berganti saluran: ${info?.name ?? next}`);
+      }
     },
 
     cookHomeRecipe: (recipeId) => {
@@ -1326,6 +1375,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isLittleLibraryOpen: false,
         isBookStallOpen: false,
         isKitchenOpen: false,
+        isPhotoAlbumOpen: false,
         homeStoveLit: false,
         isRidingScooter: false,
         isRidingBicycle: false,

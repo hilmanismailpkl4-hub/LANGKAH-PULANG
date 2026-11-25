@@ -4,6 +4,7 @@ import { ChapterTransition } from './components/ui/ChapterTransition';
 import { CulinaryModal } from './components/ui/CulinaryModal';
 import { DialogueOverlay } from './components/ui/DialogueOverlay';
 import { EndingScreen } from './components/ui/EndingScreen';
+import { FamilyPhotoAlbumModal } from './components/ui/FamilyPhotoAlbumModal';
 import { GameHUD } from './components/ui/GameHUD';
 import { GraphicsSettingsModal } from './components/ui/GraphicsSettingsModal';
 import { GuitarMinigameModal } from './components/ui/GuitarMinigameModal';
@@ -62,6 +63,7 @@ export function App() {
       <GuitarMinigameModal />
       <CulinaryModal />
       <HomeKitchenModal />
+      <FamilyPhotoAlbumModal />
       <WardrobeModal />
       <LittleLibraryModal />
       <BookStallModal />

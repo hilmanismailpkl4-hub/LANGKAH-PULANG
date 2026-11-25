@@ -137,7 +137,9 @@ export const PlayerController: React.FC = () => {
 
       // Tutup overlay dengan Escape
       if (code === 'Escape') {
-        if (state.isKitchenOpen) {
+        if (state.isPhotoAlbumOpen) {
+          state.setPhotoAlbumOpen(false);
+        } else if (state.isKitchenOpen) {
           state.setKitchenOpen(false);
         } else if (state.isBookStallOpen) {
           state.setBookStallOpen(false);
@@ -179,7 +181,8 @@ export const PlayerController: React.FC = () => {
         state.isWardrobeOpen ||
         state.isLittleLibraryOpen ||
         state.isBookStallOpen ||
-        state.isKitchenOpen
+        state.isKitchenOpen ||
+        state.isPhotoAlbumOpen
       )
         return;
 
@@ -415,7 +418,8 @@ export const PlayerController: React.FC = () => {
         state.isWardrobeOpen ||
         state.isLittleLibraryOpen ||
         state.isBookStallOpen ||
-        state.isKitchenOpen
+        state.isKitchenOpen ||
+        state.isPhotoAlbumOpen
       )
         return;
       isDraggingRef.current = true;
@@ -440,7 +444,8 @@ export const PlayerController: React.FC = () => {
         state.isWardrobeOpen ||
         state.isLittleLibraryOpen ||
         state.isBookStallOpen ||
-        state.isKitchenOpen
+        state.isKitchenOpen ||
+        state.isPhotoAlbumOpen
       )
         return;
 
@@ -480,7 +485,8 @@ export const PlayerController: React.FC = () => {
         state.isWardrobeOpen ||
         state.isLittleLibraryOpen ||
         state.isBookStallOpen ||
-        state.isKitchenOpen
+        state.isKitchenOpen ||
+        state.isPhotoAlbumOpen
       )
         return;
       if (!document.pointerLockElement && dom.requestPointerLock) {
@@ -502,7 +508,8 @@ export const PlayerController: React.FC = () => {
         state.isWardrobeOpen ||
         state.isLittleLibraryOpen ||
         state.isBookStallOpen ||
-        state.isKitchenOpen
+        state.isKitchenOpen ||
+        state.isPhotoAlbumOpen
       )
         return;
       zoomRef.current = THREE.MathUtils.clamp(zoomRef.current + e.deltaY * 0.0038, 2.8, 12.0);
@@ -988,7 +995,8 @@ export const PlayerController: React.FC = () => {
       !store.isWardrobeOpen &&
       !store.isLittleLibraryOpen &&
       !store.isBookStallOpen &&
-      !store.isKitchenOpen;
+      !store.isKitchenOpen &&
+      !store.isPhotoAlbumOpen;
 
     let moveX = 0;
     let moveZ = 0;
