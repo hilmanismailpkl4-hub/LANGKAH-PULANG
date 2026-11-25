@@ -286,4 +286,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'Dari kursi jendela kantor Ayah kelihatan semua angkot sama halte bus di seberang jalan!' },
     { speaker: 'nadia', text: 'Istirahat sebentar di sini enak ya, Mas... menarik napas dulu sebelum melangkah lagi.' },
   ],
+  activity_water_garden: [
+    { speaker: 'nadia', text: 'Wah, terima kasih banyak ya Mas sudah bantu menyiram pot melati sama mawar di teras! Langsung kelihatan segar banget daunnya.' },
+    { speaker: 'kira', text: 'Bunga matahari kecil punya Kira juga ikut mekar tuh, Ayah!! Wangi tanah basahnya enak banget!' },
+  ],
+  activity_home_mailbox: [
+    { speaker: 'nadia', text: 'Ada kartu pos dari Ibu di Bandung ya, Mas? Nanti malam kita telepon Ibu bareng Kira yuk.' },
+    { speaker: 'kira', text: 'Horeee!! Nenek kirim jaket kuning buat Kira!!' },
+  ],
 };

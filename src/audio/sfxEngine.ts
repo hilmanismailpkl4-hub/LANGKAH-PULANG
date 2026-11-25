@@ -215,6 +215,38 @@ class SfxEngine {
   }
 
   /**
+   * Suara gemericik lembut air dari gembor saat menyiram pot bunga Nadia di halaman rumah.
+   */
+  public playWateringSpray() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // 3 pancuran lembut beruntun seperti air mengalir dari corong gembor
+    [0, 0.42, 0.85].forEach((offset, idx) => {
+      const src = ctx.createBufferSource();
+      src.buffer = this.getNoiseBuffer(ctx);
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(1950 + idx * 180, now + offset);
+      filter.frequency.linearRampToValueAtTime(1400, now + offset + 0.48);
+      filter.Q.value = 1.1;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.001, now + offset);
+      g.gain.linearRampToValueAtTime(0.085 * v, now + offset + 0.09);
+      g.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.52);
+      src.connect(filter).connect(g).connect(ctx.destination);
+      src.start(now + offset, (idx * 0.21) % 0.5, 0.55);
+    });
+
+    // Denting halus menyegarkan di akhir siraman
+    this.softTone(ctx, 880, now + 0.72, 0.26, 0.038 * v, 'sine');
+    this.softTone(ctx, 1174.66, now + 0.86, 0.36, 0.042 * v, 'sine');
+  }
+
+  /**
    * Petikan gitar akustik lembut dari pemusik jalanan tepi sungai.
    */
   public playBuskerStrum(distanceFactor = 1, celebrate = false) {

@@ -227,6 +227,7 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'rumah_tv_console', minX: -14.15, maxX: -13.2, minZ: 67.85, maxZ: 69.95 },
   { id: 'rumah_fence_l', minX: -27.4, maxX: -22.0, minZ: 53.6, maxZ: 54.4 },
   { id: 'rumah_fence_r', minX: -18.0, maxX: -12.6, minZ: 53.6, maxZ: 54.4 },
+  { id: 'rumah_garden_rack', minX: -26.55, maxX: -23.35, minZ: 59.85, maxZ: 61.35 },
 
   // === 2. Perumahan Melati ===
   { id: 'house_n1', minX: 10.1, maxX: 20.9, minZ: 65.4, maxZ: 76.6 },
@@ -418,6 +419,13 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: 32.82, z: -20.18, r: 0.38 },
   { x: 39.45, z: -24.6, r: 0.34 },
   { x: 18.65, z: -20.1, r: 0.34 },
+
+  // 8 Lampu Taman Tenaga Surya di Halaman Rumah Jl. Melati No. 14
+  ...([
+    [-21.88, 56.1], [-21.88, 58.0], [-21.88, 59.9],
+    [-18.12, 56.1], [-18.12, 58.0], [-18.12, 59.9],
+    [-26.25, 59.5], [-23.5, 59.5],
+  ] as [number, number][]).map(([x, z]) => ({ x, z, r: 0.11 })),
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
     [-39.75, -9.5], [-39.75, -19.5], [-39.75, -29.5],

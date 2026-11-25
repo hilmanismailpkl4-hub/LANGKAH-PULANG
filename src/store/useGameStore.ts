@@ -143,6 +143,9 @@ interface GameStoreState {
   isPhotoAlbumOpen: boolean;
   isFridgeNotesOpen: boolean;
   isNewsstandOpen: boolean;
+  isMailboxOpen: boolean;
+  readMailIds: string[];
+  gardenWatered: boolean;
   fridgeNotes: FridgeNote[];
   homeStoveLit: boolean;
   isRidingScooter: boolean;
@@ -198,6 +201,9 @@ interface GameStoreState {
   setPhotoAlbumOpen: (open: boolean) => void;
   setFridgeNotesOpen: (open: boolean) => void;
   setNewsstandOpen: (open: boolean) => void;
+  setMailboxOpen: (open: boolean) => void;
+  markMailRead: (mailId: string) => void;
+  waterHomeGarden: () => void;
   addFridgeNote: (text: string, color: FridgeNoteColor) => void;
   deleteFridgeNote: (id: string) => void;
   cookHomeRecipe: (recipeId: string) => void;
@@ -361,6 +367,9 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     isPhotoAlbumOpen: false,
     isFridgeNotesOpen: false,
     isNewsstandOpen: false,
+    isMailboxOpen: false,
+    readMailIds: [],
+    gardenWatered: false,
     fridgeNotes: [...INITIAL_FRIDGE_NOTES],
     homeStoveLit: false,
     isRidingScooter: false,
@@ -708,6 +717,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       }
       set({
         isNewsstandOpen: open,
+        isMailboxOpen: false,
         isFridgeNotesOpen: false,
         isPhotoAlbumOpen: false,
         isKitchenOpen: false,
@@ -722,6 +732,81 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isGuitarOpen: false,
         isQuickGraphicsOpen: false,
       });
+    },
+
+    setMailboxOpen: (open) => {
+      const s = get();
+      if (open && (s.screen !== 'playing' || s.activeDialogue)) return;
+      if (open && document.pointerLockElement) document.exitPointerLock();
+      if (open) {
+        sfxEngine.play('page');
+        if (!s.flags.includes('checked_home_mailbox')) {
+          s.applyEffect({
+            kejujuranDiri: 1,
+            setFlags: ['checked_home_mailbox'],
+            journalEntry: {
+              id: 'je_home_mailbox',
+              title: 'Surat-Surat Hangat di Pagar Depan',
+              body: 'Kotak surat besi hijau di pagar Jl. Melati No. 14 masih menyimpan kehangatan lama: kartu pos Ibu dari Bandung, undangan gitar dari Bima, surat kerja bakti Pak RT, dan catatan resep kolak dari Bu Wati.',
+              chapter: s.chapter,
+            },
+          });
+        }
+        if (s.isFamilyWalkActive) {
+          s.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_home_mailbox, 'fw_home_mailbox');
+        }
+      }
+      set({
+        isMailboxOpen: open,
+        isNewsstandOpen: false,
+        isFridgeNotesOpen: false,
+        isPhotoAlbumOpen: false,
+        isKitchenOpen: false,
+        isBookStallOpen: false,
+        isLittleLibraryOpen: false,
+        isWardrobeOpen: false,
+        activeCulinarySpot: null,
+        isMapJournalOpen: false,
+        isPauseOpen: false,
+        isPhoneOpen: false,
+        isBagOpen: false,
+        isGuitarOpen: false,
+        isQuickGraphicsOpen: false,
+      });
+    },
+
+    markMailRead: (mailId) => {
+      set((s) => ({
+        readMailIds: s.readMailIds.includes(mailId) ? s.readMailIds : [...s.readMailIds, mailId],
+      }));
+    },
+
+    waterHomeGarden: () => {
+      const s = get();
+      playerRuntime.gardenWaterTimer = 4.5;
+      sfxEngine.playWateringSpray();
+      set({ gardenWatered: true });
+
+      if (!s.flags.includes('watered_nadia_garden')) {
+        s.applyEffect({
+          kehadiranKeluarga: 1,
+          kejujuranDiri: 1,
+          setFlags: ['watered_nadia_garden'],
+          journalEntry: {
+            id: 'je_nadia_garden',
+            title: 'Merawat Pot Melati di Halaman Depan',
+            body: 'Gemericik air dari gembor hijau menyegarkan pot melati, mawar merah muda, dan bunga matahari kecil milik Kira di teras depan. Aroma tanah basah mengingatkan bahwa rumah selalu tumbuh saat dirawat bersama.',
+            chapter: s.chapter,
+          },
+        });
+      }
+
+      s.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_water_garden, 'fw_water_garden');
+      s.showToast(
+        s.timeOfDay === 'rain_dusk'
+          ? 'Merapikan dan menyiram sudut teduh pot bunga Nadia—kelopak melati & mawar tampak makin segar!'
+          : 'Menyiram pot bunga Nadia dengan gembor hijau—kelopak melati, mawar & matahari mini langsung mekar segar!',
+      );
     },
 
     addFridgeNote: (text, color) => {
@@ -1393,6 +1478,9 @@ export const useGameStore = create<GameStoreState>((set, get) => {
           },
         ],
         fridgeNotes: [...INITIAL_FRIDGE_NOTES],
+        isMailboxOpen: false,
+        readMailIds: [],
+        gardenWatered: false,
         stepCount: 0,
         transitionChapter: 1,
         screen: 'chapter_transition',
@@ -1463,6 +1551,9 @@ export const useGameStore = create<GameStoreState>((set, get) => {
           },
         ],
         fridgeNotes: slot.fridgeNotes && slot.fridgeNotes.length > 0 ? [...slot.fridgeNotes] : [...INITIAL_FRIDGE_NOTES],
+        isMailboxOpen: false,
+        readMailIds: slot.flags.includes('checked_home_mailbox') ? ['mail_ibu_bandung'] : [],
+        gardenWatered: slot.flags.includes('watered_nadia_garden'),
         stepCount: slot.stepCount ?? 0,
         screen: 'playing',
         loadingOverlay: {
@@ -1557,6 +1648,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isPhotoAlbumOpen: false,
         isFridgeNotesOpen: false,
         isNewsstandOpen: false,
+        isMailboxOpen: false,
         homeStoveLit: false,
         isRidingScooter: false,
         isRidingBicycle: false,

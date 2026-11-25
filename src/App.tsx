@@ -13,6 +13,7 @@ import { HomeKitchenModal } from './components/ui/HomeKitchenModal';
 import { InventoryBagModal } from './components/ui/InventoryBagModal';
 import { LittleLibraryModal } from './components/ui/LittleLibraryModal';
 import { LoadingScreenOverlay } from './components/ui/LoadingScreenOverlay';
+import { MailboxModal } from './components/ui/MailboxModal';
 import { MapJournalModal } from './components/ui/MapJournalModal';
 import { NewsstandModal } from './components/ui/NewsstandModal';
 import { PauseSettingsModal } from './components/ui/PauseSettingsModal';
@@ -71,6 +72,7 @@ export function App() {
       <LittleLibraryModal />
       <BookStallModal />
       <NewsstandModal />
+      <MailboxModal />
       <InventoryBagModal />
       <PhoneNotification />
       <DialogueOverlay />

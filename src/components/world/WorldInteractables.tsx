@@ -733,6 +733,7 @@ export const WorldInteractables: React.FC = () => {
       store.isPhotoAlbumOpen ||
       store.isFridgeNotesOpen ||
       store.isNewsstandOpen ||
+      store.isMailboxOpen ||
       store.isRidingScooter ||
       store.isRidingBicycle ||
       store.isSitting ||
@@ -1467,6 +1468,39 @@ export const WorldInteractables: React.FC = () => {
 
     consider(
       {
+        id: 'activity_water_nadia_garden',
+        kind: 'story_object',
+        label: store.gardenWatered
+          ? 'Siram Lagi Pot Tanaman Bunga Nadia'
+          : 'Siram Pot Tanaman Bunga Nadia',
+        sublabel: 'Halaman Rumah Jl. Melati No. 14 · Melati, Mawar & Matahari Mini',
+        position: [-24.8, 0, 59.35],
+        onInteract: () => {
+          store.waterHomeGarden();
+        },
+      },
+      2.45,
+    );
+
+    consider(
+      {
+        id: 'activity_home_mailbox',
+        kind: 'story_object',
+        label:
+          store.readMailIds.length < 4
+            ? 'Buka Kotak Surat Pagar (Ada Surat Baru)'
+            : 'Periksa Kotak Surat Pagar Rumah',
+        sublabel: 'Jl. Melati No. 14 · Kartu Pos Bandung, Bima, Pak RT & Bu Wati',
+        position: [-16.9, 0, 53.0],
+        onInteract: () => {
+          store.setMailboxOpen(true);
+        },
+      },
+      2.65,
+    );
+
+    consider(
+      {
         id: 'activity_bread_vendor',
         kind: 'story_object',
         label: 'Beli Roti Hangat dari Gerobak Pak Joko',
@@ -2042,6 +2076,14 @@ export const WorldInteractables: React.FC = () => {
       </mesh>
       <mesh position={[75.8, 1.52, -2.1]}>
         <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#fcd34d" />
+      </mesh>
+      <mesh position={[-25.0, 1.58, 60.85]}>
+        <sphereGeometry args={[0.07, 8, 8]} />
+        <meshBasicMaterial color="#86efac" />
+      </mesh>
+      <mesh position={[-16.9, 1.48, 53.72]}>
+        <sphereGeometry args={[0.07, 8, 8]} />
         <meshBasicMaterial color="#fcd34d" />
       </mesh>
 
