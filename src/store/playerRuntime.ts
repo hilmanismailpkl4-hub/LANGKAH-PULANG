@@ -125,6 +125,7 @@ export const playerRuntime = {
   pigeonFeedTimer: 0,
   pigeonFeedPoint: [-81.5, 12.2] as [number, number],
   gardenWaterTimer: 0,
+  badmintonRallyTimer: 0,
   swingBoostTimer: 0,
   kiteHeight: 0,
   kitePullBoost: 0,
@@ -192,6 +193,7 @@ export function resetScooterToHome() {
   playerRuntime.koiFeedTimer = 0;
   playerRuntime.pigeonFeedTimer = 0;
   playerRuntime.gardenWaterTimer = 0;
+  playerRuntime.badmintonRallyTimer = 0;
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;
   playerRuntime.kitePullBoost = 0;

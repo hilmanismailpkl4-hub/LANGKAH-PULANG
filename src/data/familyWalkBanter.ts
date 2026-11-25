@@ -338,4 +338,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'nadia', text: 'Warung Bu Rina ini penolong banget lho Mas kalau mendadak kehabisan gula atau kecap malam-malam.' },
     { speaker: 'kira', text: 'Lihat Yah, kerupuk putih di toples besarnya kelihatan renyah banget!' },
   ],
+  activity_badminton: [
+    { speaker: 'kira', text: 'PLOK! PLOK!! Keren banget koknya terbang tinggi banget lewat net, Ayah!! Besok ajarin Kira main ya!' },
+    { speaker: 'nadia', text: 'Wah, seru banget! Lama nggak lihat kamu main bulu tangkis di lapangan gang kayak dulu, Mas!' },
+  ],
+  activity_park_stretch: [
+    { speaker: 'nadia', text: 'Tarik napas pelan-pelan, Mas... enak banget peregangan bareng warga di rumput taman begini.' },
+    { speaker: 'kira', text: 'Kira bisa angkat tangan paling tinggi nih, lihat deh Ayah!!' },
+  ],
 };

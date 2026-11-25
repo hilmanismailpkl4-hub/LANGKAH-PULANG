@@ -215,6 +215,42 @@ class SfxEngine {
   }
 
   /**
+   * Bunyi tepokan kok bulu tangkis yang renyah ("plok!") saat rally di Lapangan Gang Melati.
+   */
+  public playBadmintonHit(distanceFactor = 1) {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume * Math.max(0.2, Math.min(1, distanceFactor));
+
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(640 + Math.random() * 75, now);
+    osc.frequency.exponentialRampToValueAtTime(195, now + 0.055);
+    g.gain.setValueAtTime(0.001, now);
+    g.gain.linearRampToValueAtTime(0.14 * v, now + 0.005);
+    g.gain.exponentialRampToValueAtTime(0.0008, now + 0.075);
+    osc.connect(g).connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.085);
+
+    const src = ctx.createBufferSource();
+    src.buffer = this.getNoiseBuffer(ctx);
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 1850;
+    filter.Q.value = 2.0;
+    const ng = ctx.createGain();
+    ng.gain.setValueAtTime(0.001, now);
+    ng.gain.linearRampToValueAtTime(0.07 * v, now + 0.004);
+    ng.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+    src.connect(filter).connect(ng).connect(ctx.destination);
+    src.start(now, Math.random() * 0.3, 0.055);
+  }
+
+  /**
    * Bunyi khas ketukan sendok pada mangkuk porselen gerobak bakso keliling ("ting-ting... ting-ting-ting!").
    */
   public playBaksoClink(distanceFactor = 1) {

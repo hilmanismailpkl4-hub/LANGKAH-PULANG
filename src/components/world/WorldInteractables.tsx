@@ -930,6 +930,102 @@ export const WorldInteractables: React.FC = () => {
       2.65,
     );
 
+    consider(
+      {
+        id: 'activity_melati_badminton',
+        kind: 'story_object',
+        label: 'Pukul & Rally Kok Bulu Tangkis di Lapangan Gang Melati',
+        sublabel: 'Lapangan Bulu Tangkis RT · Perumahan Melati',
+        position: [36.0, 0, 49.8],
+        onInteract: () => {
+          playerRuntime.badmintonRallyTimer = 7.4;
+          sfxEngine.playBadmintonHit(1.0);
+          if (!store.flags.includes('played_melati_badminton')) {
+            store.applyEffect({
+              kehadiranKeluarga: 1,
+              kejujuranDiri: 1,
+              setFlags: ['played_melati_badminton'],
+              journalEntry: {
+                id: 'je_melati_badminton',
+                title: 'Tepokan Kok di Lapangan Bulu Tangkis Gang Melati',
+                body: 'Bunyi "plok!" kok yang melambung melewati net di lapangan cat putih Gang Melati langsung membawa rasa ringan yang lama hilang. Keringat tipis sore ini terasa jauh lebih jujur daripada penat di ruang rapat.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_badminton, 'fw_badminton');
+          }
+          store.showToast('Plok! Kok bulu tangkis melambung seru melintasi net di Lapangan Gang Melati!');
+        },
+      },
+      3.5,
+    );
+
+    if (store.timeOfDay !== 'rain_dusk') {
+      consider(
+        {
+          id: 'activity_park_stretch',
+          kind: 'story_object',
+          label: 'Ikut Tarik Napas & Peregangan Bersama Warga Taman',
+          sublabel: 'Kelompok Senam Santai · Rumput Taman Kota',
+          position: [-83.5, 0, 36.1],
+          onInteract: () => {
+            sfxEngine.play('chime');
+            if (!store.flags.includes('joined_park_stretch')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                setFlags: ['joined_park_stretch'],
+                journalEntry: {
+                  id: 'je_park_stretch',
+                  title: 'Peregangan Santai di Rumput Taman Kota',
+                  body: 'Mengikuti gerakan perlahan warga di rumput Taman Kota—menarik napas dalam dan merentangkan bahu di udara terbuka—membuat pundak yang kaku seharian di depan laptop terasa kembali lentur.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_park_stretch, 'fw_park_stretch');
+            }
+            store.showToast('Tarik napas dalam, rentangkan bahu, lalu embuskan pelan—badan terasa jauh lebih segar!');
+          },
+        },
+        3.0,
+      );
+    }
+
+    consider(
+      {
+        id: 'inspect_signpost_park',
+        kind: 'story_object',
+        label: 'Baca Tiang Penunjuk Arah Taman & Danau Senja',
+        sublabel: 'Gerbang Taman Kota · Buka Peta [M]',
+        position: [-62.2, 0, -6.2],
+        onInteract: () => {
+          sfxEngine.play('page');
+          store.toggleMapJournal('map');
+          store.showToast('Membuka peta kota dari Tiang Penunjuk Arah Taman & Danau Senja.');
+        },
+      },
+      2.6,
+    );
+
+    consider(
+      {
+        id: 'inspect_signpost_junction',
+        kind: 'story_object',
+        label: 'Baca Tiang Penunjuk Arah Jl. Kenangan & Jl. Melati',
+        sublabel: 'Persimpangan Kedai Bima · Buka Peta [M]',
+        position: [-10.4, 0, 10.8],
+        onInteract: () => {
+          sfxEngine.play('page');
+          store.toggleMapJournal('map');
+          store.showToast('Membuka peta kota dari Tiang Penunjuk Arah Persimpangan Jl. Kenangan.');
+        },
+      },
+      2.6,
+    );
+
     // === 3B. KULINER & NONGKRONG 2: BANGKU ANGKRINGAN PAK SLAMET ===
     consider(
       {
@@ -2321,6 +2417,10 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[14.8, 2.08, 50.0]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#fcd34d" />
+      </mesh>
+      <mesh position={[34.3, 1.05, 46.55]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#fde047" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

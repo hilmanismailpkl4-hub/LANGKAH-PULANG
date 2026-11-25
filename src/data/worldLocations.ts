@@ -347,6 +347,7 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'bakso_cart', minX: -27.95, maxX: -25.65, minZ: 47.2, maxZ: 48.4 },
   { id: 'bakso_bench', minX: -25.35, maxX: -23.85, minZ: 47.55, maxZ: 48.1 },
   { id: 'corner_warung_building', minX: 12.45, maxX: 17.15, minZ: 46.55, maxZ: 50.0 },
+  { id: 'badminton_bench', minX: 33.55, maxX: 35.05, minZ: 46.28, maxZ: 46.82 },
 ];
 
 /**
@@ -455,6 +456,15 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: -26.8, z: 46.8, r: 0.42 },
   { x: 12.7, z: 50.55, r: 0.14 },
   { x: 16.9, z: 50.55, r: 0.14 },
+
+  // Tiang Net Bulu Tangkis Gang Melati, 3 Warga Senam Taman & 2 Tiang Penunjuk Arah Kayu
+  { x: 38.5, z: 46.95, r: 0.16 },
+  { x: 38.5, z: 52.65, r: 0.16 },
+  { x: -83.5, z: 32.15, r: 0.42 },
+  { x: -84.95, z: 34.25, r: 0.42 },
+  { x: -82.05, z: 34.25, r: 0.42 },
+  { x: -62.2, z: -6.2, r: 0.22 },
+  { x: -10.4, z: 10.8, r: 0.22 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
     [-39.75, -9.5], [-39.75, -19.5], [-39.75, -29.5],
