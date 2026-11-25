@@ -175,6 +175,16 @@ export const SPOT_FAMILY_BANTERS: SpotBanterEntry[] = [
       { speaker: 'kira', text: 'Ayah, Kira mau sate ayam pakai kecap manis sama lontong dong!' },
     ],
   },
+  {
+    id: 'fw_spot_dawet_cart',
+    x: 42.8,
+    z: -13.6,
+    radius: 9.0,
+    lines: [
+      { speaker: 'nadia', text: 'Eh, ada gerobak Es Dawet Ayu Pak Darmo di depan Menara Nusantara! Segar banget kayaknya, Mas.' },
+      { speaker: 'kira', text: 'Kira mau es cendol hijau yang ada gulanya manis-manis itu, Yah!' },
+    ],
+  },
 ];
 
 /**
@@ -371,5 +381,9 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
   activity_pos_kamling: [
     { speaker: 'nadia', text: 'Adem ya duduk sebentar di Pos Kamling sambil lihat papan catur sama termos kopi begini.' },
     { speaker: 'kira', text: 'Ayah, nanti ajarin Kira main catur pakai kuda-kudaan kecil itu ya!' },
+  ],
+  activity_kota_senja_monument: [
+    { speaker: 'nadia', text: '"Kota Senja — Ruang untuk Pulang"... bagus banget ya kalimat di tugu taman bundar ini, Mas.' },
+    { speaker: 'kira', text: 'Bunga-bunga di sekeliling tugunya warna-warni banget! Nanti kita foto di sini ya, Yah!' },
   ],
 };

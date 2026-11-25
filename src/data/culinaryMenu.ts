@@ -9,7 +9,8 @@ export type CulinarySpotId =
   | 'office_pantry'
   | 'coconut'
   | 'bakso'
-  | 'sate';
+  | 'sate'
+  | 'dawet';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -21,7 +22,8 @@ export type HeldDrinkVisual =
   | 'soup'
   | 'roti'
   | 'coconut'
-  | 'sate';
+  | 'sate'
+  | 'dawet';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -149,6 +151,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [11.9, 0, 32.1],
     seatYaw: Math.PI,
     tablePropPos: [13.4, 0.78, 31.8],
+  },
+  dawet: {
+    id: 'dawet',
+    title: 'Es Cendol Dawet Ayu Pak Darmo',
+    hostName: 'Pak Darmo',
+    subtitle: 'Plaza Menara Nusantara · Cendol Pandan, Santan & Gula Aren Asli',
+    seatPos: [40.4, 0.14, -13.6],
+    lookAt: [42.8, 1.35, -13.6],
+    standPos: [40.4, 0, -12.3],
+    seatYaw: Math.PI / 2,
+    tablePropPos: [42.2, 1.12, -13.6],
   },
 };
 
@@ -555,6 +568,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Kira mau sate yang pakai kecap manis aja ya, Ayah! Enak bangettt makannya pakai lontong!' },
       { speaker: 'nadia', text: 'Makasih ya Mas buat makan malam sate Maduranya—bumbu kacangnya Cak Mat juara banget.' },
+    ],
+  },
+
+  // === 10. GEROBAK ES CENDOL DAWET AYU PAK DARMO (PLAZA MENARA NUSANTARA) ===
+  {
+    id: 'dawet_original',
+    spot: 'dawet',
+    name: 'Es Dawet Ayu Cendol Gula Aren Asli',
+    priceLabel: 'Rp 10.000',
+    tagline: 'Cendol tepung beras hijau pandan, santan gurih segar, dan sirup gula aren kental wangi.',
+    tasteNote: 'Manis legit gula aren dan dinginnya es serut langsung meluruhkan penat sepulang dari gedung kantor.',
+    drinkVisual: 'dawet',
+    isHot: false,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Wangi gula aren sama daun pandannya asli banget ya, Mas! Segar banget buat sore hari.' },
+    ],
+  },
+  {
+    id: 'dawet_nangka_tape',
+    spot: 'dawet',
+    name: 'Es Dawet Ayu Spesial Nangka & Tape Ketan',
+    priceLabel: 'Rp 14.000',
+    tagline: 'Tambahan potongan buah nangka harum dan tape ketan manis lembut di atas cendol dingin.',
+    tasteNote: 'Rasa tradisional yang selalu terasa hangat di ingatan—persis minuman pulang sekolah masa kecil.',
+    drinkVisual: 'dawet',
+    isHot: false,
+    familyReaction: [
+      { speaker: 'kira', text: 'Waaah ada cendol hijau kenyal-kenyal sama buah nangka kuning, Yah! Manis banget!' },
+    ],
+  },
+  {
+    id: 'dawet_family',
+    spot: 'dawet',
+    name: 'Traktir Keluarga Es Dawet Ayu (Paket Plaza Kantor)',
+    priceLabel: 'Rp 32.000',
+    tagline: 'Tiga gelas besar Es Dawet Ayu lengkap dengan potongan nangka wangi & es batu segar.',
+    tasteNote: 'Pak Darmo menyendok cendol dari gentong tanah liat sambil tersenyum ramah—siang menuju sore di plaza kantor jadi terasa santai.',
+    drinkVisual: 'dawet',
+    isHot: false,
+    isFamilyTreat: true,
+    journalTitle: 'Segarnya Es Dawet Ayu di Depan Menara Nusantara',
+    journalBody: 'Di bawah payung gerobak Pak Darmo di tepi plaza Menara Nusantara, aku mengajak Nadia dan Kira menikmati tiga gelas Es Dawet Ayu dingin. Gurihnya santan dan wangi gula aren mengingatkan bahwa jeda manis sering hadir tepat di tepi jalan biasa.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Slurppp!! Cendol hijaunya naik lewat sedotan, Ayah!! Enak bangettt es dawetnya Pak Darmo!' },
+      { speaker: 'nadia', text: 'Segar banget ya Mas... senang deh lihat kamu masih sempat mampir jajan manis begini sepulang kerja.' },
     ],
   },
 ];

@@ -195,6 +195,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= 12.2 && x <= 17.4 && z >= 49.4 && z <= 51.0) return true;
   // Atap Pos Kamling / Pos Ronda RT 04 Perumahan Melati
   if (x >= 25.3 && x <= 29.1 && z >= 55.2 && z <= 58.4) return true;
+  // Payung Teduh Gerobak Es Dawet Ayu Pak Darmo (Plaza Menara Nusantara)
+  if (x >= 40.2 && x <= 44.8 && z >= -15.4 && z <= -12.0) return true;
   return false;
 }
 
@@ -357,6 +359,10 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
 
   // === 21. Pos Kamling / Pos Ronda RT 04 Perumahan Melati ===
   { id: 'pos_kamling_platform', minX: 25.55, maxX: 28.85, minZ: 55.45, maxZ: 58.15 },
+
+  // === 22. Gerobak Es Cendol Dawet Ayu Pak Darmo (Plaza Menara Nusantara) ===
+  { id: 'dawet_cart', minX: 41.7, maxX: 43.9, minZ: -14.25, maxZ: -12.95 },
+  { id: 'dawet_bench', minX: 39.65, maxX: 41.15, minZ: -13.9, maxZ: -13.3 },
 ];
 
 /**
@@ -481,6 +487,10 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
     [25.3, 11.4], [-11.8, 12.6], [-14.0, -18.5],
     [15.8, -19.5], [-62.8, 8.2], [74.8, 3.2],
   ] as [number, number][]).map(([x, z]) => ({ x, z, r: 0.36 })),
+
+  // Pak Darmo Dawet Ayu & Taman Bundar Tugu "Kota Senja"
+  { x: 42.8, z: -14.7, r: 0.42 },
+  { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
     [-39.75, -9.5], [-39.75, -19.5], [-39.75, -29.5],

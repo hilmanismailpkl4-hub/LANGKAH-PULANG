@@ -29,6 +29,7 @@ import { RiversideNightMarket } from './RiversideNightMarket';
 import { ScooterEntity } from './ScooterEntity';
 import { StationAndBuskerLife } from './StationAndBuskerLife';
 import { StreetRealismAndSate } from './StreetRealismAndSate';
+import { TropicalLandmarkAndDawet } from './TropicalLandmarkAndDawet';
 import { WaypointBeacon } from './WaypointBeacon';
 import { WorldInteractables } from './WorldInteractables';
 
@@ -91,6 +92,7 @@ export const GameCanvas: React.FC = () => {
             <MorningParkAndBadminton timeOfDay={effectiveTime} settings={settings} />
             <StationAndBuskerLife timeOfDay={effectiveTime} settings={settings} />
             <StreetRealismAndSate timeOfDay={effectiveTime} settings={settings} />
+            <TropicalLandmarkAndDawet timeOfDay={effectiveTime} settings={settings} />
             <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
             <CityLife timeOfDay={effectiveTime} settings={settings} />
             <ScooterEntity timeOfDay={effectiveTime} settings={settings} />

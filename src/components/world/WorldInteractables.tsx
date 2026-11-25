@@ -912,6 +912,50 @@ export const WorldInteractables: React.FC = () => {
 
     consider(
       {
+        id: 'activity_dawet_cart',
+        kind: 'story_object',
+        label: 'Pesan Es Cendol Dawet Ayu Pak Darmo',
+        sublabel: 'Plaza Menara Nusantara · Cendol Pandan & Gula Aren',
+        position: [42.2, 0, -12.3],
+        onInteract: () => {
+          store.openCulinarySpot('dawet');
+        },
+      },
+      3.0,
+    );
+
+    consider(
+      {
+        id: 'inspect_kota_senja_monument',
+        kind: 'story_object',
+        label: 'Baca Plakat Tugu Taman Bundar "Kota Senja"',
+        sublabel: 'Persimpangan Utama Jl. Kenangan · Landmark Kota',
+        position: [13.6, 0, -12.35],
+        onInteract: () => {
+          sfxEngine.play('chime');
+          if (!store.flags.includes('read_kota_senja_monument')) {
+            store.applyEffect({
+              kejujuranDiri: 1,
+              setFlags: ['read_kota_senja_monument'],
+              journalEntry: {
+                id: 'je_kota_senja_monument',
+                title: 'Tugu Penanda di Jantung Kota Senja',
+                body: 'Di taman bundar persimpangan Jl. Kenangan berdiri plakat bertuliskan "Kota Senja — Ruang Teduh untuk Melangkah Pulang". Di antara gedung tinggi dan gang perumahan, kota ini selalu memberi ruang bagi siapa pun yang ingin kembali menemukan dirinya.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_kota_senja_monument, 'fw_monument');
+          }
+          store.showToast('"KOTA SENJA — Ruang Teduh untuk Melangkah Pulang." Bunga-bunga taman bundar bergoyang pelan tertiup angin.');
+        },
+      },
+      2.5,
+    );
+
+    consider(
+      {
         id: 'activity_corner_warung',
         kind: 'story_object',
         label: 'Mampir Sapa Warung Sudut Bu Rina',
@@ -2545,6 +2589,14 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[25.78, 2.08, 55.62]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#fde047" />
+      </mesh>
+      <mesh position={[42.8, 1.85, -13.6]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#86efac" />
+      </mesh>
+      <mesh position={[13.6, 2.55, -14.42]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#fcd34d" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (
