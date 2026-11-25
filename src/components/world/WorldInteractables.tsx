@@ -897,6 +897,21 @@ export const WorldInteractables: React.FC = () => {
 
     consider(
       {
+        id: 'activity_sate_cart',
+        kind: 'story_object',
+        label: 'Pesan Sate Ayam Madura & Lontong Hangat Cak Mat',
+        sublabel: 'Sudut Jl. Cempaka · Bara Arang & Bumbu Kacang',
+        position: [12.1, 0, 29.8],
+        onInteract: () => {
+          sfxEngine.playCharcoalSizzle();
+          store.openCulinarySpot('sate');
+        },
+      },
+      3.1,
+    );
+
+    consider(
+      {
         id: 'activity_corner_warung',
         kind: 'story_object',
         label: 'Mampir Sapa Warung Sudut Bu Rina',
@@ -2461,6 +2476,10 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-24.45, 1.32, 72.05]}>
         <sphereGeometry args={[0.06, 8, 8]} />
         <meshBasicMaterial color="#93c5fd" />
+      </mesh>
+      <mesh position={[13.4, 1.88, 29.5]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#fb923c" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

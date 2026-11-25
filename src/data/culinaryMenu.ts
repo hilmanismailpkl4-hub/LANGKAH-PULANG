@@ -8,7 +8,8 @@ export type CulinarySpotId =
   | 'roti'
   | 'office_pantry'
   | 'coconut'
-  | 'bakso';
+  | 'bakso'
+  | 'sate';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -19,7 +20,8 @@ export type HeldDrinkVisual =
   | 'peanuts'
   | 'soup'
   | 'roti'
-  | 'coconut';
+  | 'coconut'
+  | 'sate';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -136,6 +138,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [-24.6, 0, 49.0],
     seatYaw: -Math.PI / 2,
     tablePropPos: [-25.9, 1.18, 47.8],
+  },
+  sate: {
+    id: 'sate',
+    title: 'Sate Ayam Madura Cak Mat',
+    hostName: 'Cak Mat',
+    subtitle: 'Sudut Jl. Cempaka · Bara Arang, Bumbu Kacang & Lontong Hangat',
+    seatPos: [13.4, 0.14, 32.55],
+    lookAt: [13.4, 1.35, 29.5],
+    standPos: [11.9, 0, 32.1],
+    seatYaw: Math.PI,
+    tablePropPos: [13.4, 0.78, 31.8],
   },
 };
 
@@ -497,6 +510,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'YEEEY makan bakso bertiga dekat rumah!! Bakso kecilnya kenyal banget, Ayah!!' },
       { speaker: 'nadia', text: 'Enak banget ya Mas nggak perlu masak malam ini, tinggal jajan bakso hangat di depan gang.' },
+    ],
+  },
+
+  // === 9. GEROBAK SATE AYAM MADURA CAK MAT (SUDUT JL. CEMPAKA) ===
+  {
+    id: 'sate_ayam_lontong',
+    spot: 'sate',
+    name: 'Sate Ayam Madura 10 Tusuk + Lontong',
+    priceLabel: 'Rp 22.000',
+    tagline: 'Daging ayam panggang bara arang, bumbu kacang halus, kecap manis, irisan bawang merah & lontong lembut.',
+    tasteNote: 'Wangi asap arang dan gurih manis bumbu kacang Cak Mat langsung membangkitkan selera di sore yang mulai sejuk.',
+    drinkVisual: 'sate',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Aroma asap sate Cak Mat dari ujung jalan aja udah menggoda banget ya, Mas!' },
+    ],
+  },
+  {
+    id: 'sate_kambing_kecap',
+    spot: 'sate',
+    name: 'Sate Kambing Muda Bumbu Kecap',
+    priceLabel: 'Rp 28.000',
+    tagline: 'Potongan daging empuk bakar arang dengan kecap manis, tomat segar, dan irisan kol renyah.',
+    tasteNote: 'Empuk dan smoky—paling nikmat disantap selagi masih mengepul di bawah cahaya bohlam gerobak.',
+    drinkVisual: 'sate',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'kira', text: 'Asap satenya wangi bangettt! Cak Mat jago banget kipas-kipas arangnya, Yah!' },
+    ],
+  },
+  {
+    id: 'sate_family',
+    spot: 'sate',
+    name: 'Traktir Keluarga Sate Ayam & Lontong (Paket Malam)',
+    priceLabel: 'Rp 58.000',
+    tagline: '25 tusuk sate ayam bumbu kacang terpisah (ramah anak untuk Kira) plus 3 porsi lontong hangat.',
+    tasteNote: 'Duduk bersama menikmati sate hangat di pinggir Jl. Cempaka sementara kipas bambu Cak Mat menerbangkan aroma gurih ke udara malam.',
+    drinkVisual: 'sate',
+    isHot: true,
+    isFamilyTreat: true,
+    journalTitle: 'Asap Sate Madura di Sudut Jl. Cempaka',
+    journalBody: 'Di sudut Jl. Cempaka dekat Kios Harmoni, aku mengajak Nadia dan Kira duduk menyantap sate ayam Madura dan lontong hangat racikan Cak Mat. Di bawah pijar bara arang merah dan kipasan bambu, malam kota terasa begitu hidup.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Kira mau sate yang pakai kecap manis aja ya, Ayah! Enak bangettt makannya pakai lontong!' },
+      { speaker: 'nadia', text: 'Makasih ya Mas buat makan malam sate Maduranya—bumbu kacangnya Cak Mat juara banget.' },
     ],
   },
 ];

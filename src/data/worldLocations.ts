@@ -348,6 +348,10 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'bakso_bench', minX: -25.35, maxX: -23.85, minZ: 47.55, maxZ: 48.1 },
   { id: 'corner_warung_building', minX: 12.45, maxX: 17.15, minZ: 46.55, maxZ: 50.0 },
   { id: 'badminton_bench', minX: 33.55, maxX: 35.05, minZ: 46.28, maxZ: 46.82 },
+
+  // === 20. Gerobak Sate Ayam Madura Cak Mat & Meja Makan (Sudut Jl. Cempaka) ===
+  { id: 'sate_cart', minX: 12.75, maxX: 14.05, minZ: 28.15, maxZ: 30.85 },
+  { id: 'sate_table_bench', minX: 12.55, maxX: 14.25, minZ: 31.35, maxZ: 32.8 },
 ];
 
 /**
@@ -465,6 +469,13 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: -82.05, z: 34.25, r: 0.42 },
   { x: -62.2, z: -6.2, r: 0.22 },
   { x: -10.4, z: 10.8, r: 0.22 },
+
+  // Cak Mat Sate Madura & 6 Pasang Tempat Sampah Pilah Kota
+  { x: 14.52, z: 29.5, r: 0.42 },
+  ...([
+    [25.3, 11.4], [-11.8, 12.6], [-14.0, -18.5],
+    [15.8, -19.5], [-62.8, 8.2], [74.8, 3.2],
+  ] as [number, number][]).map(([x, z]) => ({ x, z, r: 0.36 })),
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
     [-39.75, -9.5], [-39.75, -19.5], [-39.75, -29.5],

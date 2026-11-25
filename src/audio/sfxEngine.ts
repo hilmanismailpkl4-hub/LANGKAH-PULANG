@@ -215,6 +215,33 @@ class SfxEngine {
   }
 
   /**
+   * Suara desis lembut bara arang & bumbu kacang sate yang dipanggang di Gerobak Cak Mat.
+   */
+  public playCharcoalSizzle() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    [0, 0.28].forEach((offset, idx) => {
+      const src = ctx.createBufferSource();
+      src.buffer = this.getNoiseBuffer(ctx);
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(2900 - idx * 450, now + offset);
+      filter.frequency.linearRampToValueAtTime(1750, now + offset + 0.45);
+      filter.Q.value = 1.2;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.001, now + offset);
+      g.gain.linearRampToValueAtTime(0.075 * v, now + offset + 0.06);
+      g.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.5);
+      src.connect(filter).connect(g).connect(ctx.destination);
+      src.start(now + offset, idx * 0.2, 0.52);
+    });
+  }
+
+  /**
    * Bunyi peluit kayu mainan lembut ("tut-tut!") saat kereta kayu Kira dinyalakan di ruang tamu.
    */
   public playToyTrainWhistle() {

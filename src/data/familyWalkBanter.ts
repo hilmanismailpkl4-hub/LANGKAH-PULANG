@@ -165,6 +165,16 @@ export const SPOT_FAMILY_BANTERS: SpotBanterEntry[] = [
       { speaker: 'nadia', text: 'Wah, pas banget nih, Mas! Kuah bakso hangat sore-sore begini pasti enak banget.' },
     ],
   },
+  {
+    id: 'fw_spot_sate_cart',
+    x: 13.4,
+    z: 29.5,
+    radius: 9.5,
+    lines: [
+      { speaker: 'nadia', text: 'Mmm, wangi asap sate ayam Madura Cak Mat sampai ke seberang jalan, Mas!' },
+      { speaker: 'kira', text: 'Ayah, Kira mau sate ayam pakai kecap manis sama lontong dong!' },
+    ],
+  },
 ];
 
 /**

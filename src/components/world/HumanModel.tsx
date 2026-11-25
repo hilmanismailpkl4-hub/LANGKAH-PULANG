@@ -256,7 +256,26 @@ export const HumanModel: React.FC<HumanModelProps> = ({
           {/* Visual Gelas Hangat / Es Krim / Jajanan Martabak & Kacang Rebus di Tangan Kanan */}
           {holdingDrink && (
             <group position={[0, -0.48, 0.05]} rotation={[0.92, 0, 0]}>
-              {holdingDrink === 'coconut' ? (
+              {holdingDrink === 'sate' ? (
+                <group>
+                  {/* Piring Berisi Tusuk Sate Ayam Bumbu Kacang Mengepul */}
+                  <mesh position={[0, 0.035, 0.02]} castShadow>
+                    <cylinderGeometry args={[0.095, 0.075, 0.025, 12]} />
+                    <meshStandardMaterial color="#f5efe6" roughness={0.4} />
+                  </mesh>
+                  <mesh position={[0, 0.052, 0.02]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <circleGeometry args={[0.078, 12]} />
+                    <meshStandardMaterial color="#8c4e24" roughness={0.65} />
+                  </mesh>
+                  {[-0.03, 0, 0.03].map((sx, si) => (
+                    <mesh key={`skw-${si}`} position={[sx, 0.068, 0.02]} rotation={[0.15, 0.25, Math.PI / 2]}>
+                      <cylinderGeometry args={[0.011, 0.011, 0.14, 6]} />
+                      <meshStandardMaterial color="#5c2d16" roughness={0.55} />
+                    </mesh>
+                  ))}
+                  <CupSteam position={[0, 0.1, 0.02]} />
+                </group>
+              ) : holdingDrink === 'coconut' ? (
                 <group>
                   {/* Kelapa Muda Hijau Utuh dengan Puncak Kupas Putih & Sedotan Merah */}
                   <mesh position={[0, 0.06, 0]} castShadow>
