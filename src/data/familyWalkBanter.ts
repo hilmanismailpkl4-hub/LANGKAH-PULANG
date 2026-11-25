@@ -145,6 +145,16 @@ export const SPOT_FAMILY_BANTERS: SpotBanterEntry[] = [
       { speaker: 'nadia', text: 'Gerobak martabak sama kacang rebus Bang Udin sudah ngebul tuh, Mas. Kita mampir jajan sambil duduk di tepi sungai yuk?' },
     ],
   },
+  {
+    id: 'fw_spot_coconut_stall',
+    x: -83.5,
+    z: -9.8,
+    radius: 9.0,
+    lines: [
+      { speaker: 'nadia', text: 'Eh, ada lapak es kelapa muda Pak Hasan di tepi danau! Duduk di bawah payungnya kelihatan adem banget, Mas.' },
+      { speaker: 'kira', text: 'Kira mau es kelapa pakai sedotan panjang dong, Ayah!!' },
+    ],
+  },
 ];
 
 /**
@@ -293,5 +303,13 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
   activity_home_mailbox: [
     { speaker: 'nadia', text: 'Ada kartu pos dari Ibu di Bandung ya, Mas? Nanti malam kita telepon Ibu bareng Kira yuk.' },
     { speaker: 'kira', text: 'Horeee!! Nenek kirim jaket kuning buat Kira!!' },
+  ],
+  activity_bridge_locks: [
+    { speaker: 'nadia', text: 'Gembok-gembok kecil di pagar jembatan ini makin banyak ya, Mas... tapi gembok tembaga kita dari 2019 tetap paling manis.' },
+    { speaker: 'kira', text: 'Waaah lampu-lampu kecil di pagar jembatannya kayak kunang-kunang baris rapi di atas sungai, Yah!' },
+  ],
+  activity_river_angler: [
+    { speaker: 'kira', text: 'Sssst!! Pelan-pelan jalannya, Bunda, nanti ikan yang mau dipancing Pak Karno kabur!' },
+    { speaker: 'nadia', text: 'Tenang banget ya lihat warga duduk santai memancing di pinggir sungai begini.' },
   ],
 };

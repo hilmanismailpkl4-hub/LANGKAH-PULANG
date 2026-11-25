@@ -189,6 +189,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= -70.6 && x <= -65.4 && z >= 16.9 && z <= 22.1) return true;
   // Lobi Beratap Menara Nusantara
   if (x >= 17.5 && x <= 40.5 && z >= -26.0 && z <= -19.0) return true;
+  // Tenda & Payung Lapak Es Kelapa Muda Pak Hasan di Tepi Danau
+  if (x >= -86.2 && x <= -80.2 && z >= -11.4 && z <= -8.0) return true;
   return false;
 }
 
@@ -331,6 +333,10 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
 
   // === 17. Kios Koran & Majalah "Warta Senja" (Peron Stasiun Senja) ===
   { id: 'station_newsstand', minX: 74.5, maxX: 76.35, minZ: 7.55, maxZ: 10.05 },
+
+  // === 18. Lapak Es Kelapa Muda Pak Hasan & Bangku Tepi Danau ===
+  { id: 'park_coconut_stall', minX: -85.75, maxX: -83.25, minZ: -10.65, maxZ: -8.95 },
+  { id: 'park_coconut_bench', minX: -82.45, maxX: -80.75, minZ: -8.82, maxZ: -8.28 },
 ];
 
 /**
@@ -426,6 +432,12 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
     [-18.12, 56.1], [-18.12, 58.0], [-18.12, 59.9],
     [-26.25, 59.5], [-23.5, 59.5],
   ] as [number, number][]).map(([x, z]) => ({ x, z, r: 0.11 })),
+
+  // Lapak Es Kelapa Muda (Pak Hasan & Meja Payung) + 2 Pemancing Bantaran Sungai (Pak Karno & Mas Yudi)
+  { x: -84.5, z: -10.85, r: 0.42 },
+  { x: -81.6, z: -9.6, r: 0.65 },
+  { x: -38.8, z: -14.8, r: 0.68 },
+  { x: -57.4, z: 25.2, r: 0.68 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
     [-39.75, -9.5], [-39.75, -19.5], [-39.75, -29.5],

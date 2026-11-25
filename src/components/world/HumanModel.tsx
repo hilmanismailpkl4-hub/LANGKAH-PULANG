@@ -256,7 +256,23 @@ export const HumanModel: React.FC<HumanModelProps> = ({
           {/* Visual Gelas Hangat / Es Krim / Jajanan Martabak & Kacang Rebus di Tangan Kanan */}
           {holdingDrink && (
             <group position={[0, -0.48, 0.05]} rotation={[0.92, 0, 0]}>
-              {holdingDrink === 'icecream' ? (
+              {holdingDrink === 'coconut' ? (
+                <group>
+                  {/* Kelapa Muda Hijau Utuh dengan Puncak Kupas Putih & Sedotan Merah */}
+                  <mesh position={[0, 0.06, 0]} castShadow>
+                    <sphereGeometry args={[0.075, 12, 10]} />
+                    <meshStandardMaterial color="#3c8a45" roughness={0.62} />
+                  </mesh>
+                  <mesh position={[0, 0.115, 0]}>
+                    <cylinderGeometry args={[0.048, 0.056, 0.022, 12]} />
+                    <meshStandardMaterial color="#f5efe2" roughness={0.75} />
+                  </mesh>
+                  <mesh position={[0.015, 0.17, 0.01]} rotation={[0.18, 0, -0.22]}>
+                    <cylinderGeometry args={[0.007, 0.007, 0.13, 6]} />
+                    <meshStandardMaterial color="#e8534a" roughness={0.4} />
+                  </mesh>
+                </group>
+              ) : holdingDrink === 'icecream' ? (
                 <group>
                   <mesh position={[0, 0.02, 0]} rotation={[Math.PI, 0, 0]} castShadow>
                     <coneGeometry args={[0.045, 0.14, 10]} />

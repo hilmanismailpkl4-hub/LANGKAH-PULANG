@@ -1,5 +1,5 @@
 import React from 'react';
-import { Coffee, Flame, Heart, Sparkles, UtensilsCrossed, X } from 'lucide-react';
+import { Coffee, Droplets, Flame, Heart, Sparkles, UtensilsCrossed, X } from 'lucide-react';
 import { CULINARY_MENU_ITEMS, CULINARY_SPOTS } from '../../data/culinaryMenu';
 import { useGameStore } from '../../store/useGameStore';
 import { Portal } from './Portal';
@@ -34,6 +34,8 @@ export const CulinaryModal: React.FC = () => {
                   <Coffee className="h-5 w-5" />
                 ) : activeSpot === 'martabak' ? (
                   <Flame className="h-5 w-5" />
+                ) : activeSpot === 'coconut' ? (
+                  <Droplets className="h-5 w-5" />
                 ) : (
                   <UtensilsCrossed className="h-5 w-5" />
                 )}
@@ -72,9 +74,13 @@ export const CulinaryModal: React.FC = () => {
                     <div className="space-y-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <h3 className="font-serif text-base font-medium text-warm-50">{item.name}</h3>
-                        {item.isHot && (
+                        {item.isHot ? (
                           <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-medium text-amber-200">
                             <Flame className="h-3 w-3" /> Hangat
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-sky-500/20 px-2 py-0.5 text-[10px] font-medium text-sky-200">
+                            <Droplets className="h-3 w-3" /> Segar Dingin
                           </span>
                         )}
                         {isTreat && (

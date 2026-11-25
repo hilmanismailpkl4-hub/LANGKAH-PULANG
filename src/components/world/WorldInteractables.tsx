@@ -882,6 +882,83 @@ export const WorldInteractables: React.FC = () => {
 
     consider(
       {
+        id: 'activity_coconut_stall',
+        kind: 'story_object',
+        label: 'Pesan Es Kelapa Muda & Pisang Goreng Pak Hasan',
+        sublabel: 'Tepi Taman Danau Senja · Segar di Bawah Payung',
+        position: [-83.4, 0, -8.5],
+        onInteract: () => {
+          store.openCulinarySpot('coconut');
+        },
+      },
+      3.0,
+    );
+
+    consider(
+      {
+        id: 'activity_bridge_locks_view',
+        kind: 'story_object',
+        label: 'Pandangi Barisan Gembok Kenangan & Lampu Jembatan',
+        sublabel: 'Jembatan Tepi Sungai · Jl. Kenangan',
+        position: [-48.0, 0.24, 5.5],
+        onInteract: () => {
+          sfxEngine.play('chime');
+          if (!store.flags.includes('admired_bridge_locks')) {
+            store.applyEffect({
+              kehadiranKeluarga: 1,
+              setFlags: ['admired_bridge_locks'],
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_bridge_locks, 'fw_bridge_locks');
+          }
+          store.showToast(
+            store.timeOfDay === 'morning'
+              ? 'Deretan gembok kenangan warga berkilau tertimpa sinar pagi di sepanjang pagar jembatan.'
+              : 'Lampu senar hangat di pagar jembatan memantul tenang di permukaan Sungai Kota bersama barisan gembok kenangan.',
+          );
+        },
+      },
+      2.2,
+    );
+
+    consider(
+      {
+        id: 'activity_river_angler_karno',
+        kind: 'story_object',
+        label: 'Sapa Pak Karno yang Memancing di Bantaran Sungai',
+        sublabel: 'Tanggul Timur Utara Jembatan · Warga Santai',
+        position: [-37.5, 0, -14.8],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          if (!store.flags.includes('greeted_river_angler')) {
+            store.applyEffect({
+              kejujuranDiri: 1,
+              setFlags: ['greeted_river_angler'],
+              journalEntry: {
+                id: 'je_river_angler',
+                title: 'Pemancing Sabar di Bantaran Sungai',
+                body: 'Pak Karno duduk tenang di kursi lipatnya di pinggir Sungai Kota sambil menatap pelampung merah-putih. Katanya, memancing itu bukan soal cepat dapat ikan, melainkan melatih hati agar sanggup menunggu tanpa gelisah.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_river_angler, 'fw_river_angler');
+          }
+          const lines = [
+            'Pak Karno tersenyum: "Wah, sore Mas Damar! Air sungainya lagi tenang, cocok buat menenangkan pikiran."',
+            'Pak Karno: "Tadi sempat dapat ikan nila kecil, Mas—tapi kulepas lagi biar besar dulu. Yang penting duduk santainya!"',
+            'Pak Karno: "Kalau kepala lagi penuh urusan kantor, duduk lima menit lihat pelampung naik-turun begini manjur lho, Mas."',
+          ];
+          store.showToast(lines[Math.floor(Date.now() / 1000) % lines.length]);
+        },
+      },
+      2.6,
+    );
+
+    consider(
+      {
         id: 'sit_riverside_lantern_bench',
         kind: 'story_object',
         label: 'Duduk Menatap Untaian Lampion Tepi Sungai',
@@ -2085,6 +2162,10 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-16.9, 1.48, 53.72]}>
         <sphereGeometry args={[0.07, 8, 8]} />
         <meshBasicMaterial color="#fcd34d" />
+      </mesh>
+      <mesh position={[-84.5, 1.55, -9.8]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#86efac" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

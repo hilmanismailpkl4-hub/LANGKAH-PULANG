@@ -1,7 +1,17 @@
 import { FamilyBanterLine } from './familyWalkBanter';
 
-export type CulinarySpotId = 'angkringan' | 'cafe' | 'kios' | 'martabak' | 'roti' | 'office_pantry';
-export type HeldDrinkVisual = 'wedang' | 'coffee' | 'tea' | 'icecream' | 'cocoa' | 'martabak' | 'peanuts' | 'soup' | 'roti';
+export type CulinarySpotId = 'angkringan' | 'cafe' | 'kios' | 'martabak' | 'roti' | 'office_pantry' | 'coconut';
+export type HeldDrinkVisual =
+  | 'wedang'
+  | 'coffee'
+  | 'tea'
+  | 'icecream'
+  | 'cocoa'
+  | 'martabak'
+  | 'peanuts'
+  | 'soup'
+  | 'roti'
+  | 'coconut';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -96,6 +106,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [31.2, 0.08, -21.2],
     seatYaw: 0,
     tablePropPos: [32.82, 0.62, -20.18],
+  },
+  coconut: {
+    id: 'coconut',
+    title: 'Lapak Es Kelapa Muda Pak Hasan',
+    hostName: 'Pak Hasan',
+    subtitle: 'Tepi Taman Danau Senja · Kelapa Muda Segar & Pisang Goreng',
+    seatPos: [-81.6, 0.14, -8.55],
+    lookAt: [-84.0, 1.35, -24.0],
+    standPos: [-81.6, 0, -7.55],
+    seatYaw: Math.PI,
+    tablePropPos: [-81.6, 0.78, -9.6],
   },
 };
 
@@ -367,6 +388,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Waaah mesin cokelat di kantor Ayah canggih banget!! Enak banget lagi rasanya!' },
       { speaker: 'nadia', text: 'Ternyata pemandangan dari lobi kantormu adem juga ya, Mas... apalagi kalau nggak sedang dikejar tenggat.' },
+    ],
+  },
+
+  // === 7. LAPAK ES KELAPA MUDA PAK HASAN (TEPI TAMAN DANAU SENJA) ===
+  {
+    id: 'coco_muda_asli',
+    spot: 'coconut',
+    name: 'Es Kelapa Muda Utuh Asli',
+    priceLabel: 'Rp 12.000',
+    tagline: 'Kelapa muda hijau segar baru dibelah dengan daging lembut dan es batu bening.',
+    tasteNote: 'Tegukan pertama langsung menyapu gerah siang—manis alaminya terasa pas ditemani angin sepoi Danau Senja.',
+    drinkVisual: 'coconut',
+    isHot: false,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Segar banget ya Mas air kelapa aslinya! Enak duduk di bawah payung menghadap danau begini.' },
+    ],
+  },
+  {
+    id: 'coco_jeruk_cocopandan',
+    spot: 'coconut',
+    name: 'Es Kelapa Jeruk Peras & Cocopandan',
+    priceLabel: 'Rp 15.000',
+    tagline: 'Air kelapa muda dingin berpadu perasan jeruk manis dan sirup cocopandan wangi.',
+    tasteNote: 'Manis segar dengan sedikit asam jeruk—persis rasa liburan Minggu siang di taman kota.',
+    drinkVisual: 'coconut',
+    isHot: false,
+    familyReaction: [
+      { speaker: 'kira', text: 'Waaah warnanya merah muda segar banget, Yah! Ada potongan daging kelapanya juga!' },
+    ],
+  },
+  {
+    id: 'coco_family',
+    spot: 'coconut',
+    name: 'Traktir Keluarga Es Kelapa & Pisang Goreng (Paket Danau)',
+    priceLabel: 'Rp 38.000',
+    tagline: 'Dua kelapa muda utuh, satu es kelapa cocopandan buat Kira, plus sepiring pisang goreng renyah.',
+    tasteNote: 'Pak Hasan tersenyum ramah mengantar kelapa muda dingin ke meja payung—di tepi Danau Senja, waktu terasa begitu lapang.',
+    drinkVisual: 'coconut',
+    isHot: false,
+    isFamilyTreat: true,
+    journalTitle: 'Segarnya Es Kelapa Muda di Tepi Danau Senja',
+    journalBody: 'Di bawah payung teduh Lapak Pak Hasan, aku mengajak Nadia dan Kira menikmati es kelapa muda dingin dan pisang goreng hangat sambil memandangi riak Danau Senja. Tawa Kira yang menyedot kelapa utuh membuat sore ini terasa sangat ringan.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Slurppp!! Es kelapa utuhnya dingin banget, Ayah!! Kira mau kerok daging kelapanya pakai sendok!' },
+      { speaker: 'nadia', text: 'Nikmat banget duduk santai di tepi danau begini, Mas... rasanya semua penat langsung hilang.' },
     ],
   },
 ];
