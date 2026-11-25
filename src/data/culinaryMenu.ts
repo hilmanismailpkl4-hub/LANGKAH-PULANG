@@ -1,6 +1,14 @@
 import { FamilyBanterLine } from './familyWalkBanter';
 
-export type CulinarySpotId = 'angkringan' | 'cafe' | 'kios' | 'martabak' | 'roti' | 'office_pantry' | 'coconut';
+export type CulinarySpotId =
+  | 'angkringan'
+  | 'cafe'
+  | 'kios'
+  | 'martabak'
+  | 'roti'
+  | 'office_pantry'
+  | 'coconut'
+  | 'bakso';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -117,6 +125,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [-81.6, 0, -7.55],
     seatYaw: Math.PI,
     tablePropPos: [-81.6, 0.78, -9.6],
+  },
+  bakso: {
+    id: 'bakso',
+    title: 'Bakso Malang Keliling Mas Agung',
+    hostName: 'Mas Agung',
+    subtitle: 'Tepi Jl. Melati · Kuah Kaldu Hangat & Pangsit Goreng',
+    seatPos: [-24.6, 0.14, 47.8],
+    lookAt: [-26.8, 1.35, 47.8],
+    standPos: [-24.6, 0, 49.0],
+    seatYaw: -Math.PI / 2,
+    tablePropPos: [-25.9, 1.18, 47.8],
   },
 };
 
@@ -433,6 +452,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Slurppp!! Es kelapa utuhnya dingin banget, Ayah!! Kira mau kerok daging kelapanya pakai sendok!' },
       { speaker: 'nadia', text: 'Nikmat banget duduk santai di tepi danau begini, Mas... rasanya semua penat langsung hilang.' },
+    ],
+  },
+
+  // === 8. GEROBAK BAKSO MALANG KELILING MAS AGUNG (TEPI JL. MELATI) ===
+  {
+    id: 'bakso_urat_hangat',
+    spot: 'bakso',
+    name: 'Bakso Urat & Tahu Kuah Kaldu Hangat',
+    priceLabel: 'Rp 16.000',
+    tagline: 'Bakso urat kenyal, bakso halus, tahu isi, mi bihun, bawang goreng & seledri wangi.',
+    tasteNote: 'Kuah kaldu sapi panas mengepul di mangkuk ayam jago—begitu diseruput saat angin malam turun, seluruh tubuh langsung hangat.',
+    drinkVisual: 'soup',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Wangi kuah kaldu sama seledrinya Mas Agung mantap banget ya, Mas! Nggak perlu pakai saus banyak udah gurih.' },
+    ],
+  },
+  {
+    id: 'bakso_mie_pangsit',
+    spot: 'bakso',
+    name: 'Mie Ayam Bakso & Pangsit Goreng Renyah',
+    priceLabel: 'Rp 18.000',
+    tagline: 'Mi kenyal tabur ayam kecap manis, dua butir bakso hangat, dan pangsit goreng kriuk.',
+    tasteNote: 'Suara "ting-ting-ting" mangkuk bakso keliling memang tak pernah gagal mengundang lapar di sore menjelang malam.',
+    drinkVisual: 'soup',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'kira', text: 'Kriuk-kriuk!! Pangsit gorengnya renyah banget, Ayah! Kira suka yang dicelup kuah!' },
+    ],
+  },
+  {
+    id: 'bakso_family',
+    spot: 'bakso',
+    name: 'Traktir Keluarga Bakso Malang Komplit (Paket Bertiga)',
+    priceLabel: 'Rp 46.000',
+    tagline: 'Tiga mangkuk bakso komplit (tanpa sambal untuk Kira) plus ekstra pangsit goreng dan teh hangat.',
+    tasteNote: 'Duduk bersama di bangku kayu samping gerobak di bawah bohlam kuning Mas Agung—hangatnya kuah bakso menyatu dengan tawa keluarga.',
+    drinkVisual: 'soup',
+    isHot: true,
+    isFamilyTreat: true,
+    journalTitle: 'Semangkuk Bakso Hangat di Bawah Lampu Malam',
+    journalBody: 'Begitu mendengar denting mangkuk "ting-ting-ting" gerobak Mas Agung di tepi Jl. Melati, aku langsung mengajak Nadia dan Kira jajan bakso Malang komplit. Duduk di bangku kayu dengan uap kuah kaldu mengepul, malam di perumahan terasa begitu akrab.',
+    familyReaction: [
+      { speaker: 'kira', text: 'YEEEY makan bakso bertiga dekat rumah!! Bakso kecilnya kenyal banget, Ayah!!' },
+      { speaker: 'nadia', text: 'Enak banget ya Mas nggak perlu masak malam ini, tinggal jajan bakso hangat di depan gang.' },
     ],
   },
 ];

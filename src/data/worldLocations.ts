@@ -191,6 +191,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= 17.5 && x <= 40.5 && z >= -26.0 && z <= -19.0) return true;
   // Tenda & Payung Lapak Es Kelapa Muda Pak Hasan di Tepi Danau
   if (x >= -86.2 && x <= -80.2 && z >= -11.4 && z <= -8.0) return true;
+  // Kanopi Teras Warung Sudut Bu Rina (Perumahan Melati)
+  if (x >= 12.2 && x <= 17.4 && z >= 49.4 && z <= 51.0) return true;
   return false;
 }
 
@@ -340,6 +342,11 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   // === 18. Lapak Es Kelapa Muda Pak Hasan & Bangku Tepi Danau ===
   { id: 'park_coconut_stall', minX: -85.75, maxX: -83.25, minZ: -10.65, maxZ: -8.95 },
   { id: 'park_coconut_bench', minX: -82.45, maxX: -80.75, minZ: -8.82, maxZ: -8.28 },
+
+  // === 19. Gerobak Bakso Keliling Mas Agung & Warung Sudut Bu Rina ===
+  { id: 'bakso_cart', minX: -27.95, maxX: -25.65, minZ: 47.2, maxZ: 48.4 },
+  { id: 'bakso_bench', minX: -25.35, maxX: -23.85, minZ: 47.55, maxZ: 48.1 },
+  { id: 'corner_warung_building', minX: 12.45, maxX: 17.15, minZ: 46.55, maxZ: 50.0 },
 ];
 
 /**
@@ -441,6 +448,13 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: -81.6, z: -9.6, r: 0.65 },
   { x: -38.8, z: -14.8, r: 0.68 },
   { x: -57.4, z: 25.2, r: 0.68 },
+
+  // Kursi Kucing Moka & Papan Kapur Kedai Bima + Mas Agung Bakso + Tiang Teras Warung Bu Rina
+  { x: -14.1, z: 17.6, r: 0.58 },
+  { x: -16.45, z: 21.65, r: 0.34 },
+  { x: -26.8, z: 46.8, r: 0.42 },
+  { x: 12.7, z: 50.55, r: 0.14 },
+  { x: 16.9, z: 50.55, r: 0.14 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
     [-39.75, -9.5], [-39.75, -19.5], [-39.75, -29.5],

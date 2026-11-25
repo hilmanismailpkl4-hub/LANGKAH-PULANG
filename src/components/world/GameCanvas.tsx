@@ -5,6 +5,7 @@ import { PHOTO_FILTER_BY_ID } from '../../data/photoFilters';
 import { useGameStore } from '../../store/useGameStore';
 import { Atmosphere } from './Atmosphere';
 import { BicycleEntity } from './BicycleEntity';
+import { CafeAndNightStreetLife } from './CafeAndNightStreetLife';
 import { CityDetails } from './CityDetails';
 import { CityGeometry } from './CityGeometry';
 import { CityLife } from './CityLife';
@@ -76,6 +77,7 @@ export const GameCanvas: React.FC = () => {
             <NeighborhoodMorningAndFridge timeOfDay={effectiveTime} settings={settings} />
             <OfficeLobbyLife timeOfDay={effectiveTime} settings={settings} />
             <MusicAndKiosLife timeOfDay={effectiveTime} settings={settings} />
+            <CafeAndNightStreetLife timeOfDay={effectiveTime} settings={settings} />
             <HomeLivingAndBusStop timeOfDay={effectiveTime} settings={settings} />
             <HomeYardLife timeOfDay={effectiveTime} settings={settings} />
             <ParkPlaygroundAndKoi timeOfDay={effectiveTime} settings={settings} />

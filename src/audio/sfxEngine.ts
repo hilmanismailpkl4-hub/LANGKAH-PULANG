@@ -215,6 +215,24 @@ class SfxEngine {
   }
 
   /**
+   * Bunyi khas ketukan sendok pada mangkuk porselen gerobak bakso keliling ("ting-ting... ting-ting-ting!").
+   */
+  public playBaksoClink(distanceFactor = 1) {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume * Math.max(0.16, Math.min(1, distanceFactor));
+    // Pola ritmis khas tukang bakso malam Indonesia
+    const hits = [0.0, 0.16, 0.42, 0.56, 0.7];
+    hits.forEach((offset, idx) => {
+      const base = idx % 2 === 0 ? 1880 : 1940;
+      this.softTone(ctx, base, now + offset, 0.14, 0.068 * v, 'sine');
+      this.softTone(ctx, base * 1.82, now + offset, 0.09, 0.032 * v, 'triangle');
+    });
+  }
+
+  /**
    * Suara gemericik lembut air dari gembor saat menyiram pot bunga Nadia di halaman rumah.
    */
   public playWateringSpray() {

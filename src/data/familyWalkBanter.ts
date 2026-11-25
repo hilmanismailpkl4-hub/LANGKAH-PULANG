@@ -155,6 +155,16 @@ export const SPOT_FAMILY_BANTERS: SpotBanterEntry[] = [
       { speaker: 'kira', text: 'Kira mau es kelapa pakai sedotan panjang dong, Ayah!!' },
     ],
   },
+  {
+    id: 'fw_spot_bakso_cart',
+    x: -26.8,
+    z: 47.8,
+    radius: 9.0,
+    lines: [
+      { speaker: 'kira', text: 'TING-TING-TING!! Ayah dengar nggak?! Ada gerobak bakso Mas Agung di dekat rumah kita!' },
+      { speaker: 'nadia', text: 'Wah, pas banget nih, Mas! Kuah bakso hangat sore-sore begini pasti enak banget.' },
+    ],
+  },
 ];
 
 /**
@@ -319,5 +329,13 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
   activity_kios_vending: [
     { speaker: 'kira', text: 'KLUNG!! Minuman dinginnya jatuh dari mesin bercahaya! Kira suka banget lampu biru Kios Harmoni malam-malam!' },
     { speaker: 'nadia', text: 'Segar ya, Mas, mampir sebentar beli minuman dingin di pinggir jalan sambil lihat bus kota lewat.' },
+  ],
+  activity_cafe_cat: [
+    { speaker: 'kira', text: 'Sssst... lucu bangettt kucing "Moka" bobo melingkar di kursi Om Bima! Bulunya lembut banget, Yah!' },
+    { speaker: 'nadia', text: 'Nyenyak banget tidurnya, kayaknya Moka ikut menikmati wangi kopi sama musik pelan di kedai ini.' },
+  ],
+  activity_corner_warung: [
+    { speaker: 'nadia', text: 'Warung Bu Rina ini penolong banget lho Mas kalau mendadak kehabisan gula atau kecap malam-malam.' },
+    { speaker: 'kira', text: 'Lihat Yah, kerupuk putih di toples besarnya kelihatan renyah banget!' },
   ],
 };

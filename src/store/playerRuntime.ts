@@ -119,6 +119,7 @@ export const playerRuntime = {
   // Aktivitas santai: perahu kertas di danau, kucing Sore, ikan koi, ayunan & layang-layang
   paperBoats: [] as FloatingPaperBoat[],
   catHeartTimer: 0,
+  cafeCatHeartTimer: 0,
   koiFeedTimer: 0,
   koiFeedPoint: [-73.2, -24.6] as [number, number],
   pigeonFeedTimer: 0,
@@ -187,6 +188,7 @@ export function resetScooterToHome() {
   };
   playerRuntime.paperBoats = [];
   playerRuntime.catHeartTimer = 0;
+  playerRuntime.cafeCatHeartTimer = 0;
   playerRuntime.koiFeedTimer = 0;
   playerRuntime.pigeonFeedTimer = 0;
   playerRuntime.gardenWaterTimer = 0;

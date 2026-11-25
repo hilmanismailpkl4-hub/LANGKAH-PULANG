@@ -835,6 +835,101 @@ export const WorldInteractables: React.FC = () => {
       2.5,
     );
 
+    consider(
+      {
+        id: 'activity_pet_cafe_cat',
+        kind: 'story_object',
+        label: 'Elus Kucing "Moka" yang Tidur di Kursi Sudut',
+        sublabel: 'Kedai Kopi Sudut Bima · Kucing Rumahan Jinak',
+        position: [-14.95, 0.08, 17.6],
+        onInteract: () => {
+          sfxEngine.play('cat');
+          playerRuntime.cafeCatHeartTimer = 4.6;
+          if (!store.flags.includes('petted_cafe_cat_moka')) {
+            store.applyEffect({
+              kehadiranKeluarga: 1,
+              setFlags: ['petted_cafe_cat_moka'],
+              journalEntry: {
+                id: 'je_cafe_cat_moka',
+                title: 'Kucing "Moka" di Kursi Sudut Kedai Bima',
+                body: 'Di kursi kayu sudut Kedai Kopi Sudut, kucing calico bernama Moka selalu tidur pulas melingkar. Begitu dielus pelan, dengkuran halusnya berpadu hangat dengan aroma kopi gula aren Bima.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_cafe_cat, 'fw_cafe_cat');
+          }
+          store.showToast('Moka mendengkur pelan penuh nyaman sambil tetap bergelung hangat di bantal kursi Bima.');
+        },
+      },
+      2.2,
+    );
+
+    consider(
+      {
+        id: 'activity_read_cafe_chalkboard',
+        kind: 'story_object',
+        label: 'Baca Papan Menu Kapur & Pesan di Kedai Bima',
+        sublabel: 'Dekat Bar Kasir · Racikan Manual & Roti Kayu Manis',
+        position: [-16.45, 0.08, 20.55],
+        onInteract: () => {
+          store.openCulinarySpot('cafe');
+        },
+      },
+      1.95,
+    );
+
+    consider(
+      {
+        id: 'activity_bakso_cart',
+        kind: 'story_object',
+        label: 'Pesan Bakso Malang & Mie Ayam Hangat Mas Agung',
+        sublabel: 'Gerobak Bakso Keliling · Tepi Jl. Melati',
+        position: [-25.6, 0, 48.8],
+        onInteract: () => {
+          sfxEngine.playBaksoClink(0.95);
+          store.openCulinarySpot('bakso');
+        },
+      },
+      3.1,
+    );
+
+    consider(
+      {
+        id: 'activity_corner_warung',
+        kind: 'story_object',
+        label: 'Mampir Sapa Warung Sudut Bu Rina',
+        sublabel: 'Perumahan Melati · Sembako, Kopi & Gorengan Sore',
+        position: [14.8, 0, 50.8],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          if (!store.flags.includes('visited_warung_bu_rina')) {
+            store.applyEffect({
+              kejujuranDiri: 1,
+              setFlags: ['visited_warung_bu_rina'],
+              journalEntry: {
+                id: 'je_warung_bu_rina',
+                title: 'Lampu Hangat Warung Sudut Bu Rina',
+                body: 'Setiap senja tiba, papan neon dan lampu teras Warung Bu Rina menyala hangat di sudut gang Perumahan Melati—seperti mercusuar kecil ramah yang menandakan rumah sudah tinggal beberapa langkah lagi.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_corner_warung, 'fw_corner_warung');
+          }
+          const lines = [
+            'Bu Rina menyapa ramah: "Sore Mas Damar! Baru pulang? Gorengan tahu isi sama kopi renceng masih hangat lho!"',
+            'Bu Rina tersenyum: "Tadi Mbak Nadia lewat belanja bumbu sop, titip salam buat Mas Damar katanya jangan lupa makan malam!"',
+            'Bu Rina: "Kalau mendadak hujan deras, berteduh dulu di teras warung nggak apa-apa ya, Mas!"',
+          ];
+          store.showToast(lines[Math.floor(Date.now() / 1000) % lines.length]);
+        },
+      },
+      2.65,
+    );
+
     // === 3B. KULINER & NONGKRONG 2: BANGKU ANGKRINGAN PAK SLAMET ===
     consider(
       {
@@ -2214,6 +2309,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[28.9, 2.24, 16.95]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#67e8f9" />
+      </mesh>
+      <mesh position={[-14.1, 1.08, 17.6]}>
+        <sphereGeometry args={[0.065, 8, 8]} />
+        <meshBasicMaterial color="#fda4af" />
+      </mesh>
+      <mesh position={[-26.8, 1.85, 47.8]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#fde047" />
+      </mesh>
+      <mesh position={[14.8, 2.08, 50.0]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#fcd34d" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (
