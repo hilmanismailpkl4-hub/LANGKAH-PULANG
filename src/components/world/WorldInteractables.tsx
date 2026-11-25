@@ -860,6 +860,48 @@ export const WorldInteractables: React.FC = () => {
       2.3,
     );
 
+    // === 3D. KULINER & NONGKRONG 4: GEROBAK MARTABAK MANIS & KACANG REBUS TEPI SUNGAI ===
+    consider(
+      {
+        id: 'activity_martabak_stall',
+        kind: 'story_object',
+        label: 'Jajan Martabak Manis & Kacang Rebus Bang Udin',
+        sublabel: 'Kuliner Tepi Sungai Lampion · Hangat Sore–Malam',
+        position: [-35.6, 0, 23.4],
+        onInteract: () => {
+          store.openCulinarySpot('martabak');
+        },
+      },
+      3.1,
+    );
+
+    consider(
+      {
+        id: 'sit_riverside_lantern_bench',
+        kind: 'story_object',
+        label: 'Duduk Menatap Untaian Lampion Tepi Sungai',
+        sublabel: 'Promenade Sungai Kota · Momen Tenang',
+        position: [-37.3, 0, 20.5],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Promenade Lampion Tepi Sungai',
+            seatPos: [-38.2, 0.14, 20.5],
+            lookAt: [-48.0, 2.0, 20.5],
+            standPos: [-36.6, 0, 20.5],
+            seatYaw: -Math.PI / 2,
+          };
+          store.setSitting(true);
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_bench, 'fw_river_bench');
+          }
+          store.showToast('Duduk santai memandangi pantulan lampion di permukaan Sungai Kota... (WASD/E berdiri)');
+        },
+      },
+      2.1,
+    );
+
     // === 4. MINI-AKTIVITAS 3: BERI MAKAN KUCING ORANYE "SORE" ===
     consider(
       {

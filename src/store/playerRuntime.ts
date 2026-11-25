@@ -1,3 +1,4 @@
+import { HeldDrinkVisual } from '../data/culinaryMenu';
 import { InteractableTarget } from '../types/game';
 
 export interface DynamicCarBox {
@@ -25,7 +26,7 @@ export interface SitSpotState {
   standPos: [number, number, number];
   seatYaw: number;
   holdingCoffee?: boolean;
-  drinkVisual?: 'wedang' | 'coffee' | 'tea' | 'icecream' | 'cocoa';
+  drinkVisual?: HeldDrinkVisual;
   tablePropPos?: [number, number, number];
   tableIsHot?: boolean;
 }

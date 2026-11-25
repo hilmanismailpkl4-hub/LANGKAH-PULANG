@@ -253,7 +253,7 @@ export const HumanModel: React.FC<HumanModelProps> = ({
             <meshStandardMaterial color={skinColor} roughness={0.75} />
           </mesh>
 
-          {/* Visual Gelas Hangat / Es Krim di Tangan Kanan */}
+          {/* Visual Gelas Hangat / Es Krim / Jajanan Martabak & Kacang Rebus di Tangan Kanan */}
           {holdingDrink && (
             <group position={[0, -0.48, 0.05]} rotation={[0.92, 0, 0]}>
               {holdingDrink === 'icecream' ? (
@@ -266,6 +266,36 @@ export const HumanModel: React.FC<HumanModelProps> = ({
                     <sphereGeometry args={[0.055, 10, 10]} />
                     <meshStandardMaterial color="#f598ad" roughness={0.5} />
                   </mesh>
+                </group>
+              ) : holdingDrink === 'martabak' ? (
+                <group>
+                  {/* Kotak Kertas Martabak Manis Hangat Terbuka Sebagian */}
+                  <mesh position={[0, 0.04, 0.03]} castShadow>
+                    <boxGeometry args={[0.16, 0.055, 0.16]} />
+                    <meshStandardMaterial color="#f5ede0" roughness={0.78} />
+                  </mesh>
+                  <mesh position={[0, 0.068, 0.03]}>
+                    <boxGeometry args={[0.13, 0.02, 0.13]} />
+                    <meshStandardMaterial color="#e6ad49" roughness={0.68} />
+                  </mesh>
+                  <mesh position={[0, 0.078, 0.03]}>
+                    <boxGeometry args={[0.1, 0.01, 0.1]} />
+                    <meshStandardMaterial color="#4f2a18" roughness={0.7} />
+                  </mesh>
+                  <CupSteam position={[0, 0.1, 0.03]} />
+                </group>
+              ) : holdingDrink === 'peanuts' ? (
+                <group>
+                  {/* Kantong Kertas Cokelat Kacang Rebus Hangat */}
+                  <mesh position={[0, 0.055, 0]} castShadow>
+                    <cylinderGeometry args={[0.062, 0.048, 0.14, 8]} />
+                    <meshStandardMaterial color="#b58352" roughness={0.9} />
+                  </mesh>
+                  <mesh position={[0, 0.125, 0]} castShadow>
+                    <sphereGeometry args={[0.052, 8, 8]} />
+                    <meshStandardMaterial color="#cfa578" roughness={0.88} />
+                  </mesh>
+                  <CupSteam position={[0, 0.14, 0]} />
                 </group>
               ) : (
                 <group>

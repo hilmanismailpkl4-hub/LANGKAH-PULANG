@@ -135,6 +135,16 @@ export const SPOT_FAMILY_BANTERS: SpotBanterEntry[] = [
       { speaker: 'kira', text: 'Ayah! Bunda! Itu kucing oranye "Sore"! Ayo kita elus sama kasih camilan!' },
     ],
   },
+  {
+    id: 'fw_spot_martabak_lampion',
+    x: -38.0,
+    z: 22.5,
+    radius: 10.5,
+    lines: [
+      { speaker: 'kira', text: 'Waaah!! Lampu lampion tepi sungainya cantik banget, Yah! Eh, bau martabak cokelat keju juga wangi banget!' },
+      { speaker: 'nadia', text: 'Gerobak martabak sama kacang rebus Bang Udin sudah ngebul tuh, Mas. Kita mampir jajan sambil duduk di tepi sungai yuk?' },
+    ],
+  },
 ];
 
 /**

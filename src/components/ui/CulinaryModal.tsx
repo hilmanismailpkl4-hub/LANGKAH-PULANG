@@ -32,6 +32,8 @@ export const CulinaryModal: React.FC = () => {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-warm-400/20 text-warm-300">
                 {activeSpot === 'cafe' ? (
                   <Coffee className="h-5 w-5" />
+                ) : activeSpot === 'martabak' ? (
+                  <Flame className="h-5 w-5" />
                 ) : (
                   <UtensilsCrossed className="h-5 w-5" />
                 )}
@@ -125,7 +127,7 @@ export const CulinaryModal: React.FC = () => {
           </div>
 
           <div className="border-t border-warm-100/10 bg-dusk-950/50 px-6 py-3 text-center text-[11px] text-warm-200/60">
-            Damar akan duduk santai menikmati hidangan hangat—gelas minuman juga bisa dibawa berjalan setelah berdiri!
+            Damar akan duduk santai menikmati hidangan hangat—minuman & jajanan juga bisa dibawa berjalan setelah berdiri!
           </div>
         </div>
       </div>

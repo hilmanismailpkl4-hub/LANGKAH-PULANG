@@ -1,7 +1,7 @@
 import { FamilyBanterLine } from './familyWalkBanter';
 
-export type CulinarySpotId = 'angkringan' | 'cafe' | 'kios';
-export type HeldDrinkVisual = 'wedang' | 'coffee' | 'tea' | 'icecream' | 'cocoa';
+export type CulinarySpotId = 'angkringan' | 'cafe' | 'kios' | 'martabak';
+export type HeldDrinkVisual = 'wedang' | 'coffee' | 'tea' | 'icecream' | 'cocoa' | 'martabak' | 'peanuts';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -63,6 +63,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [21.6, 0, 15.0],
     seatYaw: Math.PI,
     tablePropPos: [20.5, 0.78, 14.2],
+  },
+  martabak: {
+    id: 'martabak',
+    title: 'Martabak Manis & Kacang Rebus Bang Udin',
+    hostName: 'Bang Udin',
+    subtitle: 'Promenade Lampion Tepi Sungai · Jajanan Sore & Malam',
+    seatPos: [-38.2, 0.14, 20.5],
+    lookAt: [-48.0, 2.0, 20.5],
+    standPos: [-36.6, 0, 20.5],
+    seatYaw: -Math.PI / 2,
+    tablePropPos: [-38.92, 0.56, 20.5],
   },
 };
 
@@ -199,6 +210,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Es krimnya dingin tapi hati Kira hangat banget jalan sama Ayah sama Bunda!' },
       { speaker: 'nadia', text: 'Hati-hati es krimnya menetes ke baju ya, Sayang. Terima kasih ya, Mas.' },
+    ],
+  },
+
+  // === 4. GEROBAK MARTABAK MANIS & KACANG REBUS TEPI SUNGAI ===
+  {
+    id: 'martabak_cokelat_keju',
+    spot: 'martabak',
+    name: 'Martabak Manis Cokelat Keju Susu',
+    priceLabel: 'Rp 22.000',
+    tagline: 'Adonan lembut wangi mentega dengan taburan mesis cokelat, keju parut, & susu kental manis.',
+    tasteNote: 'Wangi mentega panas dan cokelat lumer—dimakan sambil menatap pantulan lampion di permukaan sungai terasa luar biasa damai.',
+    drinkVisual: 'martabak',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'kira', text: 'WAAAH kejunya banyak banget, Yah!! Martabak Bang Udin emang paling juara!' },
+    ],
+  },
+  {
+    id: 'kacang_rebus_hangat',
+    spot: 'martabak',
+    name: 'Kacang Rebus Hangat Tepi Sungai',
+    priceLabel: 'Rp 10.000',
+    tagline: 'Kacang tanah rebus gurih empuk baru diangkat dari dandang mengepul.',
+    tasteNote: 'Mengupas kacang rebus hangat satu per satu di pinggir sungai membuat waktu melambat tanpa perlu alasan.',
+    drinkVisual: 'peanuts',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Dulu bapak aku juga paling suka beli kacang rebus sore-sore gini, Mas. Gurihnya pas banget.' },
+    ],
+  },
+  {
+    id: 'martabak_family',
+    spot: 'martabak',
+    name: 'Traktir Keluarga Martabak & Kacang Rebus (Paket Tepi Sungai)',
+    priceLabel: 'Rp 36.000',
+    tagline: 'Satu loyang martabak cokelat keju spesial plus sekantong besar kacang rebus hangat.',
+    tasteNote: 'Duduk berdampingan di bangku kayu di bawah untaian lampion tepi sungai—tangan penuh remah cokelat, hati penuh rasa syukur.',
+    drinkVisual: 'martabak',
+    isHot: true,
+    isFamilyTreat: true,
+    journalTitle: 'Malam Lampion & Martabak di Tepi Sungai',
+    journalBody: 'Aku mengajak Nadia dan Kira duduk di bangku kayu promenade sungai menikmati martabak cokelat keju dan kacang rebus hangat dari gerobak Bang Udin. Di bawah untaian lampion kertas yang memantul di air sungai, kota ini terasa begitu ramah.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Ayah! Bunda! Lihat lampion-lampionnya mantul di air sungai sambil makan martabak!! Seru bangeeet!' },
+      { speaker: 'nadia', text: 'Malam yang hangat banget ya, Mas... nggak nyangka jajan martabak pinggir sungai bisa seindah ini.' },
     ],
   },
 ];

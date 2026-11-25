@@ -313,6 +313,11 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
 
   // === 14. Kotak Buku Jalanan ("Taman Baca Mini") di Taman Kota ===
   { id: 'park_book_box', minX: -73.0, maxX: -72.0, minZ: -8.65, maxZ: -7.75 },
+
+  // === 15. Gerobak Martabak Manis & Kacang Rebus Bang Udin + Bangku Tepi Sungai ===
+  { id: 'martabak_cart', minX: -37.28, maxX: -35.92, minZ: 22.5, maxZ: 25.1 },
+  { id: 'martabak_bench', minX: -38.55, maxX: -37.88, minZ: 19.4, maxZ: 21.6 },
+  { id: 'martabak_table', minX: -39.25, maxX: -38.6, minZ: 19.85, maxZ: 21.15 },
 ];
 
 /**
@@ -374,6 +379,15 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: -65.7, z: 17.2, r: 0.24 },
   { x: -70.3, z: 21.8, r: 0.24 },
   { x: -65.7, z: 21.8, r: 0.24 },
+
+  // Penjual Martabak Bang Udin & Tiang Lampion Tepi Sungai
+  { x: -37.55, z: 23.8, r: 0.42 },
+  ...([
+    [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
+    [-39.75, -9.5], [-39.75, -19.5], [-39.75, -29.5],
+    [-56.25, 9.5], [-56.25, 19.5], [-56.25, 29.5], [-56.25, 39.5],
+    [-56.25, -9.5], [-56.25, -19.5], [-56.25, -29.5],
+  ] as [number, number][]).map(([x, z]) => ({ x, z, r: 0.14 })),
 ];
 
 export const ROOFTOP_BOUNDS = {

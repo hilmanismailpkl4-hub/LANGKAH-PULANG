@@ -274,6 +274,45 @@ export const MapJournalModal: React.FC = () => {
                         fill="url(#riverGrad)"
                       />
 
+                      {/* Sorotan Untaian Lampion Tepi Sungai & Gerobak Martabak */}
+                      {[-24, -14, 14, 24, 34].map((lz) => {
+                        const lEast = toSvg(-39.75, lz);
+                        const lWest = toSvg(-56.25, lz);
+                        return (
+                          <g key={`map-ln-${lz}`} opacity="0.72">
+                            <line
+                              x1={lWest.sx}
+                              y1={lWest.sy}
+                              x2={lEast.sx}
+                              y2={lEast.sy}
+                              stroke="#fbbf24"
+                              strokeWidth="1.2"
+                              strokeDasharray="3 4"
+                            />
+                            <circle cx={lEast.sx} cy={lEast.sy} r="2.2" fill="#fb923c" />
+                            <circle cx={lWest.sx} cy={lWest.sy} r="2.2" fill="#fb923c" />
+                          </g>
+                        );
+                      })}
+                      {(() => {
+                        const mb = toSvg(-36.6, 23.8);
+                        return (
+                          <g transform={`translate(${mb.sx}, ${mb.sy})`}>
+                            <circle r="7.5" fill="rgba(251, 146, 60, 0.25)" />
+                            <circle r="3.6" fill="#fb923c" stroke="#fff7ed" strokeWidth="1.2" />
+                            <text
+                              x="9"
+                              y="3"
+                              fill="rgba(253, 186, 116, 0.9)"
+                              fontSize="7.5"
+                              fontWeight="600"
+                            >
+                              MARTABAK & LAMPION
+                            </text>
+                          </g>
+                        );
+                      })()}
+
                       {/* Rel Kereta Stasiun Timur */}
                       <line
                         x1={toSvg(94.3, -68).sx}

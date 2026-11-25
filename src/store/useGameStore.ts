@@ -20,6 +20,7 @@ import {
   NadiaOutfitId,
 } from '../data/damarOutfits';
 import { LAKE_CATCHES, LakeCatchDef } from '../data/lakeAndBooks';
+import { PhotoFilterId, PhotoFrameId } from '../data/photoFilters';
 import { evaluateEnding } from '../data/endings';
 import {
   CASUAL_FAMILY_BANTERS,
@@ -113,6 +114,8 @@ interface GameStoreState {
   titlePreviewTime: TimeOfDay;
   customWaypoint: CustomWaypoint | null;
   isPhotoMode: boolean;
+  photoFilter: PhotoFilterId;
+  photoFrame: PhotoFrameId;
   isSitting: boolean;
   isFlyingKite: boolean;
   isFishing: boolean;
@@ -156,6 +159,8 @@ interface GameStoreState {
   applyGraphicsPreset: (quality: GraphicsQuality) => void;
   setCustomWaypoint: (wp: CustomWaypoint | null) => void;
   setPhotoMode: (active: boolean) => void;
+  setPhotoFilter: (filter: PhotoFilterId) => void;
+  setPhotoFrame: (frame: PhotoFrameId) => void;
   setSitting: (sitting: boolean) => void;
   setFlyingKite: (flying: boolean) => void;
   setFishing: (fishing: boolean) => void;
@@ -282,6 +287,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     titlePreviewTime: 'sunset',
     customWaypoint: null,
     isPhotoMode: false,
+    photoFilter: 'natural',
+    photoFrame: 'none',
     isSitting: false,
     isFlyingKite: false,
     isFishing: false,
@@ -353,6 +360,16 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     setPhotoMode: (active) => {
       if (active && document.pointerLockElement) document.exitPointerLock();
       set({ isPhotoMode: active, isMapJournalOpen: false, isPauseOpen: false, isQuickGraphicsOpen: false });
+    },
+
+    setPhotoFilter: (filter) => {
+      sfxEngine.play('switch');
+      set({ photoFilter: filter });
+    },
+
+    setPhotoFrame: (frame) => {
+      sfxEngine.play('switch');
+      set({ photoFrame: frame });
     },
 
     setSitting: (sitting) => set({ isSitting: sitting }),
