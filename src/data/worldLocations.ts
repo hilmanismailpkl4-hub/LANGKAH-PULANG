@@ -381,6 +381,11 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   // === 26. Rak Parkir Sepeda Kota & Motor Kurir Kopi Depan Kedai Bima ===
   { id: 'cafe_bike_rack', minX: -25.05, maxX: -22.15, minZ: 10.52, maxZ: 12.28 },
   { id: 'cafe_delivery_scooter', minX: -17.05, maxX: -15.35, minZ: 10.25, maxZ: 12.15 },
+
+  // === 27. Gerbang Tap Kartu Komuter Stasiun Senja (3 Pedestal — 2 Lajur Terbuka Lebar!) ===
+  { id: 'station_gate_n', minX: 75.25, maxX: 76.35, minZ: -9.27, maxZ: -9.03 },
+  { id: 'station_gate_c', minX: 75.25, maxX: 76.35, minZ: -7.72, maxZ: -7.48 },
+  { id: 'station_gate_s', minX: 75.25, maxX: 76.35, minZ: -6.17, maxZ: -5.93 },
 ];
 
 /**
@@ -506,9 +511,10 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
     [15.8, -19.5], [-62.8, 8.2], [74.8, 3.2],
   ] as [number, number][]).map(([x, z]) => ({ x, z, r: 0.36 })),
 
-  // Pak Darmo Dawet Ayu, Mang Asep Siomay Bandung & Taman Bundar Tugu "Kota Senja"
+  // Pak Darmo Dawet Ayu, Mang Asep Siomay Bandung, Pelukis Mas Dimas & Taman Bundar Tugu "Kota Senja"
   { x: 42.8, z: -14.7, r: 0.42 },
   { x: -79.0, z: 13.75, r: 0.42 },
+  { x: -37.8, z: 12.6, r: 0.78 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],

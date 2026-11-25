@@ -402,4 +402,16 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'nadia', text: 'Keren ya sekarang Kedai Bima makin ramai sampai ada rak sepeda khusus sama motor antar kopi segala.' },
     { speaker: 'kira', text: 'Kring-kring!! Nanti kalau Kira udah gede, Kira mau gowes sepeda sendiri ke kedai Om Bima ah!' },
   ],
+  activity_wind_chime: [
+    { speaker: 'nadia', text: 'Suara lonceng bambu di teras itu selalu jadi tanda favoritku kalau angin sore mulai bertiup, Mas.' },
+    { speaker: 'kira', text: 'Klotak-klotak merdu banget, Yah!! Kayak musik kayu waktu liburan di desa nenek!' },
+  ],
+  activity_river_artist: [
+    { speaker: 'kira', text: 'WAAAH!! Lukisan Jembatan Lampion punya Om Dimas mirip banget sama aslinya, Ayah!! Kira mau belajar melukis juga!' },
+    { speaker: 'nadia', text: 'Indah banget ya warna langit senjanya di kanvas... bikin kita ingat betapa cantiknya kota ini kalau mau berhenti sebentar.' },
+  ],
+  activity_station_gate: [
+    { speaker: 'kira', text: 'BIP-BIP!! Pintunya langsung kebuka sendiri warna hijau, Ayah!! Keren bangettt!' },
+    { speaker: 'nadia', text: 'Ingat nggak Mas, dulu tiap sore kamu pasti lewat gerbang tap stasiun ini sambil buru-buru mengejar kereta?' },
+  ],
 };

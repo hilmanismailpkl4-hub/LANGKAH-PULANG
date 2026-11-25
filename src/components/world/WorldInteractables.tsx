@@ -2215,6 +2215,104 @@ export const WorldInteractables: React.FC = () => {
         2.4,
       );
 
+      consider(
+        {
+          id: 'activity_porch_wind_chime',
+          kind: 'story_object',
+          label: 'Sentuh Lonceng Angin Bambu Teras',
+          sublabel: 'Beranda Rumah Jl. Melati No. 14',
+          position: [-18.4, 0.08, 60.8],
+          onInteract: () => {
+            playerRuntime.windChimeTimer = 3.6;
+            sfxEngine.playBambooWindChime(1.0);
+            if (!store.flags.includes('rang_porch_wind_chime')) {
+              store.applyEffect({
+                kehadiranKeluarga: 1,
+                kejujuranDiri: 1,
+                setFlags: ['rang_porch_wind_chime'],
+                journalEntry: {
+                  id: 'je_porch_wind_chime',
+                  title: 'Denting Lonceng Bambu di Beranda Rumah',
+                  body: 'Setiap kali angin sore menyentuh lonceng bambu di samping pintu rumah Jl. Melati No. 14, suara kayunya yang hangat selalu mengingatkan bahwa aku sudah benar-benar sampai di rumah.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_wind_chime, 'fw_wind_chime');
+            }
+            store.showToast('Klotak-klotak... lima tabung bambu berdenting merdu tertiup angin beranda Rumah Jl. Melati.');
+          },
+        },
+        2.2,
+      );
+
+      consider(
+        {
+          id: 'activity_river_sketch_artist',
+          kind: 'story_object',
+          label: 'Lihat Lukisan Sketsa Jembatan Mas Dimas',
+          sublabel: 'Promenade Tepi Sungai · Pelukis Jalanan',
+          position: [-36.6, 0, 12.6],
+          onInteract: () => {
+            sfxEngine.play('page');
+            const lines = [
+              'Mas Dimas: "Cahaya lampu Jembatan Lampion kalau dipantulkan ke air sungai nggak pernah sama tiap harinya, Mas."',
+              'Mas Dimas: "Kadang orang cuma butuh berhenti lima menit buat lihat seindah apa kota yang tiap hari mereka lewati."',
+              'Mas Dimas: "Kalau adik kecil di rumah suka gambar, mampir aja lagi nanti—saya kasih lihat cara campur warna senja!"',
+            ];
+            if (!store.flags.includes('met_river_sketch_artist')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                setFlags: ['met_river_sketch_artist'],
+                journalEntry: {
+                  id: 'je_river_sketch_artist',
+                  title: 'Pelukis Sketsa Jembatan di Tepi Sungai',
+                  body: 'Di tepi promenade sungai, Mas Dimas dengan sabar melukis Jembatan Lampion di atas kanvas akrilik. Melihat kotaku dari sapuan kuasnya membuat perjalanan pulang terasa jauh lebih bermakna.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_river_artist, 'fw_river_artist');
+            }
+            store.showToast(lines[Math.floor(Date.now() / 1000) % lines.length]);
+          },
+        },
+        2.6,
+      );
+
+      consider(
+        {
+          id: 'activity_station_tap_gate',
+          kind: 'story_object',
+          label: 'Tap Kartu Komuter di Gerbang Stasiun Senja',
+          sublabel: 'Stasiun Senja · Gerbang KMT / E-Money',
+          position: [74.6, 0.11, -7.6],
+          onInteract: () => {
+            playerRuntime.stationGateTimer = 3.2;
+            sfxEngine.playStationTapBeep();
+            if (!store.flags.includes('tapped_station_gate')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                setFlags: ['tapped_station_gate'],
+                journalEntry: {
+                  id: 'je_station_tap_gate',
+                  title: 'Bunyi Bip Gerbang Komuter Stasiun Senja',
+                  body: 'Suara "bip-bip" gerbang kartu elektronik di Stasiun Senja begitu akrab di telingaku—dulu bunyi itu selalu menandai hari kerja yang tergesa, hari ini aku melewatinya tanpa terburu-buru.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_station_gate, 'fw_station_gate');
+            }
+            store.showToast('BIP-BIP! Kartu KMT terbaca — lampu LED menyala hijau dan pintu gerbang Stasiun Senja terbuka mulus.');
+          },
+        },
+        2.5,
+      );
+
     consider(
       {
         id: 'portal_up',
@@ -2742,6 +2840,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-16.2, 1.56, 11.2]}>
         <sphereGeometry args={[0.065, 8, 8]} />
         <meshBasicMaterial color="#fbbf24" />
+      </mesh>
+      <mesh position={[-18.35, 2.38, 61.55]}>
+        <sphereGeometry args={[0.065, 8, 8]} />
+        <meshBasicMaterial color="#fde047" />
+      </mesh>
+      <mesh position={[-37.8, 1.88, 12.6]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#fbbf24" />
+      </mesh>
+      <mesh position={[75.8, 1.25, -7.6]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#4ade80" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

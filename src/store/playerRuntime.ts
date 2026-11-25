@@ -127,6 +127,8 @@ export const playerRuntime = {
   gardenWaterTimer: 0,
   badmintonRallyTimer: 0,
   kentonganSwingTimer: 0,
+  windChimeTimer: 0,
+  stationGateTimer: 0,
   swingBoostTimer: 0,
   kiteHeight: 0,
   kitePullBoost: 0,
@@ -196,6 +198,8 @@ export function resetScooterToHome() {
   playerRuntime.gardenWaterTimer = 0;
   playerRuntime.badmintonRallyTimer = 0;
   playerRuntime.kentonganSwingTimer = 0;
+  playerRuntime.windChimeTimer = 0;
+  playerRuntime.stationGateTimer = 0;
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;
   playerRuntime.kitePullBoost = 0;

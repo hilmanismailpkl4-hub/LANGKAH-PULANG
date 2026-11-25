@@ -384,6 +384,72 @@ class SfxEngine {
   }
 
   /**
+   * Denting hangat lonceng angin bambu berongga (nada pentatonis kayu alami) di teras Rumah Jl. Melati.
+   */
+  public playBambooWindChime(intensity = 1) {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume * Math.max(0.18, Math.min(1, intensity));
+
+    // 5 tabung bambu bertala pentatonis hangat (D5, E5, G5, A5, C6) dengan karakter kayu berongga
+    const notes = [587.33, 659.25, 783.99, 880.0, 1046.5];
+    const pattern = intensity > 0.7 ? [0, 2, 1, 4, 3, 2] : [0, 3, 1];
+    pattern.forEach((nIdx, i) => {
+      const t = now + i * (0.12 + (i % 2) * 0.05);
+      const base = notes[nIdx];
+      // Nada dasar kayu bambu (triangle teredam hangat) + resonansi rongga pendek
+      const osc = ctx.createOscillator();
+      const filter = ctx.createBiquadFilter();
+      const g = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(base, t);
+      osc.frequency.exponentialRampToValueAtTime(base * 0.985, t + 0.24);
+      filter.type = 'bandpass';
+      filter.frequency.value = base * 1.15;
+      filter.Q.value = 4.2;
+      g.gain.setValueAtTime(0.001, t);
+      g.gain.linearRampToValueAtTime(0.095 * v, t + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0008, t + 0.36);
+      osc.connect(filter).connect(g).connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.38);
+
+      // Harmoni sinus lembut beresonansi
+      this.softTone(ctx, base, t, 0.32, 0.036 * v, 'sine');
+    });
+  }
+
+  /**
+   * Bunyi "BIP-BIP!" khas gerbang tap kartu elektronik KRL komuter Indonesia saat saldo terbaca & pintu terbuka.
+   */
+  public playStationTapBeep() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // Dua nada pendek jernih 1760 Hz -> 2349 Hz (khas tap kartu KMT / e-Money berhasil)
+    this.softTone(ctx, 1760, now, 0.075, 0.072 * v, 'sine');
+    this.softTone(ctx, 2349.3, now + 0.085, 0.11, 0.082 * v, 'sine');
+    // Desis mekanik halus daun pintu kaca terbuka
+    const src = ctx.createBufferSource();
+    src.buffer = this.getNoiseBuffer(ctx);
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(950, now + 0.06);
+    filter.Q.value = 2.0;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.001, now + 0.06);
+    g.gain.linearRampToValueAtTime(0.028 * v, now + 0.11);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+    src.connect(filter).connect(g).connect(ctx.destination);
+    src.start(now + 0.06, 0.1, 0.25);
+  }
+
+  /**
    * Petikan gitar akustik lembut dari pemusik jalanan tepi sungai.
    */
   public playBuskerStrum(distanceFactor = 1, celebrate = false) {
