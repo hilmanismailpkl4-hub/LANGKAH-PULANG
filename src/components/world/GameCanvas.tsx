@@ -13,6 +13,7 @@ import { HomeKitchenAndParkNature } from './HomeKitchenAndParkNature';
 import { HomeLivingAndBusStop } from './HomeLivingAndBusStop';
 import { NatureAndRainbow } from './NatureAndRainbow';
 import { NeighborhoodMorningAndFridge } from './NeighborhoodMorningAndFridge';
+import { ParkFountainPicnicAndJoggers } from './ParkFountainPicnicAndJoggers';
 import { ParkPlaygroundAndKoi } from './ParkPlaygroundAndKoi';
 import { PlayerController } from './PlayerController';
 import { PostEffects } from './PostEffects';
@@ -69,6 +70,7 @@ export const GameCanvas: React.FC = () => {
             <NeighborhoodMorningAndFridge timeOfDay={effectiveTime} settings={settings} />
             <HomeLivingAndBusStop timeOfDay={effectiveTime} settings={settings} />
             <ParkPlaygroundAndKoi timeOfDay={effectiveTime} settings={settings} />
+            <ParkFountainPicnicAndJoggers timeOfDay={effectiveTime} settings={settings} />
             <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
             <CityLife timeOfDay={effectiveTime} settings={settings} />
             <ScooterEntity timeOfDay={effectiveTime} settings={settings} />

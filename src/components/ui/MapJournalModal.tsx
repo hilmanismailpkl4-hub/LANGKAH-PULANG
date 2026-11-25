@@ -249,6 +249,25 @@ export const MapJournalModal: React.FC = () => {
                       >
                         TAMAN BERMAIN
                       </text>
+                      {/* Penanda Air Mancur Mini & Tikar Piknik Keluarga di Taman Kota */}
+                      {(() => {
+                        const fp = toSvg(-65.5, 10.5);
+                        const pp = toSvg(-72.0, 29.8);
+                        return (
+                          <>
+                            <g transform={`translate(${fp.sx}, ${fp.sy})`}>
+                              <circle r="5" fill="#38bdf8" fillOpacity="0.28" stroke="#7dd3fc" strokeWidth="1" />
+                              <circle r="2" fill="#e0f2fe" />
+                            </g>
+                            <g transform={`translate(${pp.sx}, ${pp.sy})`}>
+                              <rect x="-5" y="-4" width="10" height="8" rx="1.5" fill="#dc6b5a" stroke="#fef3c7" strokeWidth="1" />
+                              <text y="12" fill="rgba(254,226,226,0.78)" fontSize="6.8" textAnchor="middle">
+                                PIKNIK
+                              </text>
+                            </g>
+                          </>
+                        );
+                      })()}
                       <rect x="275" y="425" width="320" height="150" rx="18" fill="#182621" opacity="0.72" />
 
                       {/* Area Beton Pusat Kota */}

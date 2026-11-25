@@ -270,4 +270,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'AYAAAH!! BUNDAAA!! Lihat ke langit barat di atas danau ada PELANGI!!' },
     { speaker: 'nadia', text: 'Cantik banget ya, Mas... sehabis hujan reda, langit kota ini selalu terasa baru lagi.' },
   ],
+  activity_picnic: [
+    { speaker: 'kira', text: 'YEAAAY piknik di rumput taman!! Kira mau semangka dingin sama teh hangatnya Bunda!' },
+    { speaker: 'nadia', text: 'Nyaman banget ya duduk di tikar begini, Mas... rasanya nggak pengin cepat-cepat pulang.' },
+  ],
+  activity_fountain: [
+    { speaker: 'kira', text: 'Kira udah lempar koin harapan ke air mancur! Kira doain Ayah sehat terus sama sering jalan bareng Kira!' },
+    { speaker: 'nadia', text: 'Aamiin, Sayang... dengar suara percikan air mancur di sore hari bikin adem banget.' },
+  ],
 };

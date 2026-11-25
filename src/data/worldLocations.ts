@@ -396,6 +396,10 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: 7.5, z: 71.6, r: 0.14 },
   { x: -21.85, z: 54.45, r: 0.24 },
   { x: -18.15, z: 54.45, r: 0.24 },
+
+  // Air Mancur Batu Mini Taman Kota & Keranjang Piknik Rotan
+  { x: -65.5, z: 10.5, r: 1.74 },
+  { x: -71.0, z: 29.15, r: 0.36 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
     [-39.75, -9.5], [-39.75, -19.5], [-39.75, -29.5],

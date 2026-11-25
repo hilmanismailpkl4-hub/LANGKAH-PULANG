@@ -1109,6 +1109,81 @@ export const WorldInteractables: React.FC = () => {
 
     consider(
       {
+        id: 'activity_park_picnic',
+        kind: 'story_object',
+        label: store.isFamilyWalkActive
+          ? 'Duduk Piknik Bertiga di Tikar Taman'
+          : 'Duduk Santai di Tikar Piknik Taman',
+        sublabel: 'Taman Kota · Teh Hangat, Semangka & Angin Sore',
+        position: [-72.0, 0, 29.8],
+        onInteract: () => {
+          sfxEngine.play('coffee');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Tikar Piknik Taman Kota',
+            seatPos: [-72.2, 0.04, 30.05],
+            lookAt: [-70.5, 1.4, 21.5],
+            standPos: [-72.2, 0, 31.35],
+            seatYaw: Math.PI,
+            holdingCoffee: true,
+            drinkVisual: 'tea',
+          };
+          store.setSitting(true);
+          if (!store.flags.includes('sat_park_picnic')) {
+            store.applyEffect({
+              kehadiranKeluarga: 2,
+              kejujuranDiri: 1,
+              setFlags: ['sat_park_picnic'],
+              journalEntry: {
+                id: 'je_park_picnic',
+                title: 'Piknik Sederhana di Rumput Taman Kota',
+                body: 'Di atas tikar kotak-kotak merah di rumput Taman Kota, dengan termos teh hangat dan potongan semangka, rasanya seluruh kecemasan hari ini berhenti sejenak. Ternyata berlibur tidak selalu harus pergi jauh.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_picnic, 'fw_picnic');
+            store.showToast('Duduk piknik hangat bertiga bersama Nadia & Kira di rumput taman... (WASD/E berdiri)');
+          } else {
+            store.showToast('Duduk santai di tikar piknik Taman Kota... (Tekan [G] ajak Nadia & Kira ikut, atau WASD/E berdiri)');
+          }
+        },
+      },
+      2.8,
+    );
+
+    consider(
+      {
+        id: 'activity_park_fountain',
+        kind: 'story_object',
+        label: 'Lempar Koin Harapan di Air Mancur Taman',
+        sublabel: 'Air Mancur Batu Mini · Pintu Masuk Taman Kota',
+        position: [-65.5, 0, 10.5],
+        onInteract: () => {
+          sfxEngine.play('chime');
+          if (!store.flags.includes('wished_park_fountain')) {
+            store.applyEffect({
+              kejujuranDiri: 1,
+              setFlags: ['wished_park_fountain'],
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_fountain, 'fw_fountain');
+          }
+          const wishes = [
+            'Koin jatuh berkilau ke air jernih—semoga langkah pulang hari ini selalu diberi ketenangan.',
+            'Percikan air mancur terasa sejuk di wajah—satu harapan sederhana untuk kesehatan Nadia & Kira.',
+            'Riak kecil meluas di permukaan kolam—mengingatkan bahwa perubahan besar selalu mulai dari langkah kecil.',
+          ];
+          store.showToast(wishes[Math.floor(Date.now() / 1000) % wishes.length]);
+        },
+      },
+      3.3,
+    );
+
+    consider(
+      {
         id: 'activity_darman_books',
         kind: 'story_object',
         label: 'Jelajahi Rak Buku Bekas Pak Darman',
