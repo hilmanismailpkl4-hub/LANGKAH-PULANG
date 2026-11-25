@@ -215,6 +215,26 @@ class SfxEngine {
   }
 
   /**
+   * Bunyi peluit kayu mainan lembut ("tut-tut!") saat kereta kayu Kira dinyalakan di ruang tamu.
+   */
+  public playToyTrainWhistle() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // Dua tiupan peluit kayu manis (F5 + A5 lembut)
+    [
+      { t: 0, dur: 0.16 },
+      { t: 0.22, dur: 0.26 },
+    ].forEach((b) => {
+      this.softTone(ctx, 698.46, now + b.t, b.dur, 0.068 * v, 'triangle');
+      this.softTone(ctx, 880.0, now + b.t, b.dur, 0.048 * v, 'sine');
+    });
+  }
+
+  /**
    * Bunyi tepokan kok bulu tangkis yang renyah ("plok!") saat rally di Lapangan Gang Melati.
    */
   public playBadmintonHit(distanceFactor = 1) {

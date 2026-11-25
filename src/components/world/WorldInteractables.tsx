@@ -1657,7 +1657,39 @@ export const WorldInteractables: React.FC = () => {
           store.startDialogue('interior_kira_drawing_table');
         },
       },
-      2.4,
+      2.1,
+    );
+
+    consider(
+      {
+        id: 'interior_kira_toy_train',
+        kind: 'story_object',
+        label: store.kiraToyTrainOn
+          ? 'Hentikan Kereta Mainan Kayu Kira'
+          : 'Nyalakan Kereta Mainan Kayu Kira ("Tut-Tut!")',
+        sublabel: 'Karpet Sudut Kira · Rumah Jl. Melati No. 14',
+        position: [-19.9, 0.08, 69.55],
+        onInteract: () => {
+          store.toggleKiraToyTrain();
+        },
+      },
+      1.85,
+    );
+
+    consider(
+      {
+        id: 'interior_desk_laptop',
+        kind: 'story_object',
+        label: store.workLaptopClosed
+          ? 'Buka Kembali Laptop & Lampu Meja Kerja'
+          : 'Tutup Laptop Kantor & Matikan Lampu Kerja',
+        sublabel: 'Meja Kerja Damar · Lepas Urusan Kantor Saat Pulang',
+        position: [-23.85, 0.08, 71.15],
+        onInteract: () => {
+          store.toggleWorkLaptop();
+        },
+      },
+      1.85,
     );
 
     consider(
@@ -2421,6 +2453,14 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[34.3, 1.05, 46.55]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#fde047" />
+      </mesh>
+      <mesh position={[-19.9, 0.56, 70.35]}>
+        <sphereGeometry args={[0.06, 8, 8]} />
+        <meshBasicMaterial color="#fde047" />
+      </mesh>
+      <mesh position={[-24.45, 1.32, 72.05]}>
+        <sphereGeometry args={[0.06, 8, 8]} />
+        <meshBasicMaterial color="#93c5fd" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

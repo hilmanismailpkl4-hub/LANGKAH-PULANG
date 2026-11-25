@@ -346,4 +346,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'nadia', text: 'Tarik napas pelan-pelan, Mas... enak banget peregangan bareng warga di rumput taman begini.' },
     { speaker: 'kira', text: 'Kira bisa angkat tangan paling tinggi nih, lihat deh Ayah!!' },
   ],
+  activity_toy_train: [
+    { speaker: 'kira', text: 'TUT-TUUUT!! Kereta kayu Kira jalan lagi!! Ayah lihat, keretanya lewat jembatan kecil tuh!!' },
+    { speaker: 'nadia', text: 'Dari minggu lalu dia terus cerita pengin main kereta kayu itu bareng Ayah di karpet.' },
+  ],
+  activity_close_laptop: [
+    { speaker: 'nadia', text: 'Akhirnya laptop kantornya ditutup juga ya, Mas... sekarang waktunya benar-benar istirahat di rumah.' },
+    { speaker: 'kira', text: 'Horeee!! Ayah nggak kerja lagi malam ini! Ayo main sama Kira!' },
+  ],
 };

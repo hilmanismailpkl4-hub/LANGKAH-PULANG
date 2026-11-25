@@ -148,6 +148,8 @@ interface GameStoreState {
   gardenWatered: boolean;
   vinylPlaying: boolean;
   vinylTrackIdx: number;
+  kiraToyTrainOn: boolean;
+  workLaptopClosed: boolean;
   fridgeNotes: FridgeNote[];
   homeStoveLit: boolean;
   isRidingScooter: boolean;
@@ -207,6 +209,8 @@ interface GameStoreState {
   markMailRead: (mailId: string) => void;
   waterHomeGarden: () => void;
   cycleNadaLamaVinyl: () => void;
+  toggleKiraToyTrain: () => void;
+  toggleWorkLaptop: () => void;
   addFridgeNote: (text: string, color: FridgeNoteColor) => void;
   deleteFridgeNote: (id: string) => void;
   cookHomeRecipe: (recipeId: string) => void;
@@ -375,6 +379,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     gardenWatered: false,
     vinylPlaying: false,
     vinylTrackIdx: 0,
+    kiraToyTrainOn: false,
+    workLaptopClosed: false,
     fridgeNotes: [...INITIAL_FRIDGE_NOTES],
     homeStoveLit: false,
     isRidingScooter: false,
@@ -858,6 +864,62 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         set({ vinylPlaying: true, vinylTrackIdx: nextIdx });
         s.setRadioStation(chosen.station);
         s.showToast(`Mengganti ke ${chosen.title}!`);
+      }
+    },
+
+    toggleKiraToyTrain: () => {
+      const s = get();
+      const next = !s.kiraToyTrainOn;
+      set({ kiraToyTrainOn: next });
+
+      if (next) {
+        sfxEngine.playToyTrainWhistle();
+        if (!s.flags.includes('played_kira_toy_train')) {
+          s.applyEffect({
+            kehadiranKeluarga: 1,
+            setFlags: ['played_kira_toy_train'],
+            journalEntry: {
+              id: 'je_kira_toy_train',
+              title: 'Kereta Kayu Mungil di Karpet Kira',
+              body: 'Begitu kereta mainan kayu di karpet sudut Kira menyala dan melaju memutar di rel kayunya, suara "tut-tut!" kecil itu langsung mengundang senyum. Kadang kebahagiaan di rumah memang sesederhana duduk di lantai menemani anak bermain.',
+              chapter: s.chapter,
+            },
+          });
+        }
+        s.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_toy_train, 'fw_toy_train');
+        s.showToast('Tut-tut! Kereta mainan kayu Kira melaju ceria mengitari rel bundar di karpet!');
+      } else {
+        sfxEngine.play('switch');
+        s.showToast('Kereta mainan kayu Kira berhenti rapi di stasiun kecilnya.');
+      }
+    },
+
+    toggleWorkLaptop: () => {
+      const s = get();
+      const nextClosed = !s.workLaptopClosed;
+      set({ workLaptopClosed: nextClosed });
+
+      if (nextClosed) {
+        sfxEngine.play('switch');
+        sfxEngine.play('chime');
+        if (!s.flags.includes('closed_work_laptop_home')) {
+          s.applyEffect({
+            kejujuranDiri: 2,
+            kehadiranKeluarga: 1,
+            setFlags: ['closed_work_laptop_home'],
+            journalEntry: {
+              id: 'je_close_work_laptop',
+              title: 'Menutup Layar Laptop di Rumah',
+              body: 'Aku menekan pelan layar laptop kantor sampai tertutup rapat dan mematikan lampu kerja di meja sudut. Untuk malam ini, tidak ada email atau laporan yang lebih mendesak daripada suara Nadia dan tawa Kira di ruang tamu.',
+              chapter: s.chapter,
+            },
+          });
+        }
+        s.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_close_laptop, 'fw_close_laptop');
+        s.showToast('Klik. Laptop kantor ditutup & lampu kerja dipadamkan—waktu ini sepenuhnya milik rumah.');
+      } else {
+        sfxEngine.play('switch');
+        s.showToast('Laptop meja kerja & lampu belajar dinyalakan kembali.');
       }
     },
 
@@ -1535,6 +1597,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         gardenWatered: false,
         vinylPlaying: false,
         vinylTrackIdx: 0,
+        kiraToyTrainOn: false,
+        workLaptopClosed: false,
         stepCount: 0,
         transitionChapter: 1,
         screen: 'chapter_transition',
@@ -1610,6 +1674,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         gardenWatered: slot.flags.includes('watered_nadia_garden'),
         vinylPlaying: false,
         vinylTrackIdx: 0,
+        kiraToyTrainOn: false,
+        workLaptopClosed: slot.flags.includes('closed_work_laptop_home'),
         stepCount: slot.stepCount ?? 0,
         screen: 'playing',
         loadingOverlay: {
@@ -1706,6 +1772,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isNewsstandOpen: false,
         isMailboxOpen: false,
         vinylPlaying: false,
+        kiraToyTrainOn: false,
+        workLaptopClosed: false,
         homeStoveLit: false,
         isRidingScooter: false,
         isRidingBicycle: false,
