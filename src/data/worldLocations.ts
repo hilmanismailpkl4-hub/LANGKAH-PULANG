@@ -469,14 +469,28 @@ export function resolvePlayerMovement(
         return true;
       }
     }
-    // Saat tidak mengendarai skuter, skuter yang terparkir tetap solid 100%!
+    // Saat tidak mengendarai skuter/sepeda, kendaraan terparkir tetap solid 100%!
     if (!isScooter) {
       const [sx, , sz] = playerRuntime.scooter.pos;
       if (Math.hypot(px - sx, pz - sz) < radius + 0.62) {
         return true;
       }
+      if (!playerRuntime.bicycle.isRiding) {
+        const [bx, , bz] = playerRuntime.bicycle.pos;
+        if (Math.hypot(px - bx, pz - bz) < radius + 0.54) {
+          return true;
+        }
+      }
     } else {
-      // Skuter tidak boleh masuk ke dalam interior rumah Damar / Kedai Bima / Kios / Toko Musik / dermaga kayu
+      // Kendaraan tidak boleh masuk ke dalam interior rumah Damar / Kedai Bima / Kios / Toko Musik / dermaga kayu
+      if (!playerRuntime.scooter.isRiding) {
+        const [sx, , sz] = playerRuntime.scooter.pos;
+        if (Math.hypot(px - sx, pz - sz) < radius + 0.62) return true;
+      }
+      if (!playerRuntime.bicycle.isRiding) {
+        const [bx, , bz] = playerRuntime.bicycle.pos;
+        if (Math.hypot(px - bx, pz - bz) < radius + 0.54) return true;
+      }
       if (px > -27.5 && px < -12.5 && pz > 61.2 && pz < 74.8) return true;
       if (px > -28.5 && px < -11.8 && pz > 13.5 && pz < 27.8) return true;
       if (px > 17.2 && px < 31.8 && pz > 17.2 && pz < 28.8) return true;

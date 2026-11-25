@@ -13,8 +13,11 @@ interface CityLifeProps {
   settings: GameSettings;
 }
 
+type TrafficVehicleType = 'sedan' | 'angkot' | 'box_truck';
+
 interface TrafficCar {
   id: number;
+  type: TrafficVehicleType;
   axis: 'x' | 'z';
   lane: number;
   dir: 1 | -1;
@@ -26,6 +29,7 @@ interface TrafficCar {
   wheelAngle: number;
   lastHornAt: number;
   color: string;
+  accentColor?: string;
 }
 
 interface PedestrianConfig {
@@ -380,6 +384,7 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
   const textures = useMemo(() => getProceduralTextures(), []);
   const carsGroupRef = useRef<THREE.Group>(null);
   const brakeMatRefs = useRef<(THREE.MeshStandardMaterial | null)[]>([]);
+  const brakeHaloRefs = useRef<(THREE.Sprite | null)[]>([]);
   const wheelRefs = useRef<THREE.Group[][]>([]);
   const trainRef = useRef<THREE.Group>(null);
   const walkerPositionsRef = useRef<{ id: string; x: number; z: number; radius: number }[]>([]);
@@ -388,12 +393,20 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
 
   const cars = useMemo<TrafficCar[]>(
     () => [
-      { id: 0, axis: 'x', lane: 2.7, dir: 1, pos: -72, min: -92, max: 56, maxSpeed: 8.6, currentSpeed: 8.6, wheelAngle: 0, lastHornAt: -10, color: '#e4e0d8' },
-      { id: 1, axis: 'x', lane: -2.7, dir: -1, pos: 42, min: -92, max: 56, maxSpeed: 8.2, currentSpeed: 8.2, wheelAngle: 0, lastHornAt: -10, color: '#3b536b' },
-      { id: 2, axis: 'x', lane: 2.7, dir: 1, pos: 18, min: -92, max: 56, maxSpeed: 8.8, currentSpeed: 8.8, wheelAngle: 0, lastHornAt: -10, color: '#964438' },
-      { id: 3, axis: 'z', lane: 2.7, dir: 1, pos: -46, min: -58, max: 42, maxSpeed: 7.8, currentSpeed: 7.8, wheelAngle: 0, lastHornAt: -10, color: '#454f59' },
-      { id: 4, axis: 'z', lane: -2.7, dir: -1, pos: 28, min: -58, max: 42, maxSpeed: 8.2, currentSpeed: 8.2, wheelAngle: 0, lastHornAt: -10, color: '#baa07b' },
-      { id: 5, axis: 'z', lane: 64 + 2.2, dir: 1, pos: -48, min: -58, max: 54, maxSpeed: 8.4, currentSpeed: 8.4, wheelAngle: 0, lastHornAt: -10, color: '#344c49' },
+      // Angkot Biru-Kuning khas Indonesia di Jl. Kenangan (Timur)
+      { id: 0, type: 'angkot', axis: 'x', lane: 2.7, dir: 1, pos: -72, min: -92, max: 56, maxSpeed: 8.1, currentSpeed: 8.1, wheelAngle: 0, lastHornAt: -10, color: '#247bb5', accentColor: '#f5c242' },
+      // Sedan Kota Biru Tua di Jl. Kenangan (Barat)
+      { id: 1, type: 'sedan', axis: 'x', lane: -2.7, dir: -1, pos: 42, min: -92, max: 56, maxSpeed: 8.4, currentSpeed: 8.4, wheelAngle: 0, lastHornAt: -10, color: '#3b536b' },
+      // Mobil Box Pengiriman Kota di Jl. Kenangan (Timur)
+      { id: 2, type: 'box_truck', axis: 'x', lane: 2.7, dir: 1, pos: 18, min: -92, max: 56, maxSpeed: 7.4, currentSpeed: 7.4, wheelAngle: 0, lastHornAt: -10, color: '#e38b34', accentColor: '#eef2f6' },
+      // Angkot Biru Toska-Kuning di Jl. Cempaka (Selatan)
+      { id: 3, type: 'angkot', axis: 'z', lane: 2.7, dir: 1, pos: -46, min: -58, max: 42, maxSpeed: 7.6, currentSpeed: 7.6, wheelAngle: 0, lastHornAt: -10, color: '#1f8a9c', accentColor: '#f5c242' },
+      // Sedan Krem Hangat di Jl. Cempaka (Utara)
+      { id: 4, type: 'sedan', axis: 'z', lane: -2.7, dir: -1, pos: 28, min: -58, max: 42, maxSpeed: 8.2, currentSpeed: 8.2, wheelAngle: 0, lastHornAt: -10, color: '#baa07b' },
+      // Mobil Box Logistik Stasiun di Jl. Stasiun Timur
+      { id: 5, type: 'box_truck', axis: 'z', lane: 64 + 2.2, dir: 1, pos: -48, min: -58, max: 54, maxSpeed: 7.6, currentSpeed: 7.6, wheelAngle: 0, lastHornAt: -10, color: '#355c7d', accentColor: '#f4f6f9' },
+      // Angkot Biru-Kuning arah Barat menuju Jembatan & Taman Kota
+      { id: 6, type: 'angkot', axis: 'x', lane: -2.7, dir: -1, pos: -22, min: -92, max: 56, maxSpeed: 8.0, currentSpeed: 8.0, wheelAngle: 0, lastHornAt: -10, color: '#2980b9', accentColor: '#f5c242' },
     ],
     [],
   );
@@ -422,9 +435,27 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
         if (playerOnGround) {
           const forwardDist = car.axis === 'x' ? (px - carX) * car.dir : (pz - carZ) * car.dir;
           const lateralDist = car.axis === 'x' ? Math.abs(pz - carZ) : Math.abs(px - carX);
-          if (forwardDist > -1.4 && forwardDist < 9.2 && lateralDist < 2.35) {
+          if (forwardDist > -1.4 && forwardDist < 9.5 && lateralDist < 2.45) {
             shouldStop = true;
             blockedByPlayer = forwardDist > 1.2;
+          }
+          // Berhenti sopan juga bila Nadia/Kira sedang menyeberang di depan kendaraan
+          for (const comp of [playerRuntime.companions.nadia.pos, playerRuntime.companions.kira.pos]) {
+            if (comp[1] > 10) continue;
+            const cFwd = car.axis === 'x' ? (comp[0] - carX) * car.dir : (comp[2] - carZ) * car.dir;
+            const cLat = car.axis === 'x' ? Math.abs(comp[2] - carZ) : Math.abs(comp[0] - carX);
+            if (cFwd > 0.5 && cFwd < 8.5 && cLat < 2.25) {
+              shouldStop = true;
+            }
+          }
+        }
+
+        // Berhenti sopan memberi jalan jika ada pejalan kaki di jalur depan kendaraan
+        for (const w of playerRuntime.walkerColliders) {
+          const wFwd = car.axis === 'x' ? (w.x - carX) * car.dir : (w.z - carZ) * car.dir;
+          const wLat = car.axis === 'x' ? Math.abs(w.z - carZ) : Math.abs(w.x - carX);
+          if (wFwd > 0.8 && wFwd < 8.0 && wLat < 2.15) {
+            shouldStop = true;
           }
         }
 
@@ -489,9 +520,16 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
         }
 
         const brakeMat = brakeMatRefs.current[i];
+        const braking = shouldStop || car.currentSpeed < car.maxSpeed * 0.55;
         if (brakeMat) {
-          const braking = shouldStop || car.currentSpeed < car.maxSpeed * 0.45;
-          brakeMat.emissiveIntensity = braking ? 5.2 : isLit ? 1.8 : 0.35;
+          brakeMat.emissiveIntensity = braking ? 6.5 : isLit ? 1.8 : 0.35;
+          brakeMat.color.set(braking ? '#ff2a1f' : '#cc2922');
+        }
+        const brakeHalo = brakeHaloRefs.current[i];
+        if (brakeHalo) {
+          brakeHalo.visible = braking && settings.cinematicGlow;
+          const hMat = brakeHalo.material as THREE.SpriteMaterial;
+          hMat.opacity = braking ? (isLit ? 0.92 : 0.72) : 0;
         }
 
         const carWheels = wheelRefs.current[i];
@@ -501,8 +539,10 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
           }
         }
 
-        const halfX = car.axis === 'x' ? 2.12 : 1.05;
-        const halfZ = car.axis === 'x' ? 1.05 : 2.12;
+        const halfLen = car.type === 'box_truck' ? 2.58 : car.type === 'angkot' ? 2.18 : 2.12;
+        const halfWid = car.type === 'box_truck' ? 1.12 : 1.05;
+        const halfX = car.axis === 'x' ? halfLen : halfWid;
+        const halfZ = car.axis === 'x' ? halfWid : halfLen;
         nextBoxes.push({
           id: car.id,
           x: nextX,
@@ -542,29 +582,125 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
 
   return (
     <group>
-      {/* Mobil Modern Detail */}
+      {/* Variasi Kendaraan Kota Indonesia: Angkot Biru-Kuning, Mobil Box & Sedan + Lampu Rem Realistis */}
       <group ref={carsGroupRef}>
         {cars.map((car, i) => {
           if (!wheelRefs.current[i]) wheelRefs.current[i] = [];
+          const isAngkot = car.type === 'angkot';
+          const isTruck = car.type === 'box_truck';
+          const wheelZFront = isTruck ? 1.62 : 1.28;
+          const wheelZRear = isTruck ? -1.48 : -1.28;
+          const headZ = isTruck ? 2.48 : isAngkot ? 2.08 : 2.05;
+          const tailZ = isTruck ? -2.54 : isAngkot ? -2.1 : -2.04;
+          const tailY = isTruck ? 0.62 : isAngkot ? 0.68 : 0.58;
+
           return (
             <group key={`car-${i}`}>
+              {/* Bayangan kontak lembut di aspal */}
               <mesh position={[0, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-                <planeGeometry args={[2.1, 4.3]} />
-                <meshBasicMaterial color="#090b0f" transparent opacity={0.42} depthWrite={false} />
+                <planeGeometry args={[isTruck ? 2.3 : 2.1, isTruck ? 5.2 : 4.35]} />
+                <meshBasicMaterial color="#090b0f" transparent opacity={0.44} depthWrite={false} />
               </mesh>
-              <mesh position={[0, 0.56, 0]} castShadow>
-                <boxGeometry args={[1.88, 0.58, 4.05]} />
-                <meshStandardMaterial color={car.color} roughness={0.28} metalness={0.45} />
-              </mesh>
-              <mesh position={[0, 1.05, -0.18]} castShadow>
-                <boxGeometry args={[1.56, 0.52, 2.05]} />
-                <meshStandardMaterial color="#1d2530" roughness={0.14} metalness={0.65} />
-              </mesh>
+
+              {/* === BENTUK 1: ANGKOT BIRU-KUNING KHAS INDONESIA === */}
+              {isAngkot && (
+                <group>
+                  {/* Bodi Bawah Biru */}
+                  <mesh position={[0, 0.62, 0]} castShadow>
+                    <boxGeometry args={[1.82, 0.72, 4.15]} />
+                    <meshStandardMaterial color={car.color} roughness={0.34} metalness={0.32} />
+                  </mesh>
+                  {/* Strip Kuning Ikonik Memanjang di Sisi & Depan */}
+                  <mesh position={[0, 0.96, 0]}>
+                    <boxGeometry args={[1.85, 0.16, 4.18]} />
+                    <meshStandardMaterial color={car.accentColor ?? '#f5c242'} roughness={0.4} />
+                  </mesh>
+                  {/* Kabin Atas & Kaca Penumpang Lebar */}
+                  <mesh position={[0, 1.38, -0.05]} castShadow>
+                    <boxGeometry args={[1.76, 0.72, 3.85]} />
+                    <meshStandardMaterial color="#1f2937" roughness={0.16} metalness={0.55} />
+                  </mesh>
+                  {/* Atap Angkot Biru-Kuning + Papan Trayek Bercahaya */}
+                  <mesh position={[0, 1.78, -0.06]} castShadow>
+                    <boxGeometry args={[1.78, 0.12, 3.88]} />
+                    <meshStandardMaterial color={car.color} roughness={0.4} />
+                  </mesh>
+                  <mesh position={[0, 1.9, 1.38]}>
+                    <boxGeometry args={[0.92, 0.16, 0.22]} />
+                    <meshStandardMaterial
+                      color="#fff3b0"
+                      emissive="#ffd166"
+                      emissiveIntensity={isLit ? 1.8 : 0.25}
+                    />
+                  </mesh>
+                  {/* Bemper Depan & Belakang */}
+                  <mesh position={[0, 0.34, 2.1]}>
+                    <boxGeometry args={[1.84, 0.18, 0.12]} />
+                    <meshStandardMaterial color="#20242b" roughness={0.75} />
+                  </mesh>
+                  <mesh position={[0, 0.34, -2.1]}>
+                    <boxGeometry args={[1.84, 0.18, 0.12]} />
+                    <meshStandardMaterial color="#20242b" roughness={0.75} />
+                  </mesh>
+                </group>
+              )}
+
+              {/* === BENTUK 2: MOBIL BOX PENGIRIMAN KOTA === */}
+              {isTruck && (
+                <group>
+                  {/* Sasis Bawah Baja */}
+                  <mesh position={[0, 0.42, 0]} castShadow>
+                    <boxGeometry args={[1.9, 0.22, 4.9]} />
+                    <meshStandardMaterial color="#232830" roughness={0.75} />
+                  </mesh>
+                  {/* Kabin Pengemudi Depan */}
+                  <mesh position={[0, 1.08, 1.62]} castShadow>
+                    <boxGeometry args={[1.92, 1.22, 1.65]} />
+                    <meshStandardMaterial color={car.color} roughness={0.35} metalness={0.35} />
+                  </mesh>
+                  {/* Kaca Depan Kabin */}
+                  <mesh position={[0, 1.28, 2.46]}>
+                    <planeGeometry args={[1.68, 0.62]} />
+                    <meshStandardMaterial color="#1b2636" roughness={0.12} metalness={0.7} />
+                  </mesh>
+                  {/* Boks Kargo Belakang Putih Bersih */}
+                  <mesh position={[0, 1.46, -0.82]} castShadow>
+                    <boxGeometry args={[2.06, 1.92, 3.35]} />
+                    <meshStandardMaterial color={car.accentColor ?? '#eef2f6'} roughness={0.48} metalness={0.18} />
+                  </mesh>
+                  {/* Strip Logistik Warna di Sisi Boks */}
+                  <mesh position={[0, 1.22, -0.82]}>
+                    <boxGeometry args={[2.1, 0.28, 3.2]} />
+                    <meshStandardMaterial color={car.color} roughness={0.45} />
+                  </mesh>
+                  {/* Strip Reflektor Keselamatan Belakang */}
+                  <mesh position={[0, 0.85, -2.51]}>
+                    <boxGeometry args={[1.76, 0.1, 0.04]} />
+                    <meshStandardMaterial color="#fbbf24" emissive="#f59e0b" emissiveIntensity={isLit ? 1.2 : 0.15} />
+                  </mesh>
+                </group>
+              )}
+
+              {/* === BENTUK 3: SEDAN MODERN === */}
+              {!isAngkot && !isTruck && (
+                <group>
+                  <mesh position={[0, 0.56, 0]} castShadow>
+                    <boxGeometry args={[1.88, 0.58, 4.05]} />
+                    <meshStandardMaterial color={car.color} roughness={0.28} metalness={0.45} />
+                  </mesh>
+                  <mesh position={[0, 1.05, -0.18]} castShadow>
+                    <boxGeometry args={[1.56, 0.52, 2.05]} />
+                    <meshStandardMaterial color="#1d2530" roughness={0.14} metalness={0.65} />
+                  </mesh>
+                </group>
+              )}
+
+              {/* 4 Roda Berputar */}
               {[
-                [-0.92, 0.3, 1.25],
-                [0.92, 0.3, 1.25],
-                [-0.92, 0.3, -1.25],
-                [0.92, 0.3, -1.25],
+                [-0.92, 0.3, wheelZFront],
+                [0.92, 0.3, wheelZFront],
+                [-0.92, 0.3, wheelZRear],
+                [0.92, 0.3, wheelZRear],
               ].map(([wx, wy, wz], wi) => (
                 <group
                   key={`w-${wi}`}
@@ -583,8 +719,10 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
                   </mesh>
                 </group>
               ))}
+
+              {/* Lampu Depan + Pendaran */}
               {[-0.62, 0.62].map((hx, hi) => (
-                <group key={`hl-${hi}`} position={[hx, 0.58, 2.05]}>
+                <group key={`hl-${hi}`} position={[hx, isTruck ? 0.72 : 0.58, headZ]}>
                   <mesh>
                     <boxGeometry args={[0.38, 0.16, 0.05]} />
                     <meshStandardMaterial
@@ -607,8 +745,10 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
                   )}
                 </group>
               ))}
-              <mesh position={[0, 0.58, -2.04]}>
-                <boxGeometry args={[1.54, 0.16, 0.05]} />
+
+              {/* Lampu Rem Belakang Realistis (Menyala Terang Merah + Halo Glow Saat Mengerem!) */}
+              <mesh position={[0, tailY, tailZ]}>
+                <boxGeometry args={[isTruck ? 1.76 : 1.56, 0.17, 0.06]} />
                 <meshStandardMaterial
                   ref={(el) => {
                     brakeMatRefs.current[i] = el;
@@ -618,6 +758,23 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
                   emissiveIntensity={isLit ? 1.8 : 0.35}
                 />
               </mesh>
+              <sprite
+                ref={(el) => {
+                  brakeHaloRefs.current[i] = el;
+                }}
+                position={[0, tailY, tailZ - 0.14]}
+                scale={[2.9, 1.35, 1]}
+                visible={false}
+              >
+                <spriteMaterial
+                  map={textures.glowSprite}
+                  color="#ff2e24"
+                  transparent
+                  opacity={0}
+                  blending={THREE.AdditiveBlending}
+                  depthWrite={false}
+                />
+              </sprite>
             </group>
           );
         })}

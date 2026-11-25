@@ -41,6 +41,17 @@ export interface ScooterRuntimeState {
   isBraking: boolean;
 }
 
+export interface BicycleRuntimeState {
+  pos: [number, number, number];
+  yaw: number;
+  speed: number;
+  steer: number;
+  roll: number;
+  wheelAngle: number;
+  pedalAngle: number;
+  isRiding: boolean;
+}
+
 export interface FloatingPaperBoat {
   id: number;
   x: number;
@@ -92,6 +103,18 @@ export const playerRuntime = {
     isBraking: false,
   } as ScooterRuntimeState,
 
+  // Sepeda Kota Klasik (terparkir rapi di tepi Taman Kota & Danau Senja)
+  bicycle: {
+    pos: [-68.8, 0.02, -8.5] as [number, number, number],
+    yaw: 0.7,
+    speed: 0,
+    steer: 0,
+    roll: 0,
+    wheelAngle: 0,
+    pedalAngle: 0,
+    isRiding: false,
+  } as BicycleRuntimeState,
+
   // Aktivitas santai: perahu kertas di danau, kucing Sore, ikan koi, ayunan & layang-layang
   paperBoats: [] as FloatingPaperBoat[],
   catHeartTimer: 0,
@@ -123,6 +146,8 @@ export function setRuntimePosition(pos: [number, number, number], rot?: number) 
   playerRuntime.sitState = null;
   playerRuntime.scooter.isRiding = false;
   playerRuntime.scooter.speed = 0;
+  playerRuntime.bicycle.isRiding = false;
+  playerRuntime.bicycle.speed = 0;
   playerRuntime.teleportPending = { pos: [pos[0], pos[1], pos[2]], rot };
   playerRuntime.companions.snapPending = true;
 }
@@ -143,6 +168,16 @@ export function resetScooterToHome() {
     wheelAngle: 0,
     isRiding: false,
     isBraking: false,
+  };
+  playerRuntime.bicycle = {
+    pos: [-68.8, 0.02, -8.5],
+    yaw: 0.7,
+    speed: 0,
+    steer: 0,
+    roll: 0,
+    wheelAngle: 0,
+    pedalAngle: 0,
+    isRiding: false,
   };
   playerRuntime.paperBoats = [];
   playerRuntime.catHeartTimer = 0;

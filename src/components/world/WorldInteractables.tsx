@@ -730,6 +730,7 @@ export const WorldInteractables: React.FC = () => {
       store.isLittleLibraryOpen ||
       store.isBookStallOpen ||
       store.isRidingScooter ||
+      store.isRidingBicycle ||
       store.isSitting ||
       store.isFlyingKite ||
       store.isFishing
@@ -772,6 +773,30 @@ export const WorldInteractables: React.FC = () => {
         },
       },
       2.6,
+    );
+
+    // === 1B. NAIK SEPEDA KOTA KLASIK (di mana pun terparkir) ===
+    consider(
+      {
+        id: 'ride_bicycle',
+        kind: 'portal',
+        label: 'Naik Sepeda Kota Klasik',
+        sublabel: 'WASD Kayuh · Spasi Bel Kring-Kring · E Parkir',
+        position: playerRuntime.bicycle.pos,
+        onInteract: () => {
+          if (store.isFamilyWalkActive) {
+            sfxEngine.play('interact');
+            store.showToast('Jalan kaki santai saja saat bersama Nadia & Kira (tekan [G] untuk antar pulang dulu).');
+            return;
+          }
+          sfxEngine.playBicycleBell();
+          playerRuntime.bicycle.isRiding = true;
+          playerRuntime.bicycle.speed = 0;
+          store.setRidingBicycle(true);
+          store.showToast('Mengayuh sepeda kota! Gunakan WASD mengayuh, Spasi bel kring-kring, E untuk parkir.');
+        },
+      },
+      2.5,
     );
 
     // === 2. MINI-AKTIVITAS 1: PETIK GITAR AKUSTIK DI KEDAI KOPI BIMA ===

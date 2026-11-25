@@ -75,6 +75,37 @@ class SfxEngine {
   }
 
   /**
+   * Bel sepeda klasik nyaring & ceria ("KRING-KRING!").
+   */
+  public playBicycleBell() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // Dua dentingan cepat khas bel sepeda kuningan
+    [0, 0.145].forEach((offset) => {
+      [
+        { freq: 2140, gain: 0.095, dur: 0.42 },
+        { freq: 3210, gain: 0.055, dur: 0.34 },
+        { freq: 4480, gain: 0.032, dur: 0.22 },
+      ].forEach((part) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(part.freq, now + offset);
+        g.gain.setValueAtTime(0.0008, now + offset);
+        g.gain.linearRampToValueAtTime(part.gain * v, now + offset + 0.008);
+        g.gain.exponentialRampToValueAtTime(0.0005, now + offset + part.dur);
+        osc.connect(g).connect(ctx.destination);
+        osc.start(now + offset);
+        osc.stop(now + offset + part.dur + 0.03);
+      });
+    });
+  }
+
+  /**
    * Memetik 6 akor gitar akustik hangat untuk mini-game gitar di Kedai Kopi Bima.
    */
   public playGuitarChord(chordIdx: number) {

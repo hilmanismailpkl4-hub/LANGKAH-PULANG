@@ -541,13 +541,19 @@ export const MapJournalModal: React.FC = () => {
                         </g>
                       )}
 
-                      {/* Penanda Motor Skuter Damar */}
+                      {/* Penanda Motor Skuter & Sepeda Kota Damar */}
                       {(() => {
                         const scP = toSvg(playerRuntime.scooter.pos[0], playerRuntime.scooter.pos[2]);
+                        const bkP = toSvg(playerRuntime.bicycle.pos[0], playerRuntime.bicycle.pos[2]);
                         return (
-                          <g transform={`translate(${scP.sx}, ${scP.sy})`}>
-                            <rect x="-5" y="-5" width="10" height="10" rx="2" fill="#a78bfa" stroke="#fff" strokeWidth="1.4" />
-                          </g>
+                          <>
+                            <g transform={`translate(${scP.sx}, ${scP.sy})`}>
+                              <rect x="-5" y="-5" width="10" height="10" rx="2" fill="#a78bfa" stroke="#fff" strokeWidth="1.4" />
+                            </g>
+                            <g transform={`translate(${bkP.sx}, ${bkP.sy})`}>
+                              <rect x="-5" y="-5" width="10" height="10" rx="2" fill="#34d399" stroke="#fff" strokeWidth="1.4" />
+                            </g>
+                          </>
                         );
                       })()}
 
@@ -578,6 +584,9 @@ export const MapJournalModal: React.FC = () => {
                       </span>
                       <span className="flex items-center gap-1.5">
                         <span className="h-2.5 w-2.5 rounded-sm bg-violet-400" /> Motor Skuter
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <span className="h-2.5 w-2.5 rounded-sm bg-emerald-400" /> Sepeda Kota
                       </span>
                     </div>
                     <span className="text-warm-300/70">Klik titik lokasi untuk detail & pasang GPS</span>

@@ -121,6 +121,7 @@ interface GameStoreState {
   isLittleLibraryOpen: boolean;
   isBookStallOpen: boolean;
   isRidingScooter: boolean;
+  isRidingBicycle: boolean;
   isGuitarOpen: boolean;
   isBagOpen: boolean;
   umbrellaForcedOff: boolean;
@@ -163,6 +164,7 @@ interface GameStoreState {
   setLittleLibraryOpen: (open: boolean) => void;
   setBookStallOpen: (open: boolean) => void;
   setRidingScooter: (riding: boolean) => void;
+  setRidingBicycle: (riding: boolean) => void;
   setGuitarOpen: (open: boolean) => void;
   setBagOpen: (open: boolean) => void;
   toggleUmbrella: () => void;
@@ -288,6 +290,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     isLittleLibraryOpen: false,
     isBookStallOpen: false,
     isRidingScooter: false,
+    isRidingBicycle: false,
     isGuitarOpen: false,
     isBagOpen: false,
     umbrellaForcedOff: false,
@@ -477,6 +480,22 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       set({ isRidingScooter: riding });
     },
 
+    setRidingBicycle: (riding) => {
+      set({ isRidingBicycle: riding });
+      if (riding && !get().flags.includes('rode_city_bicycle')) {
+        get().applyEffect({
+          kejujuranDiri: 1,
+          setFlags: ['rode_city_bicycle'],
+          journalEntry: {
+            id: 'je_city_bicycle',
+            title: 'Mengayuh Sepeda di Tepi Taman Kota',
+            body: 'Angin sore terasa jauh lebih jujur ketika dikayuh sendiri dengan sepeda klasik di tepi Taman Danau—hanya bunyi bel kring-kring dan dedaunan yang berbisik pelan.',
+            chapter: get().chapter,
+          },
+        });
+      }
+    },
+
     setGuitarOpen: (open) => {
       if (open && document.pointerLockElement) document.exitPointerLock();
       set({
@@ -566,8 +585,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     toggleFamilyWalk: () => {
       const s = get();
       if (s.screen !== 'playing' || s.activeDialogue) return;
-      if (s.isRidingScooter) {
-        s.showToast('Parkir motor skuter dulu [E] sebelum mengajak Nadia & Kira jalan santai.');
+      if (s.isRidingScooter || s.isRidingBicycle) {
+        s.showToast('Parkir kendaraan dulu [E] sebelum mengajak Nadia & Kira jalan santai.');
         return;
       }
 
@@ -1033,6 +1052,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         lastFishCatch: null,
         isLittleLibraryOpen: false,
         isBookStallOpen: false,
+        isRidingScooter: false,
+        isRidingBicycle: false,
         isFamilyWalkActive: false,
         familyBanter: null,
         activeCulinarySpot: null,

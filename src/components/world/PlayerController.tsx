@@ -44,6 +44,7 @@ export const PlayerController: React.FC = () => {
   const timeOfDay = useGameStore((s) => s.timeOfDay);
   const umbrellaForcedOff = useGameStore((s) => s.umbrellaForcedOff);
   const isRidingScooter = useGameStore((s) => s.isRidingScooter);
+  const isRidingBicycle = useGameStore((s) => s.isRidingBicycle);
   const isSitting = useGameStore((s) => s.isSitting);
   const heldDrink = useGameStore((s) => s.heldDrink);
   const damarOutfitId = useGameStore((s) => s.damarOutfitId);
@@ -62,11 +63,16 @@ export const PlayerController: React.FC = () => {
   }, [damarOutfitId]);
 
   const umbrellaActive =
-    timeOfDay === 'rain_dusk' && !umbrellaForcedOff && !isRidingScooter && !isSitting && !isIndoorsState;
+    timeOfDay === 'rain_dusk' &&
+    !umbrellaForcedOff &&
+    !isRidingScooter &&
+    !isRidingBicycle &&
+    !isSitting &&
+    !isIndoorsState;
   const umbrellaActiveRef = useRef(umbrellaActive);
   umbrellaActiveRef.current = umbrellaActive;
   const hasDrinkRef = useRef(Boolean(heldDrink));
-  hasDrinkRef.current = Boolean(heldDrink) && !isRidingScooter;
+  hasDrinkRef.current = Boolean(heldDrink) && !isRidingScooter && !isRidingBicycle;
 
   useEffect(() => {
     const dom = gl.domElement;
@@ -101,6 +107,24 @@ export const PlayerController: React.FC = () => {
       playerRuntime.position = safePos;
       st.setRidingScooter(false);
       st.showToast('Motor skuter diparkir rapi.');
+    };
+
+    const dismountBicycle = () => {
+      const st = useGameStore.getState();
+      if (!st.isRidingBicycle) return;
+      const bk = playerRuntime.bicycle;
+      bk.isRiding = false;
+      bk.speed = 0;
+      bk.roll = 0;
+      bk.steer = 0;
+      sfxEngine.play('switch');
+
+      const sideX = bk.pos[0] + Math.cos(bk.yaw) * 1.05;
+      const sideZ = bk.pos[2] - Math.sin(bk.yaw) * 1.05;
+      const safePos = resolvePlayerMovement(bk.pos[0], bk.pos[1], bk.pos[2], sideX, sideZ, false);
+      playerRuntime.position = safePos;
+      st.setRidingBicycle(false);
+      st.showToast('Sepeda kota diparkir rapi dengan standar samping.');
     };
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -158,7 +182,8 @@ export const PlayerController: React.FC = () => {
         !state.isQuickGraphicsOpen &&
         !state.isPhotoMode &&
         !state.isPhoneOpen &&
-        !state.isRidingScooter
+        !state.isRidingScooter &&
+        !state.isRidingBicycle
       ) {
         e.preventDefault();
         state.setBagOpen(!state.isBagOpen);
@@ -175,6 +200,24 @@ export const PlayerController: React.FC = () => {
         } else if (code === 'Space') {
           e.preventDefault();
           sfxEngine.playScooterHorn();
+        } else if (code === 'KeyM' || code === 'Tab') {
+          e.preventDefault();
+          state.toggleMapJournal('map');
+        } else if (code === 'KeyP') {
+          e.preventDefault();
+          state.setPhotoMode(!state.isPhotoMode);
+        }
+        return;
+      }
+
+      // Saat mengayuh sepeda kota klasik
+      if (state.isRidingBicycle) {
+        if (code === 'KeyE') {
+          e.preventDefault();
+          dismountBicycle();
+        } else if (code === 'Space') {
+          e.preventDefault();
+          sfxEngine.playBicycleBell();
         } else if (code === 'KeyM' || code === 'Tab') {
           e.preventDefault();
           state.toggleMapJournal('map');
@@ -645,6 +688,148 @@ export const PlayerController: React.FC = () => {
       groupRef.current.rotation.z = THREE.MathUtils.lerp(groupRef.current.rotation.z, 0, dt * 10);
     }
 
+    // === 1B. MODE MENGAYUH SEPEDA KOTA KLASIK (ANIMASI KAYUH KAKI & BEL KRING-KRING) ===
+    if (store.isRidingBicycle && playerRuntime.bicycle.isRiding) {
+      const bk = playerRuntime.bicycle;
+      const keys = keysRef.current;
+      const canRide =
+        store.screen === 'playing' &&
+        !store.isMapJournalOpen &&
+        !store.isPauseOpen &&
+        !store.isQuickGraphicsOpen &&
+        !store.isPhotoMode;
+
+      const pedalFwd = canRide && (keys['KeyW'] || keys['ArrowUp']) ? 1 : 0;
+      const brakeRev = canRide && (keys['KeyS'] || keys['ArrowDown']) ? 1 : 0;
+      const steerIn =
+        canRide
+          ? (keys['KeyA'] || keys['ArrowLeft'] ? 1 : 0) - (keys['KeyD'] || keys['ArrowRight'] ? 1 : 0)
+          : 0;
+
+      bk.steer = THREE.MathUtils.lerp(bk.steer, steerIn, dt * 9);
+
+      const maxForward = 8.4;
+      const maxReverse = -2.0;
+      if (pedalFwd > 0) {
+        bk.speed = Math.min(maxForward, bk.speed + 6.8 * dt);
+      } else if (brakeRev > 0) {
+        if (bk.speed > 0.2) {
+          bk.speed = Math.max(0, bk.speed - 12.0 * dt);
+        } else {
+          bk.speed = Math.max(maxReverse, bk.speed - 3.6 * dt);
+        }
+      } else {
+        // Meluncur halus (coasting) saat berhenti mengayuh
+        bk.speed *= Math.max(0, 1 - 1.9 * dt);
+        if (Math.abs(bk.speed) < 0.06) bk.speed = 0;
+      }
+
+      if (Math.abs(bk.speed) > 0.12) {
+        const turnSign = bk.speed >= 0 ? 1 : -1;
+        const turnSpeed = Math.min(1, Math.abs(bk.speed) / 3.0) * 2.45;
+        bk.yaw += bk.steer * turnSpeed * turnSign * dt;
+      }
+      bk.roll = -bk.steer * Math.min(0.28, Math.abs(bk.speed) * 0.032);
+
+      const dx = Math.sin(bk.yaw) * bk.speed * dt;
+      const dz = Math.cos(bk.yaw) * bk.speed * dt;
+      const [nx, ny, nz] = resolvePlayerMovement(
+        bk.pos[0],
+        bk.pos[1],
+        bk.pos[2],
+        bk.pos[0] + dx,
+        bk.pos[2] + dz,
+        true,
+      );
+
+      const actualMove = Math.hypot(nx - bk.pos[0], nz - bk.pos[2]);
+      const expectedMove = Math.abs(bk.speed * dt);
+      if (expectedMove > 0.02 && actualMove < expectedMove * 0.35) {
+        bk.speed *= 0.2;
+      }
+
+      bk.pos = [nx, ny + 0.02, nz];
+      bk.wheelAngle += (bk.speed * dt) / 0.34;
+      if (pedalFwd > 0 || Math.abs(bk.speed) > 0.4) {
+        bk.pedalAngle += (pedalFwd > 0 ? Math.max(3.6, bk.speed * 1.15) : bk.speed * 0.5) * dt;
+      }
+
+      playerRuntime.position = [nx, ny + 0.02, nz];
+      playerRuntime.rotationY = bk.yaw;
+      playerRuntime.moveSpeed = Math.abs(bk.speed);
+
+      // Posisi Damar duduk & mengayuh kaki bergantian di atas sadel sepeda!
+      if (groupRef.current) {
+        const seatBackX = nx - Math.sin(bk.yaw) * 0.22;
+        const seatBackZ = nz - Math.cos(bk.yaw) * 0.22;
+        const pedalBob = Math.abs(Math.sin(bk.pedalAngle)) * 0.025;
+        groupRef.current.position.set(seatBackX, ny + 0.36 + pedalBob, seatBackZ);
+        groupRef.current.rotation.y = bk.yaw;
+        groupRef.current.rotation.z = bk.roll * 0.72;
+      }
+      const legCycle = Math.sin(bk.pedalAngle) * (Math.abs(bk.speed) > 0.2 ? 0.46 : 0.06);
+      if (leftLegRef.current) leftLegRef.current.rotation.x = -0.82 + legCycle;
+      if (rightLegRef.current) rightLegRef.current.rotation.x = -0.82 - legCycle;
+      if (leftArmRef.current) {
+        leftArmRef.current.rotation.x = -1.16;
+        leftArmRef.current.rotation.z = 0.06;
+      }
+      if (rightArmRef.current) {
+        rightArmRef.current.rotation.x = -1.16;
+        rightArmRef.current.rotation.z = -0.06;
+      }
+      if (torsoRef.current) torsoRef.current.rotation.x = 0.2;
+      if (headRef.current) {
+        headRef.current.rotation.x = 0;
+        headRef.current.rotation.y = bk.steer * 0.35;
+      }
+
+      if (!isDraggingRef.current && Math.abs(bk.speed) > 1.0) {
+        const targetCamYaw = bk.yaw + Math.PI;
+        let diff = targetCamYaw - playerRuntime.cameraYaw;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        playerRuntime.cameraYaw += diff * Math.min(1, dt * 2.8);
+      }
+
+      const dist = Math.max(5.2, zoomRef.current + 0.6);
+      const pitch = Math.max(0.18, playerRuntime.cameraPitch);
+      const yaw = playerRuntime.cameraYaw;
+      camDesiredVec.current.set(
+        nx + Math.sin(yaw) * Math.cos(pitch) * dist,
+        ny + Math.sin(pitch) * dist + 2.05,
+        nz + Math.cos(yaw) * Math.cos(pitch) * dist,
+      );
+      camera.position.lerp(camDesiredVec.current, Math.min(1, dt * 8));
+      lookTargetVec.current.set(nx, ny + 1.48, nz);
+      camera.lookAt(lookTargetVec.current);
+
+      locCheckTimerRef.current += dt;
+      if (locCheckTimerRef.current > 0.25) {
+        locCheckTimerRef.current = 0;
+        const loc = getLocationAtPosition(playerRuntime.position);
+        if (loc.id !== store.currentLocation) {
+          store.setCurrentLocation(loc.id);
+          musicEngine.setContext(loc.musicMood, store.timeOfDay);
+        }
+        spatialAmbientEngine.updateSpatialMix(
+          playerRuntime.position,
+          playerRuntime.trainZ,
+          store.timeOfDay,
+          store.screen === 'playing' && !store.isPauseOpen,
+        );
+        if (store.customWaypoint) {
+          const [wx, , wz] = store.customWaypoint.position;
+          if (Math.hypot(nx - wx, nz - wz) < 5.5) {
+            sfxEngine.play('chime');
+            store.showToast(`Tiba di tujuan penanda: ${store.customWaypoint.label}`);
+            store.setCustomWaypoint(null);
+          }
+        }
+      }
+      return;
+    }
+
     // === 2. MODE DUDUK REFLEKTIF DI BANGKU / MEJA KOPI ===
     if (store.isSitting && playerRuntime.sitState) {
       const sit = playerRuntime.sitState;
@@ -1061,7 +1246,7 @@ export const PlayerController: React.FC = () => {
         headRef={headRef}
         torsoRef={torsoRef}
         holdingUmbrella={umbrellaActive}
-        holdingDrink={!isRidingScooter ? (heldDrink?.type ?? null) : null}
+        holdingDrink={!isRidingScooter && !isRidingBicycle ? (heldDrink?.type ?? null) : null}
       />
     </group>
   );

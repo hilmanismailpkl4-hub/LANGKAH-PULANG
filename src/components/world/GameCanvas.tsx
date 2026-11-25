@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGameStore } from '../../store/useGameStore';
 import { Atmosphere } from './Atmosphere';
+import { BicycleEntity } from './BicycleEntity';
 import { CityDetails } from './CityDetails';
 import { CityGeometry } from './CityGeometry';
 import { CityLife } from './CityLife';
@@ -54,6 +55,7 @@ export const GameCanvas: React.FC = () => {
           <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
           <CityLife timeOfDay={effectiveTime} settings={settings} />
           <ScooterEntity timeOfDay={effectiveTime} settings={settings} />
+          <BicycleEntity timeOfDay={effectiveTime} settings={settings} />
           <PlayerController />
           <WorldInteractables />
           <WaypointBeacon />

@@ -22,6 +22,9 @@ interface MiniMapState {
   scooterX: number;
   scooterZ: number;
   scooterKmh: number;
+  bikeX: number;
+  bikeZ: number;
+  bikeKmh: number;
   cars: { x: number; z: number }[];
   npcs: { x: number; z: number }[];
 }
@@ -46,6 +49,7 @@ export const GameHUD: React.FC = () => {
   const isBookStallOpen = useGameStore((s) => s.isBookStallOpen);
   const heldDrink = useGameStore((s) => s.heldDrink);
   const isRidingScooter = useGameStore((s) => s.isRidingScooter);
+  const isRidingBicycle = useGameStore((s) => s.isRidingBicycle);
   const setBagOpen = useGameStore((s) => s.setBagOpen);
   const umbrellaForcedOff = useGameStore((s) => s.umbrellaForcedOff);
   const toggleUmbrella = useGameStore((s) => s.toggleUmbrella);
@@ -84,6 +88,9 @@ export const GameHUD: React.FC = () => {
     scooterX: -15.2,
     scooterZ: 57.5,
     scooterKmh: 0,
+    bikeX: -68.8,
+    bikeZ: -8.5,
+    bikeKmh: 0,
     cars: [],
     npcs: [],
   });
@@ -135,6 +142,9 @@ export const GameHUD: React.FC = () => {
         scooterX: playerRuntime.scooter.pos[0],
         scooterZ: playerRuntime.scooter.pos[2],
         scooterKmh: Math.round(Math.abs(playerRuntime.scooter.speed) * 3.1),
+        bikeX: playerRuntime.bicycle.pos[0],
+        bikeZ: playerRuntime.bicycle.pos[2],
+        bikeKmh: Math.round(Math.abs(playerRuntime.bicycle.speed) * 3.0),
         cars: playerRuntime.dynamicCarBoxes.map((c) => ({ x: c.x, z: c.z })),
         npcs: playerRuntime.npcColliders.map((n) => ({ x: n.x, z: n.z })),
       });
@@ -252,7 +262,7 @@ export const GameHUD: React.FC = () => {
                   </span>
                 )}
               </button>
-              {!isRidingScooter && (
+              {!isRidingScooter && !isRidingBicycle && (
                 <button
                   type="button"
                   onClick={toggleFamilyWalk}
@@ -267,7 +277,7 @@ export const GameHUD: React.FC = () => {
                   <span>{isFamilyWalkActive ? 'Jalan Bersama [G]' : 'Ajak Keluarga [G]'}</span>
                 </button>
               )}
-              {isFamilyWalkActive && !isRidingScooter && (
+              {isFamilyWalkActive && !isRidingScooter && !isRidingBicycle && (
                 <button
                   type="button"
                   onClick={triggerCasualFamilyChat}
@@ -278,7 +288,7 @@ export const GameHUD: React.FC = () => {
                   <span>Ngobrol [T]</span>
                 </button>
               )}
-              {timeOfDay === 'rain_dusk' && !isRidingScooter && (
+              {timeOfDay === 'rain_dusk' && !isRidingScooter && !isRidingBicycle && (
                 <button
                   type="button"
                   onClick={toggleUmbrella}
@@ -404,10 +414,14 @@ export const GameHUD: React.FC = () => {
                   );
                 })}
 
-                {/* Posisi Skuter Terparkir */}
+                {/* Posisi Skuter & Sepeda Kota Terparkir */}
                 {!isRidingScooter && (() => {
                   const sp = toRadar(miniMap.scooterX, miniMap.scooterZ);
                   return <rect x={sp.rx - 2.5} y={sp.ry - 2.5} width="5" height="5" rx="1" fill="#a78bfa" stroke="#fff" strokeWidth="0.8" />;
+                })()}
+                {!isRidingBicycle && (() => {
+                  const bp = toRadar(miniMap.bikeX, miniMap.bikeZ);
+                  return <rect x={bp.rx - 2.5} y={bp.ry - 2.5} width="5" height="5" rx="1" fill="#34d399" stroke="#fff" strokeWidth="0.8" />;
                 })()}
 
                 {/* Penanda Misi Utama */}
@@ -488,7 +502,24 @@ export const GameHUD: React.FC = () => {
               </div>
             )}
 
-            {!isRidingScooter && isFishing && (
+            {isRidingBicycle && (
+              <div className="flex items-center gap-4 rounded-full border border-emerald-300/45 bg-dusk-950/88 px-6 py-2.5 shadow-2xl backdrop-blur-md animate-fadeIn">
+                <div className="flex items-baseline gap-1">
+                  <span className="font-serif text-2xl font-semibold text-emerald-300">
+                    {miniMap.bikeKmh}
+                  </span>
+                  <span className="text-[10px] uppercase tracking-wider text-warm-200/70">km/j</span>
+                </div>
+                <div className="h-5 w-px bg-warm-100/20" />
+                <span className="text-xs text-warm-100">
+                  <strong className="text-emerald-300">WASD</strong> Kayuh ·{' '}
+                  <strong className="text-emerald-300">Spasi</strong> Bel Kring-Kring ·{' '}
+                  <strong className="text-emerald-300">E</strong> Parkir & Turun
+                </span>
+              </div>
+            )}
+
+            {!isRidingScooter && !isRidingBicycle && isFishing && (
               <div className="pointer-events-auto animate-fadeIn">
                 {fishingBiteReady ? (
                   <button
@@ -508,7 +539,7 @@ export const GameHUD: React.FC = () => {
               </div>
             )}
 
-            {!isRidingScooter && !isFishing && isFlyingKite && (
+            {!isRidingScooter && !isRidingBicycle && !isFishing && isFlyingKite && (
               <div className="rounded-full border border-amber-300/50 bg-dusk-950/88 px-5 py-2.5 text-xs text-warm-100 shadow-2xl backdrop-blur-md animate-fadeIn">
                 Layang-Layang Mengudara · Tekan <strong className="text-warm-300">[Spasi]</strong> Tarik Lebih Tinggi ·{' '}
                 <strong className="text-warm-300">[P]</strong> Foto ·{' '}
@@ -516,7 +547,7 @@ export const GameHUD: React.FC = () => {
               </div>
             )}
 
-            {!isRidingScooter && !isFishing && !isFlyingKite && isSitting && (
+            {!isRidingScooter && !isRidingBicycle && !isFishing && !isFlyingKite && isSitting && (
               <div className="rounded-full border border-warm-300/40 bg-dusk-950/85 px-5 py-2 text-xs text-warm-100 shadow-xl backdrop-blur-md animate-fadeIn">
                 {heldDrink ? `Menikmati ${heldDrink.label}` : 'Damar sedang beristirahat tenang'} · Tekan{' '}
                 <strong className="text-warm-300">[WASD / E]</strong> berdiri ·{' '}
@@ -524,7 +555,7 @@ export const GameHUD: React.FC = () => {
               </div>
             )}
 
-            {!isRidingScooter && !isFishing && !isFlyingKite && !isSitting && interactPrompt && (
+            {!isRidingScooter && !isRidingBicycle && !isFishing && !isFlyingKite && !isSitting && interactPrompt && (
               <div className="pointer-events-auto animate-fadeIn">
                 <button
                   type="button"
