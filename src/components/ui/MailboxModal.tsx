@@ -48,10 +48,10 @@ export const MailboxModal: React.FC = () => {
       >
         <div
           onClick={(e) => e.stopPropagation()}
-          className="flex max-h-[88vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-[#c9bba3] bg-[#efe7d8] text-[#28211b] shadow-2xl animate-fadeIn"
+          className="flex max-h-[94dvh] sm:max-h-[88vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-[#c9bba3] bg-[#efe7d8] text-[#28211b] shadow-2xl animate-fadeIn"
         >
           {/* Header Kotak Surat Pagar */}
-          <div className="flex items-center justify-between border-b border-[#b9a88d] bg-gradient-to-r from-[#1f4d3a] to-[#275c46] px-6 py-4 text-[#faf5ea]">
+          <div className="flex shrink-0 items-center justify-between border-b border-[#b9a88d] bg-gradient-to-r from-[#1f4d3a] to-[#275c46] px-4 py-2.5 sm:px-6 sm:py-4 text-[#faf5ea]">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#e8c97e]/40 bg-[#153628] text-[#f0cf82]">
                 <Mail className="h-5 w-5" />
@@ -81,9 +81,9 @@ export const MailboxModal: React.FC = () => {
           </div>
 
           {/* Isi Kotak Surat: Daftar Amplop Kiri + Lembar Surat Terbuka Kanan */}
-          <div className="grid flex-1 grid-cols-1 overflow-y-auto subtle-scroll md:grid-cols-12">
+          <div className="grid min-h-0 flex-1 grid-cols-12 overflow-hidden">
             {/* Daftar 4 Surat */}
-            <div className="border-b border-[#d4c7b0] bg-[#e6dcc9] p-4 md:col-span-4 md:border-r md:border-b-0">
+            <div className="col-span-4 min-h-0 overflow-y-auto subtle-scroll border-r border-[#d4c7b0] bg-[#e6dcc9] p-3 sm:p-4">
               <p className="mb-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[#6a5b4a]">
                 Tumpukan Surat ({HOME_MAILBOX_LETTERS.length})
               </p>
@@ -131,7 +131,7 @@ export const MailboxModal: React.FC = () => {
             </div>
 
             {/* Area Baca Lembar Surat / Kartu Pos */}
-            <div className="p-5 md:col-span-8 md:p-7">
+            <div className="col-span-8 min-h-0 overflow-y-auto subtle-scroll p-3.5 sm:p-5 md:p-7">
               <div
                 style={{ backgroundColor: activeLetter.paperTint }}
                 className="relative rounded-xl border border-[#cfc1a8] p-5 shadow-md md:p-7"

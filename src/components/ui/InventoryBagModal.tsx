@@ -5,13 +5,14 @@ import { voiceManager } from '../../audio/voiceManager';
 import { ALL_BAG_ITEMS, BagItemDef } from '../../data/bagItems';
 import { playerRuntime } from '../../store/playerRuntime';
 import { useGameStore } from '../../store/useGameStore';
+import { useMobileViewport } from '../../utils/mobileUtils';
 import { Portal } from './Portal';
 
-const ItemArtwork: React.FC<{ iconType: BagItemDef['iconType']; large?: boolean }> = ({
+const ItemArtwork: React.FC<{ iconType: BagItemDef['iconType']; size?: 'sm' | 'md' | 'lg' }> = ({
   iconType,
-  large = false,
+  size = 'sm',
 }) => {
-  const cls = large ? 'h-28 w-28' : 'h-11 w-11';
+  const cls = size === 'lg' ? 'h-28 w-28' : size === 'md' ? 'h-16 w-16' : 'h-10 w-10';
   switch (iconType) {
     case 'wallet':
       return (
@@ -109,6 +110,7 @@ export const InventoryBagModal: React.FC = () => {
   const discoveredEasterEggs = useGameStore((s) => s.discoveredEasterEggs);
   const startDialogue = useGameStore((s) => s.startDialogue);
   const setCustomWaypoint = useGameStore((s) => s.setCustomWaypoint);
+  const { isMobile, isCompactLandscape } = useMobileViewport();
 
   const [filter, setFilter] = useState<'all' | 'kenangan' | 'hadiah' | 'misi'>('all');
   const [selectedId, setSelectedId] = useState<string>('item_wallet_photo');
@@ -186,26 +188,42 @@ export const InventoryBagModal: React.FC = () => {
     if (px < -56 || (pz > 46 && px > -36 && px < 46)) activeSoundTags.push('Suasana Alam & Lingkungan');
   }
 
+  const compact = isMobile || isCompactLandscape;
+
   return (
     <Portal>
       <div
-        className="fixed inset-0 z-[9996] flex items-center justify-center bg-dusk-950/82 p-4 backdrop-blur-md"
+        className={`fixed inset-0 z-[9996] flex items-center justify-center bg-dusk-950/82 backdrop-blur-md ${
+          compact ? 'p-2' : 'p-4'
+        }`}
         onClick={() => setBagOpen(false)}
       >
         <div
           onClick={(e) => e.stopPropagation()}
-          className="flex h-[80vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-warm-300/25 bg-dusk-900/96 text-warm-50 shadow-2xl animate-fadeIn"
+          className={`flex w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-warm-300/25 bg-dusk-900/96 text-warm-50 shadow-2xl animate-fadeIn ${
+            compact ? 'h-[94dvh]' : 'h-[80vh]'
+          }`}
         >
           {/* Header */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-warm-100/10 px-6 py-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-warm-400/20 text-warm-300">
-                <Backpack className="h-5 w-5" />
+          <div
+            className={`flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-warm-100/10 ${
+              compact ? 'px-4 py-2' : 'px-6 py-4'
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <div
+                className={`flex shrink-0 items-center justify-center rounded-xl bg-warm-400/20 text-warm-300 ${
+                  compact ? 'h-8 w-8' : 'h-9 w-9'
+                }`}
+              >
+                <Backpack className={compact ? 'h-4 w-4' : 'h-5 w-5'} />
               </div>
               <div>
-                <h2 className="font-serif text-xl text-warm-50">Tas Selempang Damar</h2>
-                <p className="text-xs text-warm-200/65">
-                  {ownedItems.length} benda tersimpan · Periksa kenangan & berikan hadiah kecil ke keluarga
+                <h2 className={`font-serif text-warm-50 ${compact ? 'text-base leading-tight' : 'text-xl'}`}>
+                  Tas Selempang Damar
+                </h2>
+                <p className={`text-warm-200/65 ${compact ? 'text-[10px]' : 'text-xs'}`}>
+                  {ownedItems.length} benda tersimpan · Periksa kenangan &amp; berikan hadiah kecil ke keluarga
                 </p>
               </div>
             </div>
@@ -218,11 +236,19 @@ export const InventoryBagModal: React.FC = () => {
             </button>
           </div>
 
-          {/* Konten 2 Kolom */}
-          <div className="grid flex-1 grid-cols-1 overflow-hidden md:grid-cols-12">
+          {/* Konten 2 Kolom (selalu berdampingan 12-kolom di layar mendatar HP!) */}
+          <div className={`grid min-h-0 flex-1 overflow-hidden ${compact ? 'grid-cols-12' : 'grid-cols-1 md:grid-cols-12'}`}>
             {/* Kolom Kiri: Daftar Benda */}
-            <div className="flex flex-col border-b border-warm-100/10 md:col-span-5 md:border-b-0 md:border-r">
-              <div className="flex gap-1.5 border-b border-warm-100/10 px-4 py-3 text-[11px]">
+            <div
+              className={`flex min-h-0 flex-col border-warm-100/10 ${
+                compact ? 'col-span-5 border-r' : 'border-b md:col-span-5 md:border-b-0 md:border-r'
+              }`}
+            >
+              <div
+                className={`flex shrink-0 flex-wrap gap-1 border-b border-warm-100/10 ${
+                  compact ? 'px-2.5 py-2 text-[10px]' : 'px-4 py-3 text-[11px]'
+                }`}
+              >
                 {(
                   [
                     { id: 'all', label: 'Semua' },
@@ -235,7 +261,7 @@ export const InventoryBagModal: React.FC = () => {
                     key={f.id}
                     type="button"
                     onClick={() => setFilter(f.id)}
-                    className={`rounded-lg px-2.5 py-1 transition ${
+                    className={`rounded-lg transition ${compact ? 'px-2 py-1' : 'px-2.5 py-1'} ${
                       filter === f.id
                         ? 'bg-warm-400 font-semibold text-dusk-950'
                         : 'bg-dusk-950/60 text-warm-200/75 hover:text-warm-50'
@@ -246,10 +272,10 @@ export const InventoryBagModal: React.FC = () => {
                 ))}
               </div>
 
-              <div className="flex-1 space-y-2 overflow-y-auto subtle-scroll p-4">
+              <div className={`min-h-0 flex-1 overflow-y-auto subtle-scroll ${compact ? 'space-y-1.5 p-2.5' : 'space-y-2 p-4'}`}>
                 {filtered.length === 0 ? (
-                  <p className="py-8 text-center text-xs text-warm-200/55">
-                    Belum ada benda pada kategori ini. Jelajahi Kios Harmoni & tepi Taman Kota untuk mencari hadiah kecil bagi keluarga!
+                  <p className="py-6 text-center text-xs text-warm-200/55">
+                    Belum ada benda pada kategori ini. Jelajahi Kios Harmoni &amp; tepi Taman Kota untuk mencari hadiah kecil bagi keluarga!
                   </p>
                 ) : (
                   filtered.map((item) => {
@@ -262,21 +288,23 @@ export const InventoryBagModal: React.FC = () => {
                           sfxEngine.play('interact');
                           setSelectedId(item.id);
                         }}
-                        className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left transition ${
+                        className={`flex w-full items-center rounded-xl border text-left transition ${
+                          compact ? 'gap-2 p-2' : 'gap-3 p-3'
+                        } ${
                           active
                             ? 'border-warm-300/60 bg-warm-400/15'
                             : 'border-warm-100/10 bg-dusk-950/60 hover:border-warm-200/30'
                         }`}
                       >
                         <div className="shrink-0">
-                          <ItemArtwork iconType={item.iconType} />
+                          <ItemArtwork iconType={item.iconType} size="sm" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="truncate text-sm font-medium text-warm-50">{item.name}</p>
-                          <p className="truncate text-[11px] text-warm-200/60">{item.subtitle}</p>
+                          <p className={`truncate font-medium text-warm-50 ${compact ? 'text-xs' : 'text-sm'}`}>{item.name}</p>
+                          <p className={`truncate text-warm-200/60 ${compact ? 'text-[10px]' : 'text-[11px]'}`}>{item.subtitle}</p>
                         </div>
                         {item.category === 'hadiah' && (
-                          <Gift className="h-4 w-4 shrink-0 text-pink-300" />
+                          <Gift className="h-3.5 w-3.5 shrink-0 text-pink-300" />
                         )}
                       </button>
                     );
@@ -286,27 +314,45 @@ export const InventoryBagModal: React.FC = () => {
             </div>
 
             {/* Kolom Kanan: Inspeksi Detail Benda */}
-            <div className="flex flex-col justify-between overflow-y-auto subtle-scroll p-6 md:col-span-7">
+            <div
+              className={`flex min-h-0 flex-col justify-between overflow-y-auto subtle-scroll ${
+                compact ? 'col-span-7 p-3.5' : 'p-6 md:col-span-7'
+              }`}
+            >
               {selected && (
-                <div className="space-y-5">
-                  <div className="flex flex-col items-center rounded-2xl border border-warm-200/15 bg-gradient-to-b from-dusk-950/90 to-dusk-900/60 py-6">
-                    <ItemArtwork iconType={selected.iconType} large />
-                    <span className="mt-3 rounded-full bg-warm-400/15 px-3 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-warm-300">
-                      {selected.category === 'hadiah'
-                        ? 'Hadiah untuk Keluarga'
-                        : selected.category === 'misi'
-                          ? 'Titipan Warga Kota'
-                          : 'Benda Kenangan'}
-                    </span>
-                    <h3 className="mt-2 font-serif text-2xl text-warm-50 text-center px-4">
-                      {selected.name}
-                    </h3>
-                    <p className="text-xs text-warm-200/65">{selected.subtitle}</p>
+                <div className={compact ? 'space-y-2.5' : 'space-y-5'}>
+                  <div
+                    className={`rounded-2xl border border-warm-200/15 bg-gradient-to-b from-dusk-950/90 to-dusk-900/60 ${
+                      compact ? 'flex items-center gap-3 p-3' : 'flex flex-col items-center py-6'
+                    }`}
+                  >
+                    <div className="shrink-0">
+                      <ItemArtwork iconType={selected.iconType} size={compact ? 'md' : 'lg'} />
+                    </div>
+                    <div className={compact ? 'min-w-0 flex-1 text-left' : 'flex flex-col items-center text-center'}>
+                      <span
+                        className={`rounded-full bg-warm-400/15 px-2.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-warm-300 ${
+                          compact ? 'inline-block' : 'mt-3'
+                        }`}
+                      >
+                        {selected.category === 'hadiah'
+                          ? 'Hadiah untuk Keluarga'
+                          : selected.category === 'misi'
+                            ? 'Titipan Warga Kota'
+                            : 'Benda Kenangan'}
+                      </span>
+                      <h3 className={`font-serif text-warm-50 ${compact ? 'mt-1 text-base leading-tight' : 'mt-2 px-4 text-2xl'}`}>
+                        {selected.name}
+                      </h3>
+                      <p className={`text-warm-200/65 ${compact ? 'text-[10.5px]' : 'text-xs'}`}>{selected.subtitle}</p>
+                    </div>
                   </div>
 
-                  <p className="text-sm leading-relaxed text-warm-100/85">{selected.description}</p>
+                  <p className={`leading-relaxed text-warm-100/85 ${compact ? 'text-xs' : 'text-sm'}`}>
+                    {selected.description}
+                  </p>
 
-                  <div className="rounded-xl border border-warm-200/15 bg-dusk-950/70 p-4">
+                  <div className={`rounded-xl border border-warm-200/15 bg-dusk-950/70 ${compact ? 'p-3' : 'p-4'}`}>
                     <div className="flex items-center justify-between">
                       <span className="flex items-center gap-1.5 text-[11px] font-semibold text-warm-300">
                         <Sparkles className="h-3.5 w-3.5" /> Batin Damar
@@ -314,19 +360,19 @@ export const InventoryBagModal: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => voiceManager.speak(`bag_${selected.id}`, 'damar_batin', selected.monologue)}
-                        className="flex items-center gap-1 rounded-lg bg-warm-400/15 px-2.5 py-1 text-[11px] text-warm-200 hover:bg-warm-400/25"
+                        className="flex items-center gap-1 rounded-lg bg-warm-400/15 px-2.5 py-1 text-[10.5px] text-warm-200 hover:bg-warm-400/25"
                       >
                         <Volume2 className="h-3 w-3" /> Dengarkan
                       </button>
                     </div>
-                    <p className="mt-2 font-serif italic text-sm leading-relaxed text-warm-100/90">
+                    <p className={`mt-1.5 font-serif italic leading-relaxed text-warm-100/90 ${compact ? 'text-xs' : 'text-sm'}`}>
                       "{selected.monologue}"
                     </p>
                   </div>
 
                   {/* Aksi Pemberian Hadiah ke Kira atau Nadia */}
                   {selected.giftTarget && selected.giftDialogueId && (
-                    <div className="rounded-xl border border-pink-300/25 bg-pink-950/20 p-4">
+                    <div className={`rounded-xl border border-pink-300/25 bg-pink-950/20 ${compact ? 'p-2.5' : 'p-4'}`}>
                       {((selected.giftTarget === 'kira' && distKira <= 5.5) ||
                         (selected.giftTarget === 'nadia' && distNadia <= 5.5)) ? (
                         <button
@@ -335,7 +381,9 @@ export const InventoryBagModal: React.FC = () => {
                             setBagOpen(false);
                             startDialogue(selected.giftDialogueId!);
                           }}
-                          className="flex w-full items-center justify-center gap-2 rounded-xl bg-warm-400 py-3 text-xs font-semibold text-dusk-950 shadow-lg hover:bg-warm-300"
+                          className={`flex w-full items-center justify-center gap-2 rounded-xl bg-warm-400 text-xs font-semibold text-dusk-950 shadow-lg hover:bg-warm-300 ${
+                            compact ? 'py-2' : 'py-3'
+                          }`}
                         >
                           <Gift className="h-4 w-4" />
                           <span>
@@ -369,10 +417,14 @@ export const InventoryBagModal: React.FC = () => {
               )}
 
               {/* Indikator Audio Lingkungan Spasial 3D */}
-              <div className="mt-5 flex flex-wrap items-center justify-between gap-2 border-t border-warm-100/10 pt-3 text-[11px] text-warm-200/60">
+              <div
+                className={`flex flex-wrap items-center justify-between gap-2 border-t border-warm-100/10 text-warm-200/60 ${
+                  compact ? 'mt-2.5 pt-2 text-[10px]' : 'mt-5 pt-3 text-[11px]'
+                }`}
+              >
                 <span className="flex items-center gap-1.5">
                   <Waves className="h-3.5 w-3.5 text-warm-300" />
-                  <span>Audio Spasial 3D Aktif:</span>
+                  <span>Audio Spasial 3D:</span>
                 </span>
                 <span className="text-warm-200/85">
                   {activeSoundTags.length > 0 ? activeSoundTags.join(' · ') : 'Suasana Jalanan Kota'}

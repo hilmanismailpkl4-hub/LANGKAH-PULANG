@@ -74,7 +74,7 @@ export const FridgeNotesModal: React.FC = () => {
       >
         <div
           onClick={(e) => e.stopPropagation()}
-          className="flex max-h-[88vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-slate-300/30 bg-[#dde4ec] text-slate-900 shadow-2xl animate-fadeIn"
+          className="flex max-h-[94dvh] sm:max-h-[88vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-slate-300/30 bg-[#dde4ec] text-slate-900 shadow-2xl animate-fadeIn"
         >
           {/* Header Pintu Kulkas */}
           <div className="flex items-center justify-between border-b border-slate-300/80 bg-gradient-to-r from-[#cfd8e3] to-[#e4eaf1] px-6 py-4">

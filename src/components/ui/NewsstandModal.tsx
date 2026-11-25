@@ -34,10 +34,10 @@ export const NewsstandModal: React.FC = () => {
       >
         <div
           onClick={(e) => e.stopPropagation()}
-          className="flex max-h-[88vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border-2 border-[#c8bc9e] bg-[#f4ede0] text-[#241e18] shadow-2xl animate-fadeIn"
+          className="flex max-h-[94dvh] sm:max-h-[88vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border-2 border-[#c8bc9e] bg-[#f4ede0] text-[#241e18] shadow-2xl animate-fadeIn"
         >
           {/* Kepala Koran Klasik (Masthead Broadsheet) */}
-          <div className="border-b-2 border-[#2b241d] bg-[#ede4d1] px-6 py-4">
+          <div className="shrink-0 border-b-2 border-[#2b241d] bg-[#ede4d1] px-4 py-2.5 sm:px-6 sm:py-4">
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#2b241d]/25 bg-[#1b4332] text-[#fefae0]">
@@ -68,9 +68,9 @@ export const NewsstandModal: React.FC = () => {
           </div>
 
           {/* Isi Broadsheet: Daftar Kolom Kiri + Artikel Utama Kanan */}
-          <div className="grid flex-1 grid-cols-1 overflow-y-auto subtle-scroll md:grid-cols-12">
+          <div className="grid min-h-0 flex-1 grid-cols-12 overflow-hidden">
             {/* Sidebar Kolom Rubrik */}
-            <div className="border-b border-[#2b241d]/15 bg-[#efe7d6] p-4 md:col-span-4 md:border-r md:border-b-0">
+            <div className="col-span-4 min-h-0 overflow-y-auto subtle-scroll border-r border-[#2b241d]/15 bg-[#efe7d6] p-3 sm:p-4">
               <p className="mb-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[#6b5d4d]">
                 Daftar Berita Hari Ini
               </p>
@@ -104,7 +104,7 @@ export const NewsstandModal: React.FC = () => {
             </div>
 
             {/* Area Baca Artikel Broadsheet */}
-            <div className="p-6 md:col-span-8 md:p-7">
+            <div className="col-span-8 min-h-0 overflow-y-auto subtle-scroll p-4 sm:p-6 md:p-7">
               <span className="inline-block rounded bg-[#1b4332] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-[#fefae0]">
                 {activeArticle.section}
               </span>

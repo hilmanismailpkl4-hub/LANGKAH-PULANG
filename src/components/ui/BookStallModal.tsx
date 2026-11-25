@@ -55,10 +55,10 @@ export const BookStallModal: React.FC = () => {
       >
         <div
           onClick={(e) => e.stopPropagation()}
-          className="flex h-[78vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-amber-300/25 bg-dusk-900/96 text-warm-50 shadow-2xl animate-fadeIn"
+          className="flex h-[94dvh] sm:h-[82vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-amber-300/25 bg-dusk-900/96 text-warm-50 shadow-2xl animate-fadeIn"
         >
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-warm-100/10 bg-dusk-950/65 px-6 py-4">
+          <div className="flex shrink-0 items-center justify-between border-b border-warm-100/10 bg-dusk-950/65 px-4 py-2.5 sm:px-6 sm:py-4">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/20 text-amber-300">
                 <BookMarked className="h-5 w-5" />
@@ -86,8 +86,8 @@ export const BookStallModal: React.FC = () => {
           </div>
 
           {/* Rak Kiri & Detail Buku Kanan */}
-          <div className="grid flex-1 grid-cols-1 overflow-hidden md:grid-cols-12">
-            <div className="space-y-2.5 overflow-y-auto subtle-scroll border-b border-warm-100/10 p-4 md:col-span-5 md:border-b-0 md:border-r">
+          <div className="grid min-h-0 flex-1 grid-cols-12 overflow-hidden">
+            <div className="col-span-5 min-h-0 space-y-2 overflow-y-auto subtle-scroll border-r border-warm-100/10 p-3 sm:p-4">
               {DARMAN_STALL_BOOKS.map((item) => {
                 const active = item.id === book.id;
                 return (
@@ -121,7 +121,7 @@ export const BookStallModal: React.FC = () => {
               })}
             </div>
 
-            <div className="flex flex-col justify-between overflow-y-auto subtle-scroll p-6 md:col-span-7">
+            <div className="col-span-7 flex min-h-0 flex-col justify-between overflow-y-auto subtle-scroll p-4 sm:p-6">
               <div className="space-y-4">
                 <div className="flex flex-wrap items-start justify-between gap-3 border-b border-warm-100/10 pb-4">
                   <div>
