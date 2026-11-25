@@ -386,4 +386,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'nadia', text: '"Kota Senja — Ruang untuk Pulang"... bagus banget ya kalimat di tugu taman bundar ini, Mas.' },
     { speaker: 'kira', text: 'Bunga-bunga di sekeliling tugunya warna-warni banget! Nanti kita foto di sini ya, Yah!' },
   ],
+  activity_rooftop_telescope: [
+    { speaker: 'kira', text: 'AYAAAH!! Gantian dong Kira mau intip lewat teropongnya!! Kelihatan rumah kita nggak di bawah?!' },
+    { speaker: 'nadia', text: 'Lucu ya Mas, dari atas sini rumah kita kelihatan kecil banget, tapi tetap paling terang di hati.' },
+  ],
+  activity_rt_board: [
+    { speaker: 'nadia', text: 'Eh, lihat tuh Mas di papan pengumuman RT, nama kamu masuk jadwal ronda malam Sabtu lho!' },
+    { speaker: 'kira', text: 'Hihi, ada tulisan tentang kucing oranye "Sore" juga di papan pengumuman, Bunda!' },
+  ],
 };

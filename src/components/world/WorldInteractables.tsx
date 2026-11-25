@@ -734,6 +734,8 @@ export const WorldInteractables: React.FC = () => {
       store.isFridgeNotesOpen ||
       store.isNewsstandOpen ||
       store.isMailboxOpen ||
+      store.isRtBoardOpen ||
+      store.isTelescopeOpen ||
       store.isRidingScooter ||
       store.isRidingBicycle ||
       store.isSitting ||
@@ -2266,6 +2268,34 @@ export const WorldInteractables: React.FC = () => {
       2.8,
     );
 
+    consider(
+      {
+        id: 'activity_rooftop_telescope',
+        kind: 'story_object',
+        label: 'Intip Pemandangan Kota Lewat Teropong Koin (8× Zoom)',
+        sublabel: 'Rooftop Menara Nusantara · Rumah Melati, Jembatan & Danau',
+        position: [34.4, 22, -22.35],
+        onInteract: () => {
+          store.setTelescopeOpen(true);
+        },
+      },
+      2.2,
+    );
+
+    consider(
+      {
+        id: 'activity_rt_bulletin_board',
+        kind: 'story_object',
+        label: 'Baca Papan Pengumuman Warga RT 04 Melati',
+        sublabel: 'Perumahan Melati · Kerja Bakti, Posyandu & Info Warga',
+        position: [8.8, 0, 51.3],
+        onInteract: () => {
+          store.setRtBoardOpen(true);
+        },
+      },
+      2.6,
+    );
+
     if (store.mainStepId === 'ch2_2_hujan_jembatan') {
       consider(
         {
@@ -2597,6 +2627,14 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[13.6, 2.55, -14.42]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#fcd34d" />
+      </mesh>
+      <mesh position={[34.4, 23.74, -21.45]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#fcd34d" />
+      </mesh>
+      <mesh position={[8.8, 2.52, 52.4]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#86efac" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

@@ -363,6 +363,9 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   // === 22. Gerobak Es Cendol Dawet Ayu Pak Darmo (Plaza Menara Nusantara) ===
   { id: 'dawet_cart', minX: 41.7, maxX: 43.9, minZ: -14.25, maxZ: -12.95 },
   { id: 'dawet_bench', minX: 39.65, maxX: 41.15, minZ: -13.9, maxZ: -13.3 },
+
+  // === 23. Papan Pengumuman RT 04 Perumahan Melati ===
+  { id: 'melati_rt_board', minX: 7.85, maxX: 9.75, minZ: 52.05, maxZ: 52.75 },
 ];
 
 /**
@@ -507,10 +510,11 @@ export const ROOFTOP_BOUNDS = {
   elevation: 22,
 };
 
-// Objek solid di atas Rooftop (Kabin Lift & Bangku Santai Rooftop)
+// Objek solid di atas Rooftop (Kabin Lift, Bangku Santai & Teropong Koin Rooftop)
 export const ROOFTOP_COLLIDERS: ColliderBox[] = [
   { id: 'rooftop_elevator_cabin', minX: 18.0, maxX: 21.6, minZ: -27.1, maxZ: -23.75 },
   { id: 'rooftop_bench', minX: 26.7, maxX: 30.3, minZ: -23.5, maxZ: -22.5 },
+  { id: 'rooftop_telescope', minX: 33.95, maxX: 34.85, minZ: -21.9, maxZ: -21.0 },
 ];
 
 export const ELEVATOR_PORTALS = {

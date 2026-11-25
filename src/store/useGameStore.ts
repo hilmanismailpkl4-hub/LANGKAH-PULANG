@@ -144,6 +144,9 @@ interface GameStoreState {
   isFridgeNotesOpen: boolean;
   isNewsstandOpen: boolean;
   isMailboxOpen: boolean;
+  isTelescopeOpen: boolean;
+  telescopeTargetIdx: number;
+  isRtBoardOpen: boolean;
   readMailIds: string[];
   gardenWatered: boolean;
   vinylPlaying: boolean;
@@ -206,6 +209,9 @@ interface GameStoreState {
   setFridgeNotesOpen: (open: boolean) => void;
   setNewsstandOpen: (open: boolean) => void;
   setMailboxOpen: (open: boolean) => void;
+  setTelescopeOpen: (open: boolean) => void;
+  setTelescopeTargetIdx: (idx: number) => void;
+  setRtBoardOpen: (open: boolean) => void;
   markMailRead: (mailId: string) => void;
   waterHomeGarden: () => void;
   cycleNadaLamaVinyl: () => void;
@@ -375,6 +381,9 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     isFridgeNotesOpen: false,
     isNewsstandOpen: false,
     isMailboxOpen: false,
+    isTelescopeOpen: false,
+    telescopeTargetIdx: 0,
+    isRtBoardOpen: false,
     readMailIds: [],
     gardenWatered: false,
     vinylPlaying: false,
@@ -769,6 +778,100 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       }
       set({
         isMailboxOpen: open,
+        isTelescopeOpen: false,
+        isRtBoardOpen: false,
+        isNewsstandOpen: false,
+        isFridgeNotesOpen: false,
+        isPhotoAlbumOpen: false,
+        isKitchenOpen: false,
+        isBookStallOpen: false,
+        isLittleLibraryOpen: false,
+        isWardrobeOpen: false,
+        activeCulinarySpot: null,
+        isMapJournalOpen: false,
+        isPauseOpen: false,
+        isPhoneOpen: false,
+        isBagOpen: false,
+        isGuitarOpen: false,
+        isQuickGraphicsOpen: false,
+      });
+    },
+
+    setTelescopeOpen: (open) => {
+      const s = get();
+      if (open && (s.screen !== 'playing' || s.activeDialogue)) return;
+      if (open && document.pointerLockElement) document.exitPointerLock();
+      sfxEngine.play('switch');
+      if (open) {
+        if (!s.flags.includes('used_rooftop_telescope')) {
+          s.applyEffect({
+            kejujuranDiri: 1,
+            kehadiranKeluarga: 1,
+            setFlags: ['used_rooftop_telescope'],
+            journalEntry: {
+              id: 'je_rooftop_telescope',
+              title: 'Mengintip Rumah dari Teropong Rooftop',
+              body: 'Melalui lensa teropong koin di Rooftop Menara Nusantara, aku memandang jauh ke selatan menuju atap Jl. Melati No. 14, Jembatan Lampion, dan sampan di Danau Senja. Semua yang kuperlukan ternyata selalu dekat di hati.',
+              chapter: s.chapter,
+            },
+          });
+        }
+        if (s.isFamilyWalkActive) {
+          s.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_rooftop_telescope, 'fw_telescope');
+        }
+      }
+      set({
+        isTelescopeOpen: open,
+        isRtBoardOpen: false,
+        isMailboxOpen: false,
+        isNewsstandOpen: false,
+        isFridgeNotesOpen: false,
+        isPhotoAlbumOpen: false,
+        isKitchenOpen: false,
+        isBookStallOpen: false,
+        isLittleLibraryOpen: false,
+        isWardrobeOpen: false,
+        activeCulinarySpot: null,
+        isMapJournalOpen: false,
+        isPauseOpen: false,
+        isPhoneOpen: false,
+        isBagOpen: false,
+        isGuitarOpen: false,
+        isQuickGraphicsOpen: false,
+      });
+    },
+
+    setTelescopeTargetIdx: (idx) => {
+      sfxEngine.play('switch');
+      set({ telescopeTargetIdx: idx });
+    },
+
+    setRtBoardOpen: (open) => {
+      const s = get();
+      if (open && (s.screen !== 'playing' || s.activeDialogue)) return;
+      if (open && document.pointerLockElement) document.exitPointerLock();
+      if (open) {
+        sfxEngine.play('page');
+        if (!s.flags.includes('read_rt_bulletin_board')) {
+          s.applyEffect({
+            kejujuranDiri: 1,
+            setFlags: ['read_rt_bulletin_board'],
+            journalEntry: {
+              id: 'je_rt_bulletin_board',
+              title: 'Membaca Papan Pengumuman RT 04 Melati',
+              body: 'Di papan pengumuman Perumahan Melati tertempel jadwal kerja bakti Minggu pagi, Posyandu, catatan sayang warga untuk kucing Sore, bahkan namaku di jadwal ronda Malam Sabtu. Rasanya hangat menjadi bagian dari lingkungan ini.',
+              chapter: s.chapter,
+            },
+          });
+        }
+        if (s.isFamilyWalkActive) {
+          s.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_rt_board, 'fw_rt_board');
+        }
+      }
+      set({
+        isRtBoardOpen: open,
+        isTelescopeOpen: false,
+        isMailboxOpen: false,
         isNewsstandOpen: false,
         isFridgeNotesOpen: false,
         isPhotoAlbumOpen: false,
@@ -1593,6 +1696,9 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         ],
         fridgeNotes: [...INITIAL_FRIDGE_NOTES],
         isMailboxOpen: false,
+        isTelescopeOpen: false,
+        telescopeTargetIdx: 0,
+        isRtBoardOpen: false,
         readMailIds: [],
         gardenWatered: false,
         vinylPlaying: false,
@@ -1670,6 +1776,9 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         ],
         fridgeNotes: slot.fridgeNotes && slot.fridgeNotes.length > 0 ? [...slot.fridgeNotes] : [...INITIAL_FRIDGE_NOTES],
         isMailboxOpen: false,
+        isTelescopeOpen: false,
+        telescopeTargetIdx: 0,
+        isRtBoardOpen: false,
         readMailIds: slot.flags.includes('checked_home_mailbox') ? ['mail_ibu_bandung'] : [],
         gardenWatered: slot.flags.includes('watered_nadia_garden'),
         vinylPlaying: false,
@@ -1771,6 +1880,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isFridgeNotesOpen: false,
         isNewsstandOpen: false,
         isMailboxOpen: false,
+        isTelescopeOpen: false,
+        isRtBoardOpen: false,
         vinylPlaying: false,
         kiraToyTrainOn: false,
         workLaptopClosed: false,

@@ -6,6 +6,7 @@ import { sfxEngine } from '../../audio/sfxEngine';
 import { spatialAmbientEngine } from '../../audio/spatialAmbientEngine';
 import { CHARACTERS } from '../../data/characters';
 import { DAMAR_OUTFIT_BY_ID } from '../../data/damarOutfits';
+import { ROOFTOP_TELESCOPE_TARGETS } from '../../data/rooftopAndRtData';
 import {
   GROUND_COLLIDERS,
   getLocationAtPosition,
@@ -137,7 +138,11 @@ export const PlayerController: React.FC = () => {
 
       // Tutup overlay dengan Escape
       if (code === 'Escape') {
-        if (state.isMailboxOpen) {
+        if (state.isTelescopeOpen) {
+          state.setTelescopeOpen(false);
+        } else if (state.isRtBoardOpen) {
+          state.setRtBoardOpen(false);
+        } else if (state.isMailboxOpen) {
           state.setMailboxOpen(false);
         } else if (state.isNewsstandOpen) {
           state.setNewsstandOpen(false);
@@ -181,6 +186,22 @@ export const PlayerController: React.FC = () => {
         return;
       }
 
+      // Kontrol cepat saat mengintip Teropong Rooftop ([A/D] atau [←/→] ganti landmark, [E] keluar)
+      if (state.isTelescopeOpen) {
+        const total = ROOFTOP_TELESCOPE_TARGETS.length;
+        if (code === 'ArrowLeft' || code === 'KeyA') {
+          e.preventDefault();
+          state.setTelescopeTargetIdx((state.telescopeTargetIdx - 1 + total) % total);
+        } else if (code === 'ArrowRight' || code === 'KeyD') {
+          e.preventDefault();
+          state.setTelescopeTargetIdx((state.telescopeTargetIdx + 1) % total);
+        } else if (code === 'KeyE') {
+          e.preventDefault();
+          state.setTelescopeOpen(false);
+        }
+        return;
+      }
+
       if (
         state.isGuitarOpen ||
         state.activeCulinarySpot ||
@@ -191,7 +212,8 @@ export const PlayerController: React.FC = () => {
         state.isPhotoAlbumOpen ||
         state.isFridgeNotesOpen ||
         state.isNewsstandOpen ||
-        state.isMailboxOpen
+        state.isMailboxOpen ||
+        state.isRtBoardOpen
       )
         return;
 
@@ -431,7 +453,9 @@ export const PlayerController: React.FC = () => {
         state.isPhotoAlbumOpen ||
         state.isFridgeNotesOpen ||
         state.isNewsstandOpen ||
-        state.isMailboxOpen
+        state.isMailboxOpen ||
+        state.isRtBoardOpen ||
+        state.isTelescopeOpen
       )
         return;
       isDraggingRef.current = true;
@@ -460,7 +484,9 @@ export const PlayerController: React.FC = () => {
         state.isPhotoAlbumOpen ||
         state.isFridgeNotesOpen ||
         state.isNewsstandOpen ||
-        state.isMailboxOpen
+        state.isMailboxOpen ||
+        state.isRtBoardOpen ||
+        state.isTelescopeOpen
       )
         return;
 
@@ -504,7 +530,9 @@ export const PlayerController: React.FC = () => {
         state.isPhotoAlbumOpen ||
         state.isFridgeNotesOpen ||
         state.isNewsstandOpen ||
-        state.isMailboxOpen
+        state.isMailboxOpen ||
+        state.isRtBoardOpen ||
+        state.isTelescopeOpen
       )
         return;
       if (!document.pointerLockElement && dom.requestPointerLock) {
@@ -530,7 +558,9 @@ export const PlayerController: React.FC = () => {
         state.isPhotoAlbumOpen ||
         state.isFridgeNotesOpen ||
         state.isNewsstandOpen ||
-        state.isMailboxOpen
+        state.isMailboxOpen ||
+        state.isRtBoardOpen ||
+        state.isTelescopeOpen
       )
         return;
       zoomRef.current = THREE.MathUtils.clamp(zoomRef.current + e.deltaY * 0.0038, 2.8, 12.0);
@@ -586,6 +616,34 @@ export const PlayerController: React.FC = () => {
       camera.position.set(Math.sin(orbit) * 46 - 12, 16 + Math.sin(orbit * 0.65) * 3.5, Math.cos(orbit) * 46 + 4);
       camera.lookAt(-18, 4.5, 4);
       return;
+    }
+
+    const pCam = camera as THREE.PerspectiveCamera;
+    // === 0. MODE TEROPONG KOIN ROOFTOP (OPTICAL ZOOM 8× KE 4 LANDMARK KOTA) ===
+    if (store.isTelescopeOpen) {
+      const target =
+        ROOFTOP_TELESCOPE_TARGETS[store.telescopeTargetIdx % ROOFTOP_TELESCOPE_TARGETS.length] ??
+        ROOFTOP_TELESCOPE_TARGETS[0];
+      camDesiredVec.current.set(34.4, 23.62, -21.45);
+      camera.position.lerp(camDesiredVec.current, Math.min(1, dt * 8));
+      const desiredLook = new THREE.Vector3(
+        target.lookAt[0] + Math.sin(t * 0.4) * 0.35,
+        target.lookAt[1] + Math.cos(t * 0.35) * 0.18,
+        target.lookAt[2],
+      );
+      lookTargetVec.current.lerp(desiredLook, Math.min(1, dt * 4.5));
+      camera.lookAt(lookTargetVec.current);
+
+      if (Math.abs(pCam.fov - 17.5) > 0.05) {
+        pCam.fov = THREE.MathUtils.lerp(pCam.fov, 17.5, Math.min(1, dt * 6));
+        pCam.updateProjectionMatrix();
+      }
+      return;
+    }
+    if (Math.abs(pCam.fov - 52) > 0.06) {
+      pCam.fov = THREE.MathUtils.lerp(pCam.fov, 52, Math.min(1, dt * 8));
+      if (Math.abs(pCam.fov - 52) <= 0.08) pCam.fov = 52;
+      pCam.updateProjectionMatrix();
     }
 
     // === 1. MODE MENGENDARAI MOTOR SKUTER DAMAR ===
@@ -1020,7 +1078,9 @@ export const PlayerController: React.FC = () => {
       !store.isPhotoAlbumOpen &&
       !store.isFridgeNotesOpen &&
       !store.isNewsstandOpen &&
-      !store.isMailboxOpen;
+      !store.isMailboxOpen &&
+      !store.isRtBoardOpen &&
+      !store.isTelescopeOpen;
 
     let moveX = 0;
     let moveZ = 0;

@@ -26,6 +26,7 @@ import { PlayerController } from './PlayerController';
 import { PostEffects } from './PostEffects';
 import { RiverAndParkLife } from './RiverAndParkLife';
 import { RiversideNightMarket } from './RiversideNightMarket';
+import { RooftopLakeAndRtBoard } from './RooftopLakeAndRtBoard';
 import { ScooterEntity } from './ScooterEntity';
 import { StationAndBuskerLife } from './StationAndBuskerLife';
 import { StreetRealismAndSate } from './StreetRealismAndSate';
@@ -78,6 +79,7 @@ export const GameCanvas: React.FC = () => {
             <CityDetails timeOfDay={effectiveTime} settings={settings} pierLampFixed={pierLampFixed} />
             <RiversideNightMarket timeOfDay={effectiveTime} settings={settings} />
             <RiverAndParkLife timeOfDay={effectiveTime} settings={settings} />
+            <RooftopLakeAndRtBoard timeOfDay={effectiveTime} settings={settings} />
             <HomeKitchenAndParkNature timeOfDay={effectiveTime} settings={settings} />
             <NeighborhoodMorningAndFridge timeOfDay={effectiveTime} settings={settings} />
             <NightNeighborhoodAndClock timeOfDay={effectiveTime} settings={settings} />

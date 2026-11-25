@@ -19,7 +19,9 @@ import { NewsstandModal } from './components/ui/NewsstandModal';
 import { PauseSettingsModal } from './components/ui/PauseSettingsModal';
 import { PhoneNotification } from './components/ui/PhoneNotification';
 import { PhotoModeOverlay } from './components/ui/PhotoModeOverlay';
+import { RtBoardModal } from './components/ui/RtBoardModal';
 import { SmartphoneModal } from './components/ui/SmartphoneModal';
+import { TelescopeOverlay } from './components/ui/TelescopeOverlay';
 import { TitleScreen } from './components/ui/TitleScreen';
 import { WardrobeModal } from './components/ui/WardrobeModal';
 import { GameCanvas } from './components/world/GameCanvas';
@@ -73,6 +75,8 @@ export function App() {
       <BookStallModal />
       <NewsstandModal />
       <MailboxModal />
+      <RtBoardModal />
+      <TelescopeOverlay />
       <InventoryBagModal />
       <PhoneNotification />
       <DialogueOverlay />
