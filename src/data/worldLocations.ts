@@ -202,6 +202,9 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   // Payung Lapak Sol Sepatu Pak Ujang & Tenda Gerobak Gorengan Mbak Yuni (Jl. Cempaka)
   if (x >= 9.6 && x <= 12.8 && z >= 20.2 && z <= 23.4) return true;
   if (x >= -12.8 && x <= -9.8 && z >= 29.8 && z <= 33.0) return true;
+  // Tenda Warung Pecel Lele Lamongan (Jl. Kenangan) & Kanopi Pangkalan Ojek Stasiun Senja
+  if (x >= 40.8 && x <= 45.6 && z >= 10.4 && z <= 13.6) return true;
+  if (x >= 74.4 && x <= 78.6 && z >= 18.4 && z <= 21.4) return true;
   return false;
 }
 
@@ -395,6 +398,15 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'gorengan_cart', minX: -11.75, maxX: -10.65, minZ: 30.35, maxZ: 32.45 },
   { id: 'gorengan_bench', minX: -9.82, maxX: -9.28, minZ: 30.65, maxZ: 32.15 },
   { id: 'melati_pingpong_table', minX: 31.78, maxX: 34.62, minZ: 57.8, maxZ: 59.4 },
+
+  // === 29. Warung Tenda Pecel Lele Lamongan, Bilik ATM Kios Harmoni & Pangkalan Ojek Stasiun ===
+  { id: 'pecel_lele_cart', minX: 40.95, maxX: 42.35, minZ: 11.85, maxZ: 13.15 },
+  { id: 'pecel_lele_table', minX: 42.75, maxX: 45.35, minZ: 11.75, maxZ: 12.65 },
+  { id: 'pecel_lele_bench', minX: 42.8, maxX: 45.3, minZ: 10.92, maxZ: 11.42 },
+  { id: 'kios_atm_booth', minX: 31.68, maxX: 33.42, minZ: 17.95, maxZ: 19.68 },
+  { id: 'opang_shelter_bench', minX: 75.2, maxX: 77.8, minZ: 19.75, maxZ: 20.65 },
+  { id: 'opang_bike_l', minX: 74.55, maxX: 75.75, minZ: 18.1, maxZ: 19.65 },
+  { id: 'opang_bike_r', minX: 77.3, maxX: 78.5, minZ: 18.2, maxZ: 19.7 },
 ];
 
 /**
@@ -526,6 +538,8 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: -37.8, z: 12.6, r: 0.78 },
   { x: -12.3, z: 31.4, r: 0.42 },
   { x: 33.2, z: 60.05, r: 0.2 },
+  { x: 41.65, z: 13.48, r: 0.42 },
+  { x: 76.5, z: 19.15, r: 0.42 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],

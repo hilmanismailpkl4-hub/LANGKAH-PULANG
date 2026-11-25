@@ -511,6 +511,40 @@ class SfxEngine {
   }
 
   /**
+   * Suara tombol keypad ATM "bip-bip-bip" diikuti desis halus mesin penghitung uang tunai.
+   */
+  public playAtmBeepAndCash() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // 3 bunyi tombol keypad jernih
+    [0, 0.11, 0.22].forEach((offset, i) => {
+      this.softTone(ctx, 1680 + i * 140, now + offset, 0.06, 0.058 * v, 'sine');
+    });
+    // Desis cepat mesin penghitung uang kertas (krrrr-cek!)
+    const src = ctx.createBufferSource();
+    src.buffer = this.getNoiseBuffer(ctx);
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(1400, now + 0.38);
+    filter.frequency.linearRampToValueAtTime(2100, now + 0.72);
+    filter.Q.value = 3.2;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.001, now + 0.38);
+    g.gain.linearRampToValueAtTime(0.055 * v, now + 0.44);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.78);
+    src.connect(filter).connect(g).connect(ctx.destination);
+    src.start(now + 0.38, 0.12, 0.42);
+
+    // Nada konfirmasi transaksi selesai
+    this.softTone(ctx, 1318.5, now + 0.82, 0.12, 0.055 * v, 'sine');
+    this.softTone(ctx, 1760.0, now + 0.94, 0.18, 0.062 * v, 'sine');
+  }
+
+  /**
    * Petikan gitar akustik lembut dari pemusik jalanan tepi sungai.
    */
   public playBuskerStrum(distanceFactor = 1, celebrate = false) {

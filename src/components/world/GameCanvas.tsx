@@ -21,6 +21,7 @@ import { MorningParkAndBadminton } from './MorningParkAndBadminton';
 import { MusicAndKiosLife } from './MusicAndKiosLife';
 import { NatureAndRainbow } from './NatureAndRainbow';
 import { NeighborhoodMorningAndFridge } from './NeighborhoodMorningAndFridge';
+import { NightDiningAtmAndOpang } from './NightDiningAtmAndOpang';
 import { NightNeighborhoodAndClock } from './NightNeighborhoodAndClock';
 import { OfficeLobbyLife } from './OfficeLobbyLife';
 import { ParkFountainPicnicAndJoggers } from './ParkFountainPicnicAndJoggers';
@@ -101,6 +102,7 @@ export const GameCanvas: React.FC = () => {
             <AfternoonAndCreativeLife timeOfDay={effectiveTime} settings={settings} />
             <ArtisticAndStationDetails timeOfDay={effectiveTime} settings={settings} />
             <CraftAndPingPongLife timeOfDay={effectiveTime} settings={settings} />
+            <NightDiningAtmAndOpang timeOfDay={effectiveTime} settings={settings} />
             <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
             <CityLife timeOfDay={effectiveTime} settings={settings} />
             <ScooterEntity timeOfDay={effectiveTime} settings={settings} />

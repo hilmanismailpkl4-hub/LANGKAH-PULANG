@@ -422,4 +422,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'TIK-TOK! TIK-TOK!! Bolanya cepet banget memantul di meja biru, Ayah!! Kira mau pegang bet merahnya!' },
     { speaker: 'nadia', text: 'Wah, seru banget! Meja ping-pong RT 04 ini bikin sore di kompleks kita makin ramai ya, Mas.' },
   ],
+  activity_atm_booth: [
+    { speaker: 'nadia', text: 'Ambil uang tunai secukupnya aja ya Mas buat jajan kaki lima nanti malam.' },
+    { speaker: 'kira', text: 'Bip-bip... bunyi mesin uangnya lucu banget, Yah! Nanti beli es krim juga ya!' },
+  ],
+  activity_station_opang: [
+    { speaker: 'nadia', text: 'Abang-abang ojek di depan stasiun ini ramah banget ya, Mas... dari dulu selalu hafal alamat Jl. Melati.' },
+    { speaker: 'kira', text: 'Halo Om Hendra!! Motornya helmnya ada dua biar penumpang nggak kehujanan ya!' },
+  ],
 };

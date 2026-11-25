@@ -12,7 +12,8 @@ export type CulinarySpotId =
   | 'sate'
   | 'dawet'
   | 'siomay'
-  | 'gorengan';
+  | 'gorengan'
+  | 'pecel_lele';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -27,7 +28,8 @@ export type HeldDrinkVisual =
   | 'sate'
   | 'dawet'
   | 'siomay'
-  | 'gorengan';
+  | 'gorengan'
+  | 'pecel_lele';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -188,6 +190,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [-8.4, 0, 31.4],
     seatYaw: -Math.PI / 2,
     tablePropPos: [-10.65, 1.12, 31.4],
+  },
+  pecel_lele: {
+    id: 'pecel_lele',
+    title: 'Warung Tenda Pecel Lele Lamongan "Sari Rasa"',
+    hostName: 'Mas Eko',
+    subtitle: 'Tepi Jl. Kenangan · Lele Goreng Renyah, Ayam Kremes & Sambal Terasi Ulek',
+    seatPos: [44.05, 0.14, 11.18],
+    lookAt: [44.05, 1.35, 12.4],
+    standPos: [44.05, 0, 10.1],
+    seatYaw: 0,
+    tablePropPos: [44.05, 0.84, 12.15],
   },
 };
 
@@ -729,6 +742,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Horeee!! Tante Yuni kasih bonus pisang goreng dua buat Kira!! Makasih banyak, Ayaah!' },
       { speaker: 'nadia', text: 'Hati-hati masih panas ya, Sayang, tiup dulu pelan-pelan. Enak banget nih Mas gorengannya!' },
+    ],
+  },
+
+  // === 13. WARUNG TENDA PECEL LELE LAMONGAN "SARI RASA" (TEPI JL. KENANGAN) ===
+  {
+    id: 'pecel_lele_komplit',
+    spot: 'pecel_lele',
+    name: 'Pecel Lele Goreng Garing & Sambal Terasi',
+    priceLabel: 'Rp 18.000',
+    tagline: 'Dua ekor lele goreng renyah, nasi uduk wangi, sambal tomat terasi ulek, lalapan timun & kemangi.',
+    tasteNote: 'Garing di luar, lembut di dalam—dicocol sambal terasi hangat di bawah tenda biru pinggir jalan, nikmat tiada duanya.',
+    drinkVisual: 'pecel_lele',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Sambal terasi uleknya Mas Eko harum banget ya, Mas! Persis rasa kaki lima favorit kita.' },
+    ],
+  },
+  {
+    id: 'pecel_ayam_kremes',
+    spot: 'pecel_lele',
+    name: 'Ayam Goreng Kremes, Tahu Tempe & Nasi Uduk',
+    priceLabel: 'Rp 22.000',
+    tagline: 'Ayam goreng bumbu kuning renyah bertabur kremesan gurih dengan tahu tempe hangat & es teh tawar.',
+    tasteNote: 'Aroma nasi uduk daun salam dan kremesan renyah langsung membangkitkan selera makan malam sepulang kerja.',
+    drinkVisual: 'pecel_lele',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'kira', text: 'Kremesan ayam gorengnya renyah bangettt, Yah!! Kira suka makan pakai nasi uduk!' },
+    ],
+  },
+  {
+    id: 'pecel_lele_family',
+    spot: 'pecel_lele',
+    name: 'Traktir Makan Malam Keluarga di Tenda Lamongan',
+    priceLabel: 'Rp 62.000',
+    tagline: 'Pecel lele garing, ayam goreng kremes untuk Kira, tahu tempe bacem, kol goreng & 3 nasi uduk hangat.',
+    tasteNote: 'Duduk bersama di bangku panjang di balik spanduk lukis Lamongan sambil ditemani hembusan angin malam Jl. Kenangan—sederhana namun hangat luar biasa.',
+    drinkVisual: 'pecel_lele',
+    isHot: true,
+    isFamilyTreat: true,
+    journalTitle: 'Makan Malam Hangat di Warung Tenda Lamongan',
+    journalBody: 'Di bawah tenda biru Warung Pecel Lele Sari Rasa pinggir Jl. Kenangan, kami bertiga menikmati makan malam nasi uduk, lele goreng garing, dan ayam kremes hangat. Tidak ada restoran mewah yang bisa menandingi tawa keluarga di meja tenda kaki lima.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Yeeey makan malam di tenda gambar ikan lele!! Ayam kremesnya enak bangettt, Makasih Ayah!' },
+      { speaker: 'nadia', text: 'Makasih ya Mas sudah traktir makan malam di sini—hari ini aku nggak usah cuci piring deh, hehe.' },
     ],
   },
 ];

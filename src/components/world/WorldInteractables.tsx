@@ -2394,6 +2394,85 @@ export const WorldInteractables: React.FC = () => {
         2.7,
       );
 
+      consider(
+        {
+          id: 'activity_pecel_lele_lamongan',
+          kind: 'story_object',
+          label: 'Pesan Pecel Lele & Ayam Kremes Lamongan',
+          sublabel: 'Warung Tenda Sari Rasa · Tepi Jl. Kenangan',
+          position: [44.05, 0, 10.65],
+          onInteract: () => {
+            store.openCulinarySpot('pecel_lele');
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'activity_kios_atm_booth',
+          kind: 'story_object',
+          label: 'Tarik Tunai di Bilik ATM 24 Jam Bank Senja',
+          sublabel: 'Samping Kios 24 Jam Harmoni',
+          position: [32.55, 0, 17.25],
+          onInteract: () => {
+            sfxEngine.playAtmBeepAndCash();
+            if (!store.flags.includes('used_kios_atm_booth')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                setFlags: ['used_kios_atm_booth'],
+                journalEntry: {
+                  id: 'je_kios_atm_booth',
+                  title: 'Tarik Tunai Kecil untuk Jajan Keluarga',
+                  body: 'Di bilik ATM 24 Jam sebelah Kios Harmoni, aku menarik uang tunai secukupnya untuk jajan kaki lima malam ini. Uang yang dihabiskan bersama keluarga tidak pernah terasa sia-sia.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_atm_booth, 'fw_atm_booth');
+            }
+            store.showToast('Bip-bip... krrrr! Uang tunai rapi di dompet—siap mentraktir keluarga jajan kaki lima di Kota Senja.');
+          },
+        },
+        2.4,
+      );
+
+      consider(
+        {
+          id: 'activity_station_opang',
+          kind: 'story_object',
+          label: 'Sapa Bang Hendra di Pangkalan Ojek Stasiun',
+          sublabel: 'Pintu Selatan Stasiun Senja · Opang Ramah',
+          position: [76.5, 0, 17.85],
+          onInteract: () => {
+            sfxEngine.play('interact');
+            const lines = [
+              'Bang Hendra: "Sore, Mas Damar! Pulang jalan santai hari ini? Helm cadangan selalu siap kalau butuh antar ke Jl. Melati!"',
+              'Bang Hendra: "Tadi kereta sore baru lewat, penumpang ramai banget. Alhamdulillah rezeki lancar hari ini, Mas."',
+              'Bang Hendra: "Salam buat Mbak Nadia sama si kecil Kira di rumah ya, Mas! Hati-hati di jalan."',
+            ];
+            if (!store.flags.includes('met_station_opang')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                setFlags: ['met_station_opang'],
+                journalEntry: {
+                  id: 'je_station_opang',
+                  title: 'Sapaan Ramah Pangkalan Ojek Stasiun Senja',
+                  body: 'Di sudut selatan Stasiun Senja, Bang Hendra dan rekan-rekan ojek pangkalan selalu menyapa hangat siapa pun yang melintas. Ternyata banyak sekali wajah ramah di kota ini yang dulu terlewat karena langkahku terlalu tergesa.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_station_opang, 'fw_station_opang');
+            }
+            store.showToast(lines[Math.floor(Date.now() / 1000) % lines.length]);
+          },
+        },
+        2.6,
+      );
+
     consider(
       {
         id: 'portal_up',
@@ -2945,6 +3024,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[33.2, 1.18, 58.6]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#60a5fa" />
+      </mesh>
+      <mesh position={[44.05, 1.65, 11.4]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#facc15" />
+      </mesh>
+      <mesh position={[32.55, 1.55, 17.85]}>
+        <sphereGeometry args={[0.07, 8, 8]} />
+        <meshBasicMaterial color="#38bdf8" />
+      </mesh>
+      <mesh position={[76.5, 1.85, 19.15]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#4ade80" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (
