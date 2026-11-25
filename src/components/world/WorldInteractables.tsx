@@ -977,6 +977,67 @@ export const WorldInteractables: React.FC = () => {
       3.5,
     );
 
+    consider(
+      {
+        id: 'activity_strike_kentongan',
+        kind: 'story_object',
+        label: 'Pukul Kentongan Bambu Pos Kamling ("Tok-Tok-Tok!")',
+        sublabel: 'Pos Ronda RT 04 · Perumahan Melati',
+        position: [25.75, 0, 55.05],
+        onInteract: () => {
+          playerRuntime.kentonganSwingTimer = 2.4;
+          sfxEngine.playKentongan();
+          if (!store.flags.includes('struck_melati_kentongan')) {
+            store.applyEffect({
+              kehadiranKeluarga: 1,
+              kejujuranDiri: 1,
+              setFlags: ['struck_melati_kentongan'],
+              journalEntry: {
+                id: 'je_melati_kentongan',
+                title: 'Dentang Kentongan Bambu di Pos Kamling Melati',
+                body: 'Suara "tok-tok-tok" kentongan bambu di Pos Ronda RT 04 menggema hangat di antara rumah-rumah Jl. Melati. Sebuah tanda sederhana bahwa lingkungan ini saling menjaga satu sama lain.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_kentongan, 'fw_kentongan');
+          }
+          store.showToast('Tok-tok... tok-tok-tok! Bunyi kentongan bambu Pos Kamling RT 04 menggema hangat di gang!');
+        },
+      },
+      2.15,
+    );
+
+    consider(
+      {
+        id: 'sit_pos_kamling',
+        kind: 'story_object',
+        label: 'Duduk Ronda Santai & Lihat Papan Catur Pos Kamling',
+        sublabel: 'Pos Kamling RT 04 · Kopi Termos & Papan Catur',
+        position: [27.45, 0, 55.0],
+        onInteract: () => {
+          sfxEngine.play('coffee');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Pos Kamling RT 04 Perumahan Melati',
+            seatPos: [27.3, 0.48, 56.25],
+            lookAt: [26.0, 1.4, 48.0],
+            standPos: [27.45, 0, 54.85],
+            seatYaw: Math.PI,
+            holdingCoffee: true,
+            drinkVisual: 'coffee',
+          };
+          store.setSitting(true);
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_pos_kamling, 'fw_pos_kamling');
+          }
+          store.showToast('Duduk santai di bale-bale Pos Kamling sambil menikmati kopi hangat & papan catur... (WASD/E berdiri)');
+        },
+      },
+      2.15,
+    );
+
     if (store.timeOfDay !== 'rain_dusk') {
       consider(
         {
@@ -2480,6 +2541,10 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[13.4, 1.88, 29.5]}>
         <sphereGeometry args={[0.08, 8, 8]} />
         <meshBasicMaterial color="#fb923c" />
+      </mesh>
+      <mesh position={[25.78, 2.08, 55.62]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#fde047" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

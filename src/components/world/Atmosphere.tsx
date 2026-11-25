@@ -340,10 +340,130 @@ const StarField: React.FC = () => {
   );
 };
 
+function createCrescentMoonTexture(): THREE.CanvasTexture {
+  const c = document.createElement('canvas');
+  c.width = 256;
+  c.height = 256;
+  const ctx = c.getContext('2d')!;
+  ctx.clearRect(0, 0, 256, 256);
+
+  // Pendaran tipis di belakang bulan sabit
+  const glow = ctx.createRadialGradient(128, 128, 42, 128, 128, 122);
+  glow.addColorStop(0, 'rgba(255, 244, 214, 0.42)');
+  glow.addColorStop(0.55, 'rgba(186, 214, 255, 0.14)');
+  glow.addColorStop(1, 'rgba(186, 214, 255, 0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, 256, 256);
+
+  // Gambar bulan sabit bersih memakai offscreen canvas destination-out
+  const mask = document.createElement('canvas');
+  mask.width = 256;
+  mask.height = 256;
+  const mctx = mask.getContext('2d')!;
+  mctx.fillStyle = '#fff5d6';
+  mctx.beginPath();
+  mctx.arc(128, 128, 66, 0, Math.PI * 2);
+  mctx.fill();
+
+  mctx.globalCompositeOperation = 'destination-out';
+  mctx.beginPath();
+  mctx.arc(154, 114, 58, 0, Math.PI * 2);
+  mctx.fill();
+
+  ctx.drawImage(mask, 0, 0);
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+/**
+ * 3 bintang jatuh lembut yang sesekali melesat melintasi langit malam kota & Danau Senja.
+ */
+const ShootingStars: React.FC = () => {
+  const starRefs = useRef<(THREE.Group | null)[]>([]);
+  const streaks = useMemo(
+    () => [
+      { start: [-110, 82, -75], dir: [0.82, -0.34, 0.46], period: 11.5, offset: 2.0, duration: 1.15 },
+      { start: [70, 90, -95], dir: [-0.76, -0.38, 0.52], period: 15.0, offset: 7.4, duration: 1.25 },
+      { start: [-35, 96, -105], dir: [0.68, -0.44, 0.58], period: 19.5, offset: 12.8, duration: 1.1 },
+    ],
+    [],
+  );
+
+  useFrame(({ clock }) => {
+    const t = clock.getElapsedTime();
+    for (let i = 0; i < streaks.length; i++) {
+      const s = streaks[i];
+      const grp = starRefs.current[i];
+      if (!grp) continue;
+      const localT = (t + s.offset) % s.period;
+      const active = localT < s.duration;
+      grp.visible = active;
+      if (!active) continue;
+
+      const u = localT / s.duration;
+      const dist = u * 86;
+      grp.position.set(
+        s.start[0] + s.dir[0] * dist,
+        s.start[1] + s.dir[1] * dist,
+        s.start[2] + s.dir[2] * dist,
+      );
+      const fade = Math.sin(u * Math.PI);
+      const tailMesh = grp.children[0] as THREE.Mesh | undefined;
+      if (tailMesh) {
+        (tailMesh.material as THREE.MeshBasicMaterial).opacity = fade * 0.85;
+      }
+      const headMesh = grp.children[1] as THREE.Mesh | undefined;
+      if (headMesh) {
+        (headMesh.material as THREE.MeshBasicMaterial).opacity = fade;
+      }
+    }
+  });
+
+  return (
+    <group>
+      {streaks.map((s, idx) => {
+        const dirVec = new THREE.Vector3(s.dir[0], s.dir[1], s.dir[2]).normalize();
+        const quat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dirVec);
+        return (
+          <group
+            key={`sstar-${idx}`}
+            ref={(el) => {
+              starRefs.current[idx] = el;
+            }}
+            quaternion={quat}
+            visible={false}
+          >
+            {/* Ekor Cahaya Panjang Bintang Jatuh */}
+            <mesh position={[0, -5.5, 0]}>
+              <cylinderGeometry args={[0.14, 0.01, 11.0, 6]} />
+              <meshBasicMaterial
+                color="#dbeafe"
+                transparent
+                opacity={0.75}
+                blending={THREE.AdditiveBlending}
+                depthWrite={false}
+                fog={false}
+              />
+            </mesh>
+            {/* Kepala Bintang Berkilau */}
+            <mesh>
+              <sphereGeometry args={[0.38, 8, 8]} />
+              <meshBasicMaterial color="#fffbeb" transparent opacity={1} fog={false} />
+            </mesh>
+          </group>
+        );
+      })}
+    </group>
+  );
+};
+
 export const Atmosphere: React.FC<AtmosphereProps> = ({ timeOfDay, settings }) => {
   const { scene, gl } = useThree();
   const preset = TIME_PRESETS[timeOfDay];
   const textures = useMemo(() => getProceduralTextures(), []);
+  const crescentMoonTex = useMemo(() => createCrescentMoonTexture(), []);
 
   const fogScale =
     settings.drawDistance === 'near' ? 0.72 : settings.drawDistance === 'medium' ? 1.0 : 1.32;
@@ -416,19 +536,25 @@ export const Atmosphere: React.FC<AtmosphereProps> = ({ timeOfDay, settings }) =
         shadow-normalBias={0.04}
       />
 
-      {/* Matahari / Bulan + Halo Sinematik */}
+      {/* Matahari / Bulan Sabit Malam + Halo Sinematik */}
       <group position={preset.sunPos}>
-        <mesh>
-          <sphereGeometry args={[timeOfDay === 'night' ? 3.5 : 6.0, 20, 20]} />
-          <meshBasicMaterial color={preset.sunGlow} fog={false} />
-        </mesh>
+        {timeOfDay === 'night' ? (
+          <sprite scale={[18, 18, 1]}>
+            <spriteMaterial map={crescentMoonTex} transparent depthWrite={false} fog={false} />
+          </sprite>
+        ) : (
+          <mesh>
+            <sphereGeometry args={[6.0, 20, 20]} />
+            <meshBasicMaterial color={preset.sunGlow} fog={false} />
+          </mesh>
+        )}
         {settings.cinematicGlow && (
           <sprite scale={[timeOfDay === 'sunset' ? 42 : 28, timeOfDay === 'sunset' ? 42 : 28, 1]}>
             <spriteMaterial
               map={textures.glowSprite}
               color={preset.sunGlow}
               transparent
-              opacity={timeOfDay === 'sunset' ? 0.78 : 0.48}
+              opacity={timeOfDay === 'sunset' ? 0.78 : timeOfDay === 'night' ? 0.36 : 0.48}
               blending={THREE.AdditiveBlending}
               depthWrite={false}
               fog={false}
@@ -438,7 +564,12 @@ export const Atmosphere: React.FC<AtmosphereProps> = ({ timeOfDay, settings }) =
       </group>
 
       <DriftingClouds timeOfDay={timeOfDay} />
-      {timeOfDay === 'night' && <StarField />}
+      {timeOfDay === 'night' && (
+        <>
+          <StarField />
+          <ShootingStars />
+        </>
+      )}
       {timeOfDay === 'rain_dusk' && <RainEffect density={settings.particleDensity} />}
       <AmbientParticles timeOfDay={timeOfDay} density={settings.particleDensity} />
     </>

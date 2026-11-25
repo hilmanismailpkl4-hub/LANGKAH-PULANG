@@ -193,6 +193,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= -86.2 && x <= -80.2 && z >= -11.4 && z <= -8.0) return true;
   // Kanopi Teras Warung Sudut Bu Rina (Perumahan Melati)
   if (x >= 12.2 && x <= 17.4 && z >= 49.4 && z <= 51.0) return true;
+  // Atap Pos Kamling / Pos Ronda RT 04 Perumahan Melati
+  if (x >= 25.3 && x <= 29.1 && z >= 55.2 && z <= 58.4) return true;
   return false;
 }
 
@@ -352,6 +354,9 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   // === 20. Gerobak Sate Ayam Madura Cak Mat & Meja Makan (Sudut Jl. Cempaka) ===
   { id: 'sate_cart', minX: 12.75, maxX: 14.05, minZ: 28.15, maxZ: 30.85 },
   { id: 'sate_table_bench', minX: 12.55, maxX: 14.25, minZ: 31.35, maxZ: 32.8 },
+
+  // === 21. Pos Kamling / Pos Ronda RT 04 Perumahan Melati ===
+  { id: 'pos_kamling_platform', minX: 25.55, maxX: 28.85, minZ: 55.45, maxZ: 58.15 },
 ];
 
 /**

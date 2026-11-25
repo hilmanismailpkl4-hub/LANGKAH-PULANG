@@ -215,6 +215,42 @@ class SfxEngine {
   }
 
   /**
+   * Bunyi kentongan bambu berongga khas Pos Kamling Indonesia ("tok-tok... tok-tok-tok!").
+   */
+  public playKentongan() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // Pola ketukan ronda malam yang ramah & berwibawa
+    const hits = [0.0, 0.2, 0.52, 0.68, 0.84];
+    hits.forEach((offset, idx) => {
+      const pitch = idx % 2 === 0 ? 355 : 388;
+      // Resonansi rongga bambu
+      const osc = ctx.createOscillator();
+      const filter = ctx.createBiquadFilter();
+      const g = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(pitch * 1.12, now + offset);
+      osc.frequency.exponentialRampToValueAtTime(pitch, now + offset + 0.065);
+      filter.type = 'bandpass';
+      filter.frequency.value = pitch * 2.1;
+      filter.Q.value = 3.2;
+      g.gain.setValueAtTime(0.001, now + offset);
+      g.gain.linearRampToValueAtTime(0.22 * v, now + offset + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0008, now + offset + 0.14);
+      osc.connect(filter).connect(g).connect(ctx.destination);
+      osc.start(now + offset);
+      osc.stop(now + offset + 0.16);
+
+      // Tambahan nada dasar hangat kayu bambu
+      this.softTone(ctx, pitch, now + offset, 0.11, 0.085 * v, 'sine');
+    });
+  }
+
+  /**
    * Suara desis lembut bara arang & bumbu kacang sate yang dipanggang di Gerobak Cak Mat.
    */
   public playCharcoalSizzle() {

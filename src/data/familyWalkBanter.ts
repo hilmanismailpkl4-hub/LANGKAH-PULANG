@@ -364,4 +364,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'nadia', text: 'Akhirnya laptop kantornya ditutup juga ya, Mas... sekarang waktunya benar-benar istirahat di rumah.' },
     { speaker: 'kira', text: 'Horeee!! Ayah nggak kerja lagi malam ini! Ayo main sama Kira!' },
   ],
+  activity_kentongan: [
+    { speaker: 'kira', text: 'TOK-TOK-TOK!! Suara kentongan bambunya nyaring banget, Ayah!! Kayak di cerita ronda malam!' },
+    { speaker: 'nadia', text: 'Haha, pelan-pelan ya Mas, nanti bapak-bapak RT 04 mengira sudah waktunya ronda malam nih.' },
+  ],
+  activity_pos_kamling: [
+    { speaker: 'nadia', text: 'Adem ya duduk sebentar di Pos Kamling sambil lihat papan catur sama termos kopi begini.' },
+    { speaker: 'kira', text: 'Ayah, nanti ajarin Kira main catur pakai kuda-kudaan kecil itu ya!' },
+  ],
 };
