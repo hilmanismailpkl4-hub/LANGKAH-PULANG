@@ -1,7 +1,7 @@
 import { FamilyBanterLine } from './familyWalkBanter';
 
 export type CulinarySpotId = 'angkringan' | 'cafe' | 'kios' | 'martabak';
-export type HeldDrinkVisual = 'wedang' | 'coffee' | 'tea' | 'icecream' | 'cocoa' | 'martabak' | 'peanuts';
+export type HeldDrinkVisual = 'wedang' | 'coffee' | 'tea' | 'icecream' | 'cocoa' | 'martabak' | 'peanuts' | 'soup';
 
 export interface CulinaryMenuItem {
   id: string;

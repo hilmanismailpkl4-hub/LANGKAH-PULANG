@@ -262,4 +262,8 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'nadia', text: 'Duduk berteduh di halte sambil lihat lampu mobil lewat itu ada tenangnya sendiri ya, Mas.' },
     { speaker: 'kira', text: 'Kira hitung ada berapa mobil warna merah yang lewat depan halte kita!' },
   ],
+  activity_pigeons: [
+    { speaker: 'kira', text: 'WAAAH!! Burung merpatinya datang semua makan remah roti dari Ayah!! Gemes bangettt!' },
+    { speaker: 'nadia', text: 'Pelan-pelan geraknya ya Sayang, biar burungnya nggak kaget terbang lagi.' },
+  ],
 };

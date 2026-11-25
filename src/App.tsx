@@ -7,6 +7,7 @@ import { EndingScreen } from './components/ui/EndingScreen';
 import { GameHUD } from './components/ui/GameHUD';
 import { GraphicsSettingsModal } from './components/ui/GraphicsSettingsModal';
 import { GuitarMinigameModal } from './components/ui/GuitarMinigameModal';
+import { HomeKitchenModal } from './components/ui/HomeKitchenModal';
 import { InventoryBagModal } from './components/ui/InventoryBagModal';
 import { LittleLibraryModal } from './components/ui/LittleLibraryModal';
 import { LoadingScreenOverlay } from './components/ui/LoadingScreenOverlay';
@@ -60,6 +61,7 @@ export function App() {
       <SmartphoneModal />
       <GuitarMinigameModal />
       <CulinaryModal />
+      <HomeKitchenModal />
       <WardrobeModal />
       <LittleLibraryModal />
       <BookStallModal />

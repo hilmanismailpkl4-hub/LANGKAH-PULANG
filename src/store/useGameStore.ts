@@ -20,6 +20,7 @@ import {
   NadiaOutfitId,
 } from '../data/damarOutfits';
 import { LAKE_CATCHES, LakeCatchDef } from '../data/lakeAndBooks';
+import { HOME_KITCHEN_RECIPES } from '../data/homeKitchenRecipes';
 import { PhotoFilterId, PhotoFrameId } from '../data/photoFilters';
 import { evaluateEnding } from '../data/endings';
 import {
@@ -136,6 +137,8 @@ interface GameStoreState {
   lastFishCatch: LakeCatchDef | null;
   isLittleLibraryOpen: boolean;
   isBookStallOpen: boolean;
+  isKitchenOpen: boolean;
+  homeStoveLit: boolean;
   isRidingScooter: boolean;
   isRidingBicycle: boolean;
   isGuitarOpen: boolean;
@@ -184,6 +187,8 @@ interface GameStoreState {
   reelFishingCatch: () => void;
   setLittleLibraryOpen: (open: boolean) => void;
   setBookStallOpen: (open: boolean) => void;
+  setKitchenOpen: (open: boolean) => void;
+  cookHomeRecipe: (recipeId: string) => void;
   setRidingScooter: (riding: boolean) => void;
   setRidingBicycle: (riding: boolean) => void;
   setGuitarOpen: (open: boolean) => void;
@@ -320,6 +325,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     lastFishCatch: null,
     isLittleLibraryOpen: false,
     isBookStallOpen: false,
+    isKitchenOpen: false,
+    homeStoveLit: false,
     isRidingScooter: false,
     isRidingBicycle: false,
     isGuitarOpen: false,
@@ -565,6 +572,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       set({
         isBookStallOpen: open,
         isLittleLibraryOpen: false,
+        isKitchenOpen: false,
         isWardrobeOpen: false,
         activeCulinarySpot: null,
         isMapJournalOpen: false,
@@ -574,6 +582,68 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isGuitarOpen: false,
         isQuickGraphicsOpen: false,
       });
+    },
+
+    setKitchenOpen: (open) => {
+      const s = get();
+      if (open && (s.screen !== 'playing' || s.activeDialogue)) return;
+      if (open && document.pointerLockElement) document.exitPointerLock();
+      if (open) sfxEngine.play('interact');
+      set({
+        isKitchenOpen: open,
+        isBookStallOpen: false,
+        isLittleLibraryOpen: false,
+        isWardrobeOpen: false,
+        activeCulinarySpot: null,
+        isMapJournalOpen: false,
+        isPauseOpen: false,
+        isPhoneOpen: false,
+        isBagOpen: false,
+        isGuitarOpen: false,
+        isQuickGraphicsOpen: false,
+      });
+    },
+
+    cookHomeRecipe: (recipeId) => {
+      const s = get();
+      const recipe = HOME_KITCHEN_RECIPES.find((r) => r.id === recipeId);
+      if (!recipe) return;
+
+      sfxEngine.playKitchenSizzle();
+
+      if (drinkTimer) window.clearTimeout(drinkTimer);
+      drinkTimer = window.setTimeout(() => {
+        set({ heldDrink: null });
+      }, 30000);
+
+      set({
+        isKitchenOpen: false,
+        homeStoveLit: true,
+        heldDrink: { type: recipe.heldVisual, isHot: true, label: recipe.name },
+      });
+
+      const flagKey = `cooked_${recipe.id}`;
+      if (!s.flags.includes(flagKey)) {
+        s.applyEffect({
+          kehadiranKeluarga: 2,
+          kejujuranDiri: 1,
+          setFlags: [flagKey],
+          journalEntry:
+            recipe.journalTitle && recipe.journalBody
+              ? {
+                  id: `je_${flagKey}`,
+                  title: recipe.journalTitle,
+                  body: recipe.journalBody,
+                  chapter: s.chapter,
+                }
+              : undefined,
+        });
+      }
+
+      if (recipe.familyLines.length > 0) {
+        s.playFamilyBanter(recipe.familyLines, `fw_${recipe.id}`);
+      }
+      s.showToast(`${recipe.name}: "${recipe.aromaNote}"`);
     },
 
     setRidingScooter: (riding) => {
@@ -1222,6 +1292,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         lastFishCatch: null,
         isLittleLibraryOpen: false,
         isBookStallOpen: false,
+        isKitchenOpen: false,
+        homeStoveLit: false,
         isRidingScooter: false,
         isRidingBicycle: false,
         isFamilyWalkActive: false,

@@ -219,6 +219,7 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'rumah_fridge', minX: -15.15, maxX: -13.85, minZ: 71.8, maxZ: 73.0 },
   { id: 'rumah_sofa', minX: -24.95, maxX: -23.5, minZ: 64.1, maxZ: 67.1 },
   { id: 'rumah_kira_corner', minX: -20.85, maxX: -18.75, minZ: 71.85, maxZ: 73.65 },
+  { id: 'rumah_kitchen_counter', minX: -18.25, maxX: -15.55, minZ: 72.52, maxZ: 73.65 },
   { id: 'rumah_wardrobe', minX: -26.85, maxX: -25.85, minZ: 68.35, maxZ: 70.15 },
   { id: 'rumah_tv_console', minX: -14.15, maxX: -13.2, minZ: 67.85, maxZ: 69.95 },
   { id: 'rumah_fence_l', minX: -27.4, maxX: -22.0, minZ: 53.6, maxZ: 54.4 },

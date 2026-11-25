@@ -106,6 +106,62 @@ class SfxEngine {
   }
 
   /**
+   * Suara desis wajan & didihan sup hangat di dapur Rumah Jl. Melati No. 14.
+   */
+  public playKitchenSizzle() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // Desis lembut minyak/kuah hangat (filtered white noise)
+    const src = ctx.createBufferSource();
+    src.buffer = this.getNoiseBuffer(ctx);
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(2400, now);
+    filter.frequency.linearRampToValueAtTime(1650, now + 0.75);
+    filter.Q.value = 0.85;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.001, now);
+    g.gain.linearRampToValueAtTime(0.085 * v, now + 0.1);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.82);
+    src.connect(filter).connect(g).connect(ctx.destination);
+    src.start(now, 0.05, 0.85);
+
+    // Denting sendok/mangkuk hangat tanda masakan siap
+    this.softTone(ctx, 1320, now + 0.35, 0.25, 0.055 * v, 'sine');
+    this.softTone(ctx, 1760, now + 0.46, 0.35, 0.05 * v, 'sine');
+  }
+
+  /**
+   * Suara kepakan sayap lembut burung merpati taman saat terbang melintas.
+   */
+  public playPigeonFlutter() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    [0, 0.09, 0.18, 0.28].forEach((offset, idx) => {
+      const src = ctx.createBufferSource();
+      src.buffer = this.getNoiseBuffer(ctx);
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 520 + idx * 75;
+      filter.Q.value = 1.6;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.001, now + offset);
+      g.gain.linearRampToValueAtTime(0.065 * v, now + offset + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.075);
+      src.connect(filter).connect(g).connect(ctx.destination);
+      src.start(now + offset, (idx * 0.13) % 0.6, 0.085);
+    });
+  }
+
+  /**
    * Memetik 6 akor gitar akustik hangat untuk mini-game gitar di Kedai Kopi Bima.
    */
   public playGuitarChord(chordIdx: number) {

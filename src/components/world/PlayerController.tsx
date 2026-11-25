@@ -137,7 +137,9 @@ export const PlayerController: React.FC = () => {
 
       // Tutup overlay dengan Escape
       if (code === 'Escape') {
-        if (state.isBookStallOpen) {
+        if (state.isKitchenOpen) {
+          state.setKitchenOpen(false);
+        } else if (state.isBookStallOpen) {
           state.setBookStallOpen(false);
         } else if (state.isLittleLibraryOpen) {
           state.setLittleLibraryOpen(false);
@@ -171,7 +173,15 @@ export const PlayerController: React.FC = () => {
         return;
       }
 
-      if (state.isGuitarOpen || state.activeCulinarySpot || state.isWardrobeOpen || state.isLittleLibraryOpen || state.isBookStallOpen) return;
+      if (
+        state.isGuitarOpen ||
+        state.activeCulinarySpot ||
+        state.isWardrobeOpen ||
+        state.isLittleLibraryOpen ||
+        state.isBookStallOpen ||
+        state.isKitchenOpen
+      )
+        return;
 
       // Tas Selempang Damar [I]
       if (
@@ -404,7 +414,8 @@ export const PlayerController: React.FC = () => {
         Boolean(state.activeCulinarySpot) ||
         state.isWardrobeOpen ||
         state.isLittleLibraryOpen ||
-        state.isBookStallOpen
+        state.isBookStallOpen ||
+        state.isKitchenOpen
       )
         return;
       isDraggingRef.current = true;
@@ -428,7 +439,8 @@ export const PlayerController: React.FC = () => {
         Boolean(state.activeCulinarySpot) ||
         state.isWardrobeOpen ||
         state.isLittleLibraryOpen ||
-        state.isBookStallOpen
+        state.isBookStallOpen ||
+        state.isKitchenOpen
       )
         return;
 
@@ -467,7 +479,8 @@ export const PlayerController: React.FC = () => {
         Boolean(state.activeCulinarySpot) ||
         state.isWardrobeOpen ||
         state.isLittleLibraryOpen ||
-        state.isBookStallOpen
+        state.isBookStallOpen ||
+        state.isKitchenOpen
       )
         return;
       if (!document.pointerLockElement && dom.requestPointerLock) {
@@ -488,7 +501,8 @@ export const PlayerController: React.FC = () => {
         Boolean(state.activeCulinarySpot) ||
         state.isWardrobeOpen ||
         state.isLittleLibraryOpen ||
-        state.isBookStallOpen
+        state.isBookStallOpen ||
+        state.isKitchenOpen
       )
         return;
       zoomRef.current = THREE.MathUtils.clamp(zoomRef.current + e.deltaY * 0.0038, 2.8, 12.0);
@@ -973,7 +987,8 @@ export const PlayerController: React.FC = () => {
       !store.activeCulinarySpot &&
       !store.isWardrobeOpen &&
       !store.isLittleLibraryOpen &&
-      !store.isBookStallOpen;
+      !store.isBookStallOpen &&
+      !store.isKitchenOpen;
 
     let moveX = 0;
     let moveZ = 0;

@@ -297,6 +297,19 @@ export const HumanModel: React.FC<HumanModelProps> = ({
                   </mesh>
                   <CupSteam position={[0, 0.14, 0]} />
                 </group>
+              ) : holdingDrink === 'soup' ? (
+                <group>
+                  {/* Mangkuk Keramik Sup Hangat / Masakan Rumah Mengepul */}
+                  <mesh position={[0, 0.045, 0.02]} castShadow>
+                    <cylinderGeometry args={[0.082, 0.052, 0.085, 14]} />
+                    <meshStandardMaterial color="#f5efe6" roughness={0.32} />
+                  </mesh>
+                  <mesh position={[0, 0.082, 0.02]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <circleGeometry args={[0.072, 14]} />
+                    <meshStandardMaterial color="#d98c3f" roughness={0.28} />
+                  </mesh>
+                  <CupSteam position={[0, 0.11, 0.02]} />
+                </group>
               ) : (
                 <group>
                   <mesh position={[0, 0.05, 0]} castShadow>

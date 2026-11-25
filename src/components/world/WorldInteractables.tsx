@@ -729,6 +729,7 @@ export const WorldInteractables: React.FC = () => {
       store.isWardrobeOpen ||
       store.isLittleLibraryOpen ||
       store.isBookStallOpen ||
+      store.isKitchenOpen ||
       store.isRidingScooter ||
       store.isRidingBicycle ||
       store.isSitting ||
@@ -1264,6 +1265,54 @@ export const WorldInteractables: React.FC = () => {
       },
       2.4,
     );
+
+    consider(
+      {
+        id: 'interior_home_kitchen',
+        kind: 'story_object',
+        label: 'Masak & Seduh Hangat di Dapur Rumah',
+        sublabel: 'Dapur Jl. Melati No. 14 · Teh Melati, Sup Ayam & Nasi Goreng',
+        position: [-16.9, 0.08, 71.95],
+        onInteract: () => {
+          store.setKitchenOpen(true);
+        },
+      },
+      2.3,
+    );
+
+    if (store.timeOfDay !== 'rain_dusk') {
+      consider(
+        {
+          id: 'activity_feed_pigeons',
+          kind: 'story_object',
+          label: 'Tebar Remah Roti untuk Merpati Taman',
+          sublabel: 'Kawanan Merpati Jinak · Taman Kota',
+          position: [-81.5, 0, 12.2],
+          onInteract: () => {
+            sfxEngine.play('chime');
+            playerRuntime.pigeonFeedTimer = 10.0;
+            playerRuntime.pigeonFeedPoint = [-81.5, 12.2];
+            if (!store.flags.includes('fed_park_pigeons')) {
+              store.applyEffect({
+                kehadiranKeluarga: 1,
+                setFlags: ['fed_park_pigeons'],
+                journalEntry: {
+                  id: 'je_park_pigeons',
+                  title: 'Kawanan Merpati di Rumput Taman',
+                  body: 'Tujuh burung merpati jinak berkumpul mematuk remah roti di lapangan Taman Kota. Mereka melompat santai tanpa takut, seolah tahu sore ini bukan milik orang yang sedang terburu-buru.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_pigeons, 'fw_pigeons');
+            }
+            store.showToast('Kawanan burung merpati taman berjalan ceria menghampiri remah roti!');
+          },
+        },
+        3.2,
+      );
+    }
 
     consider(
       {
