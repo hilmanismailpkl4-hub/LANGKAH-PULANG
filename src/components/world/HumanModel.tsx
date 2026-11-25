@@ -256,7 +256,30 @@ export const HumanModel: React.FC<HumanModelProps> = ({
           {/* Visual Gelas Hangat / Es Krim / Jajanan Martabak & Kacang Rebus di Tangan Kanan */}
           {holdingDrink && (
             <group position={[0, -0.48, 0.05]} rotation={[0.92, 0, 0]}>
-              {holdingDrink === 'siomay' ? (
+              {holdingDrink === 'gorengan' ? (
+                <group>
+                  {/* Kantong Kertas Cokelat Gorengan Hangat Berisi Pisang Goreng, Tahu Isi & Cabai Rawit */}
+                  <mesh position={[0, 0.065, 0.01]} castShadow>
+                    <boxGeometry args={[0.12, 0.13, 0.072]} />
+                    <meshStandardMaterial color="#c49a6c" roughness={0.88} />
+                  </mesh>
+                  {/* Gorengan Keemasan Mengintip di Atas Kantong */}
+                  <mesh position={[-0.024, 0.135, 0.008]} rotation={[0.1, 0.2, 0.25]} castShadow>
+                    <boxGeometry args={[0.042, 0.048, 0.032]} />
+                    <meshStandardMaterial color="#d98a2b" roughness={0.76} />
+                  </mesh>
+                  <mesh position={[0.025, 0.138, 0.012]} rotation={[-0.1, -0.15, -0.2]} castShadow>
+                    <capsuleGeometry args={[0.018, 0.038, 5, 8]} />
+                    <meshStandardMaterial color="#c97222" roughness={0.78} />
+                  </mesh>
+                  {/* Cabai Rawit Hijau Kecil */}
+                  <mesh position={[0.004, 0.145, 0.03]} rotation={[0.3, 0, 0.55]}>
+                    <capsuleGeometry args={[0.0065, 0.028, 4, 6]} />
+                    <meshStandardMaterial color="#22c55e" roughness={0.5} />
+                  </mesh>
+                  <CupSteam position={[0, 0.17, 0.01]} />
+                </group>
+              ) : holdingDrink === 'siomay' ? (
                 <group>
                   {/* Piring Melamin Siomay Bandung Bumbu Kacang & Jeruk Limau Mengepul */}
                   <mesh position={[0, 0.032, 0.02]} castShadow>

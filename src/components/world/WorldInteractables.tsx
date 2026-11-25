@@ -2313,6 +2313,87 @@ export const WorldInteractables: React.FC = () => {
         2.5,
       );
 
+      consider(
+        {
+          id: 'activity_pak_ujang_cobbler',
+          kind: 'story_object',
+          label: 'Semir Sepatu & Ngobrol dengan Pak Ujang',
+          sublabel: 'Trotoar Jl. Cempaka · Sol Sepatu & Sandal',
+          position: [9.7, 0, 21.8],
+          onInteract: () => {
+            sfxEngine.playShoeCobblerTap();
+            const lines = [
+              'Pak Ujang: "Sepatu kerja kalau rutin disemir dan dirawat solnya, dipakai bertahun-tahun tetap gagah, Mas Damar!"',
+              'Pak Ujang: "Alhamdulillah, hari ini sudah tujuh pasang sepatu warga selesai dijahit rapi. Mau mampir duduk sebentar, Mas?"',
+              'Pak Ujang: "Langkah kaki itu penting, Mas—sepatu nyaman bikin jalan pulang ke rumah makin terasa ringan."',
+            ];
+            if (!store.flags.includes('met_pak_ujang_cobbler')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                setFlags: ['met_pak_ujang_cobbler'],
+                journalEntry: {
+                  id: 'je_pak_ujang_cobbler',
+                  title: 'Sepatu Kerja yang Dirapikan Pak Ujang',
+                  body: 'Di bawah payung teduh trotoar Jl. Cempaka, Pak Ujang merapikan dan menyemir sepatu kerjaku dengan sabar. Ia bilang sepatu yang dirawat baik membuat setiap langkah pulang terasa lebih ringan.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_pak_ujang, 'fw_pak_ujang');
+            }
+            store.showToast(lines[Math.floor(Date.now() / 1000) % lines.length]);
+          },
+        },
+        2.6,
+      );
+
+      consider(
+        {
+          id: 'activity_gorengan_mbak_yuni',
+          kind: 'story_object',
+          label: 'Beli Gorengan Hangat Sore Mbak Yuni',
+          sublabel: 'Trotoar Jl. Cempaka · Tahu Isi, Mendoan & Pisang Goreng',
+          position: [-9.8, 0, 31.4],
+          onInteract: () => {
+            store.openCulinarySpot('gorengan');
+          },
+        },
+        2.8,
+      );
+
+      consider(
+        {
+          id: 'activity_melati_pingpong',
+          kind: 'story_object',
+          label: 'Main Reli Ping-Pong Kompleks Melati',
+          sublabel: 'Lapangan RT 04 · Tenis Meja Warga',
+          position: [33.2, 0, 56.9],
+          onInteract: () => {
+            playerRuntime.pingPongRallyTimer = 6.5;
+            sfxEngine.playPingPongRally();
+            if (!store.flags.includes('played_melati_pingpong')) {
+              store.applyEffect({
+                kehadiranKeluarga: 1,
+                kejujuranDiri: 1,
+                setFlags: ['played_melati_pingpong'],
+                journalEntry: {
+                  id: 'je_melati_pingpong',
+                  title: 'Reli Ping-Pong Sore di Kompleks Melati',
+                  body: 'Di dekat Pos Kamling RT 04, aku mencoba reli singkat di meja ping-pong warga. Bunyi "tik-tok" bola putih yang lincah memantul membawa kembali semangat ringan masa muda.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_pingpong, 'fw_pingpong');
+            }
+            store.showToast('Tik-tok! Tik-tok! Bola putih memantul lincah melewati net di meja ping-pong Kompleks Melati!');
+          },
+        },
+        2.7,
+      );
+
     consider(
       {
         id: 'portal_up',
@@ -2852,6 +2933,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[75.8, 1.25, -7.6]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#4ade80" />
+      </mesh>
+      <mesh position={[11.2, 1.38, 21.8]}>
+        <sphereGeometry args={[0.07, 8, 8]} />
+        <meshBasicMaterial color="#fbbf24" />
+      </mesh>
+      <mesh position={[-11.2, 1.88, 31.4]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#fb923c" />
+      </mesh>
+      <mesh position={[33.2, 1.18, 58.6]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#60a5fa" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

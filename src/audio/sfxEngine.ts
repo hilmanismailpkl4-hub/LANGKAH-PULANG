@@ -450,6 +450,67 @@ class SfxEngine {
   }
 
   /**
+   * Suara pantulan bola tenis meja berongga "tik-tok... tik-tok!" saat main ping-pong di Kompleks Melati.
+   */
+  public playPingPongRally() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // 6 pasang pantulan bet + meja yang renyah dan berirama
+    const hits = [0, 0.24, 0.56, 0.8, 1.12, 1.36, 1.66, 1.9, 2.22, 2.46, 2.78, 3.02];
+    hits.forEach((offset, idx) => {
+      const isTableBounce = idx % 2 === 1;
+      const freq = isTableBounce ? 1180 + (idx % 3) * 45 : 740 + (idx % 2) * 35;
+      const t = now + offset;
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = isTableBounce ? 'sine' : 'triangle';
+      osc.frequency.setValueAtTime(freq, t);
+      osc.frequency.exponentialRampToValueAtTime(freq * 0.72, t + 0.045);
+      g.gain.setValueAtTime(0.001, t);
+      g.gain.linearRampToValueAtTime((isTableBounce ? 0.085 : 0.068) * v, t + 0.004);
+      g.gain.exponentialRampToValueAtTime(0.0008, t + 0.055);
+      osc.connect(g).connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.065);
+    });
+  }
+
+  /**
+   * Suara ketukan palu kayu kecil & gosokan sikat semir sepatu Pak Ujang yang rapi.
+   */
+  public playShoeCobblerTap() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // 3 ketukan palu kayu lembut "tok-tok-tok"
+    [0, 0.16, 0.34].forEach((offset, i) => {
+      this.softTone(ctx, 290 + i * 24, now + offset, 0.065, 0.075 * v, 'triangle');
+      this.softTone(ctx, 640 + i * 30, now + offset, 0.035, 0.035 * v, 'sine');
+    });
+    // Sapuan sikat semir singkat + denting kinclong ramah
+    const src = ctx.createBufferSource();
+    src.buffer = this.getNoiseBuffer(ctx);
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 1850;
+    filter.Q.value = 1.6;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.001, now + 0.5);
+    g.gain.linearRampToValueAtTime(0.048 * v, now + 0.56);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.82);
+    src.connect(filter).connect(g).connect(ctx.destination);
+    src.start(now + 0.5, 0.05, 0.34);
+    this.softTone(ctx, 1046.5, now + 0.82, 0.24, 0.042 * v, 'sine');
+  }
+
+  /**
    * Petikan gitar akustik lembut dari pemusik jalanan tepi sungai.
    */
   public playBuskerStrum(distanceFactor = 1, celebrate = false) {

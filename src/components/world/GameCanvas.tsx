@@ -11,6 +11,7 @@ import { CafeAndNightStreetLife } from './CafeAndNightStreetLife';
 import { CityDetails } from './CityDetails';
 import { CityGeometry } from './CityGeometry';
 import { CityLife } from './CityLife';
+import { CraftAndPingPongLife } from './CraftAndPingPongLife';
 import { FishingAndFlowerLibrary } from './FishingAndFlowerLibrary';
 import { HomeKitchenAndParkNature } from './HomeKitchenAndParkNature';
 import { HomeLivingAndBusStop } from './HomeLivingAndBusStop';
@@ -99,6 +100,7 @@ export const GameCanvas: React.FC = () => {
             <TropicalLandmarkAndDawet timeOfDay={effectiveTime} settings={settings} />
             <AfternoonAndCreativeLife timeOfDay={effectiveTime} settings={settings} />
             <ArtisticAndStationDetails timeOfDay={effectiveTime} settings={settings} />
+            <CraftAndPingPongLife timeOfDay={effectiveTime} settings={settings} />
             <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
             <CityLife timeOfDay={effectiveTime} settings={settings} />
             <ScooterEntity timeOfDay={effectiveTime} settings={settings} />

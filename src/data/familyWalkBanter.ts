@@ -414,4 +414,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'BIP-BIP!! Pintunya langsung kebuka sendiri warna hijau, Ayah!! Keren bangettt!' },
     { speaker: 'nadia', text: 'Ingat nggak Mas, dulu tiap sore kamu pasti lewat gerbang tap stasiun ini sambil buru-buru mengejar kereta?' },
   ],
+  activity_pak_ujang: [
+    { speaker: 'nadia', text: 'Pak Ujang telaten banget ya Mas menjahit sepatu dengan tangan... awet banget hasil jahitannya.' },
+    { speaker: 'kira', text: 'Sepatu kerja Ayah jadi kinclong lagi kayak baru!! Makasih, Kakek Ujang!' },
+  ],
+  activity_pingpong: [
+    { speaker: 'kira', text: 'TIK-TOK! TIK-TOK!! Bolanya cepet banget memantul di meja biru, Ayah!! Kira mau pegang bet merahnya!' },
+    { speaker: 'nadia', text: 'Wah, seru banget! Meja ping-pong RT 04 ini bikin sore di kompleks kita makin ramai ya, Mas.' },
+  ],
 };

@@ -11,7 +11,8 @@ export type CulinarySpotId =
   | 'bakso'
   | 'sate'
   | 'dawet'
-  | 'siomay';
+  | 'siomay'
+  | 'gorengan';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -25,7 +26,8 @@ export type HeldDrinkVisual =
   | 'coconut'
   | 'sate'
   | 'dawet'
-  | 'siomay';
+  | 'siomay'
+  | 'gorengan';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -175,6 +177,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [-79.0, 0, 9.75],
     seatYaw: 0,
     tablePropPos: [-79.0, 1.16, 12.05],
+  },
+  gorengan: {
+    id: 'gorengan',
+    title: 'Gorengan Hangat Sore Mbak Yuni',
+    hostName: 'Mbak Yuni',
+    subtitle: 'Trotoar Jl. Cempaka · Tahu Isi, Tempe Mendoan, Pisang Goreng & Cabai Rawit',
+    seatPos: [-9.55, 0.14, 31.4],
+    lookAt: [-11.2, 1.35, 31.4],
+    standPos: [-8.4, 0, 31.4],
+    seatYaw: -Math.PI / 2,
+    tablePropPos: [-10.65, 1.12, 31.4],
   },
 };
 
@@ -671,6 +684,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Yeeey!! Kira dapat telur rebus sama kentang kukus paling besar dari Mang Asep! Makasih, Ayaah!' },
       { speaker: 'nadia', text: 'Enak banget ya Mas, apalagi dimakan sore-sore sambil melihat taman begini. Terima kasih sudah traktir.' },
+    ],
+  },
+
+  // === 12. LAPAK GORENGAN HANGAT SORE MBAK YUNI (TROTOAR JL. CEMPAKA) ===
+  {
+    id: 'gorengan_campur',
+    spot: 'gorengan',
+    name: 'Gorengan Hangat Campur & Cabai Rawit',
+    priceLabel: 'Rp 10.000',
+    tagline: 'Tahu isi sayuran renyah, tempe mendoan daun bawang, bakwan jagung & cabai rawit hijau segar.',
+    tasteNote: 'Baru diangkat dari wajan—kriuk hangat di luar, lembut di dalam, persis teman terbaik di sore yang sedikit berangin.',
+    drinkVisual: 'gorengan',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Aroma tempe mendoan baru matang di pinggir Jl. Cempaka ini memang paling susah dilewatkan ya, Mas!' },
+    ],
+  },
+  {
+    id: 'gorengan_pisang',
+    spot: 'gorengan',
+    name: 'Pisang Goreng Kepok Renyah & Mendoan',
+    priceLabel: 'Rp 12.000',
+    tagline: 'Pisang kepok manis berbalut tepung krispi hangat ditemani dua potong tempe mendoan.',
+    tasteNote: 'Manis legit pisang kepok hangat bikin langkah pulang ke Jl. Melati terasa jauh lebih santai.',
+    drinkVisual: 'gorengan',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'kira', text: 'Pisang gorengnya masih hangat banget, Yah!! Manis dan kriuk-kriuk kesukaan Kira!' },
+    ],
+  },
+  {
+    id: 'gorengan_family',
+    spot: 'gorengan',
+    name: 'Traktir Keluarga Sekantong Gorengan Sore',
+    priceLabel: 'Rp 25.000',
+    tagline: 'Kantong kertas penuh pisang goreng kepok, tahu isi, bakwan jagung & mendoan buat disantap bertiga.',
+    tasteNote: 'Mbak Yuni menyelipkan dua bonus pisang goreng untuk Kira—kami bertiga makan bergantian dari kantong kertas hangat di pinggir jalan.',
+    drinkVisual: 'gorengan',
+    isHot: true,
+    isFamilyTreat: true,
+    journalTitle: 'Sekantong Gorengan Hangat di Pinggir Jl. Cempaka',
+    journalBody: 'Sepulang berkeliling kota, aku mengajak Nadia dan Kira mampir di lapak gorengan Mbak Yuni. Berbagi pisang goreng hangat, tahu isi, dan mendoan dari satu kantong kertas cokelat terasa begitu sederhana sekaligus membahagiakan.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Horeee!! Tante Yuni kasih bonus pisang goreng dua buat Kira!! Makasih banyak, Ayaah!' },
+      { speaker: 'nadia', text: 'Hati-hati masih panas ya, Sayang, tiup dulu pelan-pelan. Enak banget nih Mas gorengannya!' },
     ],
   },
 ];

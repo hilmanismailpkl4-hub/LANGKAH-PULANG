@@ -129,6 +129,7 @@ export const playerRuntime = {
   kentonganSwingTimer: 0,
   windChimeTimer: 0,
   stationGateTimer: 0,
+  pingPongRallyTimer: 0,
   swingBoostTimer: 0,
   kiteHeight: 0,
   kitePullBoost: 0,
@@ -200,6 +201,7 @@ export function resetScooterToHome() {
   playerRuntime.kentonganSwingTimer = 0;
   playerRuntime.windChimeTimer = 0;
   playerRuntime.stationGateTimer = 0;
+  playerRuntime.pingPongRallyTimer = 0;
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;
   playerRuntime.kitePullBoost = 0;

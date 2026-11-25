@@ -199,6 +199,9 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= 40.2 && x <= 44.8 && z >= -15.4 && z <= -12.0) return true;
   // Tenda Kanopi Gerobak Siomay Bandung Mang Asep (Tepi Taman Kota)
   if (x >= -80.8 && x <= -77.2 && z >= 10.6 && z <= 14.2) return true;
+  // Payung Lapak Sol Sepatu Pak Ujang & Tenda Gerobak Gorengan Mbak Yuni (Jl. Cempaka)
+  if (x >= 9.6 && x <= 12.8 && z >= 20.2 && z <= 23.4) return true;
+  if (x >= -12.8 && x <= -9.8 && z >= 29.8 && z <= 33.0) return true;
   return false;
 }
 
@@ -386,6 +389,12 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'station_gate_n', minX: 75.25, maxX: 76.35, minZ: -9.27, maxZ: -9.03 },
   { id: 'station_gate_c', minX: 75.25, maxX: 76.35, minZ: -7.72, maxZ: -7.48 },
   { id: 'station_gate_s', minX: 75.25, maxX: 76.35, minZ: -6.17, maxZ: -5.93 },
+
+  // === 28. Lapak Sol Sepatu Pak Ujang, Gorengan Mbak Yuni & Meja Ping-Pong Melati ===
+  { id: 'pak_ujang_stall', minX: 10.25, maxX: 12.15, minZ: 20.95, maxZ: 22.65 },
+  { id: 'gorengan_cart', minX: -11.75, maxX: -10.65, minZ: 30.35, maxZ: 32.45 },
+  { id: 'gorengan_bench', minX: -9.82, maxX: -9.28, minZ: 30.65, maxZ: 32.15 },
+  { id: 'melati_pingpong_table', minX: 31.78, maxX: 34.62, minZ: 57.8, maxZ: 59.4 },
 ];
 
 /**
@@ -511,10 +520,12 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
     [15.8, -19.5], [-62.8, 8.2], [74.8, 3.2],
   ] as [number, number][]).map(([x, z]) => ({ x, z, r: 0.36 })),
 
-  // Pak Darmo Dawet Ayu, Mang Asep Siomay Bandung, Pelukis Mas Dimas & Taman Bundar Tugu "Kota Senja"
+  // Pak Darmo Dawet Ayu, Mang Asep Siomay Bandung, Pelukis Mas Dimas, Mbak Yuni Gorengan & Tiang Skor Ping-Pong
   { x: 42.8, z: -14.7, r: 0.42 },
   { x: -79.0, z: 13.75, r: 0.42 },
   { x: -37.8, z: 12.6, r: 0.78 },
+  { x: -12.3, z: 31.4, r: 0.42 },
+  { x: 33.2, z: 60.05, r: 0.2 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
