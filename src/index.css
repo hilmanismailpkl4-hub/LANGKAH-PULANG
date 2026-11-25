@@ -39,3 +39,45 @@
 .film-vignette {
   background: radial-gradient(circle at center, transparent 58%, rgba(8, 10, 15, 0.58) 100%);
 }
+
+@keyframes trainGlide {
+  0% {
+    transform: translateX(-220px);
+  }
+  100% {
+    transform: translateX(880px);
+  }
+}
+
+@keyframes floatEmber {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translateY(-16px) translateX(6px);
+    opacity: 0.82;
+  }
+}
+
+@keyframes shimmerBar {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(220%);
+  }
+}
+
+.animate-train-glide {
+  animation: trainGlide 9.5s linear infinite;
+}
+
+.animate-float-ember {
+  animation: floatEmber 4.8s ease-in-out infinite;
+}
+
+.animate-shimmer-bar {
+  animation: shimmerBar 1.8s ease-in-out infinite;
+}

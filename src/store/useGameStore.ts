@@ -75,6 +75,18 @@ export interface ActiveFamilyBanter {
   text: string;
 }
 
+export type LoadingOverlayMode = 'boot' | 'login' | 'register' | 'enter_world';
+
+export interface LoadingOverlayState {
+  visible: boolean;
+  mode: LoadingOverlayMode;
+  title: string;
+  subtitle: string;
+  stageLabel: string;
+  progress: number;
+  userEmail?: string;
+}
+
 interface GameStoreState {
   screen: ScreenMode;
   transitionChapter: ChapterNumber;
@@ -107,6 +119,7 @@ interface GameStoreState {
   toast: ToastNotice | null;
   cloudUserEmail: string | null;
   lastSaveStatus: string | null;
+  loadingOverlay: LoadingOverlayState;
 
   // Settings & Bonus Features
   settings: GameSettings;
@@ -154,6 +167,9 @@ interface GameStoreState {
 
   // Actions
   initApp: () => Promise<void>;
+  showLoadingOverlay: (partial: Partial<LoadingOverlayState>) => void;
+  updateLoadingOverlay: (partial: Partial<LoadingOverlayState>) => void;
+  hideLoadingOverlay: () => void;
   setQuickGraphicsOpen: (open: boolean) => void;
   setTitlePreviewTime: (time: TimeOfDay) => void;
   applyGraphicsPreset: (quality: GraphicsQuality) => void;
@@ -281,6 +297,14 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     toast: null,
     cloudUserEmail: null,
     lastSaveStatus: null,
+    loadingOverlay: {
+      visible: true,
+      mode: 'boot',
+      title: 'Langkah Pulang',
+      subtitle: 'Menyiapkan suasana senja kota dan arsip perjalananmu...',
+      stageLabel: 'Memuat lingkungan kota 3D...',
+      progress: 24,
+    },
 
     settings: initialSettings,
     isQuickGraphicsOpen: false,
@@ -331,12 +355,74 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     stepCount: 0,
 
     initApp: async () => {
+      const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
+      const startedAt = Date.now();
+      set((s) => ({
+        loadingOverlay: {
+          ...s.loadingOverlay,
+          visible: true,
+          mode: 'boot',
+          stageLabel: 'Memeriksa arsip catatan & pengaturan...',
+          progress: 52,
+        },
+      }));
+
       const merged = await syncAndLoadAllSlots();
-      set({
+      set((s) => ({
         slots: merged,
         unlockedEndings: loadGlobalUnlockedEndings(),
-      });
+        loadingOverlay: {
+          ...s.loadingOverlay,
+          stageLabel: 'Menata pencahayaan senja kota...',
+          progress: 86,
+        },
+      }));
+
+      const elapsed = Date.now() - startedAt;
+      if (elapsed < 750) {
+        await wait(750 - elapsed);
+      }
+
+      set((s) => ({
+        loadingOverlay: {
+          ...s.loadingOverlay,
+          stageLabel: 'Selamat datang di Langkah Pulang',
+          progress: 100,
+        },
+      }));
+      await wait(280);
+      set((s) => ({
+        loadingOverlay: {
+          ...s.loadingOverlay,
+          visible: false,
+        },
+      }));
     },
+
+    showLoadingOverlay: (partial) =>
+      set((s) => ({
+        loadingOverlay: {
+          ...s.loadingOverlay,
+          ...partial,
+          visible: true,
+        },
+      })),
+
+    updateLoadingOverlay: (partial) =>
+      set((s) => ({
+        loadingOverlay: {
+          ...s.loadingOverlay,
+          ...partial,
+        },
+      })),
+
+    hideLoadingOverlay: () =>
+      set((s) => ({
+        loadingOverlay: {
+          ...s.loadingOverlay,
+          visible: false,
+        },
+      })),
 
     setQuickGraphicsOpen: (open) => {
       if (open && document.pointerLockElement) document.exitPointerLock();
@@ -913,14 +999,39 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     },
 
     startNewSlot: async (slotId, journalName) => {
-      const fresh = createFreshSaveSlot(slotId, journalName);
+      const cleanTitle = journalName.trim() || 'Catatan Langkahku';
+      const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
+
+      set({
+        loadingOverlay: {
+          visible: true,
+          mode: 'enter_world',
+          title: cleanTitle,
+          subtitle: 'Menuju Rumah Keluarga Damar · Jl. Melati No. 14',
+          stageLabel: 'Menyiapkan catatan harian Bab 1...',
+          progress: 28,
+        },
+      });
+
+      const fresh = createFreshSaveSlot(slotId, cleanTitle);
       await saveSlotData(fresh);
+
+      set((s) => ({
+        loadingOverlay: {
+          ...s.loadingOverlay,
+          stageLabel: 'Menyalakan pagi di Jl. Melati No. 14...',
+          progress: 76,
+        },
+      }));
+
       clearBanterTimers();
       resetScooterToHome();
       resetCompanionsToHome();
       setRuntimePosition(fresh.playerPosition, fresh.playerRotation);
       musicEngine.start();
       musicEngine.setContext('home', 'morning');
+
+      await wait(420);
 
       set((state) => ({
         slots: { ...state.slots, [slotId]: fresh },
@@ -956,21 +1067,42 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         stepCount: 0,
         transitionChapter: 1,
         screen: 'chapter_transition',
+        loadingOverlay: {
+          ...state.loadingOverlay,
+          stageLabel: 'Siap memulai perjalanan',
+          progress: 100,
+        },
       }));
+
+      window.setTimeout(() => {
+        set((s) => ({ loadingOverlay: { ...s.loadingOverlay, visible: false } }));
+      }, 260);
     },
 
     loadSlot: (slotId) => {
       const slot = get().slots[slotId];
       if (!slot) return;
+      const loc = getLocationAtPosition(slot.playerPosition);
+
+      set({
+        loadingOverlay: {
+          visible: true,
+          mode: 'enter_world',
+          title: slot.journalName,
+          subtitle: `Menuju ${loc.name} · Bab ${slot.chapter}`,
+          stageLabel: 'Memuat posisi & suasana kota...',
+          progress: 34,
+        },
+      });
+
       clearBanterTimers();
       resetScooterToHome();
       resetCompanionsToHome();
       setRuntimePosition(slot.playerPosition, slot.playerRotation);
-      const loc = getLocationAtPosition(slot.playerPosition);
       musicEngine.start();
       musicEngine.setContext(loc.musicMood, slot.timeOfDay);
 
-      set({
+      set((s) => ({
         activeSlotId: slot.slotId,
         journalName: slot.journalName,
         playTimeSeconds: slot.playTimeSeconds || 0,
@@ -1003,7 +1135,28 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         ],
         stepCount: slot.stepCount ?? 0,
         screen: 'playing',
-      });
+        loadingOverlay: {
+          ...s.loadingOverlay,
+          stageLabel: 'Menata pencahayaan & warga kota...',
+          progress: 78,
+        },
+      }));
+
+      window.setTimeout(() => {
+        set((s) => ({
+          loadingOverlay: {
+            ...s.loadingOverlay,
+            stageLabel: 'Selamat datang kembali, Damar',
+            progress: 100,
+          },
+        }));
+      }, 460);
+
+      window.setTimeout(() => {
+        set((s) => ({
+          loadingOverlay: { ...s.loadingOverlay, visible: false },
+        }));
+      }, 820);
     },
 
     deleteSlot: async (slotId) => {

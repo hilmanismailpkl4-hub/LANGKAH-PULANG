@@ -37,6 +37,10 @@ export const TitleScreen: React.FC = () => {
   const setCloudUserEmail = useGameStore((s) => s.setCloudUserEmail);
   const refreshSlotsFromCloud = useGameStore((s) => s.refreshSlotsFromCloud);
   const setQuickGraphicsOpen = useGameStore((s) => s.setQuickGraphicsOpen);
+  const showLoadingOverlay = useGameStore((s) => s.showLoadingOverlay);
+  const updateLoadingOverlay = useGameStore((s) => s.updateLoadingOverlay);
+  const hideLoadingOverlay = useGameStore((s) => s.hideLoadingOverlay);
+  const showToast = useGameStore((s) => s.showToast);
   const graphicsQuality = useGameStore((s) => s.settings.graphicsQuality);
 
   const [showSlotPanel, setShowSlotPanel] = useState(false);
@@ -91,29 +95,84 @@ export const TitleScreen: React.FC = () => {
 
   const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanEmail = email.trim();
+    const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
+
     setAuthLoading(true);
     setAuthFeedback(null);
+
+    showLoadingOverlay({
+      mode: authMode === 'login' ? 'login' : 'register',
+      title: authMode === 'login' ? 'Menghubungkan Akun...' : 'Menyiapkan Akun Baru...',
+      subtitle:
+        authMode === 'login'
+          ? 'Menyambungkan arsip catatan harianmu dengan penyimpanan awan.'
+          : 'Mendaftarkan akun untuk menyinkronkan perjalananmu lintas perangkat.',
+      stageLabel: authMode === 'login' ? 'Memverifikasi email & kata sandi...' : 'Membuat profil akun awan...',
+      progress: 26,
+      userEmail: cleanEmail,
+    });
+
+    const minDelay = wait(520);
+
     if (authMode === 'login') {
-      const res = await signInCloud(email.trim(), password);
+      const [res] = await Promise.all([signInCloud(cleanEmail, password), minDelay]);
       if (res.error) {
+        hideLoadingOverlay();
         setAuthFeedback(res.error);
       } else if (res.user?.email) {
+        updateLoadingOverlay({
+          stageLabel: 'Menyinkronkan arsip catatan & progres awan...',
+          progress: 68,
+        });
         setCloudUserEmail(res.user.email);
-        await refreshSlotsFromCloud();
+        await Promise.all([refreshSlotsFromCloud(), wait(420)]);
+
+        sfxEngine.play('chime');
+        updateLoadingOverlay({
+          title: 'Selamat Datang Kembali',
+          stageLabel: 'Akun & arsip catatan berhasil tersambung!',
+          progress: 100,
+        });
         setShowAuthModal(false);
         setEmail('');
         setPassword('');
+        await wait(520);
+        hideLoadingOverlay();
+        showToast(`Akun tersambung: ${res.user.email}`);
+      } else {
+        hideLoadingOverlay();
       }
     } else {
-      const res = await signUpCloud(email.trim(), password);
+      const [res] = await Promise.all([signUpCloud(cleanEmail, password), minDelay]);
       if (res.error) {
+        hideLoadingOverlay();
         setAuthFeedback(res.error);
       } else if (res.info) {
+        hideLoadingOverlay();
         setAuthFeedback(res.info);
       } else if (res.user?.email) {
+        updateLoadingOverlay({
+          stageLabel: 'Menyinkronkan arsip catatan perdana...',
+          progress: 72,
+        });
         setCloudUserEmail(res.user.email);
-        await refreshSlotsFromCloud();
+        await Promise.all([refreshSlotsFromCloud(), wait(420)]);
+
+        sfxEngine.play('chime');
+        updateLoadingOverlay({
+          title: 'Akun Siap Digunakan',
+          stageLabel: 'Sinkronisasi awan aktif!',
+          progress: 100,
+        });
         setShowAuthModal(false);
+        setEmail('');
+        setPassword('');
+        await wait(520);
+        hideLoadingOverlay();
+        showToast(`Akun terdaftar & tersambung: ${res.user.email}`);
+      } else {
+        hideLoadingOverlay();
       }
     }
     setAuthLoading(false);
