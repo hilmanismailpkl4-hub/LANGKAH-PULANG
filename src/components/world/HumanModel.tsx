@@ -259,7 +259,35 @@ export const HumanModel: React.FC<HumanModelProps> = ({
           {/* Visual Gelas Hangat / Es Krim / Jajanan Martabak & Kacang Rebus di Tangan Kanan */}
           {holdingDrink && (
             <group position={[0, -0.48, 0.05]} rotation={[0.92, 0, 0]}>
-              {holdingDrink === 'doger' ? (
+              {holdingDrink === 'ketoprak' ? (
+                <group>
+                  {/* Piring Ketoprak Jakarta + Bumbu Kacang, Tahu, Ketupat & Kerupuk Renyah */}
+                  <mesh position={[0, 0.028, 0.02]} castShadow>
+                    <cylinderGeometry args={[0.105, 0.08, 0.024, 14]} />
+                    <meshStandardMaterial color="#f8fafc" roughness={0.42} />
+                  </mesh>
+                  {/* Bumbu Kacang Cokelat Gurih & Bihun */}
+                  <mesh position={[0, 0.048, 0.02]}>
+                    <sphereGeometry args={[0.056, 10, 8, 0, Math.PI * 2, 0, Math.PI * 0.55]} />
+                    <meshStandardMaterial color="#9a5c2a" roughness={0.62} />
+                  </mesh>
+                  {/* Potongan Tahu Goreng & Ketupat */}
+                  <mesh position={[-0.028, 0.062, 0.015]} castShadow>
+                    <boxGeometry args={[0.032, 0.024, 0.032]} />
+                    <meshStandardMaterial color="#eab308" roughness={0.7} />
+                  </mesh>
+                  {/* 2 Kerupuk Oranye-Putih Renyah Menancap Miring */}
+                  <mesh position={[0.036, 0.072, 0.028]} rotation={[0.25, 0.3, -0.42]}>
+                    <cylinderGeometry args={[0.028, 0.028, 0.009, 10]} />
+                    <meshStandardMaterial color="#fb923c" roughness={0.65} />
+                  </mesh>
+                  <mesh position={[0.015, 0.076, -0.015]} rotation={[-0.2, -0.4, 0.35]}>
+                    <cylinderGeometry args={[0.026, 0.026, 0.009, 10]} />
+                    <meshStandardMaterial color="#fef3c7" roughness={0.68} />
+                  </mesh>
+                  <CupSteam position={[0, 0.1, 0.02]} />
+                </group>
+              ) : holdingDrink === 'doger' ? (
                 <group>
                   {/* Gelas Es Doger Merah Muda Segar + Alpukat, Mutiara & Sendok Plastik */}
                   <mesh position={[0, 0.058, 0]} castShadow>

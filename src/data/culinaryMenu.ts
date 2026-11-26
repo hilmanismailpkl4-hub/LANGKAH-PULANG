@@ -14,7 +14,8 @@ export type CulinarySpotId =
   | 'siomay'
   | 'gorengan'
   | 'pecel_lele'
-  | 'doger';
+  | 'doger'
+  | 'ketoprak';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -31,7 +32,8 @@ export type HeldDrinkVisual =
   | 'siomay'
   | 'gorengan'
   | 'pecel_lele'
-  | 'doger';
+  | 'doger'
+  | 'ketoprak';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -214,6 +216,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [8.6, 0, -25.6],
     seatYaw: Math.PI / 2,
     tablePropPos: [11.05, 1.14, -25.6],
+  },
+  ketoprak: {
+    id: 'ketoprak',
+    title: 'Ketoprak Jakarta Ulek Cobek Bang Jaja',
+    hostName: 'Bang Jaja',
+    subtitle: 'Promenade Tepi Sungai · Ketupat, Tahu Goreng, Bihun, Bumbu Kacang & Kerupuk',
+    seatPos: [-38.35, 0.14, 36.2],
+    lookAt: [-36.5, 1.35, 36.2],
+    standPos: [-38.35, 0, 34.8],
+    seatYaw: Math.PI / 2,
+    tablePropPos: [-37.05, 1.14, 36.2],
   },
 };
 
@@ -845,6 +858,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Horeee!! Es doger pink bertiga!! Dingin manis enak bangettt, makasih banyak Ayah!' },
       { speaker: 'nadia', text: 'Segar banget ya Mas... terima kasih sudah mengajak mampir jajan es doger sore-sore begini.' },
+    ],
+  },
+
+  // === 15. GEROBAK KETOPRAK JAKARTA BANG JAJA (PROMENADE TEPI SUNGAI) ===
+  {
+    id: 'ketoprak_komplit',
+    spot: 'ketoprak',
+    name: 'Ketoprak Jakarta Komplit & Kerupuk Renyah',
+    priceLabel: 'Rp 14.000',
+    tagline: 'Ketupat empuk, tahu putih goreng hangat, bihun, taoge segar, bumbu kacang ulek bawang putih & kerupuk.',
+    tasteNote: 'Wangi bawang putih ulek di cobek batu dan gurihnya bumbu kacang berpadu sempurna dengan kerupuk kriuk di tepi sungai.',
+    drinkVisual: 'ketoprak',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Bumbu kacang ulekan Bang Jaja harum bawang putihnya pas banget ya, Mas! Enak banget!' },
+    ],
+  },
+  {
+    id: 'ketoprak_telur_dadar',
+    spot: 'ketoprak',
+    name: 'Ketoprak Spesial Telur Dadar & Kecap Manis',
+    priceLabel: 'Rp 18.000',
+    tagline: 'Tambahan telur dadar gurih hangat, taburan bawang goreng melimpah & ekstra kerupuk oranye.',
+    tasteNote: 'Mengenyangkan dan penuh rasa rumahan—duduk di bangku pinggir sungai sambil mendengar gemericik air membuat waktu terasa begitu tenang.',
+    drinkVisual: 'ketoprak',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'kira', text: 'Kriuk!! Kerupuk oranye dari kaleng biru Bang Jaja renyah banget, Yah! Kira suka telur dadarnya!' },
+    ],
+  },
+  {
+    id: 'ketoprak_family',
+    spot: 'ketoprak',
+    name: 'Traktir Keluarga Ketoprak Tepi Sungai (Paket Bertiga)',
+    priceLabel: 'Rp 44.000',
+    tagline: 'Tiga piring ketoprak spesial (tanpa cabai untuk Kira) dengan telur dadar hangat & ekstra kerupuk sepuasnya.',
+    tasteNote: 'Bang Jaja cekatan mengulek bumbu kacang segar sambil bercerita ringan—sore di tepi Sungai Kota terasa akrab dan penuh tawa.',
+    drinkVisual: 'ketoprak',
+    isHot: true,
+    isFamilyTreat: true,
+    journalTitle: 'Sepiring Ketoprak Hangat di Tepi Sungai Kota',
+    journalBody: 'Di tepi promenade Sungai Kota, aku mengajak Nadia dan Kira duduk santai di depan gerobak Ketoprak Jakarta Bang Jaja. Suara ulekan cobek batu, renyahnya kerupuk, dan semilir angin sungai membuat sore sederhana ini terasa begitu berharga.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Yeeey!! Ketoprak pakai kerupuk banyaaak!! Bang Jaja baik banget kasih kerupuk ekstra buat Kira!' },
+      { speaker: 'nadia', text: 'Enak banget ya Mas makan ketoprak hangat di pinggir sungai begini... terima kasih sudah traktir kami.' },
     ],
   },
 ];

@@ -450,4 +450,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'Lihat deh Bunda, papan lampunya bisa ngasih tahu berapa meter lagi keretanya datang!! Keren banget!' },
     { speaker: 'nadia', text: 'Sekarang Stasiun Senja makin rapi dan informatif ya, Mas... nggak perlu bingung lagi menunggu kereta.' },
   ],
+  activity_lotus_pond: [
+    { speaker: 'kira', text: 'WAAAH!! Bunga teratai warna pink-nya mekar besar banget di atas air, Bunda!! Tadi ada kodok kecil loncat!' },
+    { speaker: 'nadia', text: 'Cantik banget sudut danau yang ini ya, Mas... daun teratainya mengapung tenang bikin hati ikut adem.' },
+  ],
+  activity_plaza_weather_totem: [
+    { speaker: 'kira', text: 'Kincir angin kecil di atas papan kantor Ayah muter-muter terus!! Suhu kotanya kelihatan besar banget!' },
+    { speaker: 'nadia', text: 'Kualitas udaranya masih baik dan segar ya hari ini, Mas. Pas banget buat jalan sore tanpa buru-buru.' },
+  ],
 };

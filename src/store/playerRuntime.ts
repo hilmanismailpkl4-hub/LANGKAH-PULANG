@@ -165,6 +165,7 @@ export const playerRuntime = {
   pingPongRallyTimer: 0,
   chessMoveTimer: 0,
   chessMoveStep: 0,
+  lotusFrogHopTimer: 0,
   gardenSwingTimer: 0,
   swingBoostTimer: 0,
   kiteHeight: 0,
@@ -268,6 +269,7 @@ export function resetScooterToHome() {
   playerRuntime.pingPongRallyTimer = 0;
   playerRuntime.chessMoveTimer = 0;
   playerRuntime.chessMoveStep = 0;
+  playerRuntime.lotusFrogHopTimer = 0;
   playerRuntime.gardenSwingTimer = 0;
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;

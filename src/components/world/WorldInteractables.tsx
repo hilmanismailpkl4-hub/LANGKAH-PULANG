@@ -2656,6 +2656,88 @@ export const WorldInteractables: React.FC = () => {
         3.0,
       );
 
+      consider(
+        {
+          id: 'culinary_ketoprak_jaja',
+          kind: 'story_object',
+          label: 'Pesan Ketoprak Jakarta Ulek Cobek Bang Jaja',
+          sublabel: 'Promenade Tepi Sungai · Ketupat, Tahu, Bumbu Kacang & Kerupuk',
+          position: [-37.9, 0, 36.2],
+          onInteract: () => {
+            store.openCulinarySpot('ketoprak');
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'activity_danau_lotus_pond',
+          kind: 'story_object',
+          label: 'Amati Hamparan Bunga Teratai Mekar di Danau Senja',
+          sublabel: 'Sudut Tenggara Danau · Teratai Merah Muda & Katak Kecil',
+          position: [-73.2, 0, -12.6],
+          onInteract: () => {
+            sfxEngine.playLotusPondRipple();
+            playerRuntime.lotusFrogHopTimer = 3.8;
+            if (!store.flags.includes('admired_danau_lotus')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                kehadiranKeluarga: 1,
+                setFlags: ['admired_danau_lotus'],
+                journalEntry: {
+                  id: 'je_danau_lotus_pond',
+                  title: 'Bunga Teratai yang Mekar Tenang di Danau Senja',
+                  body: 'Di sudut tenggara Danau Senja, bunga-bunga teratai merah muda dan putih gading mengapung tenang di atas riak air, sementara seekor katak hijau kecil melompat dari satu daun ke daun lain. Keindahan ternyata tidak pernah tergesa-gesa.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_lotus_pond, 'fw_lotus_pond');
+            }
+            store.showToast('Plup! Seekor katak kecil melompat riang di antara daun & bunga teratai merah muda yang mengapung tenang.');
+          },
+        },
+        3.2,
+      );
+
+      consider(
+        {
+          id: 'activity_plaza_weather_totem',
+          kind: 'story_object',
+          label: 'Cek Papan Cuaca & Kualitas Udara Kota Senja',
+          sublabel: 'Plaza Menara Nusantara · Sensor Angin & Jam Digital',
+          position: [24.4, 0, -14.1],
+          onInteract: () => {
+            sfxEngine.playKrlBoardChime();
+            const weatherSummary: Record<string, string> = {
+              morning: 'Info Plaza Nusantara: 26°C · Pagi Cerah Berembun · Angin 8 km/j · Kualitas Udara AQI 31 (Segar).',
+              sunset: 'Info Plaza Nusantara: 29°C · Senja Hangat Keemasan · Angin 11 km/j · Kualitas Udara AQI 36 (Baik).',
+              rain_dusk: 'Info Plaza Nusantara: 23°C · Sore Berhujan Sejuk · Angin 19 km/j · Kualitas Udara AQI 22 (Bersih). Siapkan payung [U]!',
+              night: 'Info Plaza Nusantara: 24°C · Malam Tenang Berbintang · Angin 6 km/j · Kualitas Udara AQI 29 (Baik).',
+            };
+            if (!store.flags.includes('checked_plaza_weather_totem')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                setFlags: ['checked_plaza_weather_totem'],
+                journalEntry: {
+                  id: 'je_plaza_weather_totem',
+                  title: 'Berhenti Sejenak di Depan Papan Cuaca Plaza Nusantara',
+                  body: 'Di depan Menara Nusantara, tugu layar digital menampilkan suhu kota, kecepatan angin, dan kualitas udara yang masih sejuk. Di bagian paling bawah tertulis pesan singkat yang membuatku tersenyum: "Berjalanlah pelan — kota ini menunggumu pulang."',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_plaza_weather_totem, 'fw_plaza_weather_totem');
+            }
+            store.showToast(weatherSummary[store.timeOfDay] ?? weatherSummary.sunset);
+          },
+        },
+        2.9,
+      );
+
     consider(
       {
         id: 'portal_up',

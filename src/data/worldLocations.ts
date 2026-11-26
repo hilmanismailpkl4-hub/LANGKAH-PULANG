@@ -209,6 +209,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= -65.2 && x <= -63.2 && z >= -29.0 && z <= -26.2) return true;
   // Payung Teduh Gerobak Es Doger Bang Toni (Trotoar Timur Jl. Cempaka Utara)
   if (x >= 10.0 && x <= 13.0 && z >= -27.2 && z <= -24.0) return true;
+  // Payung Teduh Gerobak Ketoprak Jakarta Bang Jaja (Promenade Tepi Sungai Timur)
+  if (x >= -38.2 && x <= -35.0 && z >= 34.6 && z <= 37.8) return true;
   return false;
 }
 
@@ -422,6 +424,11 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'doger_cart', minX: 11.0, maxX: 12.2, minZ: -26.65, maxZ: -24.55 },
   { id: 'doger_bench', minX: 9.48, maxX: 10.02, minZ: -26.35, maxZ: -24.85 },
   { id: 'melati_chess_table', minX: 22.68, maxX: 23.92, minZ: 56.18, maxZ: 57.42 },
+
+  // === 32. Gerobak Ketoprak Bang Jaja & Tugu Papan Cuaca Digital Plaza Menara Nusantara ===
+  { id: 'ketoprak_cart', minX: -37.1, maxX: -35.9, minZ: 35.15, maxZ: 37.25 },
+  { id: 'ketoprak_bench', minX: -38.62, maxX: -38.08, minZ: 35.45, maxZ: 36.95 },
+  { id: 'plaza_weather_totem', minX: 23.58, maxX: 25.22, minZ: -15.54, maxZ: -14.86 },
 ];
 
 /**
@@ -562,6 +569,8 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: 23.3, z: 55.92, r: 0.48 },
   { x: 22.22, z: 55.72, r: 0.14 },
   { x: 84.4, z: -2.2, r: 0.28 },
+  // Bang Jaja Ketoprak Tepi Sungai
+  { x: -35.4, z: 36.2, r: 0.42 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],

@@ -864,6 +864,45 @@ class SfxEngine {
     this.softTone(ctx, 1760.0, now + 0.18, 0.18, 0.024 * v, 'triangle');
   }
 
+  /**
+   * Suara gemericik air tenang & kepak halus di hamparan daun teratai Danau Senja.
+   */
+  public playLotusPondRipple() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // 2 tetesan air lembut + 1 suara katak mungil halus bernada hangat
+    const dropA = ctx.createOscillator();
+    const gA = ctx.createGain();
+    dropA.type = 'sine';
+    dropA.frequency.setValueAtTime(520, now);
+    dropA.frequency.exponentialRampToValueAtTime(980, now + 0.09);
+    gA.gain.setValueAtTime(0.001, now);
+    gA.gain.linearRampToValueAtTime(0.08 * v, now + 0.015);
+    gA.gain.exponentialRampToValueAtTime(0.0008, now + 0.14);
+    dropA.connect(gA).connect(ctx.destination);
+    dropA.start(now);
+    dropA.stop(now + 0.16);
+
+    const dropB = ctx.createOscillator();
+    const gB = ctx.createGain();
+    dropB.type = 'sine';
+    dropB.frequency.setValueAtTime(640, now + 0.15);
+    dropB.frequency.exponentialRampToValueAtTime(1240, now + 0.25);
+    gB.gain.setValueAtTime(0.001, now + 0.15);
+    gB.gain.linearRampToValueAtTime(0.065 * v, now + 0.165);
+    gB.gain.exponentialRampToValueAtTime(0.0008, now + 0.3);
+    dropB.connect(gB).connect(ctx.destination);
+    dropB.start(now + 0.15);
+    dropB.stop(now + 0.32);
+
+    this.softTone(ctx, 587.33, now + 0.28, 0.35, 0.04 * v, 'sine');
+    this.softTone(ctx, 880.0, now + 0.42, 0.42, 0.036 * v, 'sine');
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,
