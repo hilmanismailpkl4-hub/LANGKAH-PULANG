@@ -1505,6 +1505,79 @@ class SfxEngine {
     });
   }
 
+  /**
+   * Bunyi notifikasi transaksi pulsa/token listrik sukses di Konter Berkah ("bip-bip-tring!").
+   */
+  public playKonterBeepChime() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    this.softTone(ctx, 1174.66, now, 0.09, 0.055 * v, 'sine');
+    this.softTone(ctx, 1567.98, now + 0.11, 0.09, 0.058 * v, 'sine');
+    this.softTone(ctx, 2093.0, now + 0.24, 0.26, 0.062 * v, 'sine');
+  }
+
+  /**
+   * Suara tuangan jamu tradisional dari botol kaca ke gelas belimbing.
+   */
+  public playJamuPourChime() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    const src = ctx.createBufferSource();
+    src.buffer = this.getNoiseBuffer(ctx);
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.setValueAtTime(1150, now);
+    bp.frequency.linearRampToValueAtTime(2050, now + 0.45);
+    bp.Q.value = 2.6;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.001, now);
+    g.gain.linearRampToValueAtTime(0.068 * v, now + 0.06);
+    g.gain.exponentialRampToValueAtTime(0.0008, now + 0.52);
+    src.connect(bp).connect(g).connect(ctx.destination);
+    src.start(now, 0.12, 0.55);
+
+    this.softTone(ctx, 1480.0, now + 0.48, 0.24, 0.044 * v, 'sine');
+  }
+
+  /**
+   * Klik fokus lensa kuningan teropong pengamat burung diikuti kicau burung air Danau Senja.
+   */
+  public playBirdScopeChime() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // Klik mekanis fokus teropong
+    this.softTone(ctx, 1950, now, 0.04, 0.048 * v, 'triangle');
+    // 2 kicauan burung air jernih di kejauhan danau
+    [
+      [0.14, 2100, 2750, 0.12],
+      [0.32, 2450, 1980, 0.14],
+    ].forEach(([off, f0, f1, dur]) => {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(f0, now + off);
+      osc.frequency.exponentialRampToValueAtTime(f1, now + off + dur);
+      g.gain.setValueAtTime(0.001, now + off);
+      g.gain.linearRampToValueAtTime(0.052 * v, now + off + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0008, now + off + dur);
+      osc.connect(g).connect(ctx.destination);
+      osc.start(now + off);
+      osc.stop(now + off + dur + 0.02);
+    });
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

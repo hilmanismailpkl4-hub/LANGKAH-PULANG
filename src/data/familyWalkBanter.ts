@@ -558,4 +558,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'Ayah! Kira mau titip buku cerita kelinci yang sudah selesai Kira baca biar teman-teman di taman bisa ikut baca juga!' },
     { speaker: 'nadia', text: 'Pintar banget anak Bunda... berbagi mainan dan buku di kotak kecil taman ini pasti bikin banyak anak ikut tersenyum.' },
   ],
+  activity_konter_berkah: [
+    { speaker: 'nadia', text: 'Syukurlah token listrik rumah sudah diisi sekalian ya, Mas—nggak bunyi "tit-tit" lagi deh malam ini, hehe.' },
+    { speaker: 'kira', text: 'Kios lampunya warna biru-kuning terang banget, Ayah!! Mas Fajar cepat banget pencet komputernya!' },
+  ],
+  activity_lake_bird_scope: [
+    { speaker: 'kira', text: 'WAAAH!! Dari teropong kuning ini kelihatan burung putih panjang berdiri dekat bunga teratai, Ayah!!' },
+    { speaker: 'nadia', text: 'Bagus banget ya Mas ada papan edukasi flora fauna Danau Senja begini—Kira jadi makin kenal alam sekitar kota kita.' },
+  ],
 };

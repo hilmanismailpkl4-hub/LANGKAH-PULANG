@@ -194,6 +194,10 @@ export const playerRuntime = {
   estelerShaveTimer: 0,
   toyBoxOpenTimer: 0,
   toyShareStep: 0,
+  konterPulseTimer: 0,
+  jamuPourTimer: 0,
+  birdScopeTimer: 0,
+  birdSpotStep: 0,
   gardenSwingTimer: 0,
   swingBoostTimer: 0,
   kiteHeight: 0,
@@ -326,6 +330,10 @@ export function resetScooterToHome() {
   playerRuntime.estelerShaveTimer = 0;
   playerRuntime.toyBoxOpenTimer = 0;
   playerRuntime.toyShareStep = 0;
+  playerRuntime.konterPulseTimer = 0;
+  playerRuntime.jamuPourTimer = 0;
+  playerRuntime.birdScopeTimer = 0;
+  playerRuntime.birdSpotStep = 0;
   playerRuntime.gardenSwingTimer = 0;
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;

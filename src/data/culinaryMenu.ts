@@ -24,7 +24,8 @@ export type CulinarySpotId =
   | 'putu_sungai'
   | 'cilok_kenangan'
   | 'bandrek_cempaka'
-  | 'esteler_plaza';
+  | 'esteler_plaza'
+  | 'jamu_sepeda';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -51,7 +52,8 @@ export type HeldDrinkVisual =
   | 'kue_putu'
   | 'cilok_telur'
   | 'bandrek_mug'
-  | 'es_teler';
+  | 'es_teler'
+  | 'jamu_glass';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -344,6 +346,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [-17.6, 0, -10.45],
     seatYaw: Math.PI,
     tablePropPos: [-17.6, 1.14, -12.92],
+  },
+  jamu_sepeda: {
+    id: 'jamu_sepeda',
+    title: 'Jamu Tradisional Sepeda Mbak Yem',
+    hostName: 'Mbak Yem',
+    subtitle: 'Tepi Sungai & Taman Kota · Beras Kencur, Kunyit Asam & Temulawak Asli',
+    seatPos: [-60.85, 0.14, 20.4],
+    lookAt: [-59.2, 1.35, 20.4],
+    standPos: [-61.95, 0, 20.4],
+    seatYaw: Math.PI / 2,
+    tablePropPos: [-59.65, 1.08, 20.4],
   },
 };
 
@@ -1425,6 +1438,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Brrr dingin segar bangettt!! Kira suka nangka sama kelapa mudanya, makasih banyak Ayah!!' },
       { speaker: 'nadia', text: 'Segar banget ya Mas... terima kasih sudah mengajak berhenti sebentar buat jajan es teler bareng.' },
+    ],
+  },
+
+  // === 25. SEPEDA JAMU TRADISIONAL MBAK YEM (TEPI SUNGAI & TAMAN KOTA) ===
+  {
+    id: 'jamu_beras_kencur',
+    spot: 'jamu_sepeda',
+    name: 'Jamu Beras Kencur Hangat & Madu Asli',
+    priceLabel: 'Rp 7.000',
+    tagline: 'Racikan beras sangrai, kencur segar, jahe lembut & gula jawa murni untuk mengembalikan bugar badan.',
+    tasteNote: 'Manis hangat dengan semburat harum kencur—pegal di bahu dan kaki langsung terasa lebih ringan.',
+    drinkVisual: 'jamu_glass',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Beras kencur Mbak Yem lembut banget ya, Mas! Nggak langu sama sekali, cocok diminum habis jalan pagi.' },
+    ],
+  },
+  {
+    id: 'jamu_kunyit_asam',
+    spot: 'jamu_sepeda',
+    name: 'Jamu Kunyit Asam Segar Perasan Jeruk Nipis',
+    priceLabel: 'Rp 7.000',
+    tagline: 'Sari kunyit kuning alami, asam jawa, dan gula aren murni—segar, ringan, dan menenangkan.',
+    tasteNote: 'Asam manis alami yang langsung menyegarkan napas di bawah rindangnya tepi Taman Kota.',
+    drinkVisual: 'jamu_glass',
+    isHot: false,
+    familyReaction: [
+      { speaker: 'kira', text: 'Wah warna kuningnya cerah kayak jus jeruk, Yah! Rasanya manis-manis segar!' },
+    ],
+  },
+  {
+    id: 'jamu_family',
+    spot: 'jamu_sepeda',
+    name: 'Traktir Keluarga Paket Jamu Sehat Mbak Yem',
+    priceLabel: 'Rp 20.000',
+    tagline: 'Beras kencur madu untuk Damar & Kira plus kunyit asam segar buat Nadia langsung dari bakul rotan.',
+    tasteNote: 'Mbak Yem menuang jamu dari botol kaca dengan senyum keibuan—tradisi sehat nusantara yang masih hidup di sudut kota.',
+    drinkVisual: 'jamu_glass',
+    isHot: true,
+    isFamilyTreat: true,
+    journalTitle: 'Segelas Jamu Beras Kencur di Tepi Taman Kota',
+    journalBody: 'Di tepi jalur pejalan kaki antara Sungai Kota dan Gazebo Taman, kami bertiga mampir di sepeda jamu Mbak Yem. Menikmati segelas beras kencur madu dan kunyit asam segar mengingatkan bahwa menjaga kesehatan keluarga dimulai dari jeda-jeda kecil seperti ini.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Mmm!! Beras kencur pakai madu manis banget, Mbak Yem! Kira jadi kuat jalan keliling taman lagi!' },
+      { speaker: 'nadia', text: 'Segar banget badan rasanya, Mas... makasih ya sudah ingat mampir minum jamu bareng.' },
     ],
   },
 ];

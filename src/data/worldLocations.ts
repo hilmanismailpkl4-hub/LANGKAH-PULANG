@@ -246,6 +246,9 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   // Kanopi Apotek 24 Jam Sehat Melati & Payung Es Teler Bang Daud
   if (x >= -32.0 && x <= -28.4 && z >= 39.6 && z <= 41.3) return true;
   if (x >= -19.2 && x <= -16.0 && z >= -14.9 && z <= -11.8) return true;
+  // Kanopi Konter Berkah Pulsa & Payung Sepeda Jamu Mbak Yem
+  if (x >= 47.8 && x <= 51.4 && z >= 11.3 && z <= 13.0) return true;
+  if (x >= -60.7 && x <= -57.7 && z >= 18.9 && z <= 21.9) return true;
   return false;
 }
 
@@ -526,6 +529,12 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'esteler_daud_cart', minX: -18.68, maxX: -16.52, minZ: -13.94, maxZ: -12.86 },
   { id: 'esteler_daud_bench', minX: -18.38, maxX: -16.82, minZ: -11.82, maxZ: -11.28 },
   { id: 'toy_donation_box', minX: -80.22, maxX: -78.98, minZ: 25.44, maxZ: 26.16 },
+
+  // === 44. Konter Berkah Pulsa, Sepeda Jamu Mbak Yem & Papan Flora Fauna Danau Senja ===
+  { id: 'konter_berkah_kiosk', minX: 48.06, maxX: 51.14, minZ: 12.46, maxZ: 14.34 },
+  { id: 'jamu_yem_bike', minX: -59.68, maxX: -58.72, minZ: 19.4, maxZ: 21.4 },
+  { id: 'jamu_yem_bench', minX: -61.12, maxX: -60.58, minZ: 19.65, maxZ: 21.15 },
+  { id: 'lake_flora_fauna_board', minX: -69.0, maxX: -68.2, minZ: -34.55, maxZ: -33.05 },
 ];
 
 /**
@@ -726,6 +735,10 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   // Mbak Nita Apotek 24 Jam & Bang Daud Es Teler
   { x: -28.35, z: 40.2, r: 0.42 },
   { x: -17.6, z: -14.42, r: 0.42 },
+  // Mas Fajar Konter Berkah, Mbak Yem Sepeda Jamu & Teropong Pengamat Burung Danau
+  { x: 51.45, z: 12.4, r: 0.42 },
+  { x: -58.25, z: 20.4, r: 0.42 },
+  { x: -68.8, z: -32.2, r: 0.34 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],

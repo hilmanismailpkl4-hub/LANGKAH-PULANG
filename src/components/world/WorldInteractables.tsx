@@ -3750,6 +3750,93 @@ export const WorldInteractables: React.FC = () => {
         2.8,
       );
 
+      consider(
+        {
+          id: 'activity_konter_berkah',
+          kind: 'story_object',
+          label: 'Isi Token Listrik & Paket Data di "Konter Berkah"',
+          sublabel: 'Tepi Jl. Kenangan Timur · Pulsa, Kuota & Token PLN Mas Fajar',
+          position: [49.6, 0, 11.6],
+          onInteract: () => {
+            sfxEngine.playKonterBeepChime();
+            playerRuntime.konterPulseTimer = 4.2;
+            if (!store.flags.includes('visited_konter_berkah')) {
+              store.applyEffect({
+                kehadiranKeluarga: 1,
+                kejujuranDiri: 1,
+                setFlags: ['visited_konter_berkah'],
+                journalEntry: {
+                  id: 'je_konter_berkah',
+                  title: 'Isi Token Listrik & Kuota di Konter Berkah',
+                  body: 'Di pinggir Jl. Kenangan Timur, aku mampir ke Konter Berkah milik Mas Fajar mengisi token listrik rumah Jl. Melati dan kuota ponsel Nadia. Lampu LED kios kecil yang terang itu selalu menjadi penolong paling cepat bagi warga sekitar.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_konter_berkah, 'fw_konter_berkah');
+            }
+            store.showToast('Bip-bip-tring! Mas Fajar menyerahkan struk: "Token PLN rumah Jl. Melati & kuota Mbak Nadia sudah masuk semua, Mas Damar!"');
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'culinary_jamu_yem',
+          kind: 'story_object',
+          label: 'Pesan Jamu Beras Kencur & Kunyit Asam Mbak Yem',
+          sublabel: 'Sepeda Jamu Tradisional · Tepi Sungai & Taman Kota',
+          position: [-60.5, 0, 20.4],
+          onInteract: () => {
+            sfxEngine.playJamuPourChime();
+            playerRuntime.jamuPourTimer = 4.2;
+            store.openCulinarySpot('jamu_sepeda');
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'activity_lake_bird_scope',
+          kind: 'story_object',
+          label: 'Amati Burung & Baca Papan Flora Fauna Danau Senja',
+          sublabel: 'Tepi Timur Laut Danau Senja · Teropong Pengamat Burung',
+          position: [-67.6, 0, -32.8],
+          onInteract: () => {
+            sfxEngine.playBirdScopeChime();
+            playerRuntime.birdScopeTimer = 5.0;
+            const sightings = [
+              'Lewat lensa teropong terlihat seekor burung kuntul putih anggun bertengger tenang di antara kelopak teratai Danau Senja!',
+              'Teropong mengarah ke bawah dermaga kayu—kawanan ikan koi keemasan berenang memantulkan cahaya langit di permukaan air.',
+              'Dua ekor capung biru melintas lincah di atas kawanan bebek air yang berenang riang menuju pesisir selatan danau.',
+            ];
+            const msg = sightings[playerRuntime.birdSpotStep % sightings.length];
+            playerRuntime.birdSpotStep += 1;
+            if (!store.flags.includes('used_lake_bird_scope')) {
+              store.applyEffect({
+                kehadiranKeluarga: 1,
+                kejujuranDiri: 1,
+                setFlags: ['used_lake_bird_scope'],
+                journalEntry: {
+                  id: 'je_lake_bird_scope',
+                  title: 'Pengamatan Burung & Flora Fauna di Tepi Danau Senja',
+                  body: 'Dari teropong kuningan di tepi timur laut Danau Senja, aku melihat burung kuntul putih, bunga teratai, dan capung biru hidup berdampingan tepat di jantung kota. Sungguh tenang rasanya ketika alam masih diberi tempat untuk bernapas.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_lake_bird_scope, 'fw_lake_bird_scope');
+            }
+            store.showToast(msg);
+          },
+        },
+        2.9,
+      );
+
     consider(
       {
         id: 'portal_up',
@@ -4449,6 +4536,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-79.6, 1.85, 25.8]}>
         <sphereGeometry args={[0.08, 8, 8]} />
         <meshBasicMaterial color="#f472b6" />
+      </mesh>
+      <mesh position={[49.6, 2.22, 12.3]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#38bdf8" />
+      </mesh>
+      <mesh position={[-59.2, 1.92, 20.4]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#facc15" />
+      </mesh>
+      <mesh position={[-68.8, 1.84, -32.2]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#a7f3d0" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (
