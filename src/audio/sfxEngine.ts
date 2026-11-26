@@ -1120,6 +1120,37 @@ class SfxEngine {
     });
   }
 
+  /**
+   * Gema lembut & syahdu bedug kulit kayu Mushola kompleks saat senja/sore.
+   */
+  public playSoftBedug() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // 2 ketukan lembut beresonansi hangat (rendah, tenang, membumi)
+    [0.0, 0.42].forEach((off, idx) => {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(idx === 0 ? 112 : 104, now + off);
+      osc.frequency.exponentialRampToValueAtTime(56, now + off + 0.48);
+
+      g.gain.setValueAtTime(0.001, now + off);
+      g.gain.linearRampToValueAtTime((idx === 0 ? 0.22 : 0.16) * v, now + off + 0.016);
+      g.gain.exponentialRampToValueAtTime(0.0008, now + off + 0.62);
+
+      osc.connect(g).connect(ctx.destination);
+      osc.start(now + off);
+      osc.stop(now + off + 0.66);
+
+      // Harmonik kayu lembut
+      this.softTone(ctx, idx === 0 ? 168 : 156, now + off, 0.28, 0.04 * v, 'triangle');
+    });
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

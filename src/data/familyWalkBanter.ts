@@ -506,4 +506,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'nadia', text: 'Wangi bunga melati sama mawar merah muda Ibu Lela harum banget, Mas... makasih ya sudah dibeliin buket!' },
     { speaker: 'kira', text: 'Kira mau pilih bunga krisan kuning buat ditaruh di vas meja makan rumah kita, Ayah!' },
   ],
+  activity_mushola_al_ikhlas: [
+    { speaker: 'nadia', text: 'Adem banget ya Mas serambi Mushola Al-Ikhlas ini... tiap sore lampu terasnya selalu bikin hati tenang.' },
+    { speaker: 'kira', text: 'Ayah! Itu bedug kayunya gede banget!! Suaranya lembut dan hangat ya pas sore hari!' },
+  ],
+  activity_angkot_route_board: [
+    { speaker: 'nadia', text: 'Lengkap banget sekarang papan trayek angkot di Jl. Kenangan, Mas—rute ke Stasiun sampai Taman tertulis jelas.' },
+    { speaker: 'kira', text: 'Ayah! Itu angkot biru-kuning yang suka lewat depan halte ya! Bangku tunggunya juga teduh!' },
+  ],
 };

@@ -19,7 +19,8 @@ export type CulinarySpotId =
   | 'warkop_stasiun'
   | 'jasuke_taman'
   | 'eskrim_melati'
-  | 'bubur_melati';
+  | 'bubur_melati'
+  | 'tehpoci_plaza';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -41,7 +42,8 @@ export type HeldDrinkVisual =
   | 'kue_pasar'
   | 'jasuke_cup'
   | 'eskrim_potong'
-  | 'bubur_ayam';
+  | 'bubur_ayam'
+  | 'teh_poci';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -279,6 +281,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [-22.2, 0, 41.35],
     seatYaw: Math.PI,
     tablePropPos: [-22.2, 1.14, 38.88],
+  },
+  tehpoci_plaza: {
+    id: 'tehpoci_plaza',
+    title: 'Es Teh Poci & Tahu Gejrot Kang Ridwan',
+    hostName: 'Kang Ridwan',
+    subtitle: 'Plaza Menara Nusantara · Seduhan Teko Tanah Liat Gula Batu & Tahu Gejrot Cobek',
+    seatPos: [32.8, 0.14, -12.15],
+    lookAt: [32.8, 1.35, -14.0],
+    standPos: [32.8, 0, -11.05],
+    seatYaw: Math.PI,
+    tablePropPos: [32.8, 1.14, -13.52],
   },
 };
 
@@ -1135,6 +1148,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Yeeey sarapan bubur bertiga!! Kira nggak diaduk biar kerupuknya tetap kriuk di atas, Ayah!' },
       { speaker: 'nadia', text: 'Senang banget ya Mas pagi-pagi bisa sarapan santai begini tanpa terburu-buru berangkat kantor.' },
+    ],
+  },
+
+  // === 20. GEROBAK ES TEH POCI & TAHU GEJROT KANG RIDWAN (PLAZA MENARA NUSANTARA) ===
+  {
+    id: 'tehpoci_original',
+    spot: 'tehpoci_plaza',
+    name: 'Es Teh Poci Melati Gula Batu Asli',
+    priceLabel: 'Rp 7.000',
+    tagline: 'Teh melati seduh teko tanah liat berpadu manis lembut gula batu dan es batu kristal dingin.',
+    tasteNote: 'Wangi sepet melati dan dinginnya gula batu langsung menyegarkan tenggorokan sepulang dari Menara Nusantara.',
+    drinkVisual: 'teh_poci',
+    isHot: false,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Wangi teh seduhan poci tanah liatnya beda banget ya, Mas! Segar dan nggak bikin eneg.' },
+    ],
+  },
+  {
+    id: 'tehpoci_gejrot',
+    spot: 'tehpoci_plaza',
+    name: 'Tahu Gejrot Cirebon Cobek + Es Teh Poci',
+    priceLabel: 'Rp 15.000',
+    tagline: 'Tahu pong gunting disiram kuah gula aren asam jawa, ulekan bawang merah & cabai rawit plus es teh poci.',
+    tasteNote: 'Perpaduan segar manis-asam-gurih yang langsung membangunkan semangat di sore kota yang hangat.',
+    drinkVisual: 'teh_poci',
+    isHot: false,
+    familyReaction: [
+      { speaker: 'kira', text: 'Wah piring tahu gejrotnya dari tanah liat mungil, Yah!! Kira mau yang kuah manis nggak pedas ya!' },
+    ],
+  },
+  {
+    id: 'tehpoci_family',
+    spot: 'tehpoci_plaza',
+    name: 'Traktir Keluarga Es Teh Poci & Tahu Gejrot (Paket Plaza)',
+    priceLabel: 'Rp 34.000',
+    tagline: 'Tiga gelas besar Es Teh Poci gula batu & dua porsi tahu gejrot cobek (satu porsi manis ramah anak untuk Kira).',
+    tasteNote: 'Kang Ridwan cekatan menggunting tahu pong dan menuang teh dari teko tanah liat sambil tersenyum—plaza kantor terasa jauh lebih hangat.',
+    drinkVisual: 'teh_poci',
+    isHot: false,
+    isFamilyTreat: true,
+    journalTitle: 'Segarnya Es Teh Poci & Tahu Gejrot di Plaza Nusantara',
+    journalBody: 'Di depan Menara Nusantara, aku mengajak Nadia dan Kira duduk santai di depan gerobak Kang Ridwan menikmati es teh poci gula batu dan tahu gejrot cobek. Sore yang biasanya terasa kaku di halaman kantor kini dipenuhi obrolan ringan dan tawa keluarga.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Slurppp!! Es teh pocinya segar bangettt, Ayah!! Tahu manisnya juga empuk!' },
+      { speaker: 'nadia', text: 'Asyik banget ya Mas jajan tahu gejrot sama es teh poci di plaza kantor begini... terima kasih ya, Mas.' },
     ],
   },
 ];

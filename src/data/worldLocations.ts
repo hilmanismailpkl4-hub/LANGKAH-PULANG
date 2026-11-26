@@ -225,6 +225,10 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   // Payung Kios Bunga Ibu Lela (Tepi Taman Danau) & Gerobak Bubur Ayam Mang Ujang (Jl. Melati)
   if (x >= -91.4 && x <= -88.2 && z >= -10.3 && z <= -7.3) return true;
   if (x >= -23.8 && x <= -20.6 && z >= 36.8 && z <= 40.1) return true;
+  // Serambi Mushola Al-Ikhlas, Payung Teh Poci Kang Ridwan & Kanopi Pos Trayek Angkot Jl. Kenangan
+  if (x >= 41.6 && x <= 47.4 && z >= 60.8 && z <= 63.4) return true;
+  if (x >= 31.2 && x <= 34.4 && z >= -15.5 && z <= -12.4) return true;
+  if (x >= 29.9 && x <= 33.3 && z >= 10.6 && z <= 12.6) return true;
   return false;
 }
 
@@ -471,6 +475,12 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'ibu_lela_flower_stall', minX: -91.0, maxX: -88.6, minZ: -9.4, maxZ: -8.2 },
   { id: 'bubur_ujang_cart', minX: -23.28, maxX: -21.12, minZ: 37.86, maxZ: 38.94 },
   { id: 'bubur_ujang_bench', minX: -22.98, maxX: -21.42, minZ: 39.98, maxZ: 40.52 },
+
+  // === 38. Mushola Al-Ikhlas, Gerobak Es Teh Poci Kang Ridwan & Pos Trayek Angkot ===
+  { id: 'mushola_al_ikhlas_main', minX: 41.55, maxX: 47.2, minZ: 62.9, maxZ: 67.35 },
+  { id: 'tehpoci_ridwan_cart', minX: 31.72, maxX: 33.88, minZ: -14.54, maxZ: -13.46 },
+  { id: 'tehpoci_ridwan_bench', minX: 32.02, maxX: 33.58, minZ: -12.42, maxZ: -11.88 },
+  { id: 'angkot_route_kiosk', minX: 30.15, maxX: 33.05, minZ: 11.45, maxZ: 12.22 },
 ];
 
 /**
@@ -641,6 +651,12 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: -81.8, z: -12.35, r: 0.22 },
   { x: -89.8, z: -9.95, r: 0.42 },
   { x: -22.2, z: 37.38, r: 0.42 },
+  // 2 Tiang & Bedug Serambi Mushola Al-Ikhlas, Kang Ridwan Teh Poci & Tiang Stop Angkot
+  { x: 42.15, z: 61.55, r: 0.2 },
+  { x: 46.85, z: 61.55, r: 0.2 },
+  { x: 42.65, z: 62.35, r: 0.45 },
+  { x: 32.8, z: -15.02, r: 0.42 },
+  { x: 29.85, z: 11.5, r: 0.16 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],

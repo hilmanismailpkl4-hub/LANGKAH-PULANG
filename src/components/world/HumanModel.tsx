@@ -259,7 +259,33 @@ export const HumanModel: React.FC<HumanModelProps> = ({
           {/* Visual Gelas Hangat / Es Krim / Jajanan Martabak & Kacang Rebus di Tangan Kanan */}
           {holdingDrink && (
             <group position={[0, -0.48, 0.05]} rotation={[0.92, 0, 0]}>
-              {holdingDrink === 'bubur_ayam' ? (
+              {holdingDrink === 'teh_poci' ? (
+                <group>
+                  {/* Gelas Kaca Es Teh Poci Gula Batu Bening + Kubus Es & Sedotan Kuning */}
+                  <mesh position={[0, 0.058, 0]} castShadow>
+                    <cylinderGeometry args={[0.044, 0.034, 0.118, 14]} />
+                    <meshStandardMaterial color="#b45309" transparent opacity={0.84} roughness={0.18} />
+                  </mesh>
+                  {/* Lapisan Atas Es Batu Kristal */}
+                  <mesh position={[-0.012, 0.112, 0.008]} rotation={[0.3, 0.4, 0.2]}>
+                    <boxGeometry args={[0.022, 0.022, 0.022]} />
+                    <meshStandardMaterial color="#e0f2fe" transparent opacity={0.78} roughness={0.1} />
+                  </mesh>
+                  <mesh position={[0.014, 0.114, -0.008]} rotation={[-0.2, 0.6, -0.3]}>
+                    <boxGeometry args={[0.02, 0.02, 0.02]} />
+                    <meshStandardMaterial color="#f0f9ff" transparent opacity={0.78} roughness={0.1} />
+                  </mesh>
+                  {/* Tutup Cup Transparan & Sedotan Kuning */}
+                  <mesh position={[0, 0.12, 0]}>
+                    <cylinderGeometry args={[0.046, 0.046, 0.008, 14]} />
+                    <meshStandardMaterial color="#fef3c7" transparent opacity={0.7} roughness={0.25} />
+                  </mesh>
+                  <mesh position={[0.014, 0.165, 0.006]} rotation={[0.14, 0, -0.22]}>
+                    <cylinderGeometry args={[0.006, 0.006, 0.11, 6]} />
+                    <meshStandardMaterial color="#facc15" roughness={0.35} />
+                  </mesh>
+                </group>
+              ) : holdingDrink === 'bubur_ayam' ? (
                 <group>
                   {/* Mangkuk Keramik Bubur Ayam Pagi Mengepul + Kuah Kuning, Ayam Suwir, Kerupuk & Sendok */}
                   <mesh position={[0, 0.045, 0.02]} castShadow>

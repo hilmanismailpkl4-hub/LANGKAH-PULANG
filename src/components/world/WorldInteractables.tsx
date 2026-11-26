@@ -3211,6 +3211,82 @@ export const WorldInteractables: React.FC = () => {
         2.9,
       );
 
+      consider(
+        {
+          id: 'activity_mushola_al_ikhlas',
+          kind: 'story_object',
+          label: 'Rehat Teduh di Serambi Mushola "Al-Ikhlas"',
+          sublabel: 'Perumahan Melati RT 04 · Dengarkan Gema Bedug & Tenangkan Hati',
+          position: [44.5, 0, 61.8],
+          onInteract: () => {
+            sfxEngine.playSoftBedug();
+            playerRuntime.bedugRingTimer = 4.2;
+            if (!store.flags.includes('visited_mushola_al_ikhlas')) {
+              store.applyEffect({
+                kejujuranDiri: 2,
+                kehadiranKeluarga: 1,
+                setFlags: ['visited_mushola_al_ikhlas'],
+                journalEntry: {
+                  id: 'je_mushola_al_ikhlas',
+                  title: 'Serambi Teduh Mushola Al-Ikhlas Perumahan Melati',
+                  body: 'Di ujung timur Perumahan Melati, aku berdiri sejenak di serambi Mushola Al-Ikhlas di bawah lentera hangat. Gema lembut bedug sore dan sejuknya tempat wudhu batu alam membuat segala riuh pikiran ikut mereda.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_mushola_al_ikhlas, 'fw_mushola_al_ikhlas');
+            }
+            store.showToast('Dung... dung... Gema bedug lembut di serambi Mushola Al-Ikhlas menenangkan hati dan langkahmu.');
+          },
+        },
+        3.2,
+      );
+
+      consider(
+        {
+          id: 'culinary_tehpoci_ridwan',
+          kind: 'story_object',
+          label: 'Pesan Es Teh Poci & Tahu Gejrot Kang Ridwan',
+          sublabel: 'Plaza Menara Nusantara · Gula Batu & Cobek Tahu Pong',
+          position: [32.8, 0, -12.6],
+          onInteract: () => {
+            store.openCulinarySpot('tehpoci_plaza');
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'activity_angkot_route_board',
+          kind: 'story_object',
+          label: 'Cek Papan Rute & Jadwal Trayek Angkot Jl. Kenangan',
+          sublabel: 'Pos Cek Trayek · Koridor K-01, K-02 & Bus Trans Senja',
+          position: [31.6, 0, 10.6],
+          onInteract: () => {
+            sfxEngine.playKrlBoardChime();
+            if (!store.flags.includes('checked_angkot_route_board')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                setFlags: ['checked_angkot_route_board'],
+                journalEntry: {
+                  id: 'je_angkot_route_board',
+                  title: 'Papan Rute Angkot & Bus Trans Senja Jl. Kenangan',
+                  body: 'Di pinggir Jl. Kenangan, papan trayek biru-kuning merinci jalur angkot K-01 menuju Stasiun & Taman Danau, K-02 menuju Perumahan Melati, serta koridor Bus Trans Senja. Kota yang mudah dijelajahi selalu terasa lebih bersahabat.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_angkot_route_board, 'fw_angkot_route_board');
+            }
+            store.showToast('Info Trayek Jl. Kenangan: K-01 (Stasiun–Taman, ±6 mnt) · K-02 (Jl. Melati–Cempaka, ±8 mnt) · Trans Senja (Rp 3.500).');
+          },
+        },
+        2.9,
+      );
+
     consider(
       {
         id: 'portal_up',
@@ -3838,6 +3914,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-22.2, 1.92, 38.4]}>
         <sphereGeometry args={[0.08, 8, 8]} />
         <meshBasicMaterial color="#facc15" />
+      </mesh>
+      <mesh position={[44.5, 2.25, 61.55]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#34d399" />
+      </mesh>
+      <mesh position={[32.8, 1.92, -14.0]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#f59e0b" />
+      </mesh>
+      <mesh position={[31.6, 2.38, 11.4]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#60a5fa" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (
