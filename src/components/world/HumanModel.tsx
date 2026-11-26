@@ -259,7 +259,33 @@ export const HumanModel: React.FC<HumanModelProps> = ({
           {/* Visual Gelas Hangat / Es Krim / Jajanan Martabak & Kacang Rebus di Tangan Kanan */}
           {holdingDrink && (
             <group position={[0, -0.48, 0.05]} rotation={[0.92, 0, 0]}>
-              {holdingDrink === 'jasuke_cup' ? (
+              {holdingDrink === 'eskrim_potong' ? (
+                <group>
+                  {/* Es Krim Potong Neapolitan 3 Lapis (Stroberi-Vanila-Cokelat) Dibungkus Roti Tawar & Stik */}
+                  <mesh position={[0, 0.015, 0]}>
+                    <boxGeometry args={[0.014, 0.065, 0.008]} />
+                    <meshStandardMaterial color="#d6b27d" roughness={0.85} />
+                  </mesh>
+                  {/* Pembungkus Roti Tawar Lembut */}
+                  <mesh position={[0, 0.082, 0]} castShadow>
+                    <boxGeometry args={[0.095, 0.11, 0.044]} />
+                    <meshStandardMaterial color="#f5e6c8" roughness={0.88} />
+                  </mesh>
+                  {/* 3 Lapis Es Krim Neapolitan Mengintip di Atas Roti */}
+                  <mesh position={[-0.025, 0.125, 0]}>
+                    <boxGeometry args={[0.028, 0.062, 0.036]} />
+                    <meshStandardMaterial color="#f472b6" roughness={0.45} />
+                  </mesh>
+                  <mesh position={[0, 0.125, 0]}>
+                    <boxGeometry args={[0.028, 0.062, 0.036]} />
+                    <meshStandardMaterial color="#fffbeb" roughness={0.45} />
+                  </mesh>
+                  <mesh position={[0.025, 0.125, 0]}>
+                    <boxGeometry args={[0.028, 0.062, 0.036]} />
+                    <meshStandardMaterial color="#78350f" roughness={0.48} />
+                  </mesh>
+                </group>
+              ) : holdingDrink === 'jasuke_cup' ? (
                 <group>
                   {/* Cup Kertas Jasuke Hangat + Jagung Manis Emas, Parutan Keju, Mesis & Sendok Kecil */}
                   <mesh position={[0, 0.052, 0]} castShadow>

@@ -168,6 +168,9 @@ export const playerRuntime = {
   lotusFrogHopTimer: 0,
   birdcageChirpTimer: 0,
   fountainDrinkTimer: 0,
+  melatiPortalTimer: 0,
+  fruitScaleSwingTimer: 0,
+  fruitPurchaseStep: 0,
   gardenSwingTimer: 0,
   swingBoostTimer: 0,
   kiteHeight: 0,
@@ -274,6 +277,9 @@ export function resetScooterToHome() {
   playerRuntime.lotusFrogHopTimer = 0;
   playerRuntime.birdcageChirpTimer = 0;
   playerRuntime.fountainDrinkTimer = 0;
+  playerRuntime.melatiPortalTimer = 0;
+  playerRuntime.fruitScaleSwingTimer = 0;
+  playerRuntime.fruitPurchaseStep = 0;
   playerRuntime.gardenSwingTimer = 0;
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;

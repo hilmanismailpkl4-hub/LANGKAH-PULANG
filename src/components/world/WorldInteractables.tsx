@@ -2939,6 +2939,92 @@ export const WorldInteractables: React.FC = () => {
         2.8,
       );
 
+      consider(
+        {
+          id: 'culinary_eskrim_eko',
+          kind: 'story_object',
+          label: 'Pesan Es Krim Keliling Mas Eko (+ Bel Melodi)',
+          sublabel: 'Tepi Jl. Melati · Es Potong Roti Tawar & Cone Dua Rasa',
+          position: [-5.1, 0, 52.5],
+          onInteract: () => {
+            sfxEngine.playIceCreamJingle();
+            store.openCulinarySpot('eskrim_melati');
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'activity_mbak_sari_fruit',
+          kind: 'story_object',
+          label: 'Pilih & Timbang Buah Segar Lokal di Lapak Mbak Sari',
+          sublabel: 'Dekat Perempatan Utama · Mangga, Jeruk, Pisang & Semangka',
+          position: [11.2, 0, 14.8],
+          onInteract: () => {
+            sfxEngine.play('chime');
+            playerRuntime.fruitScaleSwingTimer = 3.8;
+            playerRuntime.fruitPurchaseStep += 1;
+            const fruitLines = [
+              'Mbak Sari menimbang 1 kg Mangga Harum Manis matang pohon: "Manis banget nih Mas, pas buat dibawa pulang ke Jl. Melati!"',
+              'Mbak Sari memilihkan sekantong Jeruk Medan segar: "Segar-segar baru turun pagi tadi, Mas Damar! Anak pasti suka!"',
+              'Mbak Sari membungkus potongan Semangka Merah manis: "Ini manis banget, Mas—dimakan dingin-dingin sore begini mantap!"',
+              'Mbak Sari menimbang sesisir Pisang Raja kuning wangi: "Cocok buat sarapan besok pagi sama teh hangat, Mas!"',
+            ];
+            if (!store.flags.includes('visited_mbak_sari_fruit')) {
+              store.applyEffect({
+                kehadiranKeluarga: 1,
+                kejujuranDiri: 1,
+                setFlags: ['visited_mbak_sari_fruit'],
+                journalEntry: {
+                  id: 'je_mbak_sari_fruit',
+                  title: 'Warna-Warni Lapak Buah Segar Mbak Sari',
+                  body: 'Di bawah terpal biru-oranye dekat perempatan utama, aku berhenti memilih buah lokal segar di lapak Mbak Sari. Melihat mangga harum manis, jeruk medan, dan semangka merah ditimbang di timbangan gantung membuat perjalanan pulang terasa lebih hangat.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_mbak_sari_fruit, 'fw_mbak_sari_fruit');
+            }
+            store.showToast(fruitLines[playerRuntime.fruitPurchaseStep % fruitLines.length]);
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'activity_melati_portal',
+          kind: 'story_object',
+          label: 'Periksa Portal Palang Pintu Masuk Jl. Melati',
+          sublabel: 'Gerbang Perumahan RT 04 · Tamu Harap Lapor & Cermin Tikungan',
+          position: [-10.8, 0, 50.8],
+          onInteract: () => {
+            sfxEngine.playPortalGateCreak();
+            playerRuntime.melatiPortalTimer = 4.5;
+            if (!store.flags.includes('inspected_melati_portal')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                kehadiranKeluarga: 1,
+                setFlags: ['inspected_melati_portal'],
+                journalEntry: {
+                  id: 'je_melati_portal',
+                  title: 'Gerbang Portal Merah-Putih Jl. Melati RT 04',
+                  body: 'Di pintu masuk perumahan, gerbang portal loreng putih-merah bertuliskan "Perumahan Jl. Melati — Tamu Harap Lapor" berdiri rapi lengkap dengan lampu suar kecil dan cermin cembung jalan. Setiap kali melewatinya saat senja, bahu yang seharian tegang akhirnya bisa turun perlahan.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_melati_portal, 'fw_melati_portal');
+            }
+            store.showToast('Krek-klik! Palang portal Jl. Melati RT 04 bergerak mulus — papan gerbang: "Selamat Datang di Jl. Melati · Maks 20 km/j".');
+          },
+        },
+        2.9,
+      );
+
     consider(
       {
         id: 'portal_up',
@@ -3530,6 +3616,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-63.2, 2.74, 14.4]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#fbbf24" />
+      </mesh>
+      <mesh position={[-5.6, 1.85, 53.3]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#f472b6" />
+      </mesh>
+      <mesh position={[12.0, 1.96, 14.8]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#fb923c" />
+      </mesh>
+      <mesh position={[-10.8, 1.56, 51.3]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#f87171" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

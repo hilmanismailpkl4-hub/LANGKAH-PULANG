@@ -478,4 +478,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'Ayah! Panah kayunya nunjuk ke Danau Senja, Toko Musik, sama Gerobak Jasuke!! Kira bisa jadi pemandu jalan!' },
     { speaker: 'nadia', text: 'Rapi banget ya penunjuk arah sama lampu-lampu tamannya, Mas... sore di jalur pejalan kaki ini terasa makin hangat.' },
   ],
+  activity_mbak_sari_fruit: [
+    { speaker: 'nadia', text: 'Mangga harum manis sama jeruknya Mbak Sari segar banget ya, Mas! Pas banget buat pencuci mulut malam nanti di rumah.' },
+    { speaker: 'kira', text: 'Waaah semangkanya merah banget, Bunda!! Timbangan gantungnya goyang-goyang pas buahnya ditimbang!' },
+  ],
+  activity_melati_portal: [
+    { speaker: 'kira', text: 'Lihat deh Ayah, muka Kira kelihatan bulat lucu di kaca cermin cembung dekat portal!! Hihihi!' },
+    { speaker: 'nadia', text: 'Setiap kali lewat portal merah-putih Jl. Melati ini, rasanya langsung lega karena sudah sampai rumah ya, Mas.' },
+  ],
 };

@@ -17,7 +17,8 @@ export type CulinarySpotId =
   | 'doger'
   | 'ketoprak'
   | 'warkop_stasiun'
-  | 'jasuke_taman';
+  | 'jasuke_taman'
+  | 'eskrim_melati';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -37,7 +38,8 @@ export type HeldDrinkVisual =
   | 'doger'
   | 'ketoprak'
   | 'kue_pasar'
-  | 'jasuke_cup';
+  | 'jasuke_cup'
+  | 'eskrim_potong';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -253,6 +255,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [-74.2, 0, 19.35],
     seatYaw: Math.PI,
     tablePropPos: [-74.2, 1.14, 16.88],
+  },
+  eskrim_melati: {
+    id: 'eskrim_melati',
+    title: 'Es Krim Keliling Bel Melodi Mas Eko',
+    hostName: 'Mas Eko',
+    subtitle: 'Tepi Jl. Melati · Es Krim Potong Roti Tawar & Cone Dua Rasa Klasik',
+    seatPos: [-3.85, 0.14, 53.25],
+    lookAt: [-5.6, 1.35, 53.3],
+    standPos: [-3.85, 0, 52.05],
+    seatYaw: -Math.PI / 2,
+    tablePropPos: [-5.05, 1.06, 53.3],
   },
 };
 
@@ -1019,6 +1032,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Yeeey!! Kira dapat jasuke keju pakai taburan cokelat ekstra!! Enak bangettt, makasih Ayah!' },
       { speaker: 'nadia', text: 'Sore yang hangat banget ya Mas... duduk di taman sambil makan jagung bakar bertiga begini rasanya lengkap sekali.' },
+    ],
+  },
+
+  // === 18. GEROBAK ES KRIM KELILING BEL MELODI MAS EKO (TEPI JL. MELATI) ===
+  {
+    id: 'eskrim_potong_roti',
+    spot: 'eskrim_melati',
+    name: 'Es Krim Potong Neapolitan Bungkus Roti Tawar',
+    priceLabel: 'Rp 6.000',
+    tagline: 'Balok es krim tiga rasa (stroberi, vanila, cokelat) lembut dibalut selembar roti tawar empuk.',
+    tasteNote: 'Dingin manis dan lembut seketika—persis bunyi bel es krim keliling yang selalu ditunggu sore hari sejak masa kecil.',
+    drinkVisual: 'eskrim_potong',
+    isHot: false,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Ya ampun, es krim potong bungkus roti tawar gini udah jarang banget lho, Mas! Nostalgia banget!' },
+    ],
+  },
+  {
+    id: 'eskrim_cone_duo',
+    spot: 'eskrim_melati',
+    name: 'Es Krim Cone Dua Scoop (Stroberi & Cokelat)',
+    priceLabel: 'Rp 8.000',
+    tagline: 'Dua scoop es krim dingin lembut dalam cone renyah dengan celupan cokelat manis di puncaknya.',
+    tasteNote: 'Renyah di ujung cone, segar di lidah—bikin sore di depan gang Jl. Melati terasa ceria tanpa perlu pergi jauh.',
+    drinkVisual: 'icecream',
+    isHot: false,
+    familyReaction: [
+      { speaker: 'kira', text: 'WAAAH!! Dua tumpuk warna pink sama cokelat, Ayah!! Bel sepedanya Mas Eko lagunya lucu banget!' },
+    ],
+  },
+  {
+    id: 'eskrim_family',
+    spot: 'eskrim_melati',
+    name: 'Traktir Keluarga Es Krim Sore Gang Melati (Paket Bertiga)',
+    priceLabel: 'Rp 20.000',
+    tagline: 'Dua es krim potong roti tawar buat Damar & Nadia plus satu es krim cone stroberi-cokelat spesial untuk Kira.',
+    tasteNote: 'Mas Eko membunyikan bel melodi sekali lagi sambil tersenyum lebar—anak-anak kompleks dan tawa Kira memenuhi sore Jl. Melati.',
+    drinkVisual: 'eskrim_potong',
+    isHot: false,
+    isFamilyTreat: true,
+    journalTitle: 'Melodi Bel Es Krim Sore di Tepi Jl. Melati',
+    journalBody: 'Begitu melodi bel sepeda es krim Mas Eko terdengar di tepi Jl. Melati, aku langsung mengajak Nadia dan Kira jajan es krim potong bungkus roti tawar dan cone dua rasa. Melihat mata Kira berbinar mendengar bel itu membuatku sadar betapa indahnya kebahagiaan yang sederhana.',
+    familyReaction: [
+      { speaker: 'kira', text: 'TING-TONG-TING!! Yeeey traktiran es krim sore bertiga depan gang rumah!! Makasih banyak, Ayaaah!!' },
+      { speaker: 'nadia', text: 'Lihat deh Mas betapa senangnya Kira... es krim potong roti tawarnya juga enak banget. Makasih ya, Mas.' },
     ],
   },
 ];

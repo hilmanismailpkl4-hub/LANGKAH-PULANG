@@ -215,6 +215,9 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= 70.0 && x <= 73.2 && z >= -12.2 && z <= -9.2) return true;
   // Payung Teduh Gerobak Jasuke & Jagung Bakar Bang Roni (Tepi Taman Kota)
   if (x >= -75.8 && x <= -72.6 && z >= 14.8 && z <= 18.2) return true;
+  // Payung Teduh Gerobak Es Krim Mas Eko (Jl. Melati) & Terpal Lapak Buah Mbak Sari (Perempatan Utama)
+  if (x >= -7.2 && x <= -3.4 && z >= 52.0 && z <= 54.8) return true;
+  if (x >= 11.2 && x <= 14.2 && z >= 13.3 && z <= 16.3) return true;
   return false;
 }
 
@@ -445,6 +448,11 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'jasuke_taman_bench', minX: -74.98, maxX: -73.42, minZ: 17.98, maxZ: 18.52 },
   { id: 'river_stone_bench_1', minX: -58.14, maxX: -57.46, minZ: -16.25, maxZ: -14.55 },
   { id: 'river_stone_bench_2', minX: -58.14, maxX: -57.46, minZ: -18.45, maxZ: -16.75 },
+
+  // === 35. Gerobak Es Krim Mas Eko Jl. Melati & Lapak Buah Segar Mbak Sari ===
+  { id: 'eskrim_melati_cart', minX: -6.32, maxX: -4.88, minZ: 52.68, maxZ: 53.92 },
+  { id: 'eskrim_melati_bench', minX: -4.35, maxX: -3.35, minZ: 52.95, maxZ: 53.55 },
+  { id: 'mbak_sari_fruit_stall', minX: 11.75, maxX: 13.08, minZ: 13.52, maxZ: 16.08 },
 ];
 
 /**
@@ -601,6 +609,11 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
     [-59.2, -11.5], [-59.2, -19.2], [-63.2, -12.6],
     [-63.2, 18.8], [-63.4, 23.6], [-71.6, 14.8],
   ] as [number, number][]).map(([x, z]) => ({ x, z, r: 0.16 })),
+  // Mas Eko Es Krim, Mbak Sari Lapak Buah & 2 Pilar Portal Pintu Masuk Jl. Melati
+  { x: -5.6, z: 54.32, r: 0.42 },
+  { x: 13.65, z: 14.8, r: 0.42 },
+  { x: -10.8, z: 44.3, r: 0.34 },
+  { x: -10.8, z: 51.7, r: 0.34 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],

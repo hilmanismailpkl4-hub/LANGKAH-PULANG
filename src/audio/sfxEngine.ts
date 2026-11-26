@@ -985,6 +985,60 @@ class SfxEngine {
     });
   }
 
+  /**
+   * Melodi bel musik ceria gerobak es krim keliling sore hari (8 nada kotak musik lembut).
+   */
+  public playIceCreamJingle() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // Frasa melodi ceria bergaya glockenspiel / kotak musik es krim keliling
+    const melody: [number, number, number][] = [
+      [0.0, 1046.5, 0.16], // C6
+      [0.14, 1318.5, 0.16], // E6
+      [0.28, 1568.0, 0.16], // G6
+      [0.42, 1318.5, 0.14], // E6
+      [0.54, 1760.0, 0.24], // A6
+      [0.76, 1568.0, 0.28], // G6
+      [1.0, 1318.5, 0.16], // E6
+      [1.15, 1046.5, 0.34], // C6
+    ];
+    melody.forEach(([off, freq, dur]) => {
+      this.softTone(ctx, freq, now + off, dur, 0.068 * v, 'sine');
+      this.softTone(ctx, freq * 2, now + off, dur * 0.55, 0.018 * v, 'triangle');
+    });
+  }
+
+  /**
+   * Bunyi klik besi & engsel palang portal pintu masuk perumahan Jl. Melati.
+   */
+  public playPortalGateCreak() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(220, now);
+    osc.frequency.exponentialRampToValueAtTime(340, now + 0.24);
+    osc.frequency.exponentialRampToValueAtTime(195, now + 0.42);
+    g.gain.setValueAtTime(0.001, now);
+    g.gain.linearRampToValueAtTime(0.08 * v, now + 0.04);
+    g.gain.exponentialRampToValueAtTime(0.0008, now + 0.45);
+    osc.connect(g).connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.48);
+
+    // Bunyi kunci kait besi mantap
+    this.softTone(ctx, 880, now + 0.02, 0.09, 0.055 * v, 'sine');
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,
