@@ -307,8 +307,8 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
         <meshStandardMaterial map={textures.grass} roughness={0.94} />
       </mesh>
 
-      {/* Trotoar Paving Block Area Kota */}
-      <mesh position={[12, -0.01, -4]} receiveShadow>
+      {/* Trotoar Paving Block Area Kota (permukaan atas y = 0.000) */}
+      <mesh position={[12, -0.025, -4]} receiveShadow>
         <boxGeometry args={[94, 0.05, 110]} />
         <meshStandardMaterial
           map={textures.paving}
@@ -317,8 +317,9 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
         />
       </mesh>
 
-      {/* === JALAN ASPAL BERTEKSTUR PBR === */}
-      <mesh position={[-5, 0.015, 0]} receiveShadow>
+      {/* === JALAN ASPAL BERTEKSTUR PBR (dipisah vertikal + polygonOffset agar nol Z-fighting di persimpangan!) === */}
+      {/* Jl. Kenangan (Barat-Timur, permukaan atas y = 0.036) */}
+      <mesh position={[-5, 0.011, 0]} receiveShadow>
         <boxGeometry args={[186, 0.05, 11.2]} />
         <meshStandardMaterial
           map={textures.asphalt}
@@ -328,7 +329,8 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
           metalness={roadMetalness}
         />
       </mesh>
-      <mesh position={[0, 0.017, 10]} receiveShadow>
+      {/* Jl. Cempaka (Utara-Selatan, permukaan atas y = 0.044 — bersih 8mm di atas EW + polygonOffset) */}
+      <mesh position={[0, 0.019, 10]} receiveShadow>
         <boxGeometry args={[11.2, 0.05, 148]} />
         <meshStandardMaterial
           map={textures.asphalt}
@@ -336,9 +338,13 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
           bumpScale={0.04}
           roughness={roadRoughness}
           metalness={roadMetalness}
+          polygonOffset
+          polygonOffsetFactor={-1}
+          polygonOffsetUnits={-1}
         />
       </mesh>
-      <mesh position={[-12, 0.016, 48]} receiveShadow>
+      {/* Jl. Melati Perumahan (Barat-Timur, permukaan atas y = 0.036) */}
+      <mesh position={[-12, 0.011, 48]} receiveShadow>
         <boxGeometry args={[124, 0.05, 7.6]} />
         <meshStandardMaterial
           map={textures.asphalt}
@@ -348,7 +354,8 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
           metalness={roadMetalness}
         />
       </mesh>
-      <mesh position={[64, 0.016, 0]} receiveShadow>
+      {/* Jl. Stasiun Timur (Utara-Selatan, permukaan atas y = 0.044 + polygonOffset) */}
+      <mesh position={[64, 0.019, 0]} receiveShadow>
         <boxGeometry args={[9.4, 0.05, 128]} />
         <meshStandardMaterial
           map={textures.asphalt}
@@ -356,34 +363,36 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
           bumpScale={0.035}
           roughness={roadRoughness}
           metalness={roadMetalness}
+          polygonOffset
+          polygonOffsetFactor={-1}
+          polygonOffsetUnits={-1}
         />
       </mesh>
 
-      {/* Marka Jalan & Zebra Cross */}
+      {/* Marka Garis Putus Tengah Jalan (dengan polygonOffset agar 100% bebas kedip di HP!) */}
       {[-30, -18, 16, 30, 44].map((x) => (
-        <mesh key={`mkx-${x}`} position={[x, 0.045, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh key={`mkx-${x}`} position={[x, 0.054, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[5.5, 0.24]} />
-          <meshBasicMaterial color="#e0dbd0" />
+          <meshBasicMaterial
+            color="#e0dbd0"
+            polygonOffset
+            polygonOffsetFactor={-3}
+            polygonOffsetUnits={-3}
+            depthWrite={false}
+          />
         </mesh>
       ))}
       {[-34, -18, 18, 34].map((z) => (
-        <mesh key={`mkz-${z}`} position={[0, 0.045, z]} rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh key={`mkz-${z}`} position={[0, 0.054, z]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[0.24, 5.5]} />
-          <meshBasicMaterial color="#e0dbd0" />
+          <meshBasicMaterial
+            color="#e0dbd0"
+            polygonOffset
+            polygonOffsetFactor={-3}
+            polygonOffsetUnits={-3}
+            depthWrite={false}
+          />
         </mesh>
-      ))}
-      {/* Zebra Cross Persimpangan Utama */}
-      {[-3.6, -2.1, -0.6, 0.9, 2.4, 3.9].map((offset, i) => (
-        <React.Fragment key={`zc-${i}`}>
-          <mesh position={[offset, 0.046, 7.2]} rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[0.7, 2.2]} />
-            <meshBasicMaterial color="#e6e2d8" />
-          </mesh>
-          <mesh position={[offset, 0.046, -7.2]} rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[0.7, 2.2]} />
-            <meshBasicMaterial color="#e6e2d8" />
-          </mesh>
-        </React.Fragment>
       ))}
 
       {/* === SUNGAI KOTA & DANAU SENJA BERIAK SHADER FRESNEL === */}
@@ -394,11 +403,12 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
         highQuality={settings.waterReflections}
         potatoMode={settings.graphicsQuality === 'potato'}
       />
-      <mesh position={[-56.2, -0.02, 10]} receiveShadow>
+      {/* Tanggul Sungai Barat & Timur: permukaan atas y = 0.235 (bersih 3.5cm di bawah dek jembatan y = 0.270 agar tidak jadi garis kedip di ujung jembatan!) */}
+      <mesh position={[-56.2, -0.055, 10]} receiveShadow>
         <boxGeometry args={[1.1, 0.58, 210]} />
         <meshStandardMaterial map={textures.paving} roughness={0.85} />
       </mesh>
-      <mesh position={[-39.8, -0.02, 10]} receiveShadow>
+      <mesh position={[-39.8, -0.055, 10]} receiveShadow>
         <boxGeometry args={[1.1, 0.58, 210]} />
         <meshStandardMaterial map={textures.paving} roughness={0.85} />
       </mesh>
@@ -472,6 +482,9 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
             map={textures.asphalt}
             roughness={roadRoughness}
             metalness={roadMetalness}
+            polygonOffset
+            polygonOffsetFactor={-1}
+            polygonOffsetUnits={-1}
           />
         </mesh>
         {/* Pagar Jembatan */}

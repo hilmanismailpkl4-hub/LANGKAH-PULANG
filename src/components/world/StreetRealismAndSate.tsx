@@ -379,24 +379,48 @@ export const StreetRealismAndSate: React.FC<StreetRealismAndSateProps> = ({
       </group>
 
       {/* ==================================================================== */}
-      {/* 2. 5 SET GARIS ZEBRA CROSS PUTIH TEGAS DI PERSIMPANGAN & HALTE BUS   */}
+      {/* 2. 5 SET GARIS ZEBRA CROSS PUTIH TEGAS (BEBAS Z-FIGHTING DI HP!)     */}
       {/* ==================================================================== */}
-      <group>
+      <group userData={{ noCull: true }}>
         {/* Zebra Cross Utara & Selatan (Melintasi Jl. Cempaka di z = -7.6 & +7.6) */}
         {[-7.6, 7.6].map((zz, zi) =>
           stripeOffsets.map((sx, si) => (
-            <mesh key={`zns-${zi}-${si}`} position={[sx, 0.048, zz]} receiveShadow>
-              <boxGeometry args={[0.8, 0.012, 2.55]} />
-              <meshStandardMaterial color="#f1f5f9" roughness={0.78} />
+            <mesh
+              key={`zns-${zi}-${si}`}
+              position={[sx, 0.056, zz]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              receiveShadow
+            >
+              <planeGeometry args={[0.8, 2.55]} />
+              <meshStandardMaterial
+                color="#f1f5f9"
+                roughness={0.78}
+                polygonOffset
+                polygonOffsetFactor={-4}
+                polygonOffsetUnits={-4}
+                depthWrite={false}
+              />
             </mesh>
           )),
         )}
         {/* Zebra Cross Barat & Timur (Melintasi Jl. Kenangan di x = -7.6 & +7.6) + Depan Halte Bus (x = 16.5) */}
         {[-7.6, 7.6, 16.5].map((zx, zi) =>
           stripeOffsets.map((sz, si) => (
-            <mesh key={`zew-${zi}-${si}`} position={[zx, 0.048, sz]} receiveShadow>
-              <boxGeometry args={[2.55, 0.012, 0.8]} />
-              <meshStandardMaterial color="#f1f5f9" roughness={0.78} />
+            <mesh
+              key={`zew-${zi}-${si}`}
+              position={[zx, 0.056, sz]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              receiveShadow
+            >
+              <planeGeometry args={[2.55, 0.8]} />
+              <meshStandardMaterial
+                color="#f1f5f9"
+                roughness={0.78}
+                polygonOffset
+                polygonOffsetFactor={-4}
+                polygonOffsetUnits={-4}
+                depthWrite={false}
+              />
             </mesh>
           )),
         )}
@@ -453,17 +477,29 @@ export const StreetRealismAndSate: React.FC<StreetRealismAndSateProps> = ({
                 metalness={0.88}
                 transparent
                 opacity={0.76}
+                polygonOffset
+                polygonOffsetFactor={-2}
+                polygonOffsetUnits={-2}
+                depthWrite={false}
               />
             </mesh>
             <mesh
               ref={(el) => {
                 puddleRippleRefs.current[pi] = el;
               }}
-              position={[0, 0.004, 0]}
+              position={[0, 0.008, 0]}
               rotation={[-Math.PI / 2, 0, 0]}
             >
               <ringGeometry args={[0.22, 0.27, 16]} />
-              <meshBasicMaterial color="#d8edff" transparent opacity={0.35} depthWrite={false} />
+              <meshBasicMaterial
+                color="#d8edff"
+                transparent
+                opacity={0.35}
+                polygonOffset
+                polygonOffsetFactor={-3}
+                polygonOffsetUnits={-3}
+                depthWrite={false}
+              />
             </mesh>
           </group>
         ))}

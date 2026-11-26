@@ -196,6 +196,7 @@ export const playerRuntime = {
     frameIndex: 0,
     isPotato: false,
     isLowPerf: false,
+    sceneReady: false,
   },
 
   // Posisi real-time Nadia & Kira (tetap akurat baik di rumah maupun saat jalan sore bersama!)

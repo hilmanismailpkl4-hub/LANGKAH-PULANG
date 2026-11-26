@@ -193,6 +193,7 @@ export const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
     const isMed = settings.graphicsQuality === 'medium';
 
     perf.frameIndex = (perf.frameIndex + 1) & 0x3fffffff;
+    if (!perf.sceneReady) perf.sceneReady = true;
     perf.isPotato = isPotato;
     perf.isLowPerf = isPotato || isLow || isMobile;
 

@@ -75,7 +75,7 @@ export const GameCanvas: React.FC = () => {
         <Canvas
           shadows={!isPotato && (!isMobile && settings.shadowQuality !== 'off' ? true : settings.shadowQuality === 'sharp')}
           dpr={dpr}
-          camera={{ fov: isMobile ? 58 : 52, near: 0.25, far: isPotato ? 96 : isMobile ? 132 : 300, position: [-20, 4, 73] }}
+          camera={{ fov: isMobile ? 58 : 52, near: 0.42, far: isPotato ? 96 : isMobile ? 132 : 300, position: [-20, 4, 73] }}
           gl={{
             antialias: !isMobile && !isPotato && settings.graphicsQuality !== 'low',
             powerPreference: isMobile || isPotato ? 'default' : 'high-performance',

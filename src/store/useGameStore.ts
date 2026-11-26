@@ -444,7 +444,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
           visible: true,
           mode: 'boot',
           stageLabel: 'Memeriksa arsip catatan & pengaturan...',
-          progress: 52,
+          progress: 42,
         },
       }));
 
@@ -454,14 +454,20 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         unlockedEndings: loadGlobalUnlockedEndings(),
         loadingOverlay: {
           ...s.loadingOverlay,
-          stageLabel: 'Menata pencahayaan senja kota...',
-          progress: 86,
+          stageLabel: 'Mengompilasi shader & pencahayaan 3D kota...',
+          progress: 76,
         },
       }));
 
+      // Tunggu frame pertama WebGL 3D selesai dirender (maks 1.8 detik agar tidak pernah macet)
+      const waitSceneStart = Date.now();
+      while (!playerRuntime.perf.sceneReady && Date.now() - waitSceneStart < 1800) {
+        await wait(90);
+      }
+
       const elapsed = Date.now() - startedAt;
-      if (elapsed < 750) {
-        await wait(750 - elapsed);
+      if (elapsed < 900) {
+        await wait(900 - elapsed);
       }
 
       set((s) => ({
@@ -471,7 +477,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
           progress: 100,
         },
       }));
-      await wait(280);
+      await wait(340);
       set((s) => ({
         loadingOverlay: {
           ...s.loadingOverlay,
