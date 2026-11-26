@@ -1635,6 +1635,47 @@ class SfxEngine {
     this.softTone(ctx, 1760.0, now + 0.22, 0.18, 0.052 * v, 'sine');
   }
 
+  /**
+   * Desis lembut adonan santan serabi dituang ke wajan tanah liat panas ("csssssh~").
+   */
+  public playSerabiSizzle() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    const src = ctx.createBufferSource();
+    src.buffer = this.getNoiseBuffer(ctx);
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.setValueAtTime(2400, now);
+    bp.frequency.linearRampToValueAtTime(3400, now + 0.35);
+    bp.Q.value = 1.7;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.001, now);
+    g.gain.linearRampToValueAtTime(0.074 * v, now + 0.06);
+    g.gain.exponentialRampToValueAtTime(0.0008, now + 0.72);
+    src.connect(bp).connect(g).connect(ctx.destination);
+    src.start(now, 0.1, 0.75);
+  }
+
+  /**
+   * Harmoni piano-chime hangat bernostalgia saat membuka adegan memori sejarah / taman kupu-kupu.
+   */
+  public playMemoryChime() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    const notes = [440.0, 554.37, 659.25, 880.0];
+    notes.forEach((freq, i) => {
+      this.softTone(ctx, freq, now + i * 0.12, 0.55, 0.048 * v, 'sine');
+    });
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

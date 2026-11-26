@@ -3928,6 +3928,62 @@ export const WorldInteractables: React.FC = () => {
         2.9,
       );
 
+      consider(
+        {
+          id: 'culinary_serabi_karso',
+          kind: 'story_object',
+          label: 'Pesan Serabi Solo & Kue Ape Hangat Mbah Karso',
+          sublabel: 'Trotoar Jl. Cempaka Utara · Tungku Tanah Liat Sejak 1998',
+          position: [10.0, 0, -34.2],
+          onInteract: () => {
+            sfxEngine.playSerabiSizzle();
+            playerRuntime.serabiSizzleTimer = 4.5;
+            store.openCulinarySpot('serabi_solo');
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'story_plaza_history_monument',
+          kind: 'story_object',
+          label: 'Amati Foto Lama 1996 — "Kota Senja Tempo Dulu"',
+          sublabel: 'Adegan Cerita · Plaza Menara Nusantara (Kenangan Almarhum Bapak)',
+          position: [28.2, 0, -13.3],
+          onInteract: () => {
+            sfxEngine.playMemoryChime();
+            playerRuntime.historyGlowTimer = 6.0;
+            playerRuntime.activeSpeakerPos = [28.2, 1.5, -14.8];
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_kota_tempo_dulu, 'fw_kota_tempo_dulu');
+            }
+            store.startDialogue('story_kota_tempo_dulu');
+          },
+        },
+        3.0,
+      );
+
+      consider(
+        {
+          id: 'story_lake_butterfly_garden',
+          kind: 'story_object',
+          label: 'Duduk Hening di Sudut Taman Bunga Kupu-Kupu',
+          sublabel: 'Adegan Cerita · Tepi Utara Danau Senja (Refleksi Nadia & Kira)',
+          position: [-66.2, 0, -39.6],
+          onInteract: () => {
+            sfxEngine.playMemoryChime();
+            playerRuntime.butterflyBurstTimer = 7.0;
+            playerRuntime.activeSpeakerPos = [-66.2, 1.2, -41.8];
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_butterfly_garden, 'fw_butterfly_garden');
+            }
+            store.startDialogue('story_butterfly_garden');
+          },
+        },
+        3.0,
+      );
+
     consider(
       {
         id: 'portal_up',
@@ -4651,6 +4707,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-38.85, 2.38, -11.0]}>
         <sphereGeometry args={[0.08, 8, 8]} />
         <meshBasicMaterial color="#38bdf8" />
+      </mesh>
+      <mesh position={[11.4, 1.92, -34.2]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#86efac" />
+      </mesh>
+      <mesh position={[28.2, 2.36, -14.8]}>
+        <sphereGeometry args={[0.09, 8, 8]} />
+        <meshBasicMaterial color="#fcd34d" />
+      </mesh>
+      <mesh position={[-66.2, 1.65, -40.35]}>
+        <sphereGeometry args={[0.09, 8, 8]} />
+        <meshBasicMaterial color="#f472b6" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

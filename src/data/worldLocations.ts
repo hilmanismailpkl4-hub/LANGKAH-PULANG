@@ -252,6 +252,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   // Payung Pempek Cek Ani & Kanopi Toko Kue Dapur Manis
   if (x >= -38.3 && x <= -35.0 && z >= -32.4 && z <= -29.2) return true;
   if (x >= 47.4 && x <= 51.0 && z >= 39.6 && z <= 41.3) return true;
+  // Payung Lapak Serabi Solo & Kue Ape Mbah Karso
+  if (x >= 9.7 && x <= 13.0 && z >= -35.8 && z <= -32.6) return true;
   return false;
 }
 
@@ -543,6 +545,11 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'pempek_ani_cart', minX: -37.14, maxX: -36.06, minZ: -31.88, maxZ: -29.72 },
   { id: 'pempek_ani_bench', minX: -38.72, maxX: -38.18, minZ: -31.58, maxZ: -30.02 },
   { id: 'dapur_manis_bakery_kiosk', minX: 47.66, maxX: 50.74, minZ: 38.28, maxZ: 40.15 },
+
+  // === 46. Lapak Serabi Mbah Karso & Tugu Papan Sejarah Kota Senja Tempo Dulu ===
+  { id: 'serabi_karso_cart', minX: 10.86, maxX: 11.94, minZ: -35.28, maxZ: -33.12 },
+  { id: 'serabi_karso_bench', minX: 9.28, maxX: 9.82, minZ: -34.98, maxZ: -33.42 },
+  { id: 'plaza_history_monument', minX: 27.3, maxX: 29.1, minZ: -15.22, maxZ: -14.38 },
 ];
 
 /**
@@ -751,6 +758,9 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: -35.58, z: -30.8, r: 0.42 },
   { x: 47.35, z: 40.2, r: 0.42 },
   { x: -38.85, z: -11.0, r: 0.36 },
+  // Mbah Karso Serabi Solo & Taman Bunga Kupu-Kupu Danau Senja
+  { x: 12.42, z: -34.2, r: 0.42 },
+  { x: -66.2, z: -41.8, r: 1.48 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],

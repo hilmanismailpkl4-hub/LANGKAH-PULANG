@@ -26,7 +26,8 @@ export type CulinarySpotId =
   | 'bandrek_cempaka'
   | 'esteler_plaza'
   | 'jamu_sepeda'
-  | 'pempek_sungai';
+  | 'pempek_sungai'
+  | 'serabi_solo';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -55,7 +56,8 @@ export type HeldDrinkVisual =
   | 'bandrek_mug'
   | 'es_teler'
   | 'jamu_glass'
-  | 'pempek_bowl';
+  | 'pempek_bowl'
+  | 'serabi_solo';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -370,6 +372,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [-38.45, 0, -29.4],
     seatYaw: Math.PI / 2,
     tablePropPos: [-37.1, 1.14, -30.8],
+  },
+  serabi_solo: {
+    id: 'serabi_solo',
+    title: 'Serabi Solo Tungku Tanah Liat & Kue Ape Mbah Karso',
+    hostName: 'Mbah Karso',
+    subtitle: 'Trotoar Jl. Cempaka Utara · Santan Gurih, Pandan, Nangka & Cokelat Gulung Daun Pisang',
+    seatPos: [9.55, 0.14, -34.2],
+    lookAt: [11.4, 1.35, -34.2],
+    standPos: [8.45, 0, -34.2],
+    seatYaw: Math.PI / 2,
+    tablePropPos: [10.9, 1.14, -34.2],
   },
 };
 
@@ -1541,6 +1554,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Horeee!! Kira dapat pempek isi telur kuning besar sama timun kriuk!! Makasih banyak, Ayaah!' },
       { speaker: 'nadia', text: 'Enak banget ya Mas jajan pempek hangat pinggir sungai begini... serasa jalan-jalan ke Palembang!' },
+    ],
+  },
+
+  // === 27. LAPAK SERABI SOLO & KUE APE MBAH KARSO (TROTOAR JL. CEMPAKA UTARA) ===
+  {
+    id: 'serabi_notosuman_hangat',
+    spot: 'serabi_solo',
+    name: 'Serabi Solo Santan Original & Cokelat (Isi 4)',
+    priceLabel: 'Rp 12.000',
+    tagline: 'Adonan santan hangat dipanggang di wajan tanah liat berpinggiran renyah, digulung daun pisang harum.',
+    tasteNote: 'Wangi santan panggang dan daun pisang ini langsung membawa kembali kenangan masa kecil saat almarhum Bapak membelikanku serabi selepas hujan.',
+    drinkVisual: 'serabi_solo',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Lembut banget tengahnya terus pinggirnya renyah wangi santan ya, Mas... serabi tungku tanah liat Mbah Karso memang juara.' },
+    ],
+  },
+  {
+    id: 'serabi_kue_ape',
+    spot: 'serabi_solo',
+    name: 'Serabi Pandan Nangka & Kue Ape Crispy',
+    priceLabel: 'Rp 14.000',
+    tagline: 'Perpaduan serabi pandan potongan nangka harum dan kue ape hijau pinggiran super renyah baru diangkat.',
+    tasteNote: 'Kriuk lembut di setiap gigitan—Mbah Karso bilang tungku tanah liatnya sudah menemani warga Kota Senja lebih dari dua puluh tahun.',
+    drinkVisual: 'serabi_solo',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'kira', text: 'Pinggiran kue ape hijaunya kriuk banget kayak topi penyihir manis, Ayah!! Hihihi!' },
+    ],
+  },
+  {
+    id: 'serabi_family',
+    spot: 'serabi_solo',
+    name: 'Traktir Keluarga Besek Serabi Solo & Kue Ape Hangat',
+    priceLabel: 'Rp 32.000',
+    tagline: 'Satu besek penuh serabi original, cokelat, pandan nangka & kue ape hangat untuk disantap bertiga.',
+    tasteNote: 'Mbah Karso tersenyum bijak sambil menggulung daun pisang: "Dulu almarhum bapakmu juga sering bungkus serabi ini buat kamu, Nak Damar—sekarang giliran kamu buat anakmu."',
+    drinkVisual: 'serabi_solo',
+    isHot: true,
+    isFamilyTreat: true,
+    journalTitle: 'Serabi Hangat Lintas Generasi di Tungku Mbah Karso',
+    journalBody: 'Di lapak tungku tanah liat Mbah Karso di Jl. Cempaka Utara, aku mengajak Nadia dan Kira menyantap serabi gulung daun pisang. Mendengar Mbah Karso masih ingat almarhum Bapak yang dulu membelikanku serabi selepas hujan membuat hatiku bergetar hangat—kini aku meneruskan tradisi kecil itu kepada Kira.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Wah dulu Kakek juga suka beli serabi di Mbah Karso buat Ayah kecil?! Berarti sekarang giliran Kira ya, Yah!' },
+      { speaker: 'nadia', text: 'Manis banget cerita Mbah Karso, Mas... hangatnya sampai ke hati.' },
     ],
   },
 ];

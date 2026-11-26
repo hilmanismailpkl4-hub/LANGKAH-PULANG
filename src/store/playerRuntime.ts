@@ -202,6 +202,9 @@ export const playerRuntime = {
   bakeryBellTimer: 0,
   bakeryBoxStep: 0,
   hydroSensorTimer: 0,
+  serabiSizzleTimer: 0,
+  historyGlowTimer: 0,
+  butterflyBurstTimer: 0,
   gardenSwingTimer: 0,
   swingBoostTimer: 0,
   kiteHeight: 0,
@@ -342,6 +345,9 @@ export function resetScooterToHome() {
   playerRuntime.bakeryBellTimer = 0;
   playerRuntime.bakeryBoxStep = 0;
   playerRuntime.hydroSensorTimer = 0;
+  playerRuntime.serabiSizzleTimer = 0;
+  playerRuntime.historyGlowTimer = 0;
+  playerRuntime.butterflyBurstTimer = 0;
   playerRuntime.gardenSwingTimer = 0;
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;

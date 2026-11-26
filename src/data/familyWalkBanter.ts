@@ -574,4 +574,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'Ayah! Penggaris besar biru-kuning-merah di dinding sungai itu buat ukur dalamnya air ya?! Kincir anginnya muter terus!' },
     { speaker: 'nadia', text: 'Bagus banget ya Mas tepi jembatan sekarang punya pos pantau tinggi air dan cuaca—warga jadi lebih tenang saat musim hujan.' },
   ],
+  activity_kota_tempo_dulu: [
+    { speaker: 'nadia', text: 'Ya ampun Mas, lihat foto tahun 1996 itu... kamu kecil lucu banget digandeng almarhum Bapak di tepi jembatan kayu!' },
+    { speaker: 'kira', text: 'Ayah kecil sepatunya kebesaran!! Hihihi... Kakek kelihatan sayang banget sama Ayah ya!' },
+  ],
+  activity_butterfly_garden: [
+    { speaker: 'kira', text: 'Bunda!! Kupu-kupu kuningnya terbang melingkar di atas bunga bugenvil!! Kira diem biar dia hinggap ya!' },
+    { speaker: 'nadia', text: 'Ingat kan Mas yang pernah kubilang? Hal terindah itu datang sendiri waktu kita mau berhenti sebentar dan menikmati hari.' },
+  ],
 };

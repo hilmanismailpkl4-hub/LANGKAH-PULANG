@@ -48,6 +48,7 @@ import { RiverAndParkLife } from './RiverAndParkLife';
 import { RiversideNightMarket } from './RiversideNightMarket';
 import { RooftopLakeAndRtBoard } from './RooftopLakeAndRtBoard';
 import { ScooterEntity } from './ScooterEntity';
+import { SerabiHistoryAndButterflyGarden } from './SerabiHistoryAndButterflyGarden';
 import { StationAndBuskerLife } from './StationAndBuskerLife';
 import { StationWarkopBirdsAndMusicBench } from './StationWarkopBirdsAndMusicBench';
 import { StreetRealismAndSate } from './StreetRealismAndSate';
@@ -150,6 +151,7 @@ export const GameCanvas: React.FC = () => {
               <PharmacyEsTelerAndToyBox timeOfDay={effectiveTime} settings={settings} />
               <KonterJamuAndLakeBirdScope timeOfDay={effectiveTime} settings={settings} />
               <PempekBakeryAndRiverGauge timeOfDay={effectiveTime} settings={settings} />
+              <SerabiHistoryAndButterflyGarden timeOfDay={effectiveTime} settings={settings} />
               <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
             </group>
 

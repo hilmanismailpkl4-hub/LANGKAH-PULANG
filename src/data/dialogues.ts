@@ -342,6 +342,232 @@ const AMBIENT_DIALOGUES: Record<string, DialogueScript> = {
       },
     },
   },
+
+  // === ADEGAN CERITA MENDALAM 1: TUGU SEJARAH "KOTA SENJA TEMPO DULU" (KENANGAN ALMARHUM BAPAK 1996) ===
+  story_kota_tempo_dulu: {
+    id: 'story_kota_tempo_dulu',
+    startNodeId: 'skt_1',
+    nodes: {
+      skt_1: {
+        id: 'skt_1',
+        speaker: 'narator',
+        emotion: 'tenang',
+        text: 'Di balik kaca tebal tugu marmer Plaza Nusantara, terpajang tiga lembar foto sepia Kota Senja tahun 1996: Jembatan Sungai yang masih bertiang kayu, stasiun tua tanpa kanopi baja, dan Menara Nusantara yang baru berdiri setengah lantai.',
+        onEnter: { playSfx: 'page' },
+        nextNodeId: 'skt_2',
+      },
+      skt_2: {
+        id: 'skt_2',
+        speaker: 'damar_batin',
+        emotion: 'haru',
+        text: 'Tunggu... di pojok kiri foto jembatan 1996 itu... seorang pria berkemeja kerja kusut berdiri di tanggul sungai, menggandeng bocah laki-laki kecil yang sepatunya kebesaran satu nomor. Di saku bajunya terselip buku catatan kecil.',
+        nextNodeId: 'skt_3',
+      },
+      skt_3: {
+        id: 'skt_3',
+        speaker: 'damar_batin',
+        emotion: 'sedih',
+        text: 'Itu almarhum Bapak... dan itu aku, dua puluh empat tahun lalu. Sore itu hujan baru reda, dan Bapak membelikanku dua gulung serabi hangat sebelum kami naik angkot pulang ke Jl. Melati.',
+        onEnter: { playSfx: 'chime' },
+        nextNodeId: 'skt_4',
+      },
+      skt_4: {
+        id: 'skt_4',
+        speaker: 'narator',
+        emotion: 'hangat',
+        text: 'Suara Bapak seolah masih tertinggal di antara desir angin plaza: "Gedung-gedung di kota ini nanti bakal tumbuh tinggi sekali, Mar. Tapi jangan pernah biarkan gedung tinggi bikin kamu lupa menunduk melihat orang yang kamu sayang."',
+        nextNodeId: 'skt_5',
+      },
+      skt_5: {
+        id: 'skt_5',
+        speaker: 'damar_batin',
+        emotion: 'ragu',
+        text: 'Dadaku mendadak sesak. Dulu aku bersumpah tidak akan pernah membiarkan keluargaku merasakan sepinya menunggu ayah pulang larut malam... tapi tanpa sadar, aku malah berdiri di bayangan gedung yang sama sambil mengulang sunyi itu.',
+        choices: [
+          {
+            id: 'skt_choice_break_cycle',
+            text: '"Aku baru paham sekarang, Pak... ketakutanku gagal justru membuatku menjauh dari rumah. Aku mau memutus sunyi itu demi Kira dan Nadia."',
+            subtext: 'Jujur pada luka masa kecil & memilih hadir utuh untuk keluarga',
+            nextNodeId: 'skt_end_honest',
+            effects: {
+              kejujuranDiri: 2,
+              kehadiranKeluarga: 2,
+              setFlags: ['remembered_father_1996', 'vowed_break_silence'],
+              phoneMessage: {
+                id: 'msg_nadia_foto_1996',
+                sender: 'Nadia',
+                preview: 'Mas, tiba-tiba aku kangen foto kecil kamu sama almarhum Bapak di album ruang tamu. Hati-hati di jalan ya, nanti malam kita buka albumnya bareng Kira.',
+                timeLabel: 'Baru saja',
+              },
+              journalEntry: {
+                id: 'je_kota_tempo_dulu',
+                title: 'Laki-Laki di Foto Sepia 1996',
+                body: 'Di tugu sejarah Plaza Nusantara, aku menemukan foto lama Jembatan Sungai 1996—dan di sudutnya, almarhum Bapak sedang menggandeng tanganku yang masih kecil. Pesannya kini terasa menghujam paling dalam: gedung setinggi apa pun tak ada artinya bila kita lupa menunduk menyapa orang-orang yang kita cintai.',
+                chapter: 1,
+              },
+              toast: 'Kenangan mendalam tersimpan di Jurnal & pesan baru masuk dari Nadia.',
+            },
+          },
+          {
+            id: 'skt_choice_gratitude',
+            text: '"Terima kasih, Pak, sudah berjuang sekuat tenaga dulu. Kali ini aku mau Kira mengingat tawa ayahnya, bukan hanya punggungku yang lelah."',
+            subtext: 'Memaafkan masa lalu dengan rasa syukur yang tenang',
+            nextNodeId: 'skt_end_warm',
+            effects: {
+              kehadiranKeluarga: 2,
+              kejujuranDiri: 1,
+              setFlags: ['remembered_father_1996'],
+              phoneMessage: {
+                id: 'msg_nadia_serabi_bapak',
+                sender: 'Nadia',
+                preview: 'Mas, kalau lewat Jl. Cempaka, titip salam buat Mbah Karso ya. Tadi Kira cerita pengin makan serabi hangat kayak cerita masa kecil Ayah.',
+                timeLabel: 'Baru saja',
+              },
+              journalEntry: {
+                id: 'je_kota_tempo_dulu',
+                title: 'Laki-Laki di Foto Sepia 1996',
+                body: 'Melihat foto sepia almarhum Bapak di Tugu Sejarah Kota Senja membuatku mengerti: ia dulu bekerja keras karena cinta yang tak pandai diucapkan. Kini giliranku belajar mencintai keluargaku tanpa harus kehilangan kehadiran.',
+                chapter: 1,
+              },
+              toast: 'Kenangan masa kecil tersimpan di Jurnal & pesan hangat masuk dari Nadia.',
+            },
+          },
+          {
+            id: 'skt_choice_harden',
+            text: '"Bapak dulu hidup terlalu berat karena serba pas-pasan. Aku tidak boleh melambat—aku harus memastikan Kira tidak pernah merasakan susah seperti dulu."',
+            subtext: 'Memilih terus bertahan dalam tekanan demi rasa aman materi',
+            nextNodeId: 'skt_end_guarded',
+            effects: {
+              ambisiPelarian: 2,
+              setFlags: ['remembered_father_1996', 'guarded_father_memory'],
+              journalEntry: {
+                id: 'je_kota_tempo_dulu',
+                title: 'Bayangan Masa Lalu di Foto 1996',
+                body: 'Foto sepia Kota Senja 1996 mengingatkanku pada betapa kerasnya hidup almarhum Bapak dulu. Aku masih takut—jika aku berhenti berlari sebentar saja, apakah semua yang kubangun untuk Nadia dan Kira akan runtuh?',
+                chapter: 1,
+              },
+              toast: 'Catatan batin tersimpan di Jurnal.',
+            },
+          },
+        ],
+      },
+      skt_end_honest: {
+        id: 'skt_end_honest',
+        speaker: 'damar_batin',
+        emotion: 'hangat',
+        text: 'Aku menyentuh kaca dingin tugu itu pelan. Di belakangku, Menara Nusantara menjulang tinggi—tapi untuk pertama kalinya, bayangannya tidak lagi terasa menelan langkahku.',
+        onEnter: { playSfx: 'guitar' },
+      },
+      skt_end_warm: {
+        id: 'skt_end_warm',
+        speaker: 'damar_batin',
+        emotion: 'tenang',
+        text: 'Aneh rasanya—sepotong foto pudar dari dua puluh empat tahun lalu justru membuat langkahku hari ini terasa jauh lebih utuh.',
+        onEnter: { playSfx: 'chime' },
+      },
+      skt_end_guarded: {
+        id: 'skt_end_guarded',
+        speaker: 'damar_batin',
+        emotion: 'lelah',
+        text: 'Aku membenarkan tali ransel dan menarik napas pendek. Mungkin kelak, setelah semuanya benar-benar aman, baru aku berani berhenti berlari.',
+        onEnter: { playSfx: 'interact' },
+      },
+    },
+  },
+
+  // === ADEGAN CERITA MENDALAM 2: SUDUT TAMAN KUPU-KUPU DANAU SENJA ===
+  story_butterfly_garden: {
+    id: 'story_butterfly_garden',
+    startNodeId: 'sbg_1',
+    nodes: {
+      sbg_1: {
+        id: 'sbg_1',
+        speaker: 'narator',
+        emotion: 'tenang',
+        text: 'Di tepi utara Danau Senja, delapan ekor kupu-kupu kuning, biru, dan jingga mengepak tenang di antara bunga kenikir dan bugenvil yang mekar. Hampir tak ada suara kendaraan yang sanggup menembus rimbun pepohonan di sini.',
+        onEnter: { playSfx: 'chime' },
+        nextNodeId: 'sbg_2',
+      },
+      sbg_2: {
+        id: 'sbg_2',
+        speaker: 'damar_batin',
+        emotion: 'haru',
+        text: 'Aku teringat satu sore dua tahun lalu, saat Kira mengejar kupu-kupu di taman ini sampai jatuh tersandung lalu menangis. Nadia memeluknya sambil berbisik kalimat yang ternyata juga menampar diriku sendiri...',
+        nextNodeId: 'sbg_3',
+      },
+      sbg_3: {
+        id: 'sbg_3',
+        speaker: 'nadia',
+        emotion: 'hangat',
+        text: '"Sayang, kupu-kupu itu nggak bisa ditangkap sambil berlari terburu-buru. Coba Kira duduk diam dan buka telapak tangan... nanti dia sendiri yang datang hinggap."',
+        nextNodeId: 'sbg_4',
+      },
+      sbg_4: {
+        id: 'sbg_4',
+        speaker: 'damar_batin',
+        emotion: 'tenang',
+        text: 'Selama ini aku mengejar kebahagiaan dengan cara berlari paling kencang—mengejar target, lembur, dan pengakuan—padahal yang paling kucari mungkin hanya menunggu aku mau duduk diam sebentar.',
+        choices: [
+          {
+            id: 'sbg_still',
+            text: 'Berdiri diam sejenak, tarik napas dalam, dan biarkan seekor kupu-kupu jingga hinggap di dekat bahumu',
+            subtext: 'Belajar tenang tanpa harus selalu mengejar sesuatu',
+            nextNodeId: 'sbg_end_still',
+            effects: {
+              kejujuranDiri: 2,
+              kehadiranKeluarga: 1,
+              setFlags: ['visited_butterfly_garden_story'],
+              journalEntry: {
+                id: 'je_butterfly_garden',
+                title: 'Sayap yang Hinggap Saat Kita Berhenti Berlari',
+                body: 'Di sudut taman kupu-kupu tepi Danau Senja, aku mengingat kalimat Nadia kepada Kira: hal-hal paling indah dalam hidup sering kali lari saat kita kejar dengan panik, namun datang menghampiri begitu kita berani berhenti dan membuka hati.',
+                chapter: 1,
+              },
+              toast: 'Momen hening di Taman Kupu-Kupu tersimpan di Jurnal.',
+            },
+          },
+          {
+            id: 'sbg_text_nadia',
+            text: 'Kirim pesan singkat ke Nadia untuk berjanji mengajak Kira melihat kupu-kupu di sudut danau ini besok pagi',
+            subtext: 'Membuat janji kecil yang benar-benar ingin ditepati',
+            nextNodeId: 'sbg_end_promise',
+            effects: {
+              kehadiranKeluarga: 2,
+              kejujuranDiri: 1,
+              setFlags: ['visited_butterfly_garden_story', 'promised_kira_butterflies'],
+              phoneMessage: {
+                id: 'msg_nadia_kupu_danau',
+                sender: 'Nadia',
+                preview: 'Serius Mas?! Jangan janji doang lho ya, Kira pasti langsung bangun paling pagi kalau dengar mau lihat taman kupu-kupu di Danau Senja! Aku tunggu ya.',
+                timeLabel: 'Baru saja',
+              },
+              journalEntry: {
+                id: 'je_butterfly_garden',
+                title: 'Janji Pagi di Taman Bunga Kupu-Kupu',
+                body: 'Aku mengirim pesan kepada Nadia dari sudut bunga kupu-kupu Danau Senja—berjanji mengajak Kira datang besok pagi. Kali ini, bukan sekadar janji kosong di atas sticky note kantor.',
+                chapter: 1,
+              },
+              toast: 'Pesan balasan manis masuk dari Nadia di HP!',
+            },
+          },
+        ],
+      },
+      sbg_end_still: {
+        id: 'sbg_end_still',
+        speaker: 'damar_batin',
+        emotion: 'hangat',
+        text: 'Seekor kupu-kupu keemasan benar-benar berputar pelan tepat di depan tanganku sebelum terbang ke arah permukaan danau. Ternyata diam sejenak tidak membuat dunia runtuh—justru membuatku kembali merasa hidup.',
+        onEnter: { playSfx: 'chime' },
+      },
+      sbg_end_promise: {
+        id: 'sbg_end_promise',
+        speaker: 'damar_batin',
+        emotion: 'ceria',
+        text: 'Ponselku bergetar pelan dengan balasan Nadia. Senyumku langsung terbit tanpa sadar—besok pagi, kursi taman di tepi bunga ini akan penuh oleh tawa Kira.',
+        onEnter: { playSfx: 'phone' },
+      },
+    },
+  },
 };
 
 export const ALL_DIALOGUES: Record<string, DialogueScript> = {

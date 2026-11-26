@@ -259,7 +259,34 @@ export const HumanModel: React.FC<HumanModelProps> = ({
           {/* Visual Gelas Hangat / Es Krim / Jajanan Martabak & Kacang Rebus di Tangan Kanan */}
           {holdingDrink && (
             <group position={[0, -0.48, 0.05]} rotation={[0.92, 0, 0]}>
-              {holdingDrink === 'pempek_bowl' ? (
+              {holdingDrink === 'serabi_solo' ? (
+                <group>
+                  {/* Piring Daun Pisang Berisi 2 Gulung Serabi Solo Santan & Kue Ape Hijau Mengepul */}
+                  <mesh position={[0, 0.026, 0.02]} castShadow>
+                    <cylinderGeometry args={[0.1, 0.078, 0.02, 14]} />
+                    <meshStandardMaterial color="#15803d" roughness={0.78} />
+                  </mesh>
+                  {/* 2 Gulung Serabi Daun Pisang + Santan Krem Lembut */}
+                  {[-0.026, 0.026].map((sx, si) => (
+                    <group key={`srb-${si}`} position={[sx, 0.052, 0.02]} rotation={[0.15, 0, Math.PI / 2]}>
+                      <mesh>
+                        <cylinderGeometry args={[0.02, 0.02, 0.068, 10]} />
+                        <meshStandardMaterial color="#fef3c7" roughness={0.62} />
+                      </mesh>
+                      <mesh position={[0, 0, 0]}>
+                        <cylinderGeometry args={[0.0215, 0.0215, 0.036, 10]} />
+                        <meshStandardMaterial color="#22c55e" roughness={0.78} />
+                      </mesh>
+                    </group>
+                  ))}
+                  {/* Taburan Mesis Cokelat & Pandan di Atas */}
+                  <mesh position={[0, 0.074, 0.02]}>
+                    <sphereGeometry args={[0.015, 8, 6]} />
+                    <meshStandardMaterial color="#78350f" roughness={0.68} />
+                  </mesh>
+                  <CupSteam position={[0, 0.1, 0.02]} />
+                </group>
+              ) : holdingDrink === 'pempek_bowl' ? (
                 <group>
                   {/* Mangkuk Pempek Palembang + Kuah Cuko Cokelat Gelap, Pempek Kapal Selam, Timun & Uap */}
                   <mesh position={[0, 0.045, 0.02]} castShadow>
