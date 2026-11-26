@@ -3287,6 +3287,85 @@ export const WorldInteractables: React.FC = () => {
         2.9,
       );
 
+      consider(
+        {
+          id: 'culinary_putu_oding',
+          kind: 'story_object',
+          label: 'Pesan Kue Putu Bambu Hangat Mang Oding (+ Peluit Uap)',
+          sublabel: 'Promenade Sungai Utara · Kue Putu Pandan, Klepon & Lupis',
+          position: [-38.0, 0, -22.6],
+          onInteract: () => {
+            sfxEngine.playKuePutuWhistle();
+            playerRuntime.putuWhistleTimer = 4.5;
+            store.openCulinarySpot('putu_sungai');
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'activity_bengkel_mas_budi',
+          kind: 'story_object',
+          label: 'Cek Tekanan & Isi Angin Ban di Bengkel Mas Budi',
+          sublabel: 'Pinggir Jl. Kenangan · Kompresor Angin Motor & Sepeda',
+          position: [49.0, 0, -12.8],
+          onInteract: () => {
+            sfxEngine.playTireAirHiss();
+            playerRuntime.tirePumpTimer = 4.0;
+            if (!store.flags.includes('visited_bengkel_mas_budi')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                setFlags: ['visited_bengkel_mas_budi'],
+                journalEntry: {
+                  id: 'je_bengkel_mas_budi',
+                  title: 'Isi Angin & Obrolan Bengkel Pinggir Jalan Mas Budi',
+                  body: 'Di bengkel tambal ban Mas Budi tepi Jl. Kenangan, suara desis angin kompresor kuning mengisi ban skuter dan sepeda hingga mantap lagi. Mas Budi bilang perjalanan jauh selalu butuh jeda untuk memeriksa ban—sama seperti hidup yang butuh jeda memeriksa hati.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_bengkel_mas_budi, 'fw_bengkel_mas_budi');
+            }
+            store.showToast('Pssshh—tss! Tekanan ban motor skuter & sepeda kota kembali pas — Mas Budi: "Aman Mas, hati-hati di jalan!"');
+          },
+        },
+        3.0,
+      );
+
+      consider(
+        {
+          id: 'activity_laundry_harum_melati',
+          kind: 'story_object',
+          label: 'Ambil Cucian Wangi di Laundry "Harum Melati"',
+          sublabel: 'Tepi Jl. Melati · Cuci Setrika Uap Lavender Mbak Rini',
+          position: [33.8, 0, 41.0],
+          onInteract: () => {
+            sfxEngine.play('chime');
+            playerRuntime.laundrySpinTimer = 4.5;
+            if (!store.flags.includes('visited_laundry_harum_melati')) {
+              store.applyEffect({
+                kehadiranKeluarga: 1,
+                kejujuranDiri: 1,
+                setFlags: ['visited_laundry_harum_melati'],
+                journalEntry: {
+                  id: 'je_laundry_harum_melati',
+                  title: 'Wangi Lavender Cucian Rapi di Harum Melati',
+                  body: 'Aku mampir ke Kios Laundry "Harum Melati" mengambil lipatan baju yang sudah disetrika rapi dan harum lavender. Hal kecil yang membantu meringankan pekerjaan Nadia di rumah selalu terasa sepadan.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_laundry_harum_melati, 'fw_laundry_harum_melati');
+            }
+            store.showToast('Mbak Rini menyerahkan paket baju rapi wangi lavender: "Sudah licin dan wangi semua, Mas Damar—salam buat Mbak Nadia!"');
+          },
+        },
+        2.9,
+      );
+
     consider(
       {
         id: 'portal_up',
@@ -3926,6 +4005,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[31.6, 2.38, 11.4]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#60a5fa" />
+      </mesh>
+      <mesh position={[-36.6, 1.92, -22.6]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#4ade80" />
+      </mesh>
+      <mesh position={[49.2, 1.95, -13.4]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#facc15" />
+      </mesh>
+      <mesh position={[33.8, 2.15, 40.3]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#c084fc" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

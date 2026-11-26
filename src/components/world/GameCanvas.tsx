@@ -37,6 +37,7 @@ import { ParkPlaygroundAndKoi } from './ParkPlaygroundAndKoi';
 import { PerformanceOptimizer } from './PerformanceOptimizer';
 import { PlayerController } from './PlayerController';
 import { PostEffects } from './PostEffects';
+import { PutuWorkshopAndLaundry } from './PutuWorkshopAndLaundry';
 import { RetroStreetAndParkSwing } from './RetroStreetAndParkSwing';
 import { RiverAndParkLife } from './RiverAndParkLife';
 import { RiversideNightMarket } from './RiversideNightMarket';
@@ -136,6 +137,7 @@ export const GameCanvas: React.FC = () => {
               <BarberNurseryAndGallonDepot timeOfDay={effectiveTime} settings={settings} />
               <MorningDucksFlowersAndBubur timeOfDay={effectiveTime} settings={settings} />
               <MusholaTehPociAndAngkotBoard timeOfDay={effectiveTime} settings={settings} />
+              <PutuWorkshopAndLaundry timeOfDay={effectiveTime} settings={settings} />
               <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
             </group>
 

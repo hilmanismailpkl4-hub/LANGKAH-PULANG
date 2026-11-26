@@ -359,7 +359,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     cloudUserEmail: null,
     lastSaveStatus: null,
     loadingOverlay: {
-      visible: true,
+      visible: false,
       mode: 'boot',
       title: 'Langkah Pulang',
       subtitle: 'Menyiapkan suasana senja kota dan arsip perjalananmu...',
@@ -449,15 +449,11 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         await wait(80);
       }
 
-      // Izinkan animasi loading tunggal mengalir mulus hingga 100% lalu menutup otomatis
-      set((s) => ({
-        loadingOverlay: {
-          ...s.loadingOverlay,
-          stageLabel: 'Selamat datang di Langkah Pulang!',
-          progress: 100,
-          visible: false,
-        },
-      }));
+      // Beri sinyal ke SATU-SATUNYA layar loading tunggal di index.html agar mengalir mulus sampai 100% lalu menutup!
+      if (typeof window !== 'undefined') {
+        const w = window as unknown as { __lpMarkBootReady?: () => void };
+        w.__lpMarkBootReady?.();
+      }
     },
 
     showLoadingOverlay: (partial) =>

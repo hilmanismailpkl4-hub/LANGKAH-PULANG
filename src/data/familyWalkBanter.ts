@@ -514,4 +514,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'nadia', text: 'Lengkap banget sekarang papan trayek angkot di Jl. Kenangan, Mas—rute ke Stasiun sampai Taman tertulis jelas.' },
     { speaker: 'kira', text: 'Ayah! Itu angkot biru-kuning yang suka lewat depan halte ya! Bangku tunggunya juga teduh!' },
   ],
+  activity_bengkel_mas_budi: [
+    { speaker: 'nadia', text: 'Untung bengkel Mas Budi selalu siap isi angin di pinggir Jl. Kenangan ya, Mas—aman buat motor sama sepeda kita.' },
+    { speaker: 'kira', text: 'Pssshh!! Suara angin dari tabung kuningnya keren banget, Ayah!! Bannya jadi kencang lagi!' },
+  ],
+  activity_laundry_harum_melati: [
+    { speaker: 'nadia', text: 'Mmm!! Dari depan pintu aja wangi lavender Laundry Harum Melati sudah semerbak banget ya, Mas!' },
+    { speaker: 'kira', text: 'Lihat deh Bunda, baju-bajunya muter-muter di dalam kaca mesin cuci kayak komidi putar!!' },
+  ],
 };

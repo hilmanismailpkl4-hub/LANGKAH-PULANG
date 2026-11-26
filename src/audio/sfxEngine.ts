@@ -1151,6 +1151,92 @@ class SfxEngine {
     });
   }
 
+  /**
+   * Bunyi peluit uap merdu khas gerobak Kue Putu Bambu malam hari ("ngiiiiing~").
+   */
+  public playKuePutuWhistle() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // Nada peluit uap khas (~1520 Hz -> 1680 Hz bergetar halus) + desis uap tipis
+    const osc = ctx.createOscillator();
+    const harm = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1440, now);
+    osc.frequency.linearRampToValueAtTime(1640, now + 0.25);
+    osc.frequency.setValueAtTime(1620, now + 0.72);
+    osc.frequency.exponentialRampToValueAtTime(1320, now + 1.05);
+
+    harm.type = 'triangle';
+    harm.frequency.setValueAtTime(2880, now);
+    harm.frequency.linearRampToValueAtTime(3280, now + 0.25);
+    harm.frequency.exponentialRampToValueAtTime(2640, now + 1.05);
+
+    const hg = ctx.createGain();
+    hg.gain.value = 0.14;
+
+    g.gain.setValueAtTime(0.0008, now);
+    g.gain.linearRampToValueAtTime(0.065 * v, now + 0.16);
+    g.gain.setValueAtTime(0.058 * v, now + 0.74);
+    g.gain.exponentialRampToValueAtTime(0.0008, now + 1.12);
+
+    osc.connect(g);
+    harm.connect(hg).connect(g);
+    g.connect(ctx.destination);
+    osc.start(now);
+    harm.start(now);
+    osc.stop(now + 1.15);
+    harm.stop(now + 1.15);
+
+    // Desis uap putih lembut
+    const src = ctx.createBufferSource();
+    src.buffer = this.getNoiseBuffer(ctx);
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.value = 3400;
+    bp.Q.value = 1.6;
+    const sg = ctx.createGain();
+    sg.gain.setValueAtTime(0.0008, now);
+    sg.gain.linearRampToValueAtTime(0.032 * v, now + 0.14);
+    sg.gain.exponentialRampToValueAtTime(0.0008, now + 1.0);
+    src.connect(bp).connect(sg).connect(ctx.destination);
+    src.start(now, 0.1, 1.05);
+  }
+
+  /**
+   * Suara desis angin kompresor bengkel tambal ban ("pssshh—tss!").
+   */
+  public playTireAirHiss() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // 2 semburan angin bertekanan
+    [
+      [0.0, 0.34],
+      [0.44, 0.24],
+    ].forEach(([off, dur]) => {
+      const src = ctx.createBufferSource();
+      src.buffer = this.getNoiseBuffer(ctx);
+      const hp = ctx.createBiquadFilter();
+      hp.type = 'highpass';
+      hp.frequency.setValueAtTime(2400, now + off);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.001, now + off);
+      g.gain.linearRampToValueAtTime(0.11 * v, now + off + 0.03);
+      g.gain.setValueAtTime(0.09 * v, now + off + dur * 0.72);
+      g.gain.exponentialRampToValueAtTime(0.0008, now + off + dur);
+      src.connect(hp).connect(g).connect(ctx.destination);
+      src.start(now + off, 0.05, dur + 0.04);
+    });
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

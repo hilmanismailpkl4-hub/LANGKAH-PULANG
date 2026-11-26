@@ -20,7 +20,8 @@ export type CulinarySpotId =
   | 'jasuke_taman'
   | 'eskrim_melati'
   | 'bubur_melati'
-  | 'tehpoci_plaza';
+  | 'tehpoci_plaza'
+  | 'putu_sungai';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -43,7 +44,8 @@ export type HeldDrinkVisual =
   | 'jasuke_cup'
   | 'eskrim_potong'
   | 'bubur_ayam'
-  | 'teh_poci';
+  | 'teh_poci'
+  | 'kue_putu';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -292,6 +294,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [32.8, 0, -11.05],
     seatYaw: Math.PI,
     tablePropPos: [32.8, 1.14, -13.52],
+  },
+  putu_sungai: {
+    id: 'putu_sungai',
+    title: 'Kue Putu Bambu Peluit Malam Mang Oding',
+    hostName: 'Mang Oding',
+    subtitle: 'Promenade Sungai Utara · Kue Putu Pandan Gula Merah, Klepon & Lupis Ketan',
+    seatPos: [-38.45, 0.14, -22.6],
+    lookAt: [-36.6, 1.35, -22.6],
+    standPos: [-38.45, 0, -21.2],
+    seatYaw: Math.PI / 2,
+    tablePropPos: [-37.1, 1.14, -22.6],
   },
 };
 
@@ -1193,6 +1206,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Slurppp!! Es teh pocinya segar bangettt, Ayah!! Tahu manisnya juga empuk!' },
       { speaker: 'nadia', text: 'Asyik banget ya Mas jajan tahu gejrot sama es teh poci di plaza kantor begini... terima kasih ya, Mas.' },
+    ],
+  },
+
+  // === 21. GEROBAK KUE PUTU BAMBU BERUAP MANG ODING (PROMENADE SUNGAI UTARA) ===
+  {
+    id: 'putu_bambu_asli',
+    spot: 'putu_sungai',
+    name: 'Kue Putu Bambu Pandan Gula Merah (Isi 6)',
+    priceLabel: 'Rp 10.000',
+    tagline: 'Tepung beras pandan dikukus hangat dalam tabung bambu berpeluit uap, isi gula merah cair & kelapa parut.',
+    tasteNote: 'Bunyi peluit uap khas malam hari berpadu aroma pandan hangat dan lelehan gula merah—nostalgia Indonesia paling syahdu.',
+    drinkVisual: 'kue_putu',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Begitu dengar suara peluit "ngiiiing" gerobak Mang Oding, rasanya langsung ingat masa kecil ya, Mas!' },
+    ],
+  },
+  {
+    id: 'putu_klepon_lupis',
+    spot: 'putu_sungai',
+    name: 'Campur Putu Bambu, Klepon & Lupis Gula Aren',
+    priceLabel: 'Rp 12.000',
+    tagline: 'Perpaduan kue putu hangat, klepon pandan kenyal, dan ketan lupis segitiga siram sirup gula aren kental.',
+    tasteNote: 'Manis legit hangat di atas pincuk daun pisang—pas sekali disantap pelan ditemani angin sungai malam.',
+    drinkVisual: 'kue_putu',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'kira', text: 'Waaah kue putunya keluar dari tabung bambu kecil sambil keluar asap putih, Yah!! Lucu banget!' },
+    ],
+  },
+  {
+    id: 'putu_family',
+    spot: 'putu_sungai',
+    name: 'Traktir Keluarga Paket Jajan Putu Bambu Malam',
+    priceLabel: 'Rp 28.000',
+    tagline: 'Dua kotak pincuk penuh kue putu bambu hangat, klepon pandan & lupis ketan untuk dinikmati bertiga di tepi sungai.',
+    tasteNote: 'Di bawah bohlam hangat Mang Oding dan semburan peluit uap yang merdu, malam di tepi sungai terasa begitu damai.',
+    drinkVisual: 'kue_putu',
+    isHot: true,
+    isFamilyTreat: true,
+    journalTitle: 'Peluit Uap Kue Putu Bambu di Tepi Sungai Malam',
+    journalBody: 'Begitu mendengar peluit uap khas gerobak Mang Oding di promenade Sungai Utara, aku mengajak Nadia dan Kira duduk menyantap kue putu bambu pandan dan lupis gula merah hangat. Suara sederhana dari masa kecil itu rupanya masih sanggup menghangatkan satu keluarga kecil.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Ngiiiing!! Hihihi suara peluit kue putunya seru banget, Bunda!! Gula merah di dalamnya hangat manis!' },
+      { speaker: 'nadia', text: 'Malam yang manis banget ya Mas... terima kasih sudah mengajak mampir jajan kue putu hangat di sini.' },
     ],
   },
 ];

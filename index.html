@@ -24,109 +24,365 @@
       rel="stylesheet"
     />
     <style>
-      #preboot-splash {
+      #lp-boot-loader {
         position: fixed;
         inset: 0;
         z-index: 99999;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
+        justify-content: space-between;
+        padding: 20px 28px;
         background: linear-gradient(180deg, #0b0e17 0%, #151824 55%, #23191d 100%);
         color: #fcf7ee;
         font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-        text-align: center;
-      }
-      #preboot-bar-track {
-        width: min(360px, 84vw);
-        height: 8px;
-        border-radius: 999px;
-        background: rgba(252, 247, 238, 0.14);
+        transition: opacity 380ms ease-out;
         overflow: hidden;
+      }
+      #lp-boot-loader.lp-fade-out {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .lp-boot-glow {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(circle at 50% 58%, rgba(232, 146, 74, 0.22) 0%, rgba(168, 86, 58, 0.08) 38%, transparent 68%);
+      }
+      .lp-boot-top {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 10px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(246, 224, 189, 0.8);
+      }
+      .lp-boot-center {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 620px;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 14px;
+      }
+      .lp-boot-skyline {
+        width: 100%;
+        max-width: 520px;
+        border-radius: 16px;
+        border: 1px solid rgba(252, 247, 238, 0.14);
+        background: linear-gradient(180deg, rgba(22, 27, 44, 0.88), rgba(20, 20, 28, 0.95));
+        padding: 14px 16px 6px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      }
+      .lp-boot-info {
+        width: 100%;
+        max-width: 460px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .lp-boot-title {
+        margin: 0;
+        font-family: Lora, Georgia, serif;
+        font-size: clamp(22px, 3.6vw, 32px);
+        font-weight: 500;
+        color: #fcf7ee;
+      }
+      .lp-boot-sub {
+        margin: 4px 0 0;
+        font-size: 12px;
+        color: rgba(252, 247, 238, 0.72);
+      }
+      .lp-boot-progress-wrap {
+        width: 100%;
         margin-top: 14px;
       }
-      #preboot-bar-fill {
+      .lp-boot-row {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 6px;
+      }
+      .lp-boot-size {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 11px;
+        color: rgba(246, 224, 189, 0.88);
+        font-variant-numeric: tabular-nums;
+      }
+      .lp-boot-pct {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 1;
+        color: #f5c26b;
+        font-variant-numeric: tabular-nums;
+      }
+      .lp-boot-track {
+        width: 100%;
+        height: 11px;
+        border-radius: 999px;
+        background: rgba(252, 247, 238, 0.14);
+        border: 1px solid rgba(252, 247, 238, 0.14);
+        overflow: hidden;
+      }
+      .lp-boot-fill {
         height: 100%;
         width: 0%;
         border-radius: 999px;
         background: linear-gradient(90deg, #d9823c, #f5c26b, #fde68a);
-        transition: width 140ms ease-out;
       }
-      #preboot-meta {
-        width: min(360px, 84vw);
+      .lp-boot-ticks {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        margin-top: 8px;
-        font-size: 12px;
-        color: rgba(246, 224, 189, 0.85);
+        margin-top: 5px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 9.5px;
+        color: rgba(246, 224, 189, 0.48);
         font-variant-numeric: tabular-nums;
+      }
+      .lp-boot-ticks span.active {
+        color: rgba(245, 194, 107, 0.95);
+        font-weight: 600;
+      }
+      .lp-boot-stage {
+        margin-top: 8px;
+        font-size: 11.5px;
+        color: rgba(252, 247, 238, 0.82);
+        text-align: left;
+      }
+      .lp-boot-tip {
+        position: relative;
+        z-index: 2;
+        max-width: 600px;
+        margin: 0 auto;
+        padding-top: 10px;
+        border-top: 1px solid rgba(252, 247, 238, 0.1);
+        font-family: Lora, Georgia, serif;
+        font-style: italic;
+        font-size: 12px;
+        color: rgba(246, 224, 189, 0.74);
+        text-align: center;
+      }
+      @media (max-height: 540px) and (orientation: landscape) {
+        #lp-boot-loader {
+          padding: 12px 22px;
+        }
+        .lp-boot-center {
+          max-width: 760px;
+          flex-direction: row;
+          align-items: center;
+          text-align: left;
+          gap: 22px;
+        }
+        .lp-boot-skyline {
+          flex: 0 0 42%;
+          padding: 8px 10px 4px;
+        }
+        .lp-boot-info {
+          flex: 1 1 58%;
+          align-items: flex-start;
+        }
+        .lp-boot-title {
+          font-size: 21px;
+        }
+        .lp-boot-pct {
+          font-size: 23px;
+        }
+        .lp-boot-progress-wrap {
+          margin-top: 10px;
+        }
+        .lp-boot-tip {
+          font-size: 11px;
+          padding-top: 6px;
+        }
       }
     </style>
   </head>
   <body class="bg-dusk-950 text-warm-50 antialiased selection:bg-warm-400/30 selection:text-warm-100 overflow-hidden">
-    <div id="root">
-      <!-- Splash pra-boot instan saat browser mengunduh berkas 3D & React (~2.3 MB) -->
-      <div id="preboot-splash">
-        <div style="font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(245, 194, 107, 0.85);">
-          LANGKAH PULANG · STEPS HOME
+    <div id="root"></div>
+
+    <!-- SATU Layar Loading Tunggal di luar #root agar tidak pernah berganti/tampil 2 kali -->
+    <div id="lp-boot-loader" role="status" aria-live="polite">
+      <div class="lp-boot-glow"></div>
+      <div class="lp-boot-top">
+        <span>● LANGKAH PULANG · STEPS HOME</span>
+        <span>KOTA SENJA 3D</span>
+      </div>
+
+      <div class="lp-boot-center">
+        <div class="lp-boot-skyline">
+          <svg viewBox="0 0 640 155" style="width:100%;height:auto;display:block;" aria-hidden="true">
+            <defs>
+              <radialGradient id="lpSun" cx="50%" cy="62%" r="48%">
+                <stop offset="0%" stop-color="#ffcb7a" stop-opacity="0.92" />
+                <stop offset="55%" stop-color="#e58749" stop-opacity="0.44" />
+                <stop offset="100%" stop-color="#e58749" stop-opacity="0" />
+              </radialGradient>
+              <linearGradient id="lpRiv" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#1b2638" />
+                <stop offset="50%" stop-color="#5e3e34" />
+                <stop offset="100%" stop-color="#192334" />
+              </linearGradient>
+            </defs>
+            <circle cx="320" cy="100" r="64" fill="url(#lpSun)" />
+            <circle cx="320" cy="98" r="22" fill="#ffe2a8" opacity="0.9" />
+            <path d="M0 124 Q80 92 165 112 T340 108 T520 98 T640 116 L640 136 L0 136 Z" fill="#171a26" opacity="0.88" />
+            <rect x="64" y="38" width="46" height="90" rx="2" fill="#121622" />
+            <rect x="116" y="60" width="32" height="68" rx="2" fill="#151926" />
+            <rect x="72" y="48" width="8" height="4" rx="1" fill="#f7c873" opacity="0.88" />
+            <rect x="86" y="62" width="8" height="4" rx="1" fill="#f7c873" opacity="0.92" />
+            <rect x="72" y="76" width="8" height="4" rx="1" fill="#f7c873" opacity="0.7" />
+            <rect x="96" y="90" width="7" height="4" rx="1" fill="#f7c873" opacity="0.75" />
+            <rect x="242" y="68" width="5" height="60" fill="#232838" />
+            <rect x="388" y="68" width="5" height="60" fill="#232838" />
+            <path d="M196 116 Q244 70 244 70 Q316 110 390 70 Q420 104 448 116" fill="none" stroke="#394054" stroke-width="1.8" />
+            <circle cx="266" cy="106" r="2.4" fill="#ffd98a" />
+            <circle cx="296" cy="108" r="2.4" fill="#ffd98a" />
+            <circle cx="326" cy="108" r="2.4" fill="#ffd98a" />
+            <circle cx="356" cy="106" r="2.4" fill="#ffd98a" />
+            <g transform="translate(476, 78)">
+              <polygon points="0,24 38,0 76,24" fill="#261c22" />
+              <rect x="6" y="24" width="64" height="26" fill="#161822" />
+              <rect x="16" y="30" width="16" height="12" rx="1.5" fill="#ffd27d" />
+              <rect x="44" y="30" width="16" height="12" rx="1.5" fill="#ffbe5c" opacity="0.92" />
+            </g>
+            <rect x="0" y="131" width="640" height="24" fill="url(#lpRiv)" opacity="0.9" />
+            <line x1="252" y1="139" x2="384" y2="139" stroke="#ffcb7a" stroke-width="1.2" opacity="0.35" stroke-dasharray="10 8" />
+          </svg>
         </div>
-        <h1 style="margin: 8px 0 4px; font-family: Lora, Georgia, serif; font-size: clamp(22px, 4vw, 32px); font-weight: 500;">
-          Menyiapkan Kota Senja 3D
-        </h1>
-        <div id="preboot-stage" style="font-size: 12px; color: rgba(252, 247, 238, 0.72);">
-          Mengunduh berkas aplikasi &amp; mesin 3D...
-        </div>
-        <div id="preboot-bar-track">
-          <div id="preboot-bar-fill"></div>
-        </div>
-        <div id="preboot-meta">
-          <span id="preboot-size">0.00 MB / 2.42 MB</span>
-          <strong id="preboot-pct" style="color: #f5c26b;">0%</strong>
+
+        <div class="lp-boot-info">
+          <h1 class="lp-boot-title">Langkah Pulang</h1>
+          <p class="lp-boot-sub">Menyiapkan suasana Kota Senja 3D dan arsip perjalananmu...</p>
+
+          <div class="lp-boot-progress-wrap">
+            <div class="lp-boot-row">
+              <span id="lp-boot-size" class="lp-boot-size">0 KB / 2.46 MB</span>
+              <span id="lp-boot-pct" class="lp-boot-pct">0%</span>
+            </div>
+            <div class="lp-boot-track">
+              <div id="lp-boot-fill" class="lp-boot-fill"></div>
+            </div>
+            <div id="lp-boot-ticks" class="lp-boot-ticks">
+              <span data-t="0" class="active">0%</span>
+              <span data-t="25">25%</span>
+              <span data-t="50">50%</span>
+              <span data-t="75">75%</span>
+              <span data-t="100">100%</span>
+            </div>
+            <div id="lp-boot-stage" class="lp-boot-stage">Mengunduh berkas aplikasi &amp; mesin 3D...</div>
+          </div>
         </div>
       </div>
+
+      <div class="lp-boot-tip">
+        "Atur sensitivitas kamera &amp; Mode 60 FPS kapan saja lewat ikon Pengaturan di sudut kanan atas."
+      </div>
     </div>
+
     <script>
       (function () {
-        var estTotalBytes = 2420 * 1024;
-        var pct = 0;
-        window.__lpBootPct = 0;
+        var estTotalBytes = 2460 * 1024;
+        var cur = 0;
+        var appReady = false;
+        var reached100At = null;
+        var startedAt = performance.now();
+        var lastTime = startedAt;
+        var lastInt = -1;
+
+        var loaderEl = document.getElementById('lp-boot-loader');
+        var fillEl = document.getElementById('lp-boot-fill');
+        var pctEl = document.getElementById('lp-boot-pct');
+        var sizeEl = document.getElementById('lp-boot-size');
+        var stageEl = document.getElementById('lp-boot-stage');
+        var tickEls = document.querySelectorAll('#lp-boot-ticks span');
+
+        window.__lpMarkBootReady = function () {
+          appReady = true;
+        };
+
         function fmtSize(bytes) {
           if (bytes >= 1048576) return (bytes / 1048576).toFixed(2) + ' MB';
           return Math.max(0, Math.round(bytes / 1024)) + ' KB';
         }
-        var lastTick = performance.now();
-        var timer = window.setInterval(function () {
-          var fill = document.getElementById('preboot-bar-fill');
-          var pctEl = document.getElementById('preboot-pct');
-          var sizeEl = document.getElementById('preboot-size');
-          if (!fill || !pctEl || !sizeEl) {
-            window.clearInterval(timer);
-            return;
-          }
-          var now = performance.now();
-          var dtSec = Math.min(0.15, Math.max(0.02, (now - lastTick) / 1000));
-          lastTick = now;
-          var loadedBytes = 0;
+
+        function readTotalBytes() {
+          var sum = 0;
           try {
             var entries = performance.getEntriesByType('resource') || [];
             for (var i = 0; i < entries.length; i++) {
               var e = entries[i];
-              loadedBytes += e.decodedBodySize || e.encodedBodySize || e.transferSize || 0;
+              sum += e.decodedBodySize || e.encodedBodySize || e.transferSize || 0;
             }
           } catch (_) {}
-          // Bertahap halus (~16%/detik) hingga maks 42% agar langsung disambung mulus oleh layar React sampai 100%
-          var rate = pct < 28 ? 16 : 7;
-          pct = Math.min(42, pct + rate * dtSec);
-          var rounded = Math.round(pct);
-          window.__lpBootPct = rounded;
-          var displayBytes = Math.max(loadedBytes, Math.round((rounded / 100) * estTotalBytes));
-          var totalBytes = Math.max(estTotalBytes, displayBytes);
-          fill.style.width = rounded + '%';
-          pctEl.textContent = rounded + '%';
-          sizeEl.textContent = fmtSize(displayBytes) + ' / ' + fmtSize(totalBytes);
-        }, 65);
+          return Math.max(estTotalBytes, sum);
+        }
+
+        function stageForPct(p) {
+          if (p < 25) return 'Mengunduh berkas aplikasi & mesin 3D...';
+          if (p < 50) return 'Memeriksa arsip perjalanan & pengaturan...';
+          if (p < 75) return 'Menyiapkan bangunan, jalan & suasana Kota Senja...';
+          if (p < 100) return 'Menyempurnakan pencahayaan & detail 3D...';
+          return 'Selamat datang di Langkah Pulang!';
+        }
+
+        function frame(now) {
+          if (!loaderEl) return;
+          var dtSec = Math.min(0.06, Math.max(0.008, (now - lastTime) / 1000));
+          lastTime = now;
+
+          if (!appReady && now - startedAt > 10000) {
+            appReady = true;
+          }
+
+          if (appReady) {
+            cur = Math.min(100, cur + 28 * dtSec);
+          } else {
+            var speed = cur < 70 ? 20 : cur < 88 ? 12 : Math.max(2.0, (95 - cur) * 0.55);
+            cur = Math.min(95, cur + speed * dtSec);
+          }
+
+          var rounded = Math.round(cur);
+          if (rounded !== lastInt) {
+            lastInt = rounded;
+            var totalB = readTotalBytes();
+            var loadedB = rounded >= 100 ? totalB : Math.round((rounded / 100) * totalB);
+            if (fillEl) fillEl.style.width = rounded + '%';
+            if (pctEl) pctEl.textContent = rounded + '%';
+            if (sizeEl) sizeEl.textContent = fmtSize(loadedB) + ' / ' + fmtSize(totalB);
+            if (stageEl) stageEl.textContent = stageForPct(rounded);
+            for (var i = 0; i < tickEls.length; i++) {
+              var tv = Number(tickEls[i].getAttribute('data-t') || '0');
+              if (rounded >= tv) tickEls[i].classList.add('active');
+            }
+          }
+
+          if (appReady && rounded >= 100) {
+            if (reached100At === null) {
+              reached100At = now;
+            } else if (now - reached100At >= 240) {
+              loaderEl.classList.add('lp-fade-out');
+              window.setTimeout(function () {
+                if (loaderEl && loaderEl.parentNode) {
+                  loaderEl.parentNode.removeChild(loaderEl);
+                }
+              }, 400);
+              return;
+            }
+          }
+
+          window.requestAnimationFrame(frame);
+        }
+
+        window.requestAnimationFrame(frame);
       })();
     </script>
     <script type="module" src="/src/main.tsx"></script>

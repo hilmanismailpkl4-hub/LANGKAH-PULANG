@@ -229,6 +229,10 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= 41.6 && x <= 47.4 && z >= 60.8 && z <= 63.4) return true;
   if (x >= 31.2 && x <= 34.4 && z >= -15.5 && z <= -12.4) return true;
   if (x >= 29.9 && x <= 33.3 && z >= 10.6 && z <= 12.6) return true;
+  // Payung Kue Putu Mang Oding, Atap Bengkel Mas Budi & Kanopi Laundry Harum Melati
+  if (x >= -38.3 && x <= -35.0 && z >= -24.2 && z <= -21.0) return true;
+  if (x >= 47.4 && x <= 51.0 && z >= -15.8 && z <= -12.6) return true;
+  if (x >= 32.0 && x <= 35.6 && z >= 39.6 && z <= 41.3) return true;
   return false;
 }
 
@@ -481,6 +485,12 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'tehpoci_ridwan_cart', minX: 31.72, maxX: 33.88, minZ: -14.54, maxZ: -13.46 },
   { id: 'tehpoci_ridwan_bench', minX: 32.02, maxX: 33.58, minZ: -12.42, maxZ: -11.88 },
   { id: 'angkot_route_kiosk', minX: 30.15, maxX: 33.05, minZ: 11.45, maxZ: 12.22 },
+
+  // === 39. Gerobak Kue Putu Mang Oding, Bengkel Tambal Ban Mas Budi & Laundry Harum Melati ===
+  { id: 'putu_oding_cart', minX: -37.14, maxX: -36.06, minZ: -23.68, maxZ: -21.52 },
+  { id: 'putu_oding_bench', minX: -38.72, maxX: -38.18, minZ: -23.38, maxZ: -21.82 },
+  { id: 'bengkel_mas_budi_bay', minX: 47.65, maxX: 50.75, minZ: -15.55, maxZ: -13.65 },
+  { id: 'laundry_harum_melati_kiosk', minX: 32.26, maxX: 35.34, minZ: 38.28, maxZ: 40.15 },
 ];
 
 /**
@@ -657,6 +667,10 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: 42.65, z: 62.35, r: 0.45 },
   { x: 32.8, z: -15.02, r: 0.42 },
   { x: 29.85, z: 11.5, r: 0.16 },
+  // Mang Oding Kue Putu, Mas Budi Bengkel & Mbak Rini Laundry Harum Melati
+  { x: -35.58, z: -22.6, r: 0.42 },
+  { x: 47.2, z: -13.6, r: 0.42 },
+  { x: 31.95, z: 40.2, r: 0.42 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],

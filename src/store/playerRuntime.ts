@@ -177,6 +177,9 @@ export const playerRuntime = {
   duckFeedTimer: 0,
   flowerBouquetStep: 0,
   bedugRingTimer: 0,
+  putuWhistleTimer: 0,
+  tirePumpTimer: 0,
+  laundrySpinTimer: 0,
   gardenSwingTimer: 0,
   swingBoostTimer: 0,
   kiteHeight: 0,
@@ -292,6 +295,9 @@ export function resetScooterToHome() {
   playerRuntime.duckFeedTimer = 0;
   playerRuntime.flowerBouquetStep = 0;
   playerRuntime.bedugRingTimer = 0;
+  playerRuntime.putuWhistleTimer = 0;
+  playerRuntime.tirePumpTimer = 0;
+  playerRuntime.laundrySpinTimer = 0;
   playerRuntime.gardenSwingTimer = 0;
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;
