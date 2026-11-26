@@ -18,6 +18,7 @@ import { MailboxModal } from './components/ui/MailboxModal';
 import { MapJournalModal } from './components/ui/MapJournalModal';
 import { MobileLandscapeOverlay } from './components/ui/MobileLandscapeOverlay';
 import { MobileTouchControls } from './components/ui/MobileTouchControls';
+import { NadiaLetterModal } from './components/ui/NadiaLetterModal';
 import { NewsstandModal } from './components/ui/NewsstandModal';
 import { PauseSettingsModal } from './components/ui/PauseSettingsModal';
 import { PhoneNotification } from './components/ui/PhoneNotification';
@@ -72,6 +73,7 @@ export function App() {
       <PhotoModeOverlay />
       <SmartphoneModal />
       <GuitarMinigameModal />
+      <NadiaLetterModal />
       <CulinaryModal />
       <HomeKitchenModal />
       <FamilyPhotoAlbumModal />

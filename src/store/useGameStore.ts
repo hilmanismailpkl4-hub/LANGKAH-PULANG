@@ -158,6 +158,7 @@ interface GameStoreState {
   isRidingScooter: boolean;
   isRidingBicycle: boolean;
   isGuitarOpen: boolean;
+  isNadiaLetterOpen: boolean;
   isBagOpen: boolean;
   umbrellaForcedOff: boolean;
   isFamilyWalkActive: boolean;
@@ -227,6 +228,7 @@ interface GameStoreState {
   setRidingScooter: (riding: boolean) => void;
   setRidingBicycle: (riding: boolean) => void;
   setGuitarOpen: (open: boolean) => void;
+  setNadiaLetterOpen: (open: boolean) => void;
   setBagOpen: (open: boolean) => void;
   toggleUmbrella: () => void;
   setFreeTimeOfDay: (time: TimeOfDay) => void;
@@ -400,6 +402,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     isRidingScooter: false,
     isRidingBicycle: false,
     isGuitarOpen: false,
+    isNadiaLetterOpen: false,
     isBagOpen: false,
     umbrellaForcedOff: false,
     isFamilyWalkActive: false,
@@ -1186,6 +1189,21 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       if (open && document.pointerLockElement) document.exitPointerLock();
       set({
         isGuitarOpen: open,
+        isNadiaLetterOpen: false,
+        isBagOpen: false,
+        isMapJournalOpen: false,
+        isPauseOpen: false,
+        isPhoneOpen: false,
+        isQuickGraphicsOpen: false,
+      });
+    },
+
+    setNadiaLetterOpen: (open) => {
+      if (open && document.pointerLockElement) document.exitPointerLock();
+      if (open) sfxEngine.play('page');
+      set({
+        isNadiaLetterOpen: open,
+        isGuitarOpen: false,
         isBagOpen: false,
         isMapJournalOpen: false,
         isPauseOpen: false,
@@ -1897,6 +1915,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         activeCulinarySpot: null,
         heldDrink: null,
         isWardrobeOpen: false,
+        isGuitarOpen: false,
+        isNadiaLetterOpen: false,
         interactPrompt: null,
       });
     },

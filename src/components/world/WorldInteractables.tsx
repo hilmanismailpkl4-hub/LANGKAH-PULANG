@@ -735,6 +735,7 @@ export const WorldInteractables: React.FC = () => {
       store.isPhotoMode ||
       store.isPhoneOpen ||
       store.isGuitarOpen ||
+      store.isNadiaLetterOpen ||
       store.isBagOpen ||
       Boolean(store.activeCulinarySpot) ||
       store.isWardrobeOpen ||
@@ -4183,6 +4184,22 @@ export const WorldInteractables: React.FC = () => {
       2.2,
     );
 
+    consider(
+      {
+        id: 'nadia_table_letter',
+        kind: 'story_object',
+        label: 'Baca Surat Tulisan Tangan Nadia di Meja Makan',
+        sublabel: store.flags.includes('read_nadia_table_letter')
+          ? 'Surat Pribadi untuk Damar · Tersimpan di Jurnal'
+          : 'Amplop Krem di Meja Makan · Berubah Sesuai Pilihanmu',
+        position: [-15.7, 0.08, 68.1],
+        onInteract: () => {
+          store.setNadiaLetterOpen(true);
+        },
+      },
+      2.2,
+    );
+
     if (store.mainStepId === 'ch2_2_hujan_jembatan') {
       consider(
         {
@@ -4751,6 +4768,21 @@ export const WorldInteractables: React.FC = () => {
         <sphereGeometry args={[0.085, 10, 10]} />
         <meshBasicMaterial color="#fbbf24" />
       </mesh>
+      {/* Amplop krem bersegel merah surat tulisan tangan Nadia di Meja Makan Jl. Melati */}
+      <group position={[-15.7, 0.86, 68.1]} rotation={[0, -0.35, 0]}>
+        <mesh castShadow>
+          <boxGeometry args={[0.26, 0.018, 0.18]} />
+          <meshStandardMaterial color="#f8efe0" emissive="#f6d17a" emissiveIntensity={0.28} roughness={0.75} />
+        </mesh>
+        <mesh position={[0, 0.012, 0]}>
+          <cylinderGeometry args={[0.024, 0.024, 0.008, 12]} />
+          <meshStandardMaterial color="#b34438" roughness={0.45} />
+        </mesh>
+        <mesh position={[0, 0.28, 0]}>
+          <sphereGeometry args={[0.065, 10, 10]} />
+          <meshBasicMaterial color="#fda4af" />
+        </mesh>
+      </group>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (
         <mesh position={[-48, 0.32, 0.5]} rotation={[-Math.PI / 2, 0, 0]}>

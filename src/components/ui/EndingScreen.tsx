@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { BookOpen, Compass, Film, Heart, Home, MessageCircle, Sparkles } from 'lucide-react';
+import { BookOpen, Compass, Film, Heart, Home, MailOpen, MessageCircle, Music, Sparkles } from 'lucide-react';
 import { buildEndingJourneyRecap } from '../../data/characterEchoes';
 import { EASTER_EGGS } from '../../data/easterEggs';
 import { ENDINGS } from '../../data/endings';
@@ -235,6 +235,8 @@ export const EndingScreen: React.FC = () => {
   const unlockedEndings = useGameStore((s) => s.unlockedEndings);
   const returnToTitle = useGameStore((s) => s.returnToTitle);
   const finishChapterTransition = useGameStore((s) => s.finishChapterTransition);
+  const setGuitarOpen = useGameStore((s) => s.setGuitarOpen);
+  const setNadiaLetterOpen = useGameStore((s) => s.setNadiaLetterOpen);
 
   const [revealedCount, setRevealedCount] = useState(1);
   const [selectedHintEnding, setSelectedHintEnding] = useState<EndingId | null>(null);
@@ -468,8 +470,28 @@ export const EndingScreen: React.FC = () => {
                 )}
               </div>
 
+              {/* Momen Epilog Interaktif: Surat Nadia & Konser Mini Track 4 */}
+              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={() => setNadiaLetterOpen(true)}
+                  className="flex items-center justify-center gap-2 rounded-xl border border-rose-300/40 bg-rose-500/15 px-5 py-3 text-sm font-medium text-rose-100 shadow transition hover:border-rose-300/75 hover:bg-rose-500/25"
+                >
+                  <MailOpen className="h-4 w-4 text-rose-300" />
+                  <span>Baca Surat Terakhir Nadia di Meja Makan</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setGuitarOpen(true)}
+                  className="flex items-center justify-center gap-2 rounded-xl border border-amber-300/45 bg-amber-500/15 px-5 py-3 text-sm font-medium text-amber-100 shadow transition hover:border-amber-300/80 hover:bg-amber-500/25"
+                >
+                  <Music className="h-4 w-4 text-amber-300" />
+                  <span>Mainkan Konser Mini &ldquo;Track 4 — Pulang&rdquo;</span>
+                </button>
+              </div>
+
               {/* Tombol Aksi */}
-              <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
                 <button
                   type="button"
                   onClick={() => finishChapterTransition()}

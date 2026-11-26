@@ -632,6 +632,23 @@ class SfxEngine {
     });
   }
 
+  /**
+   * Arpeggio penutup hangat Dmaj9 saat Damar menuntaskan konser mini "Track 4 — Pulang".
+   */
+  public playTrack4Finale() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+    const arpeggio = [146.83, 220.0, 293.66, 369.99, 440.0, 554.37, 659.25, 880.0];
+    arpeggio.forEach((freq, i) => {
+      this.pluckedNote(ctx, freq, now + i * 0.11, 3.0, 0.072 * v);
+    });
+    this.softTone(ctx, 587.33, now + 0.92, 1.8, 0.045 * v, 'sine');
+    this.softTone(ctx, 880.0, now + 1.05, 1.9, 0.04 * v, 'sine');
+  }
+
   private getNoiseBuffer(ctx: AudioContext): AudioBuffer {
     if (this.noiseBuffer) return this.noiseBuffer;
     const len = ctx.sampleRate * 1.2;
