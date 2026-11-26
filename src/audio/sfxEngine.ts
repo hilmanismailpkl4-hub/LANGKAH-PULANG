@@ -1081,6 +1081,45 @@ class SfxEngine {
     spr.start(now + 0.44, 0.35, 0.2);
   }
 
+  /**
+   * Suara "kwek-kwek-kwek" kawanan bebek Danau Senja yang lembut & riang saat diberi remah roti.
+   */
+  public playDuckQuack() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // 3 suara kwek dengan formant bandpass khas bebek air
+    const quacks: [number, number, number][] = [
+      [0.0, 560, 0.12],
+      [0.16, 610, 0.11],
+      [0.34, 520, 0.15],
+    ];
+    quacks.forEach(([off, baseFreq, dur]) => {
+      const osc = ctx.createOscillator();
+      const filter = ctx.createBiquadFilter();
+      const g = ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(baseFreq, now + off);
+      osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.72, now + off + dur);
+
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(1180, now + off);
+      filter.frequency.exponentialRampToValueAtTime(760, now + off + dur);
+      filter.Q.value = 3.6;
+
+      g.gain.setValueAtTime(0.001, now + off);
+      g.gain.linearRampToValueAtTime(0.11 * v, now + off + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0008, now + off + dur);
+
+      osc.connect(filter).connect(g).connect(ctx.destination);
+      osc.start(now + off);
+      osc.stop(now + off + dur + 0.03);
+    });
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

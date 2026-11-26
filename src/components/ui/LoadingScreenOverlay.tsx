@@ -30,8 +30,8 @@ const EMBER_DOTS = [
   { left: '44%', top: '68%', size: 3, delay: '1.4s', duration: '6.0s' },
 ];
 
-// Perkiraan total ukuran berkas aplikasi + aset 3D prosedural (sesuai hasil build Vite ~2.38 MB)
-const ESTIMATED_TOTAL_APP_BYTES = 2380 * 1024;
+// Perkiraan total ukuran berkas aplikasi + aset 3D prosedural (sesuai hasil build Vite ~2.42 MB)
+const ESTIMATED_TOTAL_APP_BYTES = 2420 * 1024;
 
 function formatByteSize(bytes: number): string {
   if (bytes >= 1024 * 1024) {
@@ -96,9 +96,10 @@ export const LoadingScreenOverlay: React.FC = () => {
   const loadingOverlay = useGameStore((s) => s.loadingOverlay);
   const { isMobile, isCompactLandscape } = useMobileViewport();
 
+  // Sambung mulus dari persentase pra-boot HTML agar terasa seperti SATU layar loading utuh 0% -> 100%
   const initialBootPct =
     typeof window !== 'undefined' && typeof (window as unknown as { __lpBootPct?: number }).__lpBootPct === 'number'
-      ? Math.min(18, Math.max(0, Math.round((window as unknown as { __lpBootPct?: number }).__lpBootPct ?? 0)))
+      ? Math.min(45, Math.max(0, Math.round((window as unknown as { __lpBootPct?: number }).__lpBootPct ?? 0)))
       : 0;
 
   const [rendered, setRendered] = useState(loadingOverlay.visible);
@@ -129,7 +130,7 @@ export const LoadingScreenOverlay: React.FC = () => {
       }
       setFadingOut(false);
       setRendered(true);
-      // Setiap kali layar loading baru dibuka (transisi false -> true), mulai bersih dari 0%!
+      // Saat layar loading dibuka ulang (mis. sinkronisasi akun login), mulai bersih dari 0%
       if (!prevVisibleRef.current) {
         curPctRef.current = 0;
         setDisplayProgress(0);
@@ -140,7 +141,7 @@ export const LoadingScreenOverlay: React.FC = () => {
     prevVisibleRef.current = loadingOverlay.visible;
   }, [loadingOverlay.visible]);
 
-  // Loop animasi requestAnimationFrame mulus 0% -> 100% (bebas StrictMode nested setState)
+  // Loop animasi requestAnimationFrame bertahap konstan 0% -> 100% (tidak ngebut lalu berhenti!)
   useEffect(() => {
     if (!rendered) return;
     let rafId = 0;
@@ -149,26 +150,21 @@ export const LoadingScreenOverlay: React.FC = () => {
     let reached100At: number | null = null;
 
     const tick = (now: number) => {
-      const dtSec = Math.min(0.08, Math.max(0.008, (now - lastTime) / 1000));
+      const dtSec = Math.min(0.06, Math.max(0.008, (now - lastTime) / 1000));
       lastTime = now;
 
       const wantVisible = wantVisibleRef.current;
-      const target = wantVisible ? Math.max(0, Math.min(100, targetPctRef.current)) : 100;
+      const readyToFinish = !wantVisible || targetPctRef.current >= 100;
 
       let cur = curPctRef.current;
-      if (target >= 100 || !wantVisible) {
-        // Mengalir mulus menuju 100% (~85% per detik) agar angka 0 -> 100% selalu terlihat utuh
-        const speed = Math.max(48, (100 - cur) * 2.8);
-        cur = Math.min(100, cur + speed * dtSec);
-      } else if (cur < target) {
-        const speed = Math.max(28, (target - cur) * 2.4);
-        cur = Math.min(target, cur + speed * dtSec);
+      if (readyToFinish) {
+        // Berjalan konstan & nyaman (~28%/detik) menyusuri tiap angka sampai 100% tanpa melompat!
+        const steadyFinishSpeed = 28;
+        cur = Math.min(100, cur + steadyFinishSpeed * dtSec);
       } else {
-        // Merayap halus saat menunggu jaringan/shader agar layar loading tidak pernah tampak diam
-        const softCap = Math.min(95, target + 16);
-        if (cur < softCap) {
-          cur = Math.min(softCap, cur + 8 * dtSec);
-        }
+        // Berjalan bertahap stabil ~22%/detik hingga 86%, lalu melambat halus sampai 96% bila masih menunggu jaringan/shader
+        const stepSpeed = cur < 72 ? 23 : cur < 88 ? 14 : Math.max(2.5, (96 - cur) * 0.65);
+        cur = Math.min(96, cur + stepSpeed * dtSec);
       }
 
       curPctRef.current = cur;
@@ -179,7 +175,7 @@ export const LoadingScreenOverlay: React.FC = () => {
         setAssetStats(readBrowserAssetStats(rounded));
       }
 
-      // Hanya mulai fade-out setelah progres visual benar-benar menyentuh 100% & store meminta tutup
+      // Hanya mulai fade-out setelah progres visual benar-benar menyentuh 100% & store selesai
       if (!wantVisible && rounded >= 100) {
         if (reached100At === null) {
           reached100At = now;
@@ -190,7 +186,7 @@ export const LoadingScreenOverlay: React.FC = () => {
               setRendered(false);
               setFadingOut(false);
               hideTimerRef.current = null;
-            }, 420);
+            }, 380);
           }
           return;
         }
@@ -243,6 +239,15 @@ export const LoadingScreenOverlay: React.FC = () => {
     ? LOGIN_QUOTES[tipIndex % LOGIN_QUOTES.length]
     : CITY_TIPS[tipIndex % CITY_TIPS.length];
   const BadgeIcon = modeBadge.Icon;
+
+  const dynamicStageLabel = useMemo(() => {
+    if (isAuthMode) return loadingOverlay.stageLabel;
+    if (clampedProgress < 25) return 'Mengunduh berkas aplikasi & mesin 3D...';
+    if (clampedProgress < 50) return 'Memeriksa arsip perjalanan & pengaturan...';
+    if (clampedProgress < 75) return 'Menyiapkan bangunan, jalan & suasana Kota Senja...';
+    if (clampedProgress < 100) return 'Menyempurnakan pencahayaan & detail 3D...';
+    return 'Selamat datang di Langkah Pulang!';
+  }, [isAuthMode, loadingOverlay.stageLabel, clampedProgress]);
 
   const sizeReadout = isAuthMode
     ? `Sinkronisasi akun · ${formatByteSize(assetStats.loadedBytes)} siap`
@@ -382,7 +387,7 @@ export const LoadingScreenOverlay: React.FC = () => {
       <div className="flex items-center justify-between gap-2 text-[11px] text-warm-200/80">
         <span className="flex min-w-0 items-center gap-1.5">
           <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-warm-300" />
-          <span className="truncate">{loadingOverlay.stageLabel}</span>
+          <span className="truncate">{dynamicStageLabel}</span>
         </span>
         <span className="shrink-0 font-mono text-[10px] text-warm-200/60">
           {assetStats.resourceCount} aset

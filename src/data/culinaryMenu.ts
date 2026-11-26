@@ -18,7 +18,8 @@ export type CulinarySpotId =
   | 'ketoprak'
   | 'warkop_stasiun'
   | 'jasuke_taman'
-  | 'eskrim_melati';
+  | 'eskrim_melati'
+  | 'bubur_melati';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -39,7 +40,8 @@ export type HeldDrinkVisual =
   | 'ketoprak'
   | 'kue_pasar'
   | 'jasuke_cup'
-  | 'eskrim_potong';
+  | 'eskrim_potong'
+  | 'bubur_ayam';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -266,6 +268,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [-3.85, 0, 52.05],
     seatYaw: -Math.PI / 2,
     tablePropPos: [-5.05, 1.06, 53.3],
+  },
+  bubur_melati: {
+    id: 'bubur_melati',
+    title: 'Bubur Ayam Pagi Mang Ujang',
+    hostName: 'Mang Ujang',
+    subtitle: 'Seberang Jl. Melati No. 14 · Kuah Kuning, Ayam Suwir, Cakwe & Kerupuk Renyah',
+    seatPos: [-22.2, 0.14, 40.25],
+    lookAt: [-22.2, 1.35, 38.4],
+    standPos: [-22.2, 0, 41.35],
+    seatYaw: Math.PI,
+    tablePropPos: [-22.2, 1.14, 38.88],
   },
 };
 
@@ -1077,6 +1090,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'TING-TONG-TING!! Yeeey traktiran es krim sore bertiga depan gang rumah!! Makasih banyak, Ayaaah!!' },
       { speaker: 'nadia', text: 'Lihat deh Mas betapa senangnya Kira... es krim potong roti tawarnya juga enak banget. Makasih ya, Mas.' },
+    ],
+  },
+
+  // === 19. GEROBAK BUBUR AYAM PAGI MANG UJANG (SEBERANG JL. MELATI) ===
+  {
+    id: 'bubur_komplit',
+    spot: 'bubur_melati',
+    name: 'Bubur Ayam Komplit Kuah Kuning & Kerupuk',
+    priceLabel: 'Rp 12.000',
+    tagline: 'Bubur hangat lembut bertabur ayam suwir, cakwe, kacang kedelai goreng, seledri, bawang goreng & kerupuk.',
+    tasteNote: 'Suapan pertama langsung menghangatkan perut di pagi yang sejuk—persis sarapan legendaris depan kompleks rumah.',
+    drinkVisual: 'bubur_ayam',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Kuah kuning sama cakwe Mang Ujang selalu gurih pas ya, Mas! Kamu tim bubur diaduk atau nggak diaduk nih?' },
+    ],
+  },
+  {
+    id: 'bubur_sate_ati',
+    spot: 'bubur_melati',
+    name: 'Bubur Ayam Spesial + Sate Ati Ampela & Telur Puyuh',
+    priceLabel: 'Rp 17.000',
+    tagline: 'Porsi penuh dengan tambahan sate ati ampela bacem, sate telur puyuh, & ekstra kerupuk kuning renyah.',
+    tasteNote: 'Mengenyangkan dan bikin semangat memulai hari—ditambah teh tawar hangat gratis dari teko Mang Ujang.',
+    drinkVisual: 'bubur_ayam',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'kira', text: 'Kriuk-kriuk!! Kira suka banget kerupuk kuning dari toples besarnya Mang Ujang, Yah!' },
+    ],
+  },
+  {
+    id: 'bubur_family',
+    spot: 'bubur_melati',
+    name: 'Traktir Sarapan Keluarga Bubur Ayam (Paket Bertiga)',
+    priceLabel: 'Rp 38.000',
+    tagline: 'Tiga mangkuk bubur ayam hangat komplit (porsi ramah anak tanpa sambal untuk Kira) plus sate puyuh & teh hangat.',
+    tasteNote: 'Duduk bersama di bangku kayu seberang gerbang rumah sambil menyeruput bubur pagi—pagi di Jl. Melati terasa begitu syahdu.',
+    drinkVisual: 'bubur_ayam',
+    isHot: true,
+    isFamilyTreat: true,
+    journalTitle: 'Sarapan Bubur Ayam Hangat Pagi di Depan Jl. Melati',
+    journalBody: 'Pagi ini aku mengajak Nadia dan Kira sarapan di gerobak Bubur Ayam Mang Ujang tepat di seberang kompleks rumah. Sambil berdebat ringan soal bubur diaduk atau tidak diaduk, tawa Kira ditemani renyahnya kerupuk kuning membuat pagi terasa sempurna.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Yeeey sarapan bubur bertiga!! Kira nggak diaduk biar kerupuknya tetap kriuk di atas, Ayah!' },
+      { speaker: 'nadia', text: 'Senang banget ya Mas pagi-pagi bisa sarapan santai begini tanpa terburu-buru berangkat kantor.' },
     ],
   },
 ];

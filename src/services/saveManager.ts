@@ -121,6 +121,11 @@ export function loadLocalSettings(): GameSettings {
     if (typeof parsed.showFps !== 'boolean') {
       merged.showFps = false;
     }
+    if (typeof merged.mouseSensitivity !== 'number' || Number.isNaN(merged.mouseSensitivity)) {
+      merged.mouseSensitivity = 1.0;
+    } else {
+      merged.mouseSensitivity = Math.max(0.25, Math.min(2.5, merged.mouseSensitivity));
+    }
 
     // Migrasi otomatis satu kali untuk pemain HP lama agar langsung ringan & bebas lag
     if (isMobile && !localStorage.getItem(MOBILE_OPT_FLAG_KEY)) {

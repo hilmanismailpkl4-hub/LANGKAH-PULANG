@@ -498,4 +498,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'nadia', text: 'Kebetulan banget, galon di dapur tinggal sedikit, Mas! Untung Pak Ahmad siap antar langsung pakai sepedanya.' },
     { speaker: 'kira', text: 'Waaah galon birunya bisa diangkut di belakang sepeda Pak Ahmad!! Kuat banget ya, Ayah!' },
   ],
+  activity_danau_ducks: [
+    { speaker: 'kira', text: 'KWEK-KWEK!! Bebek-bebeknya berenang ngebut nyamperin remah roti Kira, Bunda!! Lucu bangeeet!' },
+    { speaker: 'nadia', text: 'Pagi di Danau Senja jadi terasa jauh lebih hidup ya, Mas... senang banget lihat Kira ketawa lepas begini.' },
+  ],
+  activity_ibu_lela_flowers: [
+    { speaker: 'nadia', text: 'Wangi bunga melati sama mawar merah muda Ibu Lela harum banget, Mas... makasih ya sudah dibeliin buket!' },
+    { speaker: 'kira', text: 'Kira mau pilih bunga krisan kuning buat ditaruh di vas meja makan rumah kita, Ayah!' },
+  ],
 };

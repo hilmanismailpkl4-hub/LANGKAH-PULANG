@@ -259,7 +259,39 @@ export const HumanModel: React.FC<HumanModelProps> = ({
           {/* Visual Gelas Hangat / Es Krim / Jajanan Martabak & Kacang Rebus di Tangan Kanan */}
           {holdingDrink && (
             <group position={[0, -0.48, 0.05]} rotation={[0.92, 0, 0]}>
-              {holdingDrink === 'eskrim_potong' ? (
+              {holdingDrink === 'bubur_ayam' ? (
+                <group>
+                  {/* Mangkuk Keramik Bubur Ayam Pagi Mengepul + Kuah Kuning, Ayam Suwir, Kerupuk & Sendok */}
+                  <mesh position={[0, 0.045, 0.02]} castShadow>
+                    <cylinderGeometry args={[0.088, 0.056, 0.08, 14]} />
+                    <meshStandardMaterial color="#f8fafc" roughness={0.32} />
+                  </mesh>
+                  {/* Permukaan Bubur Putih & Siraman Kuah Kuning */}
+                  <mesh position={[0, 0.082, 0.02]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <circleGeometry args={[0.078, 14]} />
+                    <meshStandardMaterial color="#fef3c7" roughness={0.4} />
+                  </mesh>
+                  {/* Topping Ayam Suwir, Daun Bawang & Kerupuk Kuning Renyah */}
+                  <mesh position={[-0.018, 0.092, 0.018]}>
+                    <sphereGeometry args={[0.022, 8, 6]} />
+                    <meshStandardMaterial color="#d97706" roughness={0.7} />
+                  </mesh>
+                  <mesh position={[0.026, 0.098, 0.024]} rotation={[0.2, 0.3, -0.45]}>
+                    <cylinderGeometry args={[0.028, 0.028, 0.008, 10]} />
+                    <meshStandardMaterial color="#facc15" roughness={0.62} />
+                  </mesh>
+                  <mesh position={[0.004, 0.092, -0.016]}>
+                    <sphereGeometry args={[0.016, 8, 6]} />
+                    <meshStandardMaterial color="#22c55e" roughness={0.72} />
+                  </mesh>
+                  {/* Sendok Keramik Putih */}
+                  <mesh position={[-0.044, 0.115, 0.025]} rotation={[0.2, 0, 0.42]}>
+                    <boxGeometry args={[0.014, 0.085, 0.005]} />
+                    <meshStandardMaterial color="#ffffff" roughness={0.3} />
+                  </mesh>
+                  <CupSteam position={[0, 0.118, 0.02]} />
+                </group>
+              ) : holdingDrink === 'eskrim_potong' ? (
                 <group>
                   {/* Es Krim Potong Neapolitan 3 Lapis (Stroberi-Vanila-Cokelat) Dibungkus Roti Tawar & Stik */}
                   <mesh position={[0, 0.015, 0]}>

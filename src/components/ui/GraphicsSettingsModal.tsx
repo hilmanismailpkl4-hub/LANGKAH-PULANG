@@ -171,6 +171,50 @@ export const GraphicsSettingsModal: React.FC = () => {
               )}
             </div>
 
+            {/* Sensitivitas Kamera (Mouse & Sentuh Layar HP) */}
+            <div className="rounded-xl border border-amber-300/20 bg-amber-950/20 p-3">
+              <div className="flex items-center justify-between text-warm-100">
+                <span className="font-semibold">Sensitivitas Kamera (Mouse &amp; Sentuh)</span>
+                <span className="font-mono font-semibold text-warm-300">
+                  {Math.round(settings.mouseSensitivity * 100)}%
+                </span>
+              </div>
+              <input
+                type="range"
+                min={0.25}
+                max={2.5}
+                step={0.05}
+                value={settings.mouseSensitivity}
+                onChange={(e) => updateSettings({ mouseSensitivity: parseFloat(e.target.value) })}
+                className="mt-1.5 w-full accent-warm-400"
+              />
+              <div className="mt-1.5 grid grid-cols-3 gap-1.5">
+                {(
+                  [
+                    { val: 0.6, label: 'Pelan' },
+                    { val: 1.0, label: 'Normal' },
+                    { val: 1.65, label: 'Cepat' },
+                  ] as const
+                ).map((preset) => (
+                  <button
+                    key={preset.label}
+                    type="button"
+                    onClick={() => {
+                      sfxEngine.play('switch');
+                      updateSettings({ mouseSensitivity: preset.val });
+                    }}
+                    className={`rounded-lg py-1.5 text-[10.5px] font-medium transition ${
+                      Math.abs(settings.mouseSensitivity - preset.val) < 0.06
+                        ? 'bg-warm-400 font-semibold text-dusk-950'
+                        : 'border border-warm-100/15 bg-dusk-900/70 text-warm-200 hover:border-warm-300/45'
+                    }`}
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Resolusi Render */}
             <div>
               <div className="flex justify-between text-warm-200">

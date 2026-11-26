@@ -234,6 +234,47 @@ export const PauseSettingsModal: React.FC = () => {
                     </div>
                   ))}
 
+                  {/* Sensitivitas Kamera (Mouse & Sentuh Layar HP) */}
+                  <div className="rounded-xl border border-warm-300/20 bg-warm-400/5 p-2.5">
+                    <div className={`flex items-center justify-between text-warm-200 ${compact ? 'text-[11px]' : 'text-xs'}`}>
+                      <span className="font-medium text-warm-100">Sensitivitas Kamera (Mouse &amp; Sentuh)</span>
+                      <span className="font-mono font-semibold text-warm-300">
+                        {Math.round(settings.mouseSensitivity * 100)}%
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={0.25}
+                      max={2.5}
+                      step={0.05}
+                      value={settings.mouseSensitivity}
+                      onChange={(e) => updateSettings({ mouseSensitivity: parseFloat(e.target.value) })}
+                      className="mt-1.5 w-full accent-warm-400"
+                    />
+                    <div className="mt-1.5 grid grid-cols-3 gap-1">
+                      {(
+                        [
+                          { val: 0.6, label: 'Pelan (60%)' },
+                          { val: 1.0, label: 'Normal (100%)' },
+                          { val: 1.65, label: 'Cepat (165%)' },
+                        ] as const
+                      ).map((preset) => (
+                        <button
+                          key={preset.label}
+                          type="button"
+                          onClick={() => updateSettings({ mouseSensitivity: preset.val })}
+                          className={`rounded-lg py-1 text-[10px] font-medium transition ${
+                            Math.abs(settings.mouseSensitivity - preset.val) < 0.06
+                              ? 'bg-warm-400 font-semibold text-dusk-950'
+                              : 'border border-warm-200/20 bg-dusk-950/60 text-warm-200 hover:border-warm-300/45'
+                          }`}
+                        >
+                          {preset.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   {/* Preset Grafis */}
                   <div>
                     <div className="flex items-center justify-between gap-2">

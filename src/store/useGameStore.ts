@@ -437,60 +437,24 @@ export const useGameStore = create<GameStoreState>((set, get) => {
 
     initApp: async () => {
       const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
-      const startedAt = Date.now();
-      set((s) => ({
-        loadingOverlay: {
-          ...s.loadingOverlay,
-          visible: true,
-          mode: 'boot',
-          stageLabel: 'Memuat aset kota 3D & tekstur...',
-          progress: 22,
-        },
-      }));
-
-      await wait(240);
-
-      set((s) => ({
-        loadingOverlay: {
-          ...s.loadingOverlay,
-          stageLabel: 'Memeriksa arsip catatan & pengaturan...',
-          progress: 52,
-        },
-      }));
-
       const merged = await syncAndLoadAllSlots();
-      set((s) => ({
+      set({
         slots: merged,
         unlockedEndings: loadGlobalUnlockedEndings(),
-        loadingOverlay: {
-          ...s.loadingOverlay,
-          stageLabel: 'Mengompilasi shader & pencahayaan 3D kota...',
-          progress: 82,
-        },
-      }));
+      });
 
-      // Tunggu frame pertama WebGL 3D selesai dirender (maks 1.8 detik agar tidak pernah macet)
+      // Tunggu frame pertama WebGL 3D selesai dirender (maks 2.0 detik agar tidak pernah macet)
       const waitSceneStart = Date.now();
-      while (!playerRuntime.perf.sceneReady && Date.now() - waitSceneStart < 1800) {
+      while (!playerRuntime.perf.sceneReady && Date.now() - waitSceneStart < 2000) {
         await wait(80);
       }
 
-      const elapsed = Date.now() - startedAt;
-      if (elapsed < 1250) {
-        await wait(1250 - elapsed);
-      }
-
+      // Izinkan animasi loading tunggal mengalir mulus hingga 100% lalu menutup otomatis
       set((s) => ({
         loadingOverlay: {
           ...s.loadingOverlay,
-          stageLabel: 'Selamat datang di Langkah Pulang',
+          stageLabel: 'Selamat datang di Langkah Pulang!',
           progress: 100,
-        },
-      }));
-      await wait(420);
-      set((s) => ({
-        loadingOverlay: {
-          ...s.loadingOverlay,
           visible: false,
         },
       }));
@@ -1727,38 +1691,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
 
     startNewSlot: async (slotId, journalName) => {
       const cleanTitle = journalName.trim() || 'Catatan Langkahku';
-      const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
-
-      set({
-        loadingOverlay: {
-          visible: true,
-          mode: 'enter_world',
-          title: cleanTitle,
-          subtitle: 'Menuju Rumah Keluarga Damar · Jl. Melati No. 14',
-          stageLabel: 'Menyiapkan catatan harian Bab 1...',
-          progress: 0,
-        },
-      });
-
-      await wait(120);
-      set((s) => ({
-        loadingOverlay: {
-          ...s.loadingOverlay,
-          stageLabel: 'Menyimpan arsip langkah perdana...',
-          progress: 38,
-        },
-      }));
-
       const fresh = createFreshSaveSlot(slotId, cleanTitle);
-      await saveSlotData(fresh);
-
-      set((s) => ({
-        loadingOverlay: {
-          ...s.loadingOverlay,
-          stageLabel: 'Menyalakan pagi di Jl. Melati No. 14...',
-          progress: 76,
-        },
-      }));
+      void saveSlotData(fresh);
 
       clearBanterTimers();
       resetScooterToHome();
@@ -1767,8 +1701,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       musicEngine.start();
       musicEngine.setContext('home', 'morning');
 
-      await wait(520);
-
+      // Dunia 3D sudah siap sejak loading awal — langsung masuk tanpa layar loading kedua!
       set((state) => ({
         slots: { ...state.slots, [slotId]: fresh },
         activeSlotId: slotId,
@@ -1817,33 +1750,13 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         stepCount: 0,
         transitionChapter: 1,
         screen: 'chapter_transition',
-        loadingOverlay: {
-          ...state.loadingOverlay,
-          stageLabel: 'Siap memulai perjalanan',
-          progress: 100,
-        },
       }));
-
-      window.setTimeout(() => {
-        set((s) => ({ loadingOverlay: { ...s.loadingOverlay, visible: false } }));
-      }, 260);
     },
 
     loadSlot: (slotId) => {
       const slot = get().slots[slotId];
       if (!slot) return;
       const loc = getLocationAtPosition(slot.playerPosition);
-
-      set({
-        loadingOverlay: {
-          visible: true,
-          mode: 'enter_world',
-          title: slot.journalName,
-          subtitle: `Menuju ${loc.name} · Bab ${slot.chapter}`,
-          stageLabel: 'Memuat posisi & suasana kota...',
-          progress: 0,
-        },
-      });
 
       clearBanterTimers();
       resetScooterToHome();
@@ -1852,6 +1765,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       musicEngine.start();
       musicEngine.setContext(loc.musicMood, slot.timeOfDay);
 
+      // Langsung masuk ke dunia 3D tanpa menampilkan layar loading kedua!
       set((s) => ({
         activeSlotId: slot.slotId,
         journalName: slot.journalName,
@@ -1899,38 +1813,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         workLaptopClosed: slot.flags.includes('closed_work_laptop_home'),
         stepCount: slot.stepCount ?? 0,
         screen: 'playing',
-        loadingOverlay: {
-          ...s.loadingOverlay,
-          stageLabel: 'Memuat peta & bangunan Kota Senja...',
-          progress: 28,
-        },
       }));
-
-      window.setTimeout(() => {
-        set((s) => ({
-          loadingOverlay: {
-            ...s.loadingOverlay,
-            stageLabel: 'Menata pencahayaan & warga kota...',
-            progress: 72,
-          },
-        }));
-      }, 320);
-
-      window.setTimeout(() => {
-        set((s) => ({
-          loadingOverlay: {
-            ...s.loadingOverlay,
-            stageLabel: 'Selamat datang kembali, Damar',
-            progress: 100,
-          },
-        }));
-      }, 760);
-
-      window.setTimeout(() => {
-        set((s) => ({
-          loadingOverlay: { ...s.loadingOverlay, visible: false },
-        }));
-      }, 1180);
     },
 
     deleteSlot: async (slotId) => {

@@ -3127,6 +3127,90 @@ export const WorldInteractables: React.FC = () => {
         2.9,
       );
 
+      consider(
+        {
+          id: 'activity_danau_ducks',
+          kind: 'story_object',
+          label: 'Tabur Remah Roti untuk Kawanan Bebek Danau Senja',
+          sublabel: 'Tepi Selatan Danau · 5 Ekor Bebek Berenang & Berkwek',
+          position: [-82.4, 0, -12.1],
+          onInteract: () => {
+            sfxEngine.playDuckQuack();
+            playerRuntime.duckFeedTimer = 7.0;
+            if (!store.flags.includes('fed_danau_ducks')) {
+              store.applyEffect({
+                kehadiranKeluarga: 1,
+                kejujuranDiri: 1,
+                setFlags: ['fed_danau_ducks'],
+                journalEntry: {
+                  id: 'je_danau_ducks',
+                  title: 'Kawanan Bebek Riang di Danau Senja',
+                  body: 'Di tepi selatan Danau Senja, aku menaburkan remah roti ke permukaan air. Lima ekor bebek langsung berenang riang mendekat sambil berkwek lembut—pagi di kota ini terasa begitu ramah dan hidup.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_danau_ducks, 'fw_danau_ducks');
+            }
+            store.showToast('Kwek-kwek! Lima bebek Danau Senja langsung berenang mendekat mematuk remah roti di air!');
+          },
+        },
+        3.1,
+      );
+
+      consider(
+        {
+          id: 'activity_ibu_lela_flowers',
+          kind: 'story_object',
+          label: 'Pilih Buket Bunga Segar di Kios Ibu Lela',
+          sublabel: 'Tepi Jalan Taman Danau · Melati, Mawar & Krisan Segar',
+          position: [-89.8, 0, -7.4],
+          onInteract: () => {
+            sfxEngine.play('chime');
+            playerRuntime.flowerBouquetStep += 1;
+            const flowerLines = [
+              'Ibu Lela merangkai buket Melati & Mawar Pink harum: "Buat Mbak Nadia di rumah ya, Mas? Wanginya awet sampai besok!"',
+              'Ibu Lela memilihkan tangkai Krisan Kuning cerah: "Yang kuning ceria ini pasti bikin Kira senyum lebar, Mas Damar!"',
+              'Ibu Lela mengikat buket Mawar Merah segar berembun: "Baru dipetik subuh tadi, Mas—cantik banget buat meja ruang tamu!"',
+              'Ibu Lela menambahkan Bunga Matahari mini: "Biar rumah di Jl. Melati selalu terasa hangat kayak pagi hari, Mas!"',
+            ];
+            if (!store.flags.includes('visited_ibu_lela_flowers')) {
+              store.applyEffect({
+                kehadiranKeluarga: 2,
+                kejujuranDiri: 1,
+                setFlags: ['visited_ibu_lela_flowers'],
+                journalEntry: {
+                  id: 'je_ibu_lela_flowers',
+                  title: 'Aroma Melati & Mawar di Kios Bunga Ibu Lela',
+                  body: 'Di tepi jalan Taman Danau, ember-ember seng Ibu Lela dipenuhi melati putih, mawar merah muda, dan krisan kuning segar. Aku memilih seikat kecil untuk dibawa pulang—bukan karena ada perayaan khusus, melainkan karena Nadia dan Kira pantas dirayakan di hari biasa.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_ibu_lela_flowers, 'fw_ibu_lela_flowers');
+            }
+            store.showToast(flowerLines[playerRuntime.flowerBouquetStep % flowerLines.length]);
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'culinary_bubur_ujang',
+          kind: 'story_object',
+          label: 'Pesan Bubur Ayam Pagi Mang Ujang',
+          sublabel: 'Seberang Jl. Melati · Kuah Kuning, Cakwe, Sate Puyuh & Kerupuk',
+          position: [-22.2, 0, 39.8],
+          onInteract: () => {
+            store.openCulinarySpot('bubur_melati');
+          },
+        },
+        2.9,
+      );
+
     consider(
       {
         id: 'portal_up',
@@ -3742,6 +3826,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[25.2, 2.15, 40.3]}>
         <sphereGeometry args={[0.08, 8, 8]} />
         <meshBasicMaterial color="#38bdf8" />
+      </mesh>
+      <mesh position={[-81.8, 1.56, -12.35]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#fde047" />
+      </mesh>
+      <mesh position={[-89.8, 1.95, -8.8]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#f472b6" />
+      </mesh>
+      <mesh position={[-22.2, 1.92, 38.4]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#facc15" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

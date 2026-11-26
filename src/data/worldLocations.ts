@@ -222,6 +222,9 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= 12.4 && x <= 14.2 && z >= 36.2 && z <= 39.4) return true;
   if (x >= -68.9 && x <= -65.5 && z >= 33.4 && z <= 36.2) return true;
   if (x >= 23.4 && x <= 27.0 && z >= 39.8 && z <= 41.3) return true;
+  // Payung Kios Bunga Ibu Lela (Tepi Taman Danau) & Gerobak Bubur Ayam Mang Ujang (Jl. Melati)
+  if (x >= -91.4 && x <= -88.2 && z >= -10.3 && z <= -7.3) return true;
+  if (x >= -23.8 && x <= -20.6 && z >= 36.8 && z <= 40.1) return true;
   return false;
 }
 
@@ -463,6 +466,11 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'bu_ningsih_nursery_rack', minX: -68.55, maxX: -65.85, minZ: 33.95, maxZ: 35.28 },
   { id: 'pak_ahmad_gallon_depot', minX: 23.76, maxX: 26.64, minZ: 38.34, maxZ: 40.55 },
   { id: 'pak_ahmad_gallon_bike', minX: 26.95, maxX: 27.95, minZ: 38.75, maxZ: 40.35 },
+
+  // === 37. Kios Bunga Segar Ibu Lela & Gerobak Bubur Ayam Pagi Mang Ujang ===
+  { id: 'ibu_lela_flower_stall', minX: -91.0, maxX: -88.6, minZ: -9.4, maxZ: -8.2 },
+  { id: 'bubur_ujang_cart', minX: -23.28, maxX: -21.12, minZ: 37.86, maxZ: 38.94 },
+  { id: 'bubur_ujang_bench', minX: -22.98, maxX: -21.42, minZ: 39.98, maxZ: 40.52 },
 ];
 
 /**
@@ -629,6 +637,10 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: 13.52, z: 36.45, r: 0.22 },
   { x: -67.2, z: 35.85, r: 0.42 },
   { x: 23.35, z: 40.15, r: 0.42 },
+  // Papan Bebek Danau Senja, Ibu Lela Bunga & Mang Ujang Bubur Ayam
+  { x: -81.8, z: -12.35, r: 0.22 },
+  { x: -89.8, z: -9.95, r: 0.42 },
+  { x: -22.2, z: 37.38, r: 0.42 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
