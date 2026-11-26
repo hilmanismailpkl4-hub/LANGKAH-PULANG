@@ -180,6 +180,9 @@ export const playerRuntime = {
   putuWhistleTimer: 0,
   tirePumpTimer: 0,
   laundrySpinTimer: 0,
+  cilokFryTimer: 0,
+  bikeShareRingTimer: 0,
+  watchRepairTimer: 0,
   gardenSwingTimer: 0,
   swingBoostTimer: 0,
   kiteHeight: 0,
@@ -298,6 +301,9 @@ export function resetScooterToHome() {
   playerRuntime.putuWhistleTimer = 0;
   playerRuntime.tirePumpTimer = 0;
   playerRuntime.laundrySpinTimer = 0;
+  playerRuntime.cilokFryTimer = 0;
+  playerRuntime.bikeShareRingTimer = 0;
+  playerRuntime.watchRepairTimer = 0;
   playerRuntime.gardenSwingTimer = 0;
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;

@@ -1237,6 +1237,74 @@ class SfxEngine {
     });
   }
 
+  /**
+   * Suara desis wajan minyak hangat saat menggulung telur gulung & cilok sore ("cssshhh—krk!").
+   */
+  public playFryingSizzle() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    const src = ctx.createBufferSource();
+    src.buffer = this.getNoiseBuffer(ctx);
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.setValueAtTime(3600, now);
+    bp.frequency.linearRampToValueAtTime(4800, now + 0.25);
+    bp.frequency.linearRampToValueAtTime(3200, now + 0.85);
+    bp.Q.value = 1.4;
+
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.001, now);
+    g.gain.linearRampToValueAtTime(0.088 * v, now + 0.06);
+    g.gain.setValueAtTime(0.072 * v, now + 0.55);
+    g.gain.exponentialRampToValueAtTime(0.0008, now + 0.92);
+
+    src.connect(bp).connect(g).connect(ctx.destination);
+    src.start(now, 0.12, 0.95);
+  }
+
+  /**
+   * Suara bel sepeda kota jernih ("kring-kring!") + bunyi kunci dock stasiun sepeda sewa.
+   */
+  public playBikeShareBell() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // 2 dering bel sepeda nyaring + harmoni logam tipis
+    [0.0, 0.19].forEach((off) => {
+      this.softTone(ctx, 2180, now + off, 0.22, 0.075 * v, 'sine');
+      this.softTone(ctx, 4360, now + off, 0.14, 0.028 * v, 'triangle');
+    });
+    // Bip QR dock hijau ramah
+    this.softTone(ctx, 1175, now + 0.42, 0.09, 0.045 * v, 'sine');
+    this.softTone(ctx, 1568, now + 0.52, 0.14, 0.05 * v, 'sine');
+  }
+
+  /**
+   * Detak mekanis halus jam tangan & denting kecil lapak reparasi Pak Karto ("tik-tok-tik-tok-ting!").
+   */
+  public playWatchTickChime() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // 4 detak halus mekanis bergantian tik-tok
+    [0.0, 0.16, 0.32, 0.48].forEach((off, idx) => {
+      const freq = idx % 2 === 0 ? 3100 : 2550;
+      this.softTone(ctx, freq, now + off, 0.028, 0.052 * v, 'triangle');
+    });
+    // Denting halus penutup jam selesai diperiksa
+    this.softTone(ctx, 1760, now + 0.64, 0.28, 0.048 * v, 'sine');
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

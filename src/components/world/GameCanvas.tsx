@@ -10,6 +10,7 @@ import { Atmosphere } from './Atmosphere';
 import { BarberNurseryAndGallonDepot } from './BarberNurseryAndGallonDepot';
 import { BicycleEntity } from './BicycleEntity';
 import { CafeAndNightStreetLife } from './CafeAndNightStreetLife';
+import { CilokBikeShareAndWatchmaker } from './CilokBikeShareAndWatchmaker';
 import { CityDetails } from './CityDetails';
 import { CityGeometry } from './CityGeometry';
 import { CityLife } from './CityLife';
@@ -138,6 +139,7 @@ export const GameCanvas: React.FC = () => {
               <MorningDucksFlowersAndBubur timeOfDay={effectiveTime} settings={settings} />
               <MusholaTehPociAndAngkotBoard timeOfDay={effectiveTime} settings={settings} />
               <PutuWorkshopAndLaundry timeOfDay={effectiveTime} settings={settings} />
+              <CilokBikeShareAndWatchmaker timeOfDay={effectiveTime} settings={settings} />
               <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
             </group>
 

@@ -259,7 +259,48 @@ export const HumanModel: React.FC<HumanModelProps> = ({
           {/* Visual Gelas Hangat / Es Krim / Jajanan Martabak & Kacang Rebus di Tangan Kanan */}
           {holdingDrink && (
             <group position={[0, -0.48, 0.05]} rotation={[0.92, 0, 0]}>
-              {holdingDrink === 'kue_putu' ? (
+              {holdingDrink === 'cilok_telur' ? (
+                <group>
+                  {/* Cup Jajanan Sore Berisi 2 Tusuk Telur Gulung Emas & 2 Tusuk Cilok Bumbu Kacang */}
+                  <mesh position={[0, 0.048, 0]} castShadow>
+                    <cylinderGeometry args={[0.046, 0.035, 0.095, 12]} />
+                    <meshStandardMaterial color="#f8fafc" roughness={0.48} />
+                  </mesh>
+                  {/* Siraman Bumbu Kacang & Saus Sambal di Dalam Cup */}
+                  <mesh position={[0, 0.092, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <circleGeometry args={[0.042, 12]} />
+                    <meshStandardMaterial color="#9a5c2a" roughness={0.65} />
+                  </mesh>
+                  {/* 2 Tusuk Telur Gulung Kuning Keemasan */}
+                  {[-0.018, 0.018].map((tx, ti) => (
+                    <group key={`tg-${ti}`} position={[tx, 0.135, 0.008]} rotation={[0.1, 0, ti === 0 ? 0.16 : -0.18]}>
+                      <mesh position={[0, -0.025, 0]}>
+                        <cylinderGeometry args={[0.003, 0.003, 0.13, 6]} />
+                        <meshStandardMaterial color="#d6b27d" roughness={0.8} />
+                      </mesh>
+                      <mesh position={[0, 0.022, 0]} castShadow>
+                        <capsuleGeometry args={[0.015, 0.048, 5, 8]} />
+                        <meshStandardMaterial color="#f59e0b" roughness={0.62} />
+                      </mesh>
+                      {/* Olesan Saus Sambal Tipis */}
+                      <mesh position={[0, 0.028, 0.013]}>
+                        <sphereGeometry args={[0.007, 6, 6]} />
+                        <meshStandardMaterial color="#dc2626" roughness={0.45} />
+                      </mesh>
+                    </group>
+                  ))}
+                  {/* 2 Butir Cilok Kenyal di Belakang */}
+                  <mesh position={[-0.012, 0.112, -0.014]}>
+                    <sphereGeometry args={[0.016, 8, 8]} />
+                    <meshStandardMaterial color="#e7e5e4" roughness={0.55} />
+                  </mesh>
+                  <mesh position={[0.015, 0.114, -0.012]}>
+                    <sphereGeometry args={[0.016, 8, 8]} />
+                    <meshStandardMaterial color="#d6d3d1" roughness={0.55} />
+                  </mesh>
+                  <CupSteam position={[0, 0.17, 0]} />
+                </group>
+              ) : holdingDrink === 'kue_putu' ? (
                 <group>
                   {/* Pincuk Daun Pisang Berisi 3 Silinder Hijau Kue Putu Bambu + Kelapa Parut Putih & Lupis */}
                   <mesh position={[0, 0.026, 0.02]} castShadow>

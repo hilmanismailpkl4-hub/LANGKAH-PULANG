@@ -522,4 +522,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'nadia', text: 'Mmm!! Dari depan pintu aja wangi lavender Laundry Harum Melati sudah semerbak banget ya, Mas!' },
     { speaker: 'kira', text: 'Lihat deh Bunda, baju-bajunya muter-muter di dalam kaca mesin cuci kayak komidi putar!!' },
   ],
+  activity_city_bike_share: [
+    { speaker: 'kira', text: 'KRING-KRING!! Waaah sepeda sewa depan kantor Ayah warna kuning sama biru toskanya keren banget!!' },
+    { speaker: 'nadia', text: 'Praktis banget ya Mas sekarang di depan Menara Nusantara ada stasiun sepeda sewa kota—sehat dan ramah lingkungan!' },
+  ],
+  activity_pak_karto_watch: [
+    { speaker: 'nadia', text: 'Pak Karto telaten banget ya Mas benerin jam tangan di pinggir stasiun—bahkan jam lama pun bisa hidup lagi di tangannya.' },
+    { speaker: 'kira', text: 'Tik-tok-tik-tok!! Lihat deh Yah, jarum jam di dinding lapaknya muter barengan semuanya!!' },
+  ],
 };

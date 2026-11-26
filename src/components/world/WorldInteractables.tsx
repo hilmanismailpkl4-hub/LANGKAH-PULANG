@@ -3366,6 +3366,85 @@ export const WorldInteractables: React.FC = () => {
         2.9,
       );
 
+      consider(
+        {
+          id: 'culinary_cilok_dedi',
+          kind: 'story_object',
+          label: 'Pesan Cilok & Telur Gulung Hangat Mang Dedi',
+          sublabel: 'Trotoar Jl. Kenangan Barat · Bumbu Kacang, Sosis & Cilor Sore',
+          position: [-28.8, 0, -12.6],
+          onInteract: () => {
+            sfxEngine.playFryingSizzle();
+            playerRuntime.cilokFryTimer = 4.5;
+            store.openCulinarySpot('cilok_kenangan');
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'activity_city_bike_share',
+          kind: 'story_object',
+          label: 'Cek Stasiun Sepeda Sewa Kota ("Sepeda Senja")',
+          sublabel: 'Plaza Menara Nusantara · 4/4 Unit Siap Gowes · Rp 3.000 / 30 Mnt',
+          position: [19.8, 0, -13.0],
+          onInteract: () => {
+            sfxEngine.playBikeShareBell();
+            playerRuntime.bikeShareRingTimer = 3.8;
+            if (!store.flags.includes('checked_city_bike_share')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                setFlags: ['checked_city_bike_share'],
+                journalEntry: {
+                  id: 'je_city_bike_share',
+                  title: 'Stasiun Sepeda Sewa di Depan Menara Nusantara',
+                  body: 'Tepat di pelataran Menara Nusantara kini berdiri deretan sepeda sewa kota bertanda "Sepeda Senja". Rasanya menyenangkan melihat kota yang dulu serba terburu-buru mulai memberi ruang bagi langkah dan kayuhan yang lebih pelan.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_city_bike_share, 'fw_city_bike_share');
+            }
+            store.showToast('Kring-kring! Stasiun Sepeda Senja: 4/4 unit aktif (Rp 3.000/30 mnt). Sepeda kota pribadi Damar juga siap digowes di tepi Danau Senja!');
+          },
+        },
+        3.2,
+      );
+
+      consider(
+        {
+          id: 'activity_pak_karto_watch',
+          kind: 'story_object',
+          label: 'Cek & Setel Jam Tangan di Lapak Pak Karto',
+          sublabel: 'Halaman Stasiun Senja · Reparasi & Ganti Baterai Sejak 1994',
+          position: [70.4, 0, 12.6],
+          onInteract: () => {
+            sfxEngine.playWatchTickChime();
+            playerRuntime.watchRepairTimer = 4.4;
+            if (!store.flags.includes('visited_pak_karto_watch')) {
+              store.applyEffect({
+                kejujuranDiri: 2,
+                kehadiranKeluarga: 1,
+                setFlags: ['visited_pak_karto_watch'],
+                journalEntry: {
+                  id: 'je_pak_karto_watch',
+                  title: 'Detak Tenang di Lapak Jam Tangan Pak Karto',
+                  body: 'Di halaman selatan Stasiun Senja, Pak Karto menunduk sabar di bawah lampu meja sorot memeriksa roda gigi jam tangan tua. Beliau tersenyum berkata, "Jam yang terlalu cepat bikin orang terburu-buru, Mas—yang penting detaknya pas sama langkah pulang."',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_pak_karto_watch, 'fw_pak_karto_watch');
+            }
+            store.showToast('Tik-tok... ting! Pak Karto membersihkan kaca jam tanganmu: "Mesinnya sehat, Mas Damar—jangan lupa sisakan waktu buat orang di rumah ya."');
+          },
+        },
+        3.0,
+      );
+
     consider(
       {
         id: 'portal_up',
@@ -4017,6 +4096,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[33.8, 2.15, 40.3]}>
         <sphereGeometry args={[0.08, 8, 8]} />
         <meshBasicMaterial color="#c084fc" />
+      </mesh>
+      <mesh position={[-28.8, 1.92, -14.0]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#fb923c" />
+      </mesh>
+      <mesh position={[19.8, 2.05, -14.3]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#2dd4bf" />
+      </mesh>
+      <mesh position={[71.5, 1.98, 12.6]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#fde047" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

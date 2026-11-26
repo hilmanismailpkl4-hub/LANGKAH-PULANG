@@ -233,6 +233,10 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= -38.3 && x <= -35.0 && z >= -24.2 && z <= -21.0) return true;
   if (x >= 47.4 && x <= 51.0 && z >= -15.8 && z <= -12.6) return true;
   if (x >= 32.0 && x <= 35.6 && z >= 39.6 && z <= 41.3) return true;
+  // Payung Cilok Mang Dedi, Kanopi Stasiun Sepeda Sewa Kota & Kanopi Reparasi Jam Pak Karto
+  if (x >= -30.4 && x <= -27.2 && z >= -15.5 && z <= -12.4) return true;
+  if (x >= 17.6 && x <= 22.0 && z >= -15.5 && z <= -13.4) return true;
+  if (x >= 70.6 && x <= 73.2 && z >= 11.2 && z <= 14.0) return true;
   return false;
 }
 
@@ -491,6 +495,12 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'putu_oding_bench', minX: -38.72, maxX: -38.18, minZ: -23.38, maxZ: -21.82 },
   { id: 'bengkel_mas_budi_bay', minX: 47.65, maxX: 50.75, minZ: -15.55, maxZ: -13.65 },
   { id: 'laundry_harum_melati_kiosk', minX: 32.26, maxX: 35.34, minZ: 38.28, maxZ: 40.15 },
+
+  // === 40. Gerobak Cilok Mang Dedi, Stasiun Sepeda Sewa Menara Nusantara & Reparasi Jam Pak Karto ===
+  { id: 'cilok_dedi_cart', minX: -29.88, maxX: -27.72, minZ: -14.54, maxZ: -13.46 },
+  { id: 'cilok_dedi_bench', minX: -29.58, maxX: -28.02, minZ: -12.42, maxZ: -11.88 },
+  { id: 'city_bike_share_dock', minX: 17.7, maxX: 21.9, minZ: -15.32, maxZ: -13.88 },
+  { id: 'pak_karto_watch_stall', minX: 71.22, maxX: 72.42, minZ: 11.48, maxZ: 13.72 },
 ];
 
 /**
@@ -671,6 +681,9 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: -35.58, z: -22.6, r: 0.42 },
   { x: 47.2, z: -13.6, r: 0.42 },
   { x: 31.95, z: 40.2, r: 0.42 },
+  // Mang Dedi Cilok & Telur Gulung + Pak Karto Reparasi Jam Tangan Stasiun
+  { x: -28.8, z: -15.02, r: 0.42 },
+  { x: 72.75, z: 12.6, r: 0.42 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],

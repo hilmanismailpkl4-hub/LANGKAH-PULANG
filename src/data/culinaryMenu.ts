@@ -21,7 +21,8 @@ export type CulinarySpotId =
   | 'eskrim_melati'
   | 'bubur_melati'
   | 'tehpoci_plaza'
-  | 'putu_sungai';
+  | 'putu_sungai'
+  | 'cilok_kenangan';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -45,7 +46,8 @@ export type HeldDrinkVisual =
   | 'eskrim_potong'
   | 'bubur_ayam'
   | 'teh_poci'
-  | 'kue_putu';
+  | 'kue_putu'
+  | 'cilok_telur';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -305,6 +307,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [-38.45, 0, -21.2],
     seatYaw: Math.PI / 2,
     tablePropPos: [-37.1, 1.14, -22.6],
+  },
+  cilok_kenangan: {
+    id: 'cilok_kenangan',
+    title: 'Cilok & Telur Gulung Sore Mang Dedi',
+    hostName: 'Mang Dedi',
+    subtitle: 'Trotoar Jl. Kenangan Barat · Cilok Bumbu Kacang, Telur Gulung & Cilor Hangat',
+    seatPos: [-28.8, 0.14, -12.15],
+    lookAt: [-28.8, 1.35, -14.0],
+    standPos: [-28.8, 0, -11.05],
+    seatYaw: Math.PI,
+    tablePropPos: [-28.8, 1.14, -13.52],
   },
 };
 
@@ -1251,6 +1264,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Ngiiiing!! Hihihi suara peluit kue putunya seru banget, Bunda!! Gula merah di dalamnya hangat manis!' },
       { speaker: 'nadia', text: 'Malam yang manis banget ya Mas... terima kasih sudah mengajak mampir jajan kue putu hangat di sini.' },
+    ],
+  },
+
+  // === 22. GEROBAK CILOK & TELUR GULUNG SORE MANG DEDI (JL. KENANGAN BARAT) ===
+  {
+    id: 'cilok_telur_campur',
+    spot: 'cilok_kenangan',
+    name: 'Cilok Bumbu Kacang & 4 Tusuk Telur Gulung',
+    priceLabel: 'Rp 10.000',
+    tagline: 'Cilok kenyal panas siram bumbu kacang kecap manis plus telur gulung goreng baru diangkat dari wajan.',
+    tasteNote: 'Desis wajan minyak hangat dan gurihnya telur gulung sore langsung membawa kembali kenangan pulang sekolah yang riang.',
+    drinkVisual: 'cilok_telur',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'kira', text: 'Waaah telur gulungnya muter-muter di wajan terus jadi gembung kuning, Ayah!! Enak banget!!' },
+    ],
+  },
+  {
+    id: 'telur_gulung_spesial',
+    spot: 'cilok_kenangan',
+    name: 'Telur Gulung Sosis & Cilor Pedas Manis',
+    priceLabel: 'Rp 12.000',
+    tagline: 'Enam tusuk telur gulung balut sosis gurih ditemani cilor hangat tabur bumbu balado & saus sambal.',
+    tasteNote: 'Renyah di luar, lembut gurih di dalam—teman ngemil paling pas saat sore mulai turun di sudut Jl. Kenangan.',
+    drinkVisual: 'cilok_telur',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Aroma telur gulung Mang Dedi ini nggak pernah gagal bikin kepengin jajan sore ya, Mas!' },
+    ],
+  },
+  {
+    id: 'cilok_family',
+    spot: 'cilok_kenangan',
+    name: 'Traktir Keluarga Paket Cilok & Telur Gulung Sore',
+    priceLabel: 'Rp 26.000',
+    tagline: 'Seporsi besar cilok bumbu kacang terpisah plus selusin tusuk telur gulung & sosis hangat untuk dinikmati bertiga.',
+    tasteNote: 'Mang Dedi sigap menggulung telur di atas wajan mendesis sambil bercanda akrab—sudut Jl. Kenangan terasa penuh tawa sore.',
+    drinkVisual: 'cilok_telur',
+    isHot: true,
+    isFamilyTreat: true,
+    journalTitle: 'Jajan Cilok & Telur Gulung Sore di Sudut Jl. Kenangan',
+    journalBody: 'Di dekat Toko Musik Nada Lama, aku mengajak Nadia dan Kira jajan cilok bumbu kacang dan telur gulung hangat di gerobak Mang Dedi. Melihat Kira terpesona menyaksikan telur digulung cepat di atas wajan membuat sore di tengah kota ini terasa begitu hangat.',
+    familyReaction: [
+      { speaker: 'kira', text: 'YEEEY!! Kira pegang dua tusuk telur gulung sekaligus!! Saus kecap manisnya mantap banget, Mang Dedi!' },
+      { speaker: 'nadia', text: 'Sederhana tapi bikin senyum terus ya, Mas... makasih sudah traktir jajan sore favorit kita!' },
     ],
   },
 ];
