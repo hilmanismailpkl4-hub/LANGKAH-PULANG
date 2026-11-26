@@ -171,6 +171,9 @@ export const playerRuntime = {
   melatiPortalTimer: 0,
   fruitScaleSwingTimer: 0,
   fruitPurchaseStep: 0,
+  barberCutTimer: 0,
+  nurseryPickStep: 0,
+  gallonRefillTimer: 0,
   gardenSwingTimer: 0,
   swingBoostTimer: 0,
   kiteHeight: 0,
@@ -280,6 +283,9 @@ export function resetScooterToHome() {
   playerRuntime.melatiPortalTimer = 0;
   playerRuntime.fruitScaleSwingTimer = 0;
   playerRuntime.fruitPurchaseStep = 0;
+  playerRuntime.barberCutTimer = 0;
+  playerRuntime.nurseryPickStep = 0;
+  playerRuntime.gallonRefillTimer = 0;
   playerRuntime.gardenSwingTimer = 0;
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;

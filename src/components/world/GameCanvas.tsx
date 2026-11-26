@@ -7,6 +7,7 @@ import { detectIsMobileDevice } from '../../utils/mobileUtils';
 import { AfternoonAndCreativeLife } from './AfternoonAndCreativeLife';
 import { ArtisticAndStationDetails } from './ArtisticAndStationDetails';
 import { Atmosphere } from './Atmosphere';
+import { BarberNurseryAndGallonDepot } from './BarberNurseryAndGallonDepot';
 import { BicycleEntity } from './BicycleEntity';
 import { CafeAndNightStreetLife } from './CafeAndNightStreetLife';
 import { CityDetails } from './CityDetails';
@@ -130,6 +131,7 @@ export const GameCanvas: React.FC = () => {
               <StationWarkopBirdsAndMusicBench timeOfDay={effectiveTime} settings={settings} />
               <ParkJasukeWaterAndWayfinder timeOfDay={effectiveTime} settings={settings} />
               <NeighborhoodIceCreamFruitAndPortal timeOfDay={effectiveTime} settings={settings} />
+              <BarberNurseryAndGallonDepot timeOfDay={effectiveTime} settings={settings} />
               <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
             </group>
 

@@ -486,4 +486,16 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'Lihat deh Ayah, muka Kira kelihatan bulat lucu di kaca cermin cembung dekat portal!! Hihihi!' },
     { speaker: 'nadia', text: 'Setiap kali lewat portal merah-putih Jl. Melati ini, rasanya langsung lega karena sudah sampai rumah ya, Mas.' },
   ],
+  activity_barber_rapi_jaya: [
+    { speaker: 'nadia', text: 'Wah, rambutmu langsung kelihatan rapi dan segar banget, Mas! Bang Darto memang paling telaten.' },
+    { speaker: 'kira', text: 'Lampu tabung merah-putih-birunya muter terus kayak permen raksasa, Ayah!! Ayah jadi makin ganteng!' },
+  ],
+  activity_bu_ningsih_plants: [
+    { speaker: 'nadia', text: 'Ih, pot terakota sama monstera Bu Ningsih cantik-cantik banget, Mas! Cocok banget ditaruh di teras Jl. Melati!' },
+    { speaker: 'kira', text: 'Kira mau pilih kaktus mungil buat di dekat jendela kamar ya, Bunda! Nanti Kira siram tiap pagi!' },
+  ],
+  activity_pak_ahmad_gallon: [
+    { speaker: 'nadia', text: 'Kebetulan banget, galon di dapur tinggal sedikit, Mas! Untung Pak Ahmad siap antar langsung pakai sepedanya.' },
+    { speaker: 'kira', text: 'Waaah galon birunya bisa diangkut di belakang sepeda Pak Ahmad!! Kuat banget ya, Ayah!' },
+  ],
 };

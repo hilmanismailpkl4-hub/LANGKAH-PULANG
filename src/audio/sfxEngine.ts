@@ -1039,6 +1039,48 @@ class SfxEngine {
     this.softTone(ctx, 880, now + 0.02, 0.09, 0.055 * v, 'sine');
   }
 
+  /**
+   * Bunyi khas gunting pangkas rambut ("krik-krik-krik") diikuti semprotan halus di Kios Rapi Jaya.
+   */
+  public playBarberSnip() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // 3 jepitan gunting baja tajam namun lembut
+    [0.0, 0.14, 0.28].forEach((off) => {
+      const src = ctx.createBufferSource();
+      src.buffer = this.getNoiseBuffer(ctx);
+      const hp = ctx.createBiquadFilter();
+      hp.type = 'bandpass';
+      hp.frequency.setValueAtTime(4200, now + off);
+      hp.Q.value = 3.2;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.001, now + off);
+      g.gain.linearRampToValueAtTime(0.095 * v, now + off + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.0008, now + off + 0.065);
+      src.connect(hp).connect(g).connect(ctx.destination);
+      src.start(now + off, 0.2, 0.08);
+
+      this.softTone(ctx, 2850, now + off, 0.045, 0.03 * v, 'triangle');
+    });
+
+    // Semprotan botol air rambut singkat ("cssht!")
+    const spr = ctx.createBufferSource();
+    spr.buffer = this.getNoiseBuffer(ctx);
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'highpass';
+    bp.frequency.setValueAtTime(2900, now + 0.44);
+    const sg = ctx.createGain();
+    sg.gain.setValueAtTime(0.001, now + 0.44);
+    sg.gain.linearRampToValueAtTime(0.055 * v, now + 0.47);
+    sg.gain.exponentialRampToValueAtTime(0.0008, now + 0.62);
+    spr.connect(bp).connect(sg).connect(ctx.destination);
+    spr.start(now + 0.44, 0.35, 0.2);
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

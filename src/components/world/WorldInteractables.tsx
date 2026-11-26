@@ -3025,6 +3025,108 @@ export const WorldInteractables: React.FC = () => {
         2.9,
       );
 
+      consider(
+        {
+          id: 'activity_barber_rapi_jaya',
+          kind: 'story_object',
+          label: 'Rapikan Rambut & Ngobrol Santai di Pangkas Rambut "Rapi Jaya"',
+          sublabel: 'Jl. Cempaka · Bang Darto & Lampu Barber Pole Berputar',
+          position: [13.0, 0, 37.8],
+          onInteract: () => {
+            sfxEngine.playBarberSnip();
+            playerRuntime.barberCutTimer = 4.2;
+            if (!store.flags.includes('visited_barber_rapi_jaya')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                kehadiranKeluarga: 1,
+                setFlags: ['visited_barber_rapi_jaya'],
+                journalEntry: {
+                  id: 'je_barber_rapi_jaya',
+                  title: 'Potong Rambut Rapi & Obrolan Hangat di Rapi Jaya',
+                  body: 'Di bawah lampu tabung merah-putih-biru Pangkas Rambut "Rapi Jaya", Bang Darto merapikan potongan rambutku sambil bercerita tentang kabar warga Jl. Cempaka. Kadang merawat diri sepuluh menit saja cukup membuat langkah terasa lebih ringan.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_barber_rapi_jaya, 'fw_barber_rapi_jaya');
+            }
+            store.showToast('Krik-krik-cssht! Bang Darto merapikan rambut Damar hingga segar kembali — "Nah, langsung kelihatan cerah, Mas!"');
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'activity_bu_ningsih_plants',
+          kind: 'story_object',
+          label: 'Pilih Tanaman Hias & Pot Terakota di Lapak Bu Ningsih',
+          sublabel: 'Tepi Taman Kota Selatan · Monstera, Lidah Mertua & Kaktus',
+          position: [-67.2, 0, 33.1],
+          onInteract: () => {
+            sfxEngine.play('chime');
+            playerRuntime.nurseryPickStep += 1;
+            const plantLines = [
+              'Bu Ningsih menunjukkan pot Monstera daun lebar: "Yang ini rimbun banget, Mas—taruh di teras Jl. Melati langsung adem!"',
+              'Bu Ningsih memilihkan Lidah Mertua pot terakota: "Gampang dirawat, tahan panas, bikin udara ruang tamu makin segar!"',
+              'Bu Ningsih mengangkat pot Kaktus Mini lucu: "Ini favorit anak-anak, Mas—cocok banget buat jendela kamar Kira!"',
+              'Bu Ningsih merapikan Bougenville merah muda: "Kalau kena matahari pagi, bunganya mekar cerah terus sepanjang bulan!"',
+            ];
+            if (!store.flags.includes('visited_bu_ningsih_plants')) {
+              store.applyEffect({
+                kehadiranKeluarga: 1,
+                kejujuranDiri: 1,
+                setFlags: ['visited_bu_ningsih_plants'],
+                journalEntry: {
+                  id: 'je_bu_ningsih_plants',
+                  title: 'Deretan Pot Terakota & Daun Hijau Lapak Bu Ningsih',
+                  body: 'Di sudut selatan Taman Kota, rak kayu Bu Ningsih dipenuhi pot tanah liat berisi monstera, lidah mertua, kaktus mini, dan bougenville merah muda. Merawat sesuatu agar tumbuh pelan rupanya punya kesabaran yang sama dengan merawat keluarga.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_bu_ningsih_plants, 'fw_bu_ningsih_plants');
+            }
+            store.showToast(plantLines[playerRuntime.nurseryPickStep % plantLines.length]);
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'activity_pak_ahmad_gallon',
+          kind: 'story_object',
+          label: 'Pesan Antar Galon Air Isi Ulang di Depot Pak Ahmad',
+          sublabel: 'Sudut Jl. Melati · Tirta Melati RO & Sepeda Antar Galon',
+          position: [25.0, 0, 41.0],
+          onInteract: () => {
+            sfxEngine.playWaterFountain();
+            playerRuntime.gallonRefillTimer = 4.2;
+            if (!store.flags.includes('ordered_pak_ahmad_gallon')) {
+              store.applyEffect({
+                kehadiranKeluarga: 1,
+                kejujuranDiri: 1,
+                setFlags: ['ordered_pak_ahmad_gallon'],
+                journalEntry: {
+                  id: 'je_pak_ahmad_gallon',
+                  title: 'Depot Air Isi Ulang Tirta Melati & Sepeda Pak Ahmad',
+                  body: 'Di seberang Pos Ronda RT 04, aku mampir memesan isi ulang galon air RO di depot Pak Ahmad. Pak Ahmad tertawa ramah sambil menyiapkan sepeda pengantarnya menuju Jl. Melati No. 14—kehidupan kompleks terasa begitu saling menjaga.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_pak_ahmad_gallon, 'fw_pak_ahmad_gallon');
+            }
+            store.showToast('Ssshh... Galon RO higienis selesai disterilkan UV! Pak Ahmad: "Siap Mas Damar, sebentar lagi langsung saya antar ke Jl. Melati No. 14!"');
+          },
+        },
+        2.9,
+      );
+
     consider(
       {
         id: 'portal_up',
@@ -3628,6 +3730,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-10.8, 1.56, 51.3]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#f87171" />
+      </mesh>
+      <mesh position={[13.52, 2.38, 36.45]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#ef4444" />
+      </mesh>
+      <mesh position={[-67.2, 2.25, 34.6]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#4ade80" />
+      </mesh>
+      <mesh position={[25.2, 2.15, 40.3]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#38bdf8" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (
