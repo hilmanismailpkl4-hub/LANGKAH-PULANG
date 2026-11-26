@@ -22,6 +22,7 @@ import { HomeLivingAndBusStop } from './HomeLivingAndBusStop';
 import { HomeWarmthAndButterflies } from './HomeWarmthAndButterflies';
 import { HomeYardLife } from './HomeYardLife';
 import { KetoprakLotusAndWeatherPlaza } from './KetoprakLotusAndWeatherPlaza';
+import { LakeBoatsBandrekAndParkLights } from './LakeBoatsBandrekAndParkLights';
 import { MorningDucksFlowersAndBubur } from './MorningDucksFlowersAndBubur';
 import { MorningParkAndBadminton } from './MorningParkAndBadminton';
 import { MusholaTehPociAndAngkotBoard } from './MusholaTehPociAndAngkotBoard';
@@ -140,6 +141,7 @@ export const GameCanvas: React.FC = () => {
               <MusholaTehPociAndAngkotBoard timeOfDay={effectiveTime} settings={settings} />
               <PutuWorkshopAndLaundry timeOfDay={effectiveTime} settings={settings} />
               <CilokBikeShareAndWatchmaker timeOfDay={effectiveTime} settings={settings} />
+              <LakeBoatsBandrekAndParkLights timeOfDay={effectiveTime} settings={settings} />
               <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
             </group>
 

@@ -3445,6 +3445,113 @@ export const WorldInteractables: React.FC = () => {
         3.0,
       );
 
+      consider(
+        {
+          id: 'activity_pedal_duck_boats',
+          kind: 'story_object',
+          label: 'Lihat & Goyangkan Perahu Bebek Kayuh Tambat',
+          sublabel: 'Dermaga Selatan Danau Senja · Angsa Putih & Bebek Kuning',
+          position: [-92.8, 0, -11.9],
+          onInteract: () => {
+            sfxEngine.playPedalBoatSplash();
+            playerRuntime.pedalBoatWaveTimer = 5.0;
+            if (!store.flags.includes('visited_pedal_duck_boats')) {
+              store.applyEffect({
+                kehadiranKeluarga: 1,
+                kejujuranDiri: 1,
+                setFlags: ['visited_pedal_duck_boats'],
+                journalEntry: {
+                  id: 'je_pedal_duck_boats',
+                  title: 'Perahu Bebek Kayuh di Dermaga Selatan Danau Senja',
+                  body: 'Dua perahu bebek kayuh tertambat tenang di dermaga kayu tepi Danau Senja—satu angsa putih dan satu bebek kuning ceria. Melihat kincir kayuhnya memercikkan air danau membuat sore ini terasa seperti hari libur yang lama dinanti.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_pedal_duck_boats, 'fw_pedal_duck_boats');
+            }
+            store.showToast('Byur—byur! Kincir perahu bebek kayuh berputar pelan menciptakan riak jernih di tepi Danau Senja!');
+          },
+        },
+        3.0,
+      );
+
+      consider(
+        {
+          id: 'culinary_bandrek_udin',
+          kind: 'story_object',
+          label: 'Pesan Bandrek & Bajigur Hangat Abah Udin',
+          sublabel: 'Tepi Jl. Cempaka Utara · Jahe Merah Susu, Bajigur & Rebusan',
+          position: [-9.8, 0, -35.2],
+          onInteract: () => {
+            sfxEngine.playWarmPourChime();
+            playerRuntime.bandrekSteamTimer = 4.5;
+            store.openCulinarySpot('bandrek_cempaka');
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'activity_park_hanging_lights',
+          kind: 'story_object',
+          label: 'Nyalakan Kilau Gelombang Lampu Taman Gantung',
+          sublabel: 'Alun-Alun Taman Kota · 24 Bohlam Hangat Senja & Malam',
+          position: [-85.4, 0, 10.6],
+          onInteract: () => {
+            sfxEngine.playFairyLightsChime();
+            playerRuntime.parkLightsPulseTimer = 6.5;
+            if (!store.flags.includes('lit_park_hanging_lights')) {
+              store.applyEffect({
+                kehadiranKeluarga: 1,
+                kejujuranDiri: 1,
+                setFlags: ['lit_park_hanging_lights'],
+                journalEntry: {
+                  id: 'je_park_hanging_lights',
+                  title: 'Kilau Lampu Gantung di Alun-Alun Taman Kota',
+                  body: 'Di tengah Taman Kota, dua puluh empat bohlam kuning hangat menggantung bersilang di antara empat tiang besi tempa. Begitu menyala bergelombang menjelang malam, taman ini terasa seperti halaman rumah kedua bagi seluruh warga.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_park_hanging_lights, 'fw_park_hanging_lights');
+            }
+            store.showToast('Deretan lampu taman gantung berkilau keemasan bergelombang hangat menerangi Alun-Alun Taman Kota!');
+          },
+        },
+        2.4,
+      );
+
+      consider(
+        {
+          id: 'sit_park_lights_bench',
+          kind: 'story_object',
+          label: 'Duduk Santai di Bawah Lampu Taman Gantung',
+          sublabel: 'Alun-Alun Taman Kota · Momen Tenang',
+          position: [-85.4, 0, 12.8],
+          onInteract: () => {
+            sfxEngine.play('interact');
+            playerRuntime.sitState = {
+              active: true,
+              label: 'Alun-Alun Lampu Gantung Taman Kota',
+              seatPos: [-85.4, 0.14, 12.0],
+              lookAt: [-85.4, 2.4, 4.0],
+              standPos: [-85.4, 0, 13.05],
+              seatYaw: Math.PI,
+            };
+            store.setSitting(true);
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_park_hanging_lights, 'fw_bench_park_lights');
+            }
+            store.showToast('Duduk santai di bawah hangatnya deretan lampu gantung Taman Kota... (WASD/E berdiri)');
+          },
+        },
+        2.0,
+      );
+
     consider(
       {
         id: 'portal_up',
@@ -4106,6 +4213,18 @@ export const WorldInteractables: React.FC = () => {
         <meshBasicMaterial color="#2dd4bf" />
       </mesh>
       <mesh position={[71.5, 1.98, 12.6]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#fde047" />
+      </mesh>
+      <mesh position={[-92.8, 1.85, -12.2]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#38bdf8" />
+      </mesh>
+      <mesh position={[-11.2, 1.92, -35.2]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#f59e0b" />
+      </mesh>
+      <mesh position={[-85.4, 1.65, 9.6]}>
         <sphereGeometry args={[0.08, 8, 8]} />
         <meshBasicMaterial color="#fde047" />
       </mesh>

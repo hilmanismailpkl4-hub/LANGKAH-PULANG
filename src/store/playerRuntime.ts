@@ -183,6 +183,9 @@ export const playerRuntime = {
   cilokFryTimer: 0,
   bikeShareRingTimer: 0,
   watchRepairTimer: 0,
+  pedalBoatWaveTimer: 0,
+  bandrekSteamTimer: 0,
+  parkLightsPulseTimer: 0,
   gardenSwingTimer: 0,
   swingBoostTimer: 0,
   kiteHeight: 0,
@@ -304,6 +307,9 @@ export function resetScooterToHome() {
   playerRuntime.cilokFryTimer = 0;
   playerRuntime.bikeShareRingTimer = 0;
   playerRuntime.watchRepairTimer = 0;
+  playerRuntime.pedalBoatWaveTimer = 0;
+  playerRuntime.bandrekSteamTimer = 0;
+  playerRuntime.parkLightsPulseTimer = 0;
   playerRuntime.gardenSwingTimer = 0;
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;

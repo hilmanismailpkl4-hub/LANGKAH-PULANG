@@ -22,7 +22,8 @@ export type CulinarySpotId =
   | 'bubur_melati'
   | 'tehpoci_plaza'
   | 'putu_sungai'
-  | 'cilok_kenangan';
+  | 'cilok_kenangan'
+  | 'bandrek_cempaka';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -47,7 +48,8 @@ export type HeldDrinkVisual =
   | 'bubur_ayam'
   | 'teh_poci'
   | 'kue_putu'
-  | 'cilok_telur';
+  | 'cilok_telur'
+  | 'bandrek_mug';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -318,6 +320,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [-28.8, 0, -11.05],
     seatYaw: Math.PI,
     tablePropPos: [-28.8, 1.14, -13.52],
+  },
+  bandrek_cempaka: {
+    id: 'bandrek_cempaka',
+    title: 'Bandrek & Bajigur Hangat Abah Udin',
+    hostName: 'Abah Udin',
+    subtitle: 'Tepi Jl. Cempaka Utara · Jahe Merah, Santan Gula Aren & Rebusan Malam',
+    seatPos: [-9.35, 0.14, -35.2],
+    lookAt: [-11.2, 1.35, -35.2],
+    standPos: [-8.25, 0, -35.2],
+    seatYaw: -Math.PI / 2,
+    tablePropPos: [-10.7, 1.14, -35.2],
   },
 };
 
@@ -1309,6 +1322,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'YEEEY!! Kira pegang dua tusuk telur gulung sekaligus!! Saus kecap manisnya mantap banget, Mang Dedi!' },
       { speaker: 'nadia', text: 'Sederhana tapi bikin senyum terus ya, Mas... makasih sudah traktir jajan sore favorit kita!' },
+    ],
+  },
+
+  // === 23. GEROBAK BANDREK & BAJIGUR HANGAT ABAH UDIN (JL. CEMPAKA UTARA) ===
+  {
+    id: 'bandrek_jahe_susu',
+    spot: 'bandrek_cempaka',
+    name: 'Bandrek Jahe Merah Susu & Serai Hangat',
+    priceLabel: 'Rp 9.000',
+    tagline: 'Seduhan jahe merah, gula aren, kayu manis, cengkih & susu kental manis dalam cangkir hangat mengepul.',
+    tasteNote: 'Rasa pedas manis rempah langsung menjalar ke dada—pas sekali menemani udara malam yang dingin di Jl. Cempaka.',
+    drinkVisual: 'bandrek_mug',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Wangi kayu manis sama jahe merah Abah Udin langsung bikin badan hangat ya, Mas!' },
+    ],
+  },
+  {
+    id: 'bajigur_kolang_kaling',
+    spot: 'bandrek_cempaka',
+    name: 'Bajigur Santan Gula Aren, Kolang-Kaling & Pisang Rebus',
+    priceLabel: 'Rp 11.000',
+    tagline: 'Bajigur gurih manis wangi daun pandan dengan potongan kolang-kaling empuk & sepotong pisang kepok rebus.',
+    tasteNote: 'Manis lembut dan gurih santan—persis obrolan hangat di beranda rumah saat gerimis malam turun.',
+    drinkVisual: 'bandrek_mug',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'kira', text: 'Mmm!! Bajigurnya manis kayak karamel, Yah!! Kira suka banget kolang-kaling kenyalnya!' },
+    ],
+  },
+  {
+    id: 'bandrek_family',
+    spot: 'bandrek_cempaka',
+    name: 'Traktir Keluarga Bandrek, Bajigur & Rebusan Hangat',
+    priceLabel: 'Rp 30.000',
+    tagline: 'Bandrek susu untuk Damar, bajigur hangat untuk Nadia & Kira, plus sepiring kacang, ubi & pisang rebus.',
+    tasteNote: 'Abah Udin menuang bajigur dari dandang kuningan sambil tersenyum ramah—malam di tepi Jl. Cempaka terasa begitu teduh.',
+    drinkVisual: 'bandrek_mug',
+    isHot: true,
+    isFamilyTreat: true,
+    journalTitle: 'Malam Hangat Bandrek & Bajigur di Gerobak Abah Udin',
+    journalBody: 'Di tepi Jl. Cempaka Utara, aku mengajak Nadia dan Kira duduk sejenak di depan gerobak Abah Udin menyeruput bandrek susu dan bajigur hangat ditemani ubi dan pisang rebus. Hangatnya rempah malam itu seakan mengusir sisa penat sepanjang pekan.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Hangat banget cangkir bajigurnya, Bunda!! Pisang rebusnya juga empuk manis banget!' },
+      { speaker: 'nadia', text: 'Enak banget ya Mas duduk malam-malam minum bajigur begini... rasanya damai sekali.' },
     ],
   },
 ];

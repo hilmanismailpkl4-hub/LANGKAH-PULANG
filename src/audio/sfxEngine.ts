@@ -1305,6 +1305,81 @@ class SfxEngine {
     this.softTone(ctx, 1760, now + 0.64, 0.28, 0.048 * v, 'sine');
   }
 
+  /**
+   * Suara kecipak air lembut kincir perahu bebek kayuh di tepi Danau Senja.
+   */
+  public playPedalBoatSplash() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // 3 kecipak air ritmis kincir kayuh
+    [0.0, 0.24, 0.48].forEach((off) => {
+      const src = ctx.createBufferSource();
+      src.buffer = this.getNoiseBuffer(ctx);
+      const bp = ctx.createBiquadFilter();
+      bp.type = 'bandpass';
+      bp.frequency.setValueAtTime(720, now + off);
+      bp.frequency.linearRampToValueAtTime(1420, now + off + 0.14);
+      bp.Q.value = 1.6;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.001, now + off);
+      g.gain.linearRampToValueAtTime(0.092 * v, now + off + 0.04);
+      g.gain.exponentialRampToValueAtTime(0.0008, now + off + 0.2);
+      src.connect(bp).connect(g).connect(ctx.destination);
+      src.start(now + off, 0.08, 0.22);
+    });
+    // Nada riak air lembut
+    this.softTone(ctx, 523.25, now + 0.56, 0.3, 0.036 * v, 'sine');
+  }
+
+  /**
+   * Suara tuangan bandrek/bajigur hangat ke cangkir enamel diikuti denting sendok lembut.
+   */
+  public playWarmPourChime() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    const src = ctx.createBufferSource();
+    src.buffer = this.getNoiseBuffer(ctx);
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.setValueAtTime(980, now);
+    bp.frequency.linearRampToValueAtTime(1850, now + 0.55);
+    bp.Q.value = 2.4;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.001, now);
+    g.gain.linearRampToValueAtTime(0.072 * v, now + 0.08);
+    g.gain.exponentialRampToValueAtTime(0.0008, now + 0.62);
+    src.connect(bp).connect(g).connect(ctx.destination);
+    src.start(now, 0.15, 0.65);
+
+    this.softTone(ctx, 1318.5, now + 0.52, 0.24, 0.045 * v, 'sine');
+    this.softTone(ctx, 1760.0, now + 0.64, 0.28, 0.038 * v, 'sine');
+  }
+
+  /**
+   * Kilau harmoni lembut saat rangkaian lampu gantung hangat Alun-Alun Taman Kota berkedip syahdu.
+   */
+  public playFairyLightsChime() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // Arpeggio 5 nada hangat berkilau
+    const notes = [523.25, 659.25, 783.99, 987.77, 1318.5];
+    notes.forEach((freq, idx) => {
+      this.softTone(ctx, freq, now + idx * 0.085, 0.42, 0.048 * v, 'sine');
+    });
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

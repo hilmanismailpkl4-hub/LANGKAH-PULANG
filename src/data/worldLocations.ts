@@ -237,6 +237,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= -30.4 && x <= -27.2 && z >= -15.5 && z <= -12.4) return true;
   if (x >= 17.6 && x <= 22.0 && z >= -15.5 && z <= -13.4) return true;
   if (x >= 70.6 && x <= 73.2 && z >= 11.2 && z <= 14.0) return true;
+  // Payung Gerobak Bandrek & Bajigur Abah Udin (Jl. Cempaka Utara)
+  if (x >= -12.8 && x <= -9.5 && z >= -36.8 && z <= -33.6) return true;
   return false;
 }
 
@@ -501,6 +503,11 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'cilok_dedi_bench', minX: -29.58, maxX: -28.02, minZ: -12.42, maxZ: -11.88 },
   { id: 'city_bike_share_dock', minX: 17.7, maxX: 21.9, minZ: -15.32, maxZ: -13.88 },
   { id: 'pak_karto_watch_stall', minX: 71.22, maxX: 72.42, minZ: 11.48, maxZ: 13.72 },
+
+  // === 41. Gerobak Bandrek Abah Udin & Bangku Alun-Alun Lampu Gantung Taman Kota ===
+  { id: 'bandrek_udin_cart', minX: -11.74, maxX: -10.66, minZ: -36.28, maxZ: -34.12 },
+  { id: 'bandrek_udin_bench', minX: -9.62, maxX: -9.08, minZ: -35.98, maxZ: -34.42 },
+  { id: 'park_lights_plaza_bench', minX: -86.5, maxX: -84.3, minZ: 11.65, maxZ: 12.35 },
 ];
 
 /**
@@ -684,6 +691,15 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   // Mang Dedi Cilok & Telur Gulung + Pak Karto Reparasi Jam Tangan Stasiun
   { x: -28.8, z: -15.02, r: 0.42 },
   { x: 72.75, z: 12.6, r: 0.42 },
+  // Dermaga Perahu Bebek Danau Senja, Abah Udin Bandrek & 4 Tiang + Sakelar Lampu Gantung Taman
+  { x: -94.1, z: -12.15, r: 0.26 },
+  { x: -91.6, z: -12.2, r: 0.18 },
+  { x: -12.22, z: -35.2, r: 0.42 },
+  { x: -88.2, z: 9.6, r: 0.16 },
+  { x: -82.6, z: 9.6, r: 0.16 },
+  { x: -88.2, z: 14.0, r: 0.16 },
+  { x: -82.6, z: 14.0, r: 0.16 },
+  { x: -85.4, z: 9.6, r: 0.22 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],

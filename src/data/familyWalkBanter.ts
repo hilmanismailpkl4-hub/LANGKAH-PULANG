@@ -530,4 +530,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'nadia', text: 'Pak Karto telaten banget ya Mas benerin jam tangan di pinggir stasiun—bahkan jam lama pun bisa hidup lagi di tangannya.' },
     { speaker: 'kira', text: 'Tik-tok-tik-tok!! Lihat deh Yah, jarum jam di dinding lapaknya muter barengan semuanya!!' },
   ],
+  activity_pedal_duck_boats: [
+    { speaker: 'kira', text: 'WAAAH!! Ada perahu bebek kuning sama angsa putih di tepi Danau Senja!! Kapan-kapan kita kayuh bertiga ya, Ayah!' },
+    { speaker: 'nadia', text: 'Lucu banget lihat perahu bebeknya bergoyang pelan di air danau—bikin suasana Taman Senja makin terasa kayak liburan!' },
+  ],
+  activity_park_hanging_lights: [
+    { speaker: 'nadia', text: 'Cantik banget ya Mas deretan lampu gantung hangat di atas alun-alun taman ini... rasanya syahdu sekali.' },
+    { speaker: 'kira', text: 'Bintang-bintang kecilnya nyala di atas kepala Kira, Ayah!! Kayak langit senja turun ke taman!' },
+  ],
 };
