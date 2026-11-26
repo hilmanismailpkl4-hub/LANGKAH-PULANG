@@ -259,7 +259,38 @@ export const HumanModel: React.FC<HumanModelProps> = ({
           {/* Visual Gelas Hangat / Es Krim / Jajanan Martabak & Kacang Rebus di Tangan Kanan */}
           {holdingDrink && (
             <group position={[0, -0.48, 0.05]} rotation={[0.92, 0, 0]}>
-              {holdingDrink === 'bandrek_mug' ? (
+              {holdingDrink === 'es_teler' ? (
+                <group>
+                  {/* Mangkuk Es Teler Segar + Gunungan Es Serut, Alpukat Hijau, Nangka Kuning, Kelapa & Sendok */}
+                  <mesh position={[0, 0.044, 0.02]} castShadow>
+                    <cylinderGeometry args={[0.082, 0.052, 0.074, 14]} />
+                    <meshStandardMaterial color="#f8fafc" roughness={0.34} />
+                  </mesh>
+                  {/* Gunungan Es Serut Putih Susu */}
+                  <mesh position={[0, 0.086, 0.02]}>
+                    <sphereGeometry args={[0.068, 12, 8, 0, Math.PI * 2, 0, Math.PI * 0.62]} />
+                    <meshStandardMaterial color="#f0f9ff" roughness={0.42} />
+                  </mesh>
+                  {/* Potongan Alpukat Hijau, Nangka Kuning & Mutiara Merah */}
+                  <mesh position={[-0.024, 0.118, 0.032]}>
+                    <boxGeometry args={[0.028, 0.018, 0.024]} />
+                    <meshStandardMaterial color="#65a30d" roughness={0.45} />
+                  </mesh>
+                  <mesh position={[0.024, 0.12, 0.024]}>
+                    <boxGeometry args={[0.026, 0.018, 0.022]} />
+                    <meshStandardMaterial color="#facc15" roughness={0.45} />
+                  </mesh>
+                  <mesh position={[0.0, 0.132, 0.002]}>
+                    <sphereGeometry args={[0.014, 8, 8]} />
+                    <meshStandardMaterial color="#f43f5e" roughness={0.38} />
+                  </mesh>
+                  {/* Sendok Plastik Merah Menancap Miring */}
+                  <mesh position={[0.04, 0.135, 0.02]} rotation={[0, 0, -0.38]}>
+                    <boxGeometry args={[0.012, 0.095, 0.005]} />
+                    <meshStandardMaterial color="#ef4444" roughness={0.38} />
+                  </mesh>
+                </group>
+              ) : holdingDrink === 'bandrek_mug' ? (
                 <group>
                   {/* Cangkir Enamel Hijau-Krem Klasik Bandrek / Bajigur Hangat + Batang Kayu Manis & Uap */}
                   <mesh position={[0, 0.052, 0]} castShadow>

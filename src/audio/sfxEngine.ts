@@ -1445,6 +1445,66 @@ class SfxEngine {
     });
   }
 
+  /**
+   * Bel pintu otomatis lembut Apotek 24 Jam "Sehat Melati" ("ting-tong~" bersih menenangkan).
+   */
+  public playPharmacyChime() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    this.softTone(ctx, 880.0, now, 0.26, 0.062 * v, 'sine');
+    this.softTone(ctx, 1174.66, now + 0.16, 0.34, 0.058 * v, 'sine');
+    this.softTone(ctx, 1760.0, now + 0.16, 0.22, 0.02 * v, 'triangle');
+  }
+
+  /**
+   * Suara serutan es batu renyah gerobak Es Teler Bang Daud ("kresss—kresss!").
+   */
+  public playIceShaverCrunch() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    [0.0, 0.28].forEach((off) => {
+      const src = ctx.createBufferSource();
+      src.buffer = this.getNoiseBuffer(ctx);
+      const bp = ctx.createBiquadFilter();
+      bp.type = 'bandpass';
+      bp.frequency.setValueAtTime(2800, now + off);
+      bp.frequency.linearRampToValueAtTime(4200, now + off + 0.18);
+      bp.Q.value = 1.8;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.001, now + off);
+      g.gain.linearRampToValueAtTime(0.095 * v, now + off + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.0008, now + off + 0.24);
+      src.connect(bp).connect(g).connect(ctx.destination);
+      src.start(now + off, 0.06, 0.26);
+    });
+    this.softTone(ctx, 1318.5, now + 0.56, 0.22, 0.042 * v, 'sine');
+  }
+
+  /**
+   * Melodi kotak mainan kayu ceria saat membuka Kotak Donasi Buku & Mainan Anak.
+   */
+  public playToyBoxChime() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    const notes = [659.25, 783.99, 1046.5, 1318.5];
+    notes.forEach((freq, i) => {
+      this.softTone(ctx, freq, now + i * 0.09, 0.28, 0.056 * v, 'sine');
+      this.softTone(ctx, freq * 2, now + i * 0.09, 0.16, 0.014 * v, 'triangle');
+    });
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

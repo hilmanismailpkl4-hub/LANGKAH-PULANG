@@ -190,6 +190,10 @@ export const playerRuntime = {
   veggiePurchaseStep: 0,
   sewingMachineTimer: 0,
   railCrossingBellTimer: 0,
+  pharmacyPulseTimer: 0,
+  estelerShaveTimer: 0,
+  toyBoxOpenTimer: 0,
+  toyShareStep: 0,
   gardenSwingTimer: 0,
   swingBoostTimer: 0,
   kiteHeight: 0,
@@ -318,6 +322,10 @@ export function resetScooterToHome() {
   playerRuntime.veggiePurchaseStep = 0;
   playerRuntime.sewingMachineTimer = 0;
   playerRuntime.railCrossingBellTimer = 0;
+  playerRuntime.pharmacyPulseTimer = 0;
+  playerRuntime.estelerShaveTimer = 0;
+  playerRuntime.toyBoxOpenTimer = 0;
+  playerRuntime.toyShareStep = 0;
   playerRuntime.gardenSwingTimer = 0;
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;

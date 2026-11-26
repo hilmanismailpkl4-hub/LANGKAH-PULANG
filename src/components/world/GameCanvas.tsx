@@ -37,6 +37,7 @@ import { ParkFountainPicnicAndJoggers } from './ParkFountainPicnicAndJoggers';
 import { ParkJasukeWaterAndWayfinder } from './ParkJasukeWaterAndWayfinder';
 import { ParkPlaygroundAndKoi } from './ParkPlaygroundAndKoi';
 import { PerformanceOptimizer } from './PerformanceOptimizer';
+import { PharmacyEsTelerAndToyBox } from './PharmacyEsTelerAndToyBox';
 import { PlayerController } from './PlayerController';
 import { PostEffects } from './PostEffects';
 import { PutuWorkshopAndLaundry } from './PutuWorkshopAndLaundry';
@@ -144,6 +145,7 @@ export const GameCanvas: React.FC = () => {
               <CilokBikeShareAndWatchmaker timeOfDay={effectiveTime} settings={settings} />
               <LakeBoatsBandrekAndParkLights timeOfDay={effectiveTime} settings={settings} />
               <VeggieTailorAndRailCrossing timeOfDay={effectiveTime} settings={settings} />
+              <PharmacyEsTelerAndToyBox timeOfDay={effectiveTime} settings={settings} />
               <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
             </group>
 

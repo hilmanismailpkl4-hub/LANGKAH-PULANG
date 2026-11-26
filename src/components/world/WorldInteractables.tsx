@@ -3663,6 +3663,93 @@ export const WorldInteractables: React.FC = () => {
         3.2,
       );
 
+      consider(
+        {
+          id: 'activity_apotek_sehat_melati',
+          kind: 'story_object',
+          label: 'Mampir Apotek 24 Jam "Sehat Melati" (Mbak Nita)',
+          sublabel: 'Seberang Jl. Melati Barat · Vitamin, Balsem Hangat & P3K Keluarga',
+          position: [-30.2, 0, 41.0],
+          onInteract: () => {
+            sfxEngine.playPharmacyChime();
+            playerRuntime.pharmacyPulseTimer = 4.2;
+            if (!store.flags.includes('visited_apotek_sehat_melati')) {
+              store.applyEffect({
+                kehadiranKeluarga: 1,
+                kejujuranDiri: 1,
+                setFlags: ['visited_apotek_sehat_melati'],
+                journalEntry: {
+                  id: 'je_apotek_sehat_melati',
+                  title: 'Lampu Hijau Tenang Apotek 24 Jam Sehat Melati',
+                  body: 'Di seberang Jl. Melati Barat, palang hijau LED Apotek Sehat Melati selalu menyala tenang sepanjang malam. Aku mampir membeli vitamin C, minyak kayu putih, dan plester bergambar lucu untuk persediaan kotak P3K rumah.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_apotek_sehat_melati, 'fw_apotek_sehat_melati');
+            }
+            store.showToast('Mbak Nita menyerahkan kantong obat ramah: "Vitamin C, minyak kayu putih & plester lucu buat Kira sudah siap—sehat selalu ya, Mas!"');
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'culinary_esteler_daud',
+          kind: 'story_object',
+          label: 'Pesan Es Teler Alpukat & Kelapa Muda Bang Daud',
+          sublabel: 'Trotoar Jl. Kenangan · Alpukat Mentega, Nangka Harum & Es Serut',
+          position: [-17.6, 0, -12.0],
+          onInteract: () => {
+            sfxEngine.playIceShaverCrunch();
+            playerRuntime.estelerShaveTimer = 4.5;
+            store.openCulinarySpot('esteler_plaza');
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'activity_toy_donation_box',
+          kind: 'story_object',
+          label: 'Buka Kotak Donasi Buku & Mainan Anak ("Berbagi Senja")',
+          sublabel: 'Tepi Taman Bermain · Ambil Seperlunya, Titip Seikhlasnya',
+          position: [-79.6, 0, 24.6],
+          onInteract: () => {
+            sfxEngine.playToyBoxChime();
+            playerRuntime.toyBoxOpenTimer = 4.4;
+            const moments = [
+              'Pintu kotak terbuka hangat—kamu menitipkan buku dongeng bergambar agar bisa dibaca anak-anak lain di Taman Bermain!',
+              'Di rak bawah tersusun rapi balok kayu warna-warni, truk mainan kuning & boneka kelinci kecil yang terawat bersih.',
+              'Ada secarik catatan kecil di dalam kotak: "Terima kasih sudah berbagi cerita hari ini, semoga harimu ikut ceria!"',
+            ];
+            const msg = moments[playerRuntime.toyShareStep % moments.length];
+            playerRuntime.toyShareStep += 1;
+            if (!store.flags.includes('visited_toy_donation_box')) {
+              store.applyEffect({
+                kehadiranKeluarga: 2,
+                kejujuranDiri: 1,
+                setFlags: ['visited_toy_donation_box'],
+                journalEntry: {
+                  id: 'je_toy_donation_box',
+                  title: 'Kotak Kecil Berbagi Buku & Mainan di Taman Bermain',
+                  body: 'Di pinggir Taman Bermain Anak berdiri kotak kaca mungil bertuliskan "Ambil Seperlunya, Titip Seikhlasnya". Menitipkan buku cerita lama milik Kira di sana membuat kami merasa bagian dari kehangatan kota ini.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_toy_donation_box, 'fw_toy_donation_box');
+            }
+            store.showToast(msg);
+          },
+        },
+        2.8,
+      );
+
     consider(
       {
         id: 'portal_up',
@@ -4350,6 +4437,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[86.2, 2.25, 19.8]}>
         <sphereGeometry args={[0.08, 8, 8]} />
         <meshBasicMaterial color="#f87171" />
+      </mesh>
+      <mesh position={[-30.2, 2.25, 40.3]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#10b981" />
+      </mesh>
+      <mesh position={[-17.6, 1.92, -13.4]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#84cc16" />
+      </mesh>
+      <mesh position={[-79.6, 1.85, 25.8]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#f472b6" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

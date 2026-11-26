@@ -243,6 +243,9 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= 41.6 && x <= 44.8 && z >= 52.0 && z <= 55.0) return true;
   if (x >= 40.4 && x <= 44.0 && z >= 39.6 && z <= 41.3) return true;
   if (x >= 84.4 && x <= 87.5 && z >= 18.4 && z <= 21.2) return true;
+  // Kanopi Apotek 24 Jam Sehat Melati & Payung Es Teler Bang Daud
+  if (x >= -32.0 && x <= -28.4 && z >= 39.6 && z <= 41.3) return true;
+  if (x >= -19.2 && x <= -16.0 && z >= -14.9 && z <= -11.8) return true;
   return false;
 }
 
@@ -517,6 +520,12 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'veggie_tati_cart', minX: 42.12, maxX: 44.28, minZ: 52.86, maxZ: 53.94 },
   { id: 'sari_tailor_kiosk', minX: 40.66, maxX: 43.74, minZ: 38.28, maxZ: 40.15 },
   { id: 'rail_crossing_hut', minX: 85.22, maxX: 87.22, minZ: 18.68, maxZ: 20.92 },
+
+  // === 43. Apotek 24 Jam Sehat Melati, Es Teler Bang Daud & Kotak Donasi Mainan Anak ===
+  { id: 'apotek_sehat_melati_kiosk', minX: -31.74, maxX: -28.66, minZ: 38.28, maxZ: 40.15 },
+  { id: 'esteler_daud_cart', minX: -18.68, maxX: -16.52, minZ: -13.94, maxZ: -12.86 },
+  { id: 'esteler_daud_bench', minX: -18.38, maxX: -16.82, minZ: -11.82, maxZ: -11.28 },
+  { id: 'toy_donation_box', minX: -80.22, maxX: -78.98, minZ: 25.44, maxZ: 26.16 },
 ];
 
 /**
@@ -714,6 +723,9 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: 40.35, z: 40.2, r: 0.42 },
   { x: 87.6, z: 17.5, r: 0.34 },
   { x: 84.85, z: 20.3, r: 0.42 },
+  // Mbak Nita Apotek 24 Jam & Bang Daud Es Teler
+  { x: -28.35, z: 40.2, r: 0.42 },
+  { x: -17.6, z: -14.42, r: 0.42 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],

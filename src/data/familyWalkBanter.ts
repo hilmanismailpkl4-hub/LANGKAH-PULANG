@@ -550,4 +550,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'TENG-TENG-TENG!! Lampu merah silangnya kedip-kedip terus palangnya gerak, Ayah!! Kereta KRL-nya mau lewat!' },
     { speaker: 'nadia', text: 'Terima kasih ya Pak Maman selalu sigap menjaga pintu pelintasan Stasiun Senja pagi sampai malam.' },
   ],
+  activity_apotek_sehat_melati: [
+    { speaker: 'nadia', text: 'Tenang banget ya Mas punya Apotek Sehat Melati yang buka 24 jam dekat rumah—apa pun kebutuhannya tinggal jalan sebentar.' },
+    { speaker: 'kira', text: 'Lampu tanda tambah hijaunya terang banget malam-malam, Yah!! Mbak Nita kasih stiker plester lucu buat Kira!' },
+  ],
+  activity_toy_donation_box: [
+    { speaker: 'kira', text: 'Ayah! Kira mau titip buku cerita kelinci yang sudah selesai Kira baca biar teman-teman di taman bisa ikut baca juga!' },
+    { speaker: 'nadia', text: 'Pintar banget anak Bunda... berbagi mainan dan buku di kotak kecil taman ini pasti bikin banyak anak ikut tersenyum.' },
+  ],
 };

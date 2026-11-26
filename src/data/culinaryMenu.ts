@@ -23,7 +23,8 @@ export type CulinarySpotId =
   | 'tehpoci_plaza'
   | 'putu_sungai'
   | 'cilok_kenangan'
-  | 'bandrek_cempaka';
+  | 'bandrek_cempaka'
+  | 'esteler_plaza';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -49,7 +50,8 @@ export type HeldDrinkVisual =
   | 'teh_poci'
   | 'kue_putu'
   | 'cilok_telur'
-  | 'bandrek_mug';
+  | 'bandrek_mug'
+  | 'es_teler';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -331,6 +333,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [-8.25, 0, -35.2],
     seatYaw: -Math.PI / 2,
     tablePropPos: [-10.7, 1.14, -35.2],
+  },
+  esteler_plaza: {
+    id: 'esteler_plaza',
+    title: 'Es Teler Alpukat & Kelapa Muda Bang Daud',
+    hostName: 'Bang Daud',
+    subtitle: 'Trotoar Jl. Kenangan · Alpukat Mentega, Nangka Harum, Kelapa Muda & Es Serut',
+    seatPos: [-17.6, 0.14, -11.55],
+    lookAt: [-17.6, 1.35, -13.4],
+    standPos: [-17.6, 0, -10.45],
+    seatYaw: Math.PI,
+    tablePropPos: [-17.6, 1.14, -12.92],
   },
 };
 
@@ -1367,6 +1380,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Hangat banget cangkir bajigurnya, Bunda!! Pisang rebusnya juga empuk manis banget!' },
       { speaker: 'nadia', text: 'Enak banget ya Mas duduk malam-malam minum bajigur begini... rasanya damai sekali.' },
+    ],
+  },
+
+  // === 24. GEROBAK ES TELER ALPUKAT & KELAPA MUDA BANG DAUD (TEPI JL. KENANGAN) ===
+  {
+    id: 'esteler_alpukat_nangka',
+    spot: 'esteler_plaza',
+    name: 'Es Teler Spesial Alpukat Mentega & Nangka',
+    priceLabel: 'Rp 14.000',
+    tagline: 'Kerokan daging kelapa muda, alpukat mentega lembut, potongan nangka harum, cincau & susu kental manis.',
+    tasteNote: 'Dingin segar dan legit menyatu dalam satu sendokan—gerah siang kota langsung hilang seketika.',
+    drinkVisual: 'es_teler',
+    isHot: false,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Alpukat menteganya lembut banget ya, Mas! Nangkanya juga wangi segar, porsinya melimpah!' },
+    ],
+  },
+  {
+    id: 'esteler_durian_susu',
+    spot: 'esteler_plaza',
+    name: 'Es Teler Komplit Santan & Ekstra Kelapa Muda',
+    priceLabel: 'Rp 17.000',
+    tagline: 'Gunungan es serut lembut siram santan gurih, sirup pandan, daging kelapa muda melimpah & mutiara.',
+    tasteNote: 'Perpaduan gurih santan dan manis segar buah tropis—jajanan kaki lima Indonesia yang selalu bikin senyum.',
+    drinkVisual: 'es_teler',
+    isHot: false,
+    familyReaction: [
+      { speaker: 'kira', text: 'WAAAH gunungan es serutnya tinggi banget, Ayah!! Ada potongan alpukat hijau sama nangka kuning!' },
+    ],
+  },
+  {
+    id: 'esteler_family',
+    spot: 'esteler_plaza',
+    name: 'Traktir Keluarga Es Teler Segar (Paket Bertiga)',
+    priceLabel: 'Rp 40.000',
+    tagline: 'Tiga mangkuk besar Es Teler komplit dengan ekstra alpukat, kelapa muda & susu kental manis.',
+    tasteNote: 'Bang Daud cekatan menyerut es batu sambil bercanda ramah—duduk menyendok es teler bertiga di tepi Jl. Kenangan terasa luar biasa segar.',
+    drinkVisual: 'es_teler',
+    isHot: false,
+    isFamilyTreat: true,
+    journalTitle: 'Segarnya Es Teler Alpukat Bertiga di Tepi Jl. Kenangan',
+    journalBody: 'Di tepi Jl. Kenangan dekat Toko Musik Nada Lama, aku mengajak Nadia dan Kira mampir menikmati tiga mangkuk Es Teler Alpukat dan Kelapa Muda racikan Bang Daud. Melihat Kira bersemangat menyendok gunung es serut membuat sore kota ini terasa begitu ceria.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Brrr dingin segar bangettt!! Kira suka nangka sama kelapa mudanya, makasih banyak Ayah!!' },
+      { speaker: 'nadia', text: 'Segar banget ya Mas... terima kasih sudah mengajak berhenti sebentar buat jajan es teler bareng.' },
     ],
   },
 ];
