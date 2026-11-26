@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ChevronRight, Film, RotateCcw, Volume2, VolumeX, X } from 'lucide-react';
+import { ChevronRight, Film, RotateCcw, Sparkles, Volume2, VolumeX, X } from 'lucide-react';
 import { voiceManager } from '../../audio/voiceManager';
 import { CHARACTERS } from '../../data/characters';
 import { useGameStore } from '../../store/useGameStore';
@@ -162,6 +162,12 @@ export const DialogueOverlay: React.FC = () => {
                   } ${compact ? 'px-3.5 py-2' : 'px-5 py-3.5'}`}
                 >
                   <div>
+                    {choice.echoBadge && (
+                      <span className="mb-1 inline-flex items-center gap-1 rounded-full border border-amber-300/45 bg-amber-500/20 px-2 py-0.5 text-[9.5px] font-semibold tracking-wide text-amber-200">
+                        <Sparkles className="h-2.5 w-2.5" />
+                        {choice.echoBadge}
+                      </span>
+                    )}
                     <p
                       className={`font-medium ${
                         flashback ? 'text-amber-50 group-hover:text-amber-200' : 'text-warm-50 group-hover:text-warm-200'
@@ -188,9 +194,19 @@ export const DialogueOverlay: React.FC = () => {
             className={`rounded-2xl border shadow-2xl backdrop-blur-xl ${
               flashback
                 ? 'border-amber-300/30 bg-[#140f0c]/94 hover:border-amber-200/50'
-                : 'border-warm-100/15 bg-dusk-950/92 hover:border-warm-200/30'
+                : node.echoTag
+                  ? 'border-amber-300/40 bg-dusk-950/94 hover:border-amber-200/55'
+                  : 'border-warm-100/15 bg-dusk-950/92 hover:border-warm-200/30'
             } ${compact ? 'px-4 py-3' : 'px-6 py-5'} ${visibleChoices.length === 0 ? 'cursor-pointer' : ''}`}
           >
+            {/* Pita Gema Pilihan & Ingatan Karakter (bila dialog merespons pilihan/memori pemain!) */}
+            {node.echoTag && (
+              <div className={`inline-flex items-center gap-1.5 rounded-full border border-amber-300/35 bg-amber-400/12 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-amber-200 ${compact ? 'mb-1.5' : 'mb-2.5'}`}>
+                <Sparkles className="h-3 w-3 shrink-0 text-amber-300" />
+                <span>{node.echoTag}</span>
+              </div>
+            )}
+
             {/* Header Nama Tokoh + Kontrol Suara */}
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2.5">

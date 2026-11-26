@@ -1978,8 +1978,37 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         get().applyEffect(node.onEnd);
       }
 
-      if (node.nextNodeId && activeDialogue.nodes[node.nextNodeId]) {
-        const nextNode = activeDialogue.nodes[node.nextNodeId];
+      // Evaluasi percabangan kondisional (Gema Pilihan & Ingatan Karakter) sebelum nextNodeId standar
+      let resolvedNextId = node.nextNodeId;
+      if (node.conditionalNext && node.conditionalNext.length > 0) {
+        const curState = get();
+        const completedSideCount = Object.values(curState.sideQuests).filter((q) => q.status === 'completed').length;
+        const matched = node.conditionalNext.find((branch) => {
+          if (branch.requiredFlag && !curState.flags.includes(branch.requiredFlag)) return false;
+          if (
+            branch.requiredAnyFlags &&
+            branch.requiredAnyFlags.length > 0 &&
+            !branch.requiredAnyFlags.some((f) => curState.flags.includes(f))
+          ) {
+            return false;
+          }
+          if (branch.requiredRepliedPrompt) {
+            const actual = curState.repliedPhonePrompts[branch.requiredRepliedPrompt.promptId];
+            if (!actual) return false;
+            if (branch.requiredRepliedPrompt.optionId && actual !== branch.requiredRepliedPrompt.optionId) {
+              return false;
+            }
+          }
+          if (branch.minSideQuests !== undefined && completedSideCount < branch.minSideQuests) return false;
+          return true;
+        });
+        if (matched) {
+          resolvedNextId = matched.nextNodeId;
+        }
+      }
+
+      if (resolvedNextId && activeDialogue.nodes[resolvedNextId]) {
+        const nextNode = activeDialogue.nodes[resolvedNextId];
         set({ activeNodeId: nextNode.id });
         if (nextNode.onEnter) {
           get().applyEffect(nextNode.onEnter);

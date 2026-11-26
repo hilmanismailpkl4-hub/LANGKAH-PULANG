@@ -40,6 +40,52 @@ export const CHAPTER_2_DIALOGUES: Record<string, DialogueScript> = {
         speaker: 'pak_hendra',
         emotion: 'tegas',
         text: 'Damar, klien baru saja minta revisi presentasi jam tujuh malam ini. Kalau kamu ikut saya lembur sampai jam sepuluh malam ini, besok pagi tanda tangan kontrak Proyek Kartika langsung beres atas namamu.',
+        conditionalNext: [
+          {
+            requiredRepliedPrompt: { promptId: 'prompt_hendra_ch2', optionId: 'rep_ph2_firm' },
+            nextNodeId: 'ch2_hp_echo_chat',
+          },
+          {
+            requiredRepliedPrompt: { promptId: 'prompt_hendra_ch1', optionId: 'rep_ph1_honest' },
+            nextNodeId: 'ch2_hp_echo_chat',
+          },
+          {
+            requiredFlag: 'flashback_dinner_done',
+            nextNodeId: 'ch2_hp_echo_dinner',
+          },
+          {
+            requiredFlag: 'remembered_father_1996',
+            nextNodeId: 'ch2_hp_echo_1996',
+          },
+        ],
+        nextNodeId: 'ch2_hp_2',
+      },
+      ch2_hp_echo_chat: {
+        id: 'ch2_hp_echo_chat',
+        speaker: 'pak_hendra',
+        emotion: 'tenang',
+        echoTag: 'Ingatan Pak Hendra · Balasan Pesanmu di HP',
+        text: 'Saya sudah membaca pesanmu tadi di ponsel soal ingin menata ulang batas jam kerja, Damar. Itu sebabnya kali ini saya tidak memaksa—saya hanya menaruh pilihannya di depanmu.',
+        conditionalNext: [
+          { requiredFlag: 'flashback_dinner_done', nextNodeId: 'ch2_hp_echo_dinner' },
+          { requiredFlag: 'remembered_father_1996', nextNodeId: 'ch2_hp_echo_1996' },
+        ],
+        nextNodeId: 'ch2_hp_2',
+      },
+      ch2_hp_echo_dinner: {
+        id: 'ch2_hp_echo_dinner',
+        speaker: 'damar_batin',
+        emotion: 'sedih',
+        echoTag: 'Gema Memori · Meja Makan Pukul 22.15',
+        text: 'Seketika bayangan mangkuk sup dingin dan suara Nadia enam bulan lalu melintas di kepalaku—"Aku takut kamu pulang ke rumah ini, tapi rasanya sudah seperti tamu."',
+        nextNodeId: 'ch2_hp_2',
+      },
+      ch2_hp_echo_1996: {
+        id: 'ch2_hp_echo_1996',
+        speaker: 'damar_batin',
+        emotion: 'tenang',
+        echoTag: 'Gema Memori · Foto Sepia Kota 1996',
+        text: 'Tiba-tiba terlintas lagi foto kota 1996 dan senyum tenang almarhum Bapak. Bapak tidak pernah mewariskan gelar tinggi—ia mewariskan keberanian untuk selalu hadir saat makan malam.',
         nextNodeId: 'ch2_hp_2',
       },
       ch2_hp_2: {
@@ -154,6 +200,44 @@ export const CHAPTER_2_DIALOGUES: Record<string, DialogueScript> = {
         speaker: 'nadia',
         emotion: 'haru',
         text: 'Mas... aku nggak marah kamu cari nafkah. Sungguh. Tapi boleh nggak aku jujur sekali ini aja? Aku capek merasa sendirian padahal aku punya suami. Tiap kamu pulang, ragamu ada di rumah, tapi pikiranmu selalu tertinggal entah di mana.',
+        conditionalNext: [
+          {
+            requiredFlag: 'reconciled_dinner_memory_chat',
+            nextNodeId: 'ch2_jb_echo_apology',
+          },
+          {
+            requiredAnyFlags: ['ch2_stood_up_for_family', 'ch2_honest_with_hendra'],
+            nextNodeId: 'ch2_jb_echo_stood',
+          },
+          {
+            requiredFlag: 'ch2_chose_overtime',
+            nextNodeId: 'ch2_jb_echo_overtime',
+          },
+        ],
+        nextNodeId: 'ch2_jb_4',
+      },
+      ch2_jb_echo_apology: {
+        id: 'ch2_jb_echo_apology',
+        speaker: 'nadia',
+        emotion: 'haru',
+        echoTag: 'Ingatan Nadia · Pesan Maafmu Sebelum Hujan',
+        text: 'Tadi pas kamu kirim pesan minta maaf soal malam meja makan enam bulan lalu, hatiku sebenarnya udah mulai lega, Mas... aku cuma masih takut kalau semua itu bakal tenggelam lagi begitu besok kamu ketemu tenggat baru.',
+        nextNodeId: 'ch2_jb_4',
+      },
+      ch2_jb_echo_stood: {
+        id: 'ch2_jb_echo_stood',
+        speaker: 'nadia',
+        emotion: 'hangat',
+        echoTag: 'Ingatan Nadia · Keberanianmu di Menara Nusantara',
+        text: 'Suaramu sore ini kedengaran beda... lebih tenang, nggak terburu-buru kayak habis dikejar rapat. Kamu... beneran sudah bicara baik-baik sama Pak Hendra ya, Mas?',
+        nextNodeId: 'ch2_jb_4',
+      },
+      ch2_jb_echo_overtime: {
+        id: 'ch2_jb_echo_overtime',
+        speaker: 'nadia',
+        emotion: 'sedih',
+        echoTag: 'Gema Pilihan · Jadwal Lembur Proyek Kartika',
+        text: 'Dan barusan aku dengar helaan napasmu... kamu ambil lembur lagi malam ini ya, Mas? Kenapa setiap kali aku mulai berharap, jawabannya selalu "tunggu habis proyek ini"?',
         nextNodeId: 'ch2_jb_4',
       },
       ch2_jb_4: {
@@ -249,6 +333,32 @@ export const CHAPTER_2_DIALOGUES: Record<string, DialogueScript> = {
         speaker: 'bima',
         emotion: 'tenang',
         text: 'Mar, boleh gue tanya satu hal yang udah bertahun-tahun gue tahan?',
+        conditionalNext: [
+          {
+            requiredFlag: 'flashback_2020_done',
+            nextNodeId: 'ch2_bh_echo_2020',
+          },
+          {
+            requiredFlag: 'flashback_2018_done',
+            nextNodeId: 'ch2_bh_echo_2018',
+          },
+        ],
+        nextNodeId: 'ch2_bh_4',
+      },
+      ch2_bh_echo_2020: {
+        id: 'ch2_bh_echo_2020',
+        speaker: 'bima',
+        emotion: 'haru',
+        echoTag: 'Ingatan Bima · Gitar Mahoni & Malam Agustus 2020',
+        text: 'Mas Bagas baru cerita tipis ke gue—lo dulu diem-diem ngelepas gitar mahoni kesayangan lo di tengah hujan demi kelahiran Kira, dan lo nggak pernah cerita ke siapa-siapa biar nggak bikin Nadia kepikiran.',
+        nextNodeId: 'ch2_bh_4',
+      },
+      ch2_bh_echo_2018: {
+        id: 'ch2_bh_echo_2018',
+        speaker: 'bima',
+        emotion: 'hangat',
+        echoTag: 'Ingatan Bima · Panggung Taman Kota 2018',
+        text: 'Gue masih inget jelas malam 2018 di Taman Kota. Waktu senar satu lo putus, lo nggak kabur dari panggung—lo lanjut nyanyi pakai lima senar karena Nadia tepuk tangan di depan. Kapan lo mulai takut tampil nggak sempurna, Mar?',
         nextNodeId: 'ch2_bh_4',
       },
       ch2_bh_4: {

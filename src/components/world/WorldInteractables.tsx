@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { sfxEngine } from '../../audio/sfxEngine';
+import { resolveDynamicNpcAmbient } from '../../data/characterEchoes';
 import { CHARACTERS } from '../../data/characters';
 import { KIRA_OUTFIT_BY_ID, KiraOutfitId, NADIA_OUTFIT_BY_ID, NadiaOutfitId } from '../../data/damarOutfits';
 import { EASTER_EGGS } from '../../data/easterEggs';
@@ -634,6 +635,16 @@ export const WorldInteractables: React.FC = () => {
           return { dialogueId: 'sq_pak_budi_complete', highlight: 'side', sublabel: 'Selesaikan Misi' };
         }
         return { dialogueId: 'ambient_budi', highlight: null, sublabel: 'Berbincang' };
+      }
+
+      // Gema Pilihan & Ingatan Karakter: NPC utama mengingat apa yang sudah dialami/dipilih Damar!
+      const dynamicEcho = resolveDynamicNpcAmbient(npcId, store.flags, store.repliedPhonePrompts);
+      if (dynamicEcho) {
+        return {
+          dialogueId: dynamicEcho.dialogueId,
+          highlight: null,
+          sublabel: dynamicEcho.sublabel,
+        };
       }
 
       const ambientMap: Partial<Record<CharacterId, string>> = {

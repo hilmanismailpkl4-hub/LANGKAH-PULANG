@@ -141,10 +141,19 @@ export interface FlashbackMeta {
   epigraph?: string;
 }
 
+export interface ConditionalBranch {
+  requiredFlag?: string;
+  requiredAnyFlags?: string[];
+  requiredRepliedPrompt?: { promptId: string; optionId?: string };
+  minSideQuests?: number;
+  nextNodeId: string;
+}
+
 export interface DialogueChoice {
   id: string;
   text: string;
   subtext?: string;
+  echoBadge?: string;
   nextNodeId: string;
   requiredFlag?: string;
   effects?: DialogueEffect;
@@ -155,7 +164,9 @@ export interface DialogueNode {
   speaker: CharacterId;
   text: string;
   emotion?: EmotionTone;
+  echoTag?: string;
   nextNodeId?: string;
+  conditionalNext?: ConditionalBranch[];
   choices?: DialogueChoice[];
   onEnter?: DialogueEffect;
   onEnd?: DialogueEffect;
