@@ -1578,6 +1578,63 @@ class SfxEngine {
     });
   }
 
+  /**
+   * Suara gorengan pempek renyah di wajan diikuti tuangan kuah cuko segar.
+   */
+  public playPempekFryChime() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    const src = ctx.createBufferSource();
+    src.buffer = this.getNoiseBuffer(ctx);
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.setValueAtTime(3200, now);
+    bp.frequency.linearRampToValueAtTime(4400, now + 0.35);
+    bp.Q.value = 1.5;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.001, now);
+    g.gain.linearRampToValueAtTime(0.082 * v, now + 0.05);
+    g.gain.exponentialRampToValueAtTime(0.0008, now + 0.65);
+    src.connect(bp).connect(g).connect(ctx.destination);
+    src.start(now, 0.08, 0.68);
+
+    this.softTone(ctx, 1396.9, now + 0.52, 0.22, 0.042 * v, 'sine');
+  }
+
+  /**
+   * Lonceng pintu kuningan manis Toko Kue Tradisional "Dapur Manis" ("ting-ling~").
+   */
+  public playBakeryShopBell() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    this.softTone(ctx, 1567.98, now, 0.32, 0.064 * v, 'sine');
+    this.softTone(ctx, 2093.0, now + 0.12, 0.36, 0.056 * v, 'sine');
+    this.softTone(ctx, 3135.96, now + 0.12, 0.22, 0.02 * v, 'triangle');
+  }
+
+  /**
+   * Bip telemetri digital sensor pengukur tinggi air & cuaca Pos Pantau Sungai Kota.
+   */
+  public playHydroSensorBeep() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    this.softTone(ctx, 1046.5, now, 0.08, 0.048 * v, 'sine');
+    this.softTone(ctx, 1318.5, now + 0.11, 0.08, 0.048 * v, 'sine');
+    this.softTone(ctx, 1760.0, now + 0.22, 0.18, 0.052 * v, 'sine');
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

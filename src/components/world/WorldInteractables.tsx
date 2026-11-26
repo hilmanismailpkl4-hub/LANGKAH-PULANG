@@ -3837,6 +3837,97 @@ export const WorldInteractables: React.FC = () => {
         2.9,
       );
 
+      consider(
+        {
+          id: 'culinary_pempek_ani',
+          kind: 'story_object',
+          label: 'Pesan Pempek Palembang & Es Kacang Merah Cek Ani',
+          sublabel: 'Promenade Sungai Utara · Kapal Selam, Lenjer & Kuah Cuko',
+          position: [-38.0, 0, -30.8],
+          onInteract: () => {
+            sfxEngine.playPempekFryChime();
+            playerRuntime.pempekFryTimer = 4.5;
+            store.openCulinarySpot('pempek_sungai');
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'activity_dapur_manis_bakery',
+          kind: 'story_object',
+          label: 'Beli Kue & Jajanan Tradisional di "Dapur Manis"',
+          sublabel: 'Jl. Melati Timur · Bolu Kukus, Kue Lapis, Brownies & Risoles Ibu Dewi',
+          position: [49.2, 0, 41.0],
+          onInteract: () => {
+            sfxEngine.playBakeryShopBell();
+            playerRuntime.bakeryBellTimer = 4.4;
+            const boxes = [
+              'Ibu Dewi membungkus sekotak bolu kukus mekar & kue lapis pelangi: "Masih hangat baru turun dari kukusan, Mas Damar!"',
+              'Ibu Dewi menyerahkan kotak risoles mayo & pastel renyah: "Pas banget buat teman teh sore bareng Mbak Nadia di teras!"',
+              'Ibu Dewi tersenyum ramah: "Brownies cokelat lembut ini favoritnya Kira lho, Mas—salam manis buat di rumah ya!"',
+            ];
+            const msg = boxes[playerRuntime.bakeryBoxStep % boxes.length];
+            playerRuntime.bakeryBoxStep += 1;
+            if (!store.flags.includes('visited_dapur_manis_bakery')) {
+              store.applyEffect({
+                kehadiranKeluarga: 1,
+                kejujuranDiri: 1,
+                setFlags: ['visited_dapur_manis_bakery'],
+                journalEntry: {
+                  id: 'je_dapur_manis_bakery',
+                  title: 'Aroma Bolu Kukus Hangat di Toko Kue Dapur Manis',
+                  body: 'Di ujung deretan kios Jl. Melati Timur, lonceng kecil Toko Kue "Dapur Manis" menyambut dengan aroma bolu kukus pandan dan brownies hangat. Membawa pulang sekotak jajanan kecil selalu menjadi cara paling manis untuk menyapa rumah.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_dapur_manis_bakery, 'fw_dapur_manis_bakery');
+            }
+            store.showToast(msg);
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'activity_river_gauge_post',
+          kind: 'story_object',
+          label: 'Cek Papan Pengukur Tinggi Air & Sensor Cuaca Sungai',
+          sublabel: 'Tepi Timur Laut Jembatan · Telemetri TMA & Anemometer',
+          position: [-37.8, 0, -11.0],
+          onInteract: () => {
+            sfxEngine.playHydroSensorBeep();
+            playerRuntime.hydroSensorTimer = 4.6;
+            const isRainNow = store.timeOfDay === 'rain_dusk';
+            if (!store.flags.includes('checked_river_gauge_post')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                setFlags: ['checked_river_gauge_post'],
+                journalEntry: {
+                  id: 'je_river_gauge_post',
+                  title: 'Pos Pantau Tinggi Air & Cuaca Sungai Kota',
+                  body: 'Di samping Jembatan Tepi Sungai berdiri papan penggaris tinggi muka air dan tiang sensor angin bertenaga surya. Kesiagaan kecil seperti ini membuat warga kota tetap merasa aman saat hujan senja turun.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_river_gauge_post, 'fw_river_gauge_post');
+            }
+            store.showToast(
+              isRainNow
+                ? 'Sensor Sungai Kota: TMA 112 cm (Waspada Hujan · Debit Mengalir Lancar · Angin 18 km/jam).'
+                : 'Sensor Sungai Kota: TMA 68 cm (Status Aman Normal · Air Tenang · Angin 7 km/jam).',
+            );
+          },
+        },
+        2.9,
+      );
+
     consider(
       {
         id: 'portal_up',
@@ -4548,6 +4639,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-68.8, 1.84, -32.2]}>
         <sphereGeometry args={[0.08, 8, 8]} />
         <meshBasicMaterial color="#a7f3d0" />
+      </mesh>
+      <mesh position={[-36.6, 1.92, -30.8]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#f97316" />
+      </mesh>
+      <mesh position={[49.2, 2.15, 40.3]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#f472b6" />
+      </mesh>
+      <mesh position={[-38.85, 2.38, -11.0]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#38bdf8" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

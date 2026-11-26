@@ -249,6 +249,9 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   // Kanopi Konter Berkah Pulsa & Payung Sepeda Jamu Mbak Yem
   if (x >= 47.8 && x <= 51.4 && z >= 11.3 && z <= 13.0) return true;
   if (x >= -60.7 && x <= -57.7 && z >= 18.9 && z <= 21.9) return true;
+  // Payung Pempek Cek Ani & Kanopi Toko Kue Dapur Manis
+  if (x >= -38.3 && x <= -35.0 && z >= -32.4 && z <= -29.2) return true;
+  if (x >= 47.4 && x <= 51.0 && z >= 39.6 && z <= 41.3) return true;
   return false;
 }
 
@@ -535,6 +538,11 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'jamu_yem_bike', minX: -59.68, maxX: -58.72, minZ: 19.4, maxZ: 21.4 },
   { id: 'jamu_yem_bench', minX: -61.12, maxX: -60.58, minZ: 19.65, maxZ: 21.15 },
   { id: 'lake_flora_fauna_board', minX: -69.0, maxX: -68.2, minZ: -34.55, maxZ: -33.05 },
+
+  // === 45. Gerobak Pempek Cek Ani & Toko Kue Tradisional Dapur Manis ===
+  { id: 'pempek_ani_cart', minX: -37.14, maxX: -36.06, minZ: -31.88, maxZ: -29.72 },
+  { id: 'pempek_ani_bench', minX: -38.72, maxX: -38.18, minZ: -31.58, maxZ: -30.02 },
+  { id: 'dapur_manis_bakery_kiosk', minX: 47.66, maxX: 50.74, minZ: 38.28, maxZ: 40.15 },
 ];
 
 /**
@@ -739,6 +747,10 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: 51.45, z: 12.4, r: 0.42 },
   { x: -58.25, z: 20.4, r: 0.42 },
   { x: -68.8, z: -32.2, r: 0.34 },
+  // Cek Ani Pempek, Ibu Dewi Dapur Manis & Pos Pantau TMA Sungai Kota
+  { x: -35.58, z: -30.8, r: 0.42 },
+  { x: 47.35, z: 40.2, r: 0.42 },
+  { x: -38.85, z: -11.0, r: 0.36 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],

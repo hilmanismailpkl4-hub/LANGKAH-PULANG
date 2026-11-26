@@ -198,6 +198,10 @@ export const playerRuntime = {
   jamuPourTimer: 0,
   birdScopeTimer: 0,
   birdSpotStep: 0,
+  pempekFryTimer: 0,
+  bakeryBellTimer: 0,
+  bakeryBoxStep: 0,
+  hydroSensorTimer: 0,
   gardenSwingTimer: 0,
   swingBoostTimer: 0,
   kiteHeight: 0,
@@ -334,6 +338,10 @@ export function resetScooterToHome() {
   playerRuntime.jamuPourTimer = 0;
   playerRuntime.birdScopeTimer = 0;
   playerRuntime.birdSpotStep = 0;
+  playerRuntime.pempekFryTimer = 0;
+  playerRuntime.bakeryBellTimer = 0;
+  playerRuntime.bakeryBoxStep = 0;
+  playerRuntime.hydroSensorTimer = 0;
   playerRuntime.gardenSwingTimer = 0;
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;

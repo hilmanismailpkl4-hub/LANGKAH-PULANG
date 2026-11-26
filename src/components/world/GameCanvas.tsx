@@ -37,6 +37,7 @@ import { OfficeLobbyLife } from './OfficeLobbyLife';
 import { ParkFountainPicnicAndJoggers } from './ParkFountainPicnicAndJoggers';
 import { ParkJasukeWaterAndWayfinder } from './ParkJasukeWaterAndWayfinder';
 import { ParkPlaygroundAndKoi } from './ParkPlaygroundAndKoi';
+import { PempekBakeryAndRiverGauge } from './PempekBakeryAndRiverGauge';
 import { PerformanceOptimizer } from './PerformanceOptimizer';
 import { PharmacyEsTelerAndToyBox } from './PharmacyEsTelerAndToyBox';
 import { PlayerController } from './PlayerController';
@@ -148,6 +149,7 @@ export const GameCanvas: React.FC = () => {
               <VeggieTailorAndRailCrossing timeOfDay={effectiveTime} settings={settings} />
               <PharmacyEsTelerAndToyBox timeOfDay={effectiveTime} settings={settings} />
               <KonterJamuAndLakeBirdScope timeOfDay={effectiveTime} settings={settings} />
+              <PempekBakeryAndRiverGauge timeOfDay={effectiveTime} settings={settings} />
               <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
             </group>
 

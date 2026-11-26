@@ -259,7 +259,35 @@ export const HumanModel: React.FC<HumanModelProps> = ({
           {/* Visual Gelas Hangat / Es Krim / Jajanan Martabak & Kacang Rebus di Tangan Kanan */}
           {holdingDrink && (
             <group position={[0, -0.48, 0.05]} rotation={[0.92, 0, 0]}>
-              {holdingDrink === 'jamu_glass' ? (
+              {holdingDrink === 'pempek_bowl' ? (
+                <group>
+                  {/* Mangkuk Pempek Palembang + Kuah Cuko Cokelat Gelap, Pempek Kapal Selam, Timun & Uap */}
+                  <mesh position={[0, 0.045, 0.02]} castShadow>
+                    <cylinderGeometry args={[0.086, 0.054, 0.078, 14]} />
+                    <meshStandardMaterial color="#f8fafc" roughness={0.34} />
+                  </mesh>
+                  {/* Permukaan Kuah Cuko Gelap Mengilap */}
+                  <mesh position={[0, 0.08, 0.02]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <circleGeometry args={[0.075, 14]} />
+                    <meshStandardMaterial color="#3b1d0a" roughness={0.22} />
+                  </mesh>
+                  {/* Potongan Pempek Kapal Selam Keemasan & Lenjer */}
+                  <mesh position={[-0.018, 0.092, 0.018]} rotation={[0, 0.3, Math.PI / 2]}>
+                    <capsuleGeometry args={[0.018, 0.036, 5, 8]} />
+                    <meshStandardMaterial color="#d97706" roughness={0.62} />
+                  </mesh>
+                  <mesh position={[0.024, 0.09, 0.024]}>
+                    <cylinderGeometry args={[0.018, 0.018, 0.02, 10]} />
+                    <meshStandardMaterial color="#eab308" roughness={0.65} />
+                  </mesh>
+                  {/* Potongan Timun Hijau Segar */}
+                  <mesh position={[0.008, 0.092, -0.016]}>
+                    <boxGeometry args={[0.022, 0.016, 0.022]} />
+                    <meshStandardMaterial color="#22c55e" roughness={0.55} />
+                  </mesh>
+                  <CupSteam position={[0, 0.118, 0.02]} />
+                </group>
+              ) : holdingDrink === 'jamu_glass' ? (
                 <group>
                   {/* Gelas Belimbing Bening Berisi Jamu Kunyit Asam / Beras Kencur Keemasan + Irisan Jeruk Nipis */}
                   <mesh position={[0, 0.052, 0]} castShadow>

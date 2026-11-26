@@ -25,7 +25,8 @@ export type CulinarySpotId =
   | 'cilok_kenangan'
   | 'bandrek_cempaka'
   | 'esteler_plaza'
-  | 'jamu_sepeda';
+  | 'jamu_sepeda'
+  | 'pempek_sungai';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -53,7 +54,8 @@ export type HeldDrinkVisual =
   | 'cilok_telur'
   | 'bandrek_mug'
   | 'es_teler'
-  | 'jamu_glass';
+  | 'jamu_glass'
+  | 'pempek_bowl';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -357,6 +359,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [-61.95, 0, 20.4],
     seatYaw: Math.PI / 2,
     tablePropPos: [-59.65, 1.08, 20.4],
+  },
+  pempek_sungai: {
+    id: 'pempek_sungai',
+    title: 'Pempek Palembang & Es Kacang Merah Cek Ani',
+    hostName: 'Cek Ani',
+    subtitle: 'Promenade Sungai Utara · Kapal Selam, Lenjer, Kuah Cuko & Es Kacang Merah',
+    seatPos: [-38.45, 0.14, -30.8],
+    lookAt: [-36.6, 1.35, -30.8],
+    standPos: [-38.45, 0, -29.4],
+    seatYaw: Math.PI / 2,
+    tablePropPos: [-37.1, 1.14, -30.8],
   },
 };
 
@@ -1483,6 +1496,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Mmm!! Beras kencur pakai madu manis banget, Mbak Yem! Kira jadi kuat jalan keliling taman lagi!' },
       { speaker: 'nadia', text: 'Segar banget badan rasanya, Mas... makasih ya sudah ingat mampir minum jamu bareng.' },
+    ],
+  },
+
+  // === 26. GEROBAK PEMPEK PALEMBANG & ES KACANG MERAH CEK ANI (PROMENADE SUNGAI UTARA) ===
+  {
+    id: 'pempek_kapal_selam',
+    spot: 'pempek_sungai',
+    name: 'Pempek Kapal Selam & Lenjer Kuah Cuko',
+    priceLabel: 'Rp 18.000',
+    tagline: 'Pempek ikan tenggiri isi telur utuh & lenjer goreng renyah, mi kuning, potongan timun segar & cuko kental.',
+    tasteNote: 'Garing di luar, kenyal gurih di dalam—berpadu asam manis pedas cuko asli di tepi angin Sungai Kota.',
+    drinkVisual: 'pempek_bowl',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Kuah cuko Cek Ani wangi gula batok sama bawang putihnya asli banget ya, Mas! Mantap sekali!' },
+    ],
+  },
+  {
+    id: 'pempek_es_kacang',
+    spot: 'pempek_sungai',
+    name: 'Pempek Adaan Bulat + Es Kacang Merah Segar',
+    priceLabel: 'Rp 20.000',
+    tagline: 'Empat butir pempek adaan daun bawang wangi ditemani semangkuk es kacang merah manis lembut.',
+    tasteNote: 'Gurih hangat pempek adaan ditutup dingin manis es kacang merah—perpaduan sore tepi sungai paling nikmat.',
+    drinkVisual: 'pempek_bowl',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'kira', text: 'Pempek bulatnya gurih banget, Yah!! Terus es kacang merahnya manis dingin kayak es krim!' },
+    ],
+  },
+  {
+    id: 'pempek_family',
+    spot: 'pempek_sungai',
+    name: 'Traktir Keluarga Paket Pempek & Es Kacang Merah',
+    priceLabel: 'Rp 48.000',
+    tagline: 'Dua kapal selam, lenjer & adaan (kuah cuko manis ramah anak untuk Kira) plus 2 mangkuk es kacang merah.',
+    tasteNote: 'Cek Ani ramah menyajikan pempek panas baru tiris sambil bercerita tentang Sungai Musi—sore di tepi sungai terasa makin akrab.',
+    drinkVisual: 'pempek_bowl',
+    isHot: true,
+    isFamilyTreat: true,
+    journalTitle: 'Sore Gurih Pempek & Es Kacang Merah di Tepi Sungai',
+    journalBody: 'Di promenade Sungai Utara, aku mengajak Nadia dan Kira duduk santai menyantap pempek kapal selam, lenjer, dan es kacang merah di gerobak Cek Ani. Asam manis kuah cuko dan semilir angin sungai membuat sore ini terasa lengkap.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Horeee!! Kira dapat pempek isi telur kuning besar sama timun kriuk!! Makasih banyak, Ayaah!' },
+      { speaker: 'nadia', text: 'Enak banget ya Mas jajan pempek hangat pinggir sungai begini... serasa jalan-jalan ke Palembang!' },
     ],
   },
 ];

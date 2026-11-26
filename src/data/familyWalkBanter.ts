@@ -566,4 +566,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'WAAAH!! Dari teropong kuning ini kelihatan burung putih panjang berdiri dekat bunga teratai, Ayah!!' },
     { speaker: 'nadia', text: 'Bagus banget ya Mas ada papan edukasi flora fauna Danau Senja begini—Kira jadi makin kenal alam sekitar kota kita.' },
   ],
+  activity_dapur_manis_bakery: [
+    { speaker: 'nadia', text: 'Wangi bolu kukus pandan sama kue lapis dari Dapur Manis tercium sampai depan pintu ya, Mas! Pas buat teman teh sore.' },
+    { speaker: 'kira', text: 'Kue tart cokelatnya muter pelan di dalam kaca etalase, Bunda!! Kira mau bolu kukus mekar warna pink!' },
+  ],
+  activity_river_gauge_post: [
+    { speaker: 'kira', text: 'Ayah! Penggaris besar biru-kuning-merah di dinding sungai itu buat ukur dalamnya air ya?! Kincir anginnya muter terus!' },
+    { speaker: 'nadia', text: 'Bagus banget ya Mas tepi jembatan sekarang punya pos pantau tinggi air dan cuaca—warga jadi lebih tenang saat musim hujan.' },
+  ],
 };
