@@ -466,4 +466,16 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'nadia', text: 'Lihat deh Mas, poster konser akustik tahun sembilan puluhan itu masih tertempel rapi di samping Toko Musik Nada Lama!' },
     { speaker: 'kira', text: 'Wah, bangkunya adem banget di bawah pohon! Nanti kalau Ayah manggung lagi, poster Ayah ditempel di sini ya!' },
   ],
+  activity_drinking_fountain: [
+    { speaker: 'kira', text: 'Waaah airnya melengkung jernih kayak air mancur mini, Ayah!! Segar banget habis jalan kaki di taman!' },
+    { speaker: 'nadia', text: 'Enak banget ya Mas taman kota sekarang punya keran air siap minum yang bersih dan terawat begini.' },
+  ],
+  activity_river_stone_bench: [
+    { speaker: 'nadia', text: 'Duduk di bangku batu tepi sungai ini adem banget ya, Mas... suara airnya bikin pikiran langsung tenang.' },
+    { speaker: 'kira', text: 'Ayah, lihat pantulan Menara Nusantara sama lampion di sungai dari sini!! Keren bangeeet!' },
+  ],
+  activity_park_wayfinder: [
+    { speaker: 'kira', text: 'Ayah! Panah kayunya nunjuk ke Danau Senja, Toko Musik, sama Gerobak Jasuke!! Kira bisa jadi pemandu jalan!' },
+    { speaker: 'nadia', text: 'Rapi banget ya penunjuk arah sama lampu-lampu tamannya, Mas... sore di jalur pejalan kaki ini terasa makin hangat.' },
+  ],
 };

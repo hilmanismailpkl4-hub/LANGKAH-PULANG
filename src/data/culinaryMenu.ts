@@ -16,7 +16,8 @@ export type CulinarySpotId =
   | 'pecel_lele'
   | 'doger'
   | 'ketoprak'
-  | 'warkop_stasiun';
+  | 'warkop_stasiun'
+  | 'jasuke_taman';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -35,7 +36,8 @@ export type HeldDrinkVisual =
   | 'pecel_lele'
   | 'doger'
   | 'ketoprak'
-  | 'kue_pasar';
+  | 'kue_pasar'
+  | 'jasuke_cup';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -240,6 +242,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [71.6, 0, -7.85],
     seatYaw: Math.PI,
     tablePropPos: [71.6, 1.14, -10.32],
+  },
+  jasuke_taman: {
+    id: 'jasuke_taman',
+    title: 'Jasuke & Jagung Bakar Arang Bang Roni',
+    hostName: 'Bang Roni',
+    subtitle: 'Tepi Taman Kota · Jagung Manis Susu Keju & Jagung Bakar Mentega Pedas',
+    seatPos: [-74.2, 0.14, 18.25],
+    lookAt: [-74.2, 1.35, 16.4],
+    standPos: [-74.2, 0, 19.35],
+    seatYaw: Math.PI,
+    tablePropPos: [-74.2, 1.14, 16.88],
   },
 };
 
@@ -961,6 +974,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Horeee!! Klepon hijaunya meletus manis di mulut Kira, Bunda!! Hihihi enak banget!' },
       { speaker: 'nadia', text: 'Jajanan pasar Mang Dadang beneran buatan rumahan ya, Mas... senang banget mampir sini bertiga.' },
+    ],
+  },
+
+  // === 17. GEROBAK JASUKE & JAGUNG BAKAR SORE BANG RONI (TEPI TAMAN KOTA) ===
+  {
+    id: 'jasuke_keju_susu',
+    spot: 'jasuke_taman',
+    name: 'Jasuke Panas Keju Parut & Susu Kental Manis',
+    priceLabel: 'Rp 10.000',
+    tagline: 'Jagung manis pipil kukus hangat berlumur mentega, parutan keju melimpah, dan susu kental manis.',
+    tasteNote: 'Manis gurih dan hangat mengepul di genggaman—paling pas dinikmati pelan di sore Taman Kota yang mulai sejuk.',
+    drinkVisual: 'jasuke_cup',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'kira', text: 'Waaah keju parutnya banyak banget di atas jagung manisnya, Yah!! Hangat dan gurih banget!' },
+    ],
+  },
+  {
+    id: 'jasuke_jagung_bakar',
+    spot: 'jasuke_taman',
+    name: 'Jagung Bakar Arang Mentega Manis Pedas',
+    priceLabel: 'Rp 12.000',
+    tagline: 'Jagung manis utuh dipanggang di atas bara arang merah dengan olesan mentega bawang & saus madu pedas.',
+    tasteNote: 'Wangi asap arang dan karamelisasi jagung bakar langsung menghidupkan suasana sore kaki lima taman kota.',
+    drinkVisual: 'jasuke_cup',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Aroma mentega jagung bakarnya Bang Roni dari jauh aja udah bikin lapar lagi ya, Mas!' },
+    ],
+  },
+  {
+    id: 'jasuke_family',
+    spot: 'jasuke_taman',
+    name: 'Traktir Keluarga Paket Jasuke & Jagung Bakar Taman',
+    priceLabel: 'Rp 32.000',
+    tagline: 'Dua cup Jasuke spesial keju-cokelat buat Kira & Nadia plus dua tongkol jagung bakar hangat untuk dinikmati bertiga.',
+    tasteNote: 'Di bawah cahaya bohlam gerobak dan pijar bara arang Bang Roni, tawa hangat keluarga menyatu dengan semilir angin Taman Kota.',
+    drinkVisual: 'jasuke_cup',
+    isHot: true,
+    isFamilyTreat: true,
+    journalTitle: 'Hangatnya Jasuke & Jagung Bakar Sore di Taman Kota',
+    journalBody: 'Di tepi Taman Kota dekat gazebo akustik, aku mengajak Nadia dan Kira duduk di depan gerobak Bang Roni menikmati jasuke keju hangat dan jagung bakar arang. Bau mentega panggang dan suara kipas bara sore itu membuat seluruh kota terasa begitu akrab.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Yeeey!! Kira dapat jasuke keju pakai taburan cokelat ekstra!! Enak bangettt, makasih Ayah!' },
+      { speaker: 'nadia', text: 'Sore yang hangat banget ya Mas... duduk di taman sambil makan jagung bakar bertiga begini rasanya lengkap sekali.' },
     ],
   },
 ];

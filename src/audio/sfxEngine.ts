@@ -936,6 +936,55 @@ class SfxEngine {
     });
   }
 
+  /**
+   * Suara gemericik pancuran air minum taman siap minum yang jernih & menyegarkan.
+   */
+  public playWaterFountain() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // Aliran air tersaring lembut (bandpass noise 1.4kHz -> 2.1kHz)
+    const src = ctx.createBufferSource();
+    src.buffer = this.getNoiseBuffer(ctx);
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(1450, now);
+    filter.frequency.linearRampToValueAtTime(2150, now + 0.35);
+    filter.frequency.linearRampToValueAtTime(1600, now + 0.95);
+    filter.Q.value = 1.9;
+
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0008, now);
+    g.gain.linearRampToValueAtTime(0.085 * v, now + 0.08);
+    g.gain.setValueAtTime(0.075 * v, now + 0.62);
+    g.gain.exponentialRampToValueAtTime(0.0008, now + 1.05);
+    src.connect(filter).connect(g).connect(ctx.destination);
+    src.start(now, 0.05, 1.08);
+
+    // 3 kilau gelembung air jernih lembut
+    const bubbles: [number, number, number][] = [
+      [0.06, 780, 1280],
+      [0.24, 920, 1480],
+      [0.48, 860, 1360],
+    ];
+    bubbles.forEach(([off, f0, f1]) => {
+      const osc = ctx.createOscillator();
+      const bg = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(f0, now + off);
+      osc.frequency.exponentialRampToValueAtTime(f1, now + off + 0.09);
+      bg.gain.setValueAtTime(0.0008, now + off);
+      bg.gain.linearRampToValueAtTime(0.05 * v, now + off + 0.018);
+      bg.gain.exponentialRampToValueAtTime(0.0008, now + off + 0.11);
+      osc.connect(bg).connect(ctx.destination);
+      osc.start(now + off);
+      osc.stop(now + off + 0.13);
+    });
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

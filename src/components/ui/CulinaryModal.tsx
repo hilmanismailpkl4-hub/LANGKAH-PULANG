@@ -53,7 +53,8 @@ export const CulinaryModal: React.FC = () => {
                   activeSpot === 'siomay' ||
                   activeSpot === 'gorengan' ||
                   activeSpot === 'pecel_lele' ||
-                  activeSpot === 'ketoprak' ? (
+                  activeSpot === 'ketoprak' ||
+                  activeSpot === 'jasuke_taman' ? (
                   <Flame className="h-4 w-4 sm:h-5 sm:w-5" />
                 ) : activeSpot === 'coconut' || activeSpot === 'dawet' || activeSpot === 'doger' ? (
                   <Droplets className="h-4 w-4 sm:h-5 sm:w-5" />

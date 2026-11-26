@@ -28,6 +28,7 @@ import { NightDiningAtmAndOpang } from './NightDiningAtmAndOpang';
 import { NightNeighborhoodAndClock } from './NightNeighborhoodAndClock';
 import { OfficeLobbyLife } from './OfficeLobbyLife';
 import { ParkFountainPicnicAndJoggers } from './ParkFountainPicnicAndJoggers';
+import { ParkJasukeWaterAndWayfinder } from './ParkJasukeWaterAndWayfinder';
 import { ParkPlaygroundAndKoi } from './ParkPlaygroundAndKoi';
 import { PerformanceOptimizer } from './PerformanceOptimizer';
 import { PlayerController } from './PlayerController';
@@ -126,6 +127,7 @@ export const GameCanvas: React.FC = () => {
               <DogerChessAndKrlBoard timeOfDay={effectiveTime} settings={settings} />
               <KetoprakLotusAndWeatherPlaza timeOfDay={effectiveTime} settings={settings} />
               <StationWarkopBirdsAndMusicBench timeOfDay={effectiveTime} settings={settings} />
+              <ParkJasukeWaterAndWayfinder timeOfDay={effectiveTime} settings={settings} />
               <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
             </group>
 

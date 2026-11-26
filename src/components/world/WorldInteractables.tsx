@@ -2823,6 +2823,122 @@ export const WorldInteractables: React.FC = () => {
         2.7,
       );
 
+      consider(
+        {
+          id: 'culinary_jasuke_roni',
+          kind: 'story_object',
+          label: 'Pesan Jasuke & Jagung Bakar Arang Bang Roni',
+          sublabel: 'Tepi Taman Kota · Keju Parut, Susu & Bara Arang',
+          position: [-74.2, 0, 17.8],
+          onInteract: () => {
+            store.openCulinarySpot('jasuke_taman');
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'activity_park_drinking_fountain',
+          kind: 'story_object',
+          label: 'Minum Air Segar dari Keran Siap Minum Taman',
+          sublabel: 'Promenade Tepi Sungai · Pos Air Minum Taman Kota',
+          position: [-58.4, 0, -13.2],
+          onInteract: () => {
+            sfxEngine.playWaterFountain();
+            playerRuntime.fountainDrinkTimer = 4.2;
+            if (!store.flags.includes('used_park_drinking_fountain')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                kehadiranKeluarga: 1,
+                setFlags: ['used_park_drinking_fountain'],
+                journalEntry: {
+                  id: 'je_park_drinking_fountain',
+                  title: 'Tegukan Air Segar di Pos Air Minum Tepi Sungai',
+                  body: 'Di promenade tepi sungai dekat Taman Kota, aku menekan keran air siap minum dan menyesap aliran air jernih yang melengkung lembut. Hal-hal sederhana yang dirawat bersama oleh warga membuat sebuah kota terasa layak disebut rumah.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_drinking_fountain, 'fw_drinking_fountain');
+            }
+            store.showToast('Ssshhh... Aliran air jernih melengkung segar dari keran taman! Dahaga perjalanan langsung hilang.');
+          },
+        },
+        2.5,
+      );
+
+      consider(
+        {
+          id: 'sit_river_stone_bench',
+          kind: 'story_object',
+          label: 'Duduk Santai di Bangku Batu Alami Tepi Sungai',
+          sublabel: 'Promenade Sungai Barat · Menghadap Aliran Sungai & Menara',
+          position: [-58.6, 0, -15.4],
+          onInteract: () => {
+            sfxEngine.play('interact');
+            playerRuntime.sitState = {
+              active: true,
+              label: 'Bangku Batu Tepi Sungai Kota',
+              seatPos: [-57.8, 0.14, -15.4],
+              lookAt: [-42.0, 1.35, -15.4],
+              standPos: [-59.0, 0, -15.4],
+              seatYaw: Math.PI / 2,
+            };
+            store.setSitting(true);
+            if (!store.flags.includes('sat_river_stone_bench')) {
+              store.applyEffect({
+                kehadiranKeluarga: 1,
+                kejujuranDiri: 1,
+                setFlags: ['sat_river_stone_bench'],
+                journalEntry: {
+                  id: 'je_river_stone_bench',
+                  title: 'Duduk Tenang di Bangku Batu Tepi Sungai',
+                  body: 'Aku duduk di bangku batu andesit yang sejuk di tepi barat Sungai Kota, memandang pantulan Menara Nusantara dan deretan lampion di permukaan air. Tidak ada rapat, tidak ada tenggat—hanya suara air mengalir perlahan.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_river_stone_bench, 'fw_river_stone_bench');
+            }
+            store.showToast('Damar duduk santai di bangku batu menghadap aliran Sungai Kota... (Tekan WASD/E untuk berdiri)');
+          },
+        },
+        2.7,
+      );
+
+      consider(
+        {
+          id: 'activity_park_wayfinder',
+          kind: 'story_object',
+          label: 'Baca Papan Penunjuk Arah Kayu Taman Kota',
+          sublabel: 'Simpang Jalur Pejalan Kaki · Danau, Stasiun & Toko Musik',
+          position: [-63.2, 0, 14.4],
+          onInteract: () => {
+            sfxEngine.play('chime');
+            if (!store.flags.includes('read_park_wayfinder')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                setFlags: ['read_park_wayfinder'],
+                journalEntry: {
+                  id: 'je_park_wayfinder',
+                  title: 'Penunjuk Arah Kayu di Jalur Pejalan Kaki Taman',
+                  body: 'Di persimpangan jalur pejalan kaki Taman Kota yang diterangi lampu taman hangat, papan panah kayu menunjuk rapi ke Danau Senja, Toko Musik Nada Lama, Stasiun Senja, dan sudut Jasuke Bang Roni. Semua jalan pulang ternyata selalu saling terhubung.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_park_wayfinder, 'fw_park_wayfinder');
+            }
+            store.showToast('Papan Arah Taman: ◀ Danau Senja (38m) · Toko Musik (55m) ▶ · Stasiun (140m) ▶ · ◀ Jasuke & Taman Bermain (15m).');
+          },
+        },
+        2.8,
+      );
+
     consider(
       {
         id: 'portal_up',
@@ -3398,6 +3514,22 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-64.2, 1.45, -27.6]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#fde047" />
+      </mesh>
+      <mesh position={[-74.2, 1.92, 16.4]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#facc15" />
+      </mesh>
+      <mesh position={[-58.4, 1.56, -13.2]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#38bdf8" />
+      </mesh>
+      <mesh position={[-57.8, 0.92, -15.4]}>
+        <sphereGeometry args={[0.07, 8, 8]} />
+        <meshBasicMaterial color="#a7f3d0" />
+      </mesh>
+      <mesh position={[-63.2, 2.74, 14.4]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#fbbf24" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

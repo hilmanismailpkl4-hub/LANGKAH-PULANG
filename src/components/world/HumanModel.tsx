@@ -259,7 +259,35 @@ export const HumanModel: React.FC<HumanModelProps> = ({
           {/* Visual Gelas Hangat / Es Krim / Jajanan Martabak & Kacang Rebus di Tangan Kanan */}
           {holdingDrink && (
             <group position={[0, -0.48, 0.05]} rotation={[0.92, 0, 0]}>
-              {holdingDrink === 'kue_pasar' ? (
+              {holdingDrink === 'jasuke_cup' ? (
+                <group>
+                  {/* Cup Kertas Jasuke Hangat + Jagung Manis Emas, Parutan Keju, Mesis & Sendok Kecil */}
+                  <mesh position={[0, 0.052, 0]} castShadow>
+                    <cylinderGeometry args={[0.048, 0.036, 0.105, 14]} />
+                    <meshStandardMaterial color="#fef08a" roughness={0.55} />
+                  </mesh>
+                  {/* Gunungan Biji Jagung Manis Kuning Keemasan */}
+                  <mesh position={[0, 0.108, 0]}>
+                    <sphereGeometry args={[0.044, 10, 8, 0, Math.PI * 2, 0, Math.PI * 0.62]} />
+                    <meshStandardMaterial color="#facc15" roughness={0.5} />
+                  </mesh>
+                  {/* Taburan Keju Parut Krem & Cokelat */}
+                  <mesh position={[-0.01, 0.132, 0.008]}>
+                    <sphereGeometry args={[0.024, 8, 6]} />
+                    <meshStandardMaterial color="#fffbeb" roughness={0.62} />
+                  </mesh>
+                  <mesh position={[0.014, 0.132, -0.006]}>
+                    <boxGeometry args={[0.022, 0.012, 0.02]} />
+                    <meshStandardMaterial color="#78350f" roughness={0.65} />
+                  </mesh>
+                  {/* Sendok Plastik Merah Menancap Miring */}
+                  <mesh position={[0.022, 0.15, 0]} rotation={[0, 0, -0.34]}>
+                    <boxGeometry args={[0.011, 0.09, 0.004]} />
+                    <meshStandardMaterial color="#ef4444" roughness={0.38} />
+                  </mesh>
+                  <CupSteam position={[0, 0.155, 0]} />
+                </group>
+              ) : holdingDrink === 'kue_pasar' ? (
                 <group>
                   {/* Piring Daun Pisang Jajanan Pasar (Klepon Hijau, Kue Lumpur Kuning & Lemper) */}
                   <mesh position={[0, 0.026, 0.02]} castShadow>

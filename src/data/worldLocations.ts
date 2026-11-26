@@ -213,6 +213,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= -38.2 && x <= -35.0 && z >= 34.6 && z <= 37.8) return true;
   // Payung Teduh Warkop & Kue Pasar Mang Dadang (Gerbang Barat Stasiun Senja)
   if (x >= 70.0 && x <= 73.2 && z >= -12.2 && z <= -9.2) return true;
+  // Payung Teduh Gerobak Jasuke & Jagung Bakar Bang Roni (Tepi Taman Kota)
+  if (x >= -75.8 && x <= -72.6 && z >= 14.8 && z <= 18.2) return true;
   return false;
 }
 
@@ -437,6 +439,12 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'warkop_stasiun_bench', minX: 70.85, maxX: 72.35, minZ: -9.22, maxZ: -8.68 },
   { id: 'nada_poster_board', minX: -13.75, maxX: -13.15, minZ: -25.65, maxZ: -23.55 },
   { id: 'nada_poster_bench', minX: -12.15, maxX: -11.45, minZ: -25.6, maxZ: -23.6 },
+
+  // === 34. Gerobak Jasuke & Jagung Bakar Bang Roni + 2 Bangku Batu Alami Tepi Sungai ===
+  { id: 'jasuke_taman_cart', minX: -75.28, maxX: -73.12, minZ: 15.86, maxZ: 16.94 },
+  { id: 'jasuke_taman_bench', minX: -74.98, maxX: -73.42, minZ: 17.98, maxZ: 18.52 },
+  { id: 'river_stone_bench_1', minX: -58.14, maxX: -57.46, minZ: -16.25, maxZ: -14.55 },
+  { id: 'river_stone_bench_2', minX: -58.14, maxX: -57.46, minZ: -18.45, maxZ: -16.75 },
 ];
 
 /**
@@ -585,6 +593,14 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: 1.8, z: 64.9, r: 0.24 },
   { x: -12.6, z: -27.2, r: 0.66 },
   { x: -12.6, z: -22.2, r: 0.18 },
+  // Bang Roni Jasuke Taman, Pos Air Minum Taman, Tiang Penunjuk Arah Kayu & 6 Lampu Taman Hias
+  { x: -74.2, z: 15.38, r: 0.42 },
+  { x: -58.4, z: -13.2, r: 0.44 },
+  { x: -63.2, z: 14.4, r: 0.44 },
+  ...([
+    [-59.2, -11.5], [-59.2, -19.2], [-63.2, -12.6],
+    [-63.2, 18.8], [-63.4, 23.6], [-71.6, 14.8],
+  ] as [number, number][]).map(([x, z]) => ({ x, z, r: 0.16 })),
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
