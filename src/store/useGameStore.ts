@@ -1929,11 +1929,24 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       }
       clearBanterTimers();
 
+      if (script.flashback) {
+        sfxEngine.playMemoryChime();
+        if (script.flashback.mood === 'rain_melancholy') {
+          musicEngine.setContext('park', 'rain_dusk');
+        } else if (script.flashback.mood === 'quiet_night') {
+          musicEngine.setContext('rooftop', 'night');
+        } else {
+          musicEngine.setContext('cafe', 'sunset');
+        }
+      }
+
       set({
         activeDialogue: script,
         activeNodeId: startNode.id,
         isMapJournalOpen: false,
         isPauseOpen: false,
+        isPhoneOpen: false,
+        isPhotoAlbumOpen: false,
         familyBanter: null,
       });
 
@@ -1952,8 +1965,16 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       // Jika ada pilihan, pemain harus klik salah satu pilihan
       if (node.choices && node.choices.length > 0) return;
 
+      const wasFlashback = Boolean(activeDialogue.flashback);
       voiceManager.stop();
       if (node.onEnd) {
+        if (node.onEnd.launchDialogueId) {
+          const targetId = node.onEnd.launchDialogueId;
+          const { launchDialogueId: _omit, ...restEffects } = node.onEnd;
+          get().applyEffect(restEffects);
+          get().startDialogue(targetId);
+          return;
+        }
         get().applyEffect(node.onEnd);
       }
 
@@ -1966,6 +1987,10 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         voiceManager.speak(nextNode.id, nextNode.speaker, nextNode.text);
       } else {
         set({ activeDialogue: null, activeNodeId: null });
+        if (wasFlashback && get().screen === 'playing') {
+          const loc = getLocationAtPosition(playerRuntime.position);
+          musicEngine.setContext(loc.musicMood, get().timeOfDay);
+        }
         void get().saveCurrentGame(true);
       }
     },
@@ -1974,6 +1999,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       const { activeDialogue, activeNodeId } = get();
       if (!activeDialogue || !activeNodeId) return;
       const currentNode = activeDialogue.nodes[activeNodeId];
+      const wasFlashback = Boolean(activeDialogue.flashback);
       voiceManager.stop();
       sfxEngine.play('interact');
 
@@ -1981,6 +2007,13 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         get().applyEffect(currentNode.onEnd);
       }
       if (choice.effects) {
+        if (choice.effects.launchDialogueId) {
+          const targetId = choice.effects.launchDialogueId;
+          const { launchDialogueId: _omit, ...restEffects } = choice.effects;
+          get().applyEffect(restEffects);
+          get().startDialogue(targetId);
+          return;
+        }
         get().applyEffect(choice.effects);
       }
 
@@ -1993,13 +2026,22 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         voiceManager.speak(nextNode.id, nextNode.speaker, nextNode.text);
       } else {
         set({ activeDialogue: null, activeNodeId: null });
+        if (wasFlashback && get().screen === 'playing') {
+          const loc = getLocationAtPosition(playerRuntime.position);
+          musicEngine.setContext(loc.musicMood, get().timeOfDay);
+        }
         void get().saveCurrentGame(true);
       }
     },
 
     closeDialogue: () => {
+      const wasFlashback = Boolean(get().activeDialogue?.flashback);
       voiceManager.stop();
       set({ activeDialogue: null, activeNodeId: null });
+      if (wasFlashback && get().screen === 'playing') {
+        const loc = getLocationAtPosition(playerRuntime.position);
+        musicEngine.setContext(loc.musicMood, get().timeOfDay);
+      }
     },
 
     discoverEasterEgg: (easterEggId) => {

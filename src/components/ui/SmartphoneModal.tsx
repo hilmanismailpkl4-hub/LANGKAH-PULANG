@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ArrowLeft,
   Battery,
@@ -8,6 +8,7 @@ import {
   ChevronRight,
   CloudRain,
   CloudSun,
+  Film,
   Footprints,
   Heart,
   Home,
@@ -24,6 +25,7 @@ import {
   Play,
   Plus,
   Send,
+  Sparkles,
   Sun,
   Sunset,
   Trash2,
@@ -40,6 +42,7 @@ import {
   PHONE_THREADS,
   PhoneContactThread,
   RADIO_STATIONS,
+  ReplyToneLabel,
   VOICE_NOTES,
 } from '../../data/phoneContent';
 import { LOCATION_BY_ID } from '../../data/worldLocations';
@@ -149,6 +152,35 @@ const MemoryIllustration: React.FC<{ theme: MemoryPhotoItem['theme']; large?: bo
       </svg>
     );
   }
+  if (theme === 'dinner_quiet') {
+    return (
+      <svg viewBox="0 0 240 140" className={`w-full ${h} rounded-lg`}>
+        <defs>
+          <radialGradient id="lampGlow" cx="50%" cy="18%" r="72%">
+            <stop offset="0%" stopColor="#f5c97a" stopOpacity="0.45" />
+            <stop offset="100%" stopColor="#121015" stopOpacity="1" />
+          </radialGradient>
+        </defs>
+        <rect width="240" height="140" fill="url(#lampGlow)" />
+        {/* Lampu gantung kuning ruang makan */}
+        <line x1="120" y1="0" x2="120" y2="24" stroke="#3a3028" strokeWidth="2" />
+        <polygon points="104,24 136,24 144,36 96,36" fill="#d4a056" />
+        <ellipse cx="120" cy="36" rx="18" ry="4" fill="#ffe6a8" />
+        {/* Jam dinding 22:15 */}
+        <circle cx="42" cy="34" r="14" fill="#231c18" stroke="#8a745c" strokeWidth="2" />
+        <line x1="42" y1="34" x2="35" y2="30" stroke="#f5e6cc" strokeWidth="1.8" />
+        <line x1="42" y1="34" x2="51" y2="34" stroke="#f5e6cc" strokeWidth="1.4" />
+        {/* Meja kayu */}
+        <rect x="0" y="92" width="240" height="48" fill="#3a271d" />
+        {/* Mangkuk sup ayam dingin di sisi kiri */}
+        <path d="M52 84 Q72 104 92 84 Z" fill="#e8dfd2" />
+        <ellipse cx="72" cy="84" rx="20" ry="4.5" fill="#d9b26a" />
+        {/* Laptop terbuka menyala dingin biru-putih di sisi kanan */}
+        <polygon points="146,56 196,56 190,90 140,90" fill="#9bc2e6" stroke="#2c3442" strokeWidth="2.5" />
+        <rect x="132" y="90" width="66" height="5" rx="2" fill="#3c4554" />
+      </svg>
+    );
+  }
   return (
     <svg viewBox="0 0 240 140" className={`w-full ${h} rounded-lg`}>
       <rect width="240" height="140" fill="#10182b" />
@@ -162,6 +194,14 @@ const MemoryIllustration: React.FC<{ theme: MemoryPhotoItem['theme']; large?: bo
       <rect x="0" y="124" width="240" height="16" fill="#18202c" />
     </svg>
   );
+};
+
+const TONE_BADGE_CLASS: Record<ReplyToneLabel, string> = {
+  Jujur: 'border-amber-300/45 bg-amber-500/20 text-amber-200',
+  Hangat: 'border-rose-300/45 bg-rose-500/20 text-rose-200',
+  Tenang: 'border-sky-300/45 bg-sky-500/20 text-sky-200',
+  Defensif: 'border-slate-300/35 bg-slate-500/20 text-slate-200',
+  'Fokus Kerja': 'border-indigo-300/35 bg-indigo-500/20 text-indigo-200',
 };
 
 export const SmartphoneModal: React.FC = () => {
@@ -197,6 +237,8 @@ export const SmartphoneModal: React.FC = () => {
   const toggleUmbrella = useGameStore((s) => s.toggleUmbrella);
   const isFamilyWalkActive = useGameStore((s) => s.isFamilyWalkActive);
   const toggleFamilyWalk = useGameStore((s) => s.toggleFamilyWalk);
+  const flags = useGameStore((s) => s.flags);
+  const startDialogue = useGameStore((s) => s.startDialogue);
 
   const [typingThread, setTypingThread] = useState<string | null>(null);
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
@@ -205,7 +247,17 @@ export const SmartphoneModal: React.FC = () => {
   const [selectedMemory, setSelectedMemory] = useState<MemoryPhotoItem | null>(null);
   const [selectedCaptureUrl, setSelectedCaptureUrl] = useState<{ url: string; title: string; caption: string } | null>(null);
   const [noteInput, setNoteInput] = useState('');
+  const chatScrollRef = useRef<HTMLDivElement | null>(null);
   const { isCompactLandscape } = useMobileViewport();
+
+  useEffect(() => {
+    if (app === 'chat' && threadId && chatScrollRef.current) {
+      chatScrollRef.current.scrollTo({
+        top: chatScrollRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [app, threadId, repliedPhonePrompts, typingThread]);
 
   useEffect(() => {
     if (!activeCall) return;
@@ -227,13 +279,20 @@ export const SmartphoneModal: React.FC = () => {
   const loc = LOCATION_BY_ID[currentLocation];
   const activeThread = PHONE_THREADS.find((t) => t.id === threadId) ?? null;
 
-  // Hitung total chat yang memiliki prompt balasan belum dijawab pada bab saat ini
+  const isPromptUnlocked = (p: { chapterMin: number; requiredFlag?: string }) =>
+    p.chapterMin <= chapter && (!p.requiredFlag || flags.includes(p.requiredFlag));
+
+  // Hitung total chat yang memiliki prompt balasan belum dijawab pada bab/progres saat ini
   const pendingReplyCount = PHONE_THREADS.reduce((sum, th) => {
     const unanswered = th.prompts.filter(
-      (p) => p.chapterMin <= chapter && !repliedPhonePrompts[p.id],
+      (p) => isPromptUnlocked(p) && !repliedPhonePrompts[p.id],
     ).length;
     return sum + unanswered;
   }, 0);
+
+  const flashbacksCompletedCount = ['flashback_2018_done', 'flashback_2020_done', 'flashback_dinner_done'].filter(
+    (f) => flags.includes(f),
+  ).length;
 
   const handleSendReply = (promptId: string, option: ChatReplyOption, thread: PhoneContactThread) => {
     sfxEngine.play('interact');
@@ -278,8 +337,12 @@ export const SmartphoneModal: React.FC = () => {
       done: discoveredEasterEggs.length >= 5,
     },
     {
-      label: 'Balas pesan hangat dari Nadia atau Kira di aplikasi Pesan',
+      label: 'Balas pesan hangat dari Nadia, Kira, Bima, atau Mas Bagas di aplikasi Pesan',
       done: Object.keys(repliedPhonePrompts).length > 0,
+    },
+    {
+      label: `Hidupkan Kilas Balik Memori Sinematik di Galeri HP atau Album Rumah (${flashbacksCompletedCount}/3)`,
+      done: flashbacksCompletedCount > 0,
     },
   ];
 
@@ -633,11 +696,11 @@ export const SmartphoneModal: React.FC = () => {
                 </div>
                 <div className="flex-1 divide-y divide-white/5 overflow-y-auto subtle-scroll">
                   {PHONE_THREADS.map((th) => {
-                    const visibleMsgs = th.messages.filter((m) => m.chapterMin <= chapter);
+                    const visibleMsgs = th.messages.filter((m) => isPromptUnlocked(m));
                     const lastMsg = visibleMsgs[visibleMsgs.length - 1];
-                    const hasPending = th.prompts.some(
-                      (p) => p.chapterMin <= chapter && !repliedPhonePrompts[p.id],
-                    );
+                    const pendingCount = th.prompts.filter(
+                      (p) => isPromptUnlocked(p) && !repliedPhonePrompts[p.id],
+                    ).length;
                     return (
                       <button
                         key={th.id}
@@ -650,7 +713,7 @@ export const SmartphoneModal: React.FC = () => {
                         className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition hover:bg-white/5"
                       >
                         <div
-                          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+                          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white shadow"
                           style={{ backgroundColor: th.avatarColor }}
                         >
                           {th.initials}
@@ -658,14 +721,16 @@ export const SmartphoneModal: React.FC = () => {
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center justify-between gap-2">
                             <p className="truncate text-sm font-semibold text-warm-50">{th.name}</p>
-                            <span className="text-[10px] text-warm-200/50">{lastMsg?.time}</span>
+                            <span className="shrink-0 text-[10px] text-warm-200/50">{lastMsg?.time}</span>
                           </div>
                           <p className="mt-0.5 truncate text-xs text-warm-200/70">
                             {lastMsg?.text}
                           </p>
                         </div>
-                        {hasPending && (
-                          <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-emerald-400" />
+                        {pendingCount > 0 && (
+                          <span className="flex h-5 min-w-[20px] shrink-0 items-center justify-center rounded-full bg-emerald-500 px-1.5 text-[10px] font-bold text-dusk-950 shadow">
+                            {pendingCount}
+                          </span>
                         )}
                       </button>
                     );
@@ -710,9 +775,9 @@ export const SmartphoneModal: React.FC = () => {
                 </div>
 
                 {/* Daftar Balon Pesan */}
-                <div className="flex-1 space-y-2.5 overflow-y-auto subtle-scroll p-3.5 text-xs">
+                <div ref={chatScrollRef} className="flex-1 space-y-2.5 overflow-y-auto subtle-scroll p-3.5 text-xs">
                   {activeThread.messages
-                    .filter((m) => m.chapterMin <= chapter)
+                    .filter((m) => isPromptUnlocked(m))
                     .map((m) => (
                       <div key={m.id} className="flex justify-start">
                         <div className="max-w-[85%] rounded-2xl rounded-tl-sm bg-dusk-800/95 px-3.5 py-2.5 text-warm-100 shadow">
@@ -724,19 +789,24 @@ export const SmartphoneModal: React.FC = () => {
 
                   {/* Balasan yang Sudah Dikirim Damar + Balasan Otomatis Mereka */}
                   {activeThread.prompts
-                    .filter((p) => p.chapterMin <= chapter && repliedPhonePrompts[p.id])
-                    .map((p) => {
+                    .filter((p) => isPromptUnlocked(p) && repliedPhonePrompts[p.id])
+                    .map((p, idx, arr) => {
                       const chosen = p.options.find((o) => o.id === repliedPhonePrompts[p.id]);
                       if (!chosen) return null;
+                      const isLatestTyping = typingThread === activeThread.id && idx === arr.length - 1;
                       return (
                         <React.Fragment key={p.id}>
                           <div className="flex justify-end">
                             <div className="max-w-[85%] rounded-2xl rounded-tr-sm bg-emerald-700/85 px-3.5 py-2.5 text-white shadow">
                               <p className="leading-relaxed">{chosen.text}</p>
-                              <p className="mt-1 text-right text-[9px] text-emerald-100/70">Terkirim ✓✓</p>
+                              <div className="mt-1 flex items-center justify-end gap-1.5 text-[9px] text-emerald-100/75">
+                                <span className="opacity-80">{chosen.toneLabel}</span>
+                                <span>·</span>
+                                <span className="text-sky-200">Dibaca ✓✓</span>
+                              </div>
                             </div>
                           </div>
-                          {typingThread !== activeThread.id && (
+                          {!isLatestTyping && (
                             <div className="flex justify-start animate-fadeIn">
                               <div className="max-w-[85%] rounded-2xl rounded-tl-sm bg-dusk-800/95 px-3.5 py-2.5 text-warm-100 shadow">
                                 <p className="leading-relaxed">{chosen.replyFromThem}</p>
@@ -749,8 +819,13 @@ export const SmartphoneModal: React.FC = () => {
                     })}
 
                   {typingThread === activeThread.id && (
-                    <div className="inline-block rounded-2xl bg-dusk-800/80 px-3 py-2 text-[11px] italic text-warm-300">
-                      sedang mengetik...
+                    <div className="inline-flex items-center gap-1.5 rounded-2xl rounded-tl-sm bg-dusk-800/90 px-3.5 py-2 text-[11px] italic text-emerald-200/90">
+                      <span>sedang mengetik</span>
+                      <span className="inline-flex gap-0.5">
+                        <span className="h-1 w-1 animate-bounce rounded-full bg-emerald-300" />
+                        <span className="h-1 w-1 animate-bounce rounded-full bg-emerald-300 [animation-delay:120ms]" />
+                        <span className="h-1 w-1 animate-bounce rounded-full bg-emerald-300 [animation-delay:240ms]" />
+                      </span>
                     </div>
                   )}
                 </div>
@@ -758,29 +833,45 @@ export const SmartphoneModal: React.FC = () => {
                 {/* Pilihan Balasan Cepat */}
                 {(() => {
                   const nextPrompt = activeThread.prompts.find(
-                    (p) => p.chapterMin <= chapter && !repliedPhonePrompts[p.id],
+                    (p) => isPromptUnlocked(p) && !repliedPhonePrompts[p.id],
                   );
                   if (!nextPrompt) {
                     return (
                       <div className="border-t border-white/10 bg-dusk-900/80 px-4 py-2.5 text-center text-[11px] text-warm-200/50">
-                        Belum ada pesan baru yang perlu dibalas saat ini.
+                        Semua pesan di obrolan ini sudah kamu balas.
                       </div>
                     );
                   }
                   return (
-                    <div className="space-y-1.5 border-t border-white/10 bg-dusk-900/95 p-3">
-                      <p className="text-[10px] font-semibold uppercase tracking-wider text-warm-300">
-                        Pilih Balasan Damar:
-                      </p>
+                    <div className="max-h-[46%] space-y-1.5 overflow-y-auto subtle-scroll border-t border-white/10 bg-dusk-900/95 p-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-warm-300">
+                          Pilih Balasan Damar
+                        </p>
+                        {nextPrompt.contextHint && (
+                          <span className="truncate text-[9.5px] italic text-warm-200/60">
+                            {nextPrompt.contextHint}
+                          </span>
+                        )}
+                      </div>
                       {nextPrompt.options.map((opt) => (
                         <button
                           key={opt.id}
                           type="button"
                           onClick={() => handleSendReply(nextPrompt.id, opt, activeThread)}
-                          className="flex w-full items-center justify-between gap-2 rounded-xl border border-emerald-400/30 bg-emerald-950/35 px-3 py-2 text-left text-[11px] text-warm-50 transition hover:bg-emerald-900/50"
+                          className="group flex w-full items-start justify-between gap-2 rounded-xl border border-emerald-400/25 bg-emerald-950/35 px-3 py-2 text-left text-[11px] text-warm-50 transition hover:border-emerald-300/60 hover:bg-emerald-900/50"
                         >
-                          <span className="leading-snug">{opt.text}</span>
-                          <Send className="h-3.5 w-3.5 shrink-0 text-emerald-300" />
+                          <div className="space-y-1">
+                            <span
+                              className={`inline-block rounded-full border px-1.5 py-0.5 text-[9px] font-semibold leading-none ${
+                                TONE_BADGE_CLASS[opt.toneLabel]
+                              }`}
+                            >
+                              {opt.toneLabel}
+                            </span>
+                            <p className="leading-snug">{opt.text}</p>
+                          </div>
+                          <Send className="mt-1 h-3.5 w-3.5 shrink-0 text-emerald-300 transition group-hover:translate-x-0.5" />
                         </button>
                       ))}
                     </div>
@@ -930,6 +1021,25 @@ export const SmartphoneModal: React.FC = () => {
                           {selectedMemory.caption}
                         </p>
                       </div>
+                      {selectedMemory.flashbackDialogueId && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const fbId = selectedMemory.flashbackDialogueId!;
+                            setSelectedMemory(null);
+                            closePhone();
+                            startDialogue(fbId);
+                          }}
+                          className="flex w-full items-center justify-center gap-2 rounded-xl border border-amber-300/50 bg-gradient-to-r from-amber-500/85 to-warm-400 px-4 py-2.5 text-xs font-semibold text-dusk-950 shadow-lg transition hover:brightness-105"
+                        >
+                          <Film className="h-4 w-4" />
+                          <span>
+                            {selectedMemory.flashbackFlag && flags.includes(selectedMemory.flashbackFlag)
+                              ? 'Putar Ulang Kilas Balik Sinematik'
+                              : 'Hidupkan Kilas Balik Sinematik'}
+                          </span>
+                        </button>
+                      )}
                     </div>
                   ) : selectedCaptureUrl ? (
                     <div className="space-y-3 animate-fadeIn">
@@ -951,22 +1061,53 @@ export const SmartphoneModal: React.FC = () => {
                       </div>
                     </div>
                   ) : galleryTab === 'memories' ? (
-                    <div className="grid grid-cols-2 gap-2.5">
-                      {MEMORY_PHOTOS.filter((m) => m.chapterMin <= chapter).map((m) => (
-                        <button
-                          key={m.id}
-                          type="button"
-                          onClick={() => {
-                            sfxEngine.play('interact');
-                            setSelectedMemory(m);
-                          }}
-                          className="overflow-hidden rounded-xl border border-white/10 bg-dusk-900/70 p-1.5 text-left transition hover:border-warm-300/50"
-                        >
-                          <MemoryIllustration theme={m.theme} />
-                          <p className="mt-1.5 truncate text-[11px] font-medium text-warm-100">{m.title}</p>
-                          <p className="truncate text-[9px] text-warm-200/55">{m.dateLabel}</p>
-                        </button>
-                      ))}
+                    <div className="space-y-2.5">
+                      <div className="flex items-center justify-between rounded-xl border border-amber-300/25 bg-amber-500/10 px-3 py-2 text-[10.5px] text-amber-100/90">
+                        <span className="flex items-center gap-1.5">
+                          <Sparkles className="h-3.5 w-3.5 text-amber-300" />
+                          <span>Foto bertanda <strong>Kilas Balik</strong> dapat dihidupkan!</span>
+                        </span>
+                        <span className="font-mono text-amber-300">{flashbacksCompletedCount}/3</span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2.5">
+                        {MEMORY_PHOTOS.filter((m) => m.chapterMin <= chapter).map((m) => {
+                          const hasFb = Boolean(m.flashbackDialogueId);
+                          const fbDone = Boolean(m.flashbackFlag && flags.includes(m.flashbackFlag));
+                          return (
+                            <button
+                              key={m.id}
+                              type="button"
+                              onClick={() => {
+                                sfxEngine.play('interact');
+                                setSelectedMemory(m);
+                              }}
+                              className={`relative overflow-hidden rounded-xl border p-1.5 text-left transition ${
+                                hasFb
+                                  ? 'border-amber-300/35 bg-dusk-900/80 hover:border-amber-300/80'
+                                  : 'border-white/10 bg-dusk-900/70 hover:border-warm-300/50'
+                              }`}
+                            >
+                              <div className="relative">
+                                <MemoryIllustration theme={m.theme} />
+                                {hasFb && (
+                                  <span
+                                    className={`absolute right-1.5 top-1.5 inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[8.5px] font-semibold shadow ${
+                                      fbDone
+                                        ? 'bg-emerald-500/90 text-dusk-950'
+                                        : 'bg-amber-400/95 text-dusk-950'
+                                    }`}
+                                  >
+                                    <Film className="h-2.5 w-2.5" />
+                                    {fbDone ? 'Terkenang' : m.flashbackBadge ?? 'Kilas Balik'}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="mt-1.5 truncate text-[11px] font-medium text-warm-100">{m.title}</p>
+                              <p className="truncate text-[9px] text-warm-200/55">{m.dateLabel}</p>
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
                   ) : playerPhotos.length === 0 ? (
                     <div className="flex h-full flex-col items-center justify-center space-y-3 py-10 text-center">

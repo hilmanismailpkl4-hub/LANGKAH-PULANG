@@ -4156,6 +4156,22 @@ export const WorldInteractables: React.FC = () => {
       2.6,
     );
 
+    consider(
+      {
+        id: 'flashback_home_dining_table',
+        kind: 'story_object',
+        label: 'Renungkan Meja Makan Pukul 22.15 (Kilas Balik)',
+        sublabel: store.flags.includes('flashback_dinner_done')
+          ? 'Kilas Balik Sinematik · Sudah Dikenang'
+          : 'Kilas Balik Memori · Enam Bulan Lalu',
+        position: [-17.2, 0.08, 69.0],
+        onInteract: () => {
+          store.startDialogue('flashback_meja_makan_sunyi');
+        },
+      },
+      2.2,
+    );
+
     if (store.mainStepId === 'ch2_2_hujan_jembatan') {
       consider(
         {
@@ -4719,6 +4735,10 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-66.2, 1.65, -40.35]}>
         <sphereGeometry args={[0.09, 8, 8]} />
         <meshBasicMaterial color="#f472b6" />
+      </mesh>
+      <mesh position={[-17.2, 1.15, 69.0]}>
+        <sphereGeometry args={[0.085, 10, 10]} />
+        <meshBasicMaterial color="#fbbf24" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { BookOpen, Camera, ChevronLeft, ChevronRight, Heart, MapPin, X } from 'lucide-react';
+import { BookOpen, Camera, ChevronLeft, ChevronRight, Film, Heart, MapPin, X } from 'lucide-react';
 import { sfxEngine } from '../../audio/sfxEngine';
 import { MEMORY_PHOTOS, MemoryPhotoItem } from '../../data/phoneContent';
 import { useGameStore } from '../../store/useGameStore';
@@ -15,6 +15,8 @@ interface AlbumPageItem {
   caption: string;
   theme?: MemoryPhotoItem['theme'];
   dataUrl?: string;
+  flashbackDialogueId?: string;
+  flashbackFlag?: string;
 }
 
 /**
@@ -106,6 +108,30 @@ const AlbumMemoryArt: React.FC<{ theme: MemoryPhotoItem['theme'] }> = ({ theme }
       </svg>
     );
   }
+  if (theme === 'dinner_quiet') {
+    return (
+      <svg viewBox="0 0 280 170" className="h-full w-full">
+        <defs>
+          <radialGradient id="alb-din" cx="50%" cy="20%" r="75%">
+            <stop offset="0%" stopColor="#f4c778" stopOpacity="0.48" />
+            <stop offset="100%" stopColor="#141116" stopOpacity="1" />
+          </radialGradient>
+        </defs>
+        <rect width="280" height="170" fill="url(#alb-din)" />
+        <line x1="140" y1="0" x2="140" y2="28" stroke="#3c3028" strokeWidth="2.5" />
+        <polygon points="120,28 160,28 170,44 110,44" fill="#d49e52" />
+        <ellipse cx="140" cy="44" rx="22" ry="5" fill="#ffe6a8" />
+        <circle cx="48" cy="42" r="16" fill="#241c17" stroke="#8e775c" strokeWidth="2" />
+        <line x1="48" y1="42" x2="40" y2="37" stroke="#f5e6cc" strokeWidth="2" />
+        <line x1="48" y1="42" x2="58" y2="42" stroke="#f5e6cc" strokeWidth="1.6" />
+        <rect x="0" y="114" width="280" height="56" fill="#3a271d" />
+        <path d="M58 104 Q82 128 106 104 Z" fill="#ece2d4" />
+        <ellipse cx="82" cy="104" rx="24" ry="5.5" fill="#d9b26a" />
+        <polygon points="168,68 228,68 220,110 160,110" fill="#9bc2e6" stroke="#2c3442" strokeWidth="3" />
+        <rect x="150" y="110" width="80" height="6" rx="2" fill="#3c4554" />
+      </svg>
+    );
+  }
   return (
     <svg viewBox="0 0 280 170" className="h-full w-full">
       <rect width="280" height="170" fill="#131a2b" />
@@ -131,6 +157,8 @@ export const FamilyPhotoAlbumModal: React.FC = () => {
   const chapter = useGameStore((s) => s.chapter);
   const playerPhotos = useGameStore((s) => s.playerPhotos);
   const journalName = useGameStore((s) => s.journalName);
+  const flags = useGameStore((s) => s.flags);
+  const startDialogue = useGameStore((s) => s.startDialogue);
   const { isMobile, isCompactLandscape } = useMobileViewport();
 
   const [spreadIdx, setSpreadIdx] = useState(0);
@@ -153,6 +181,8 @@ export const FamilyPhotoAlbumModal: React.FC = () => {
       locationLabel: m.locationLabel,
       caption: m.caption,
       theme: m.theme,
+      flashbackDialogueId: m.flashbackDialogueId,
+      flashbackFlag: m.flashbackFlag,
     }));
     return [...captures, ...memories];
   }, [playerPhotos, chapter]);
@@ -270,6 +300,26 @@ export const FamilyPhotoAlbumModal: React.FC = () => {
             <p className={`font-serif italic leading-snug text-[#4f4034] ${compact ? 'pt-0.5 text-[10.5px] line-clamp-2' : 'pt-1 text-xs leading-relaxed'}`}>
               "{item.caption}"
             </p>
+            {item.flashbackDialogueId && (
+              <button
+                type="button"
+                onClick={() => {
+                  const fbId = item.flashbackDialogueId!;
+                  setOpen(false);
+                  startDialogue(fbId);
+                }}
+                className={`inline-flex items-center gap-1.5 rounded-full bg-[#7a3e2c] font-semibold text-[#fdf8f0] shadow transition hover:bg-[#964f39] ${
+                  compact ? 'mt-1.5 px-2.5 py-1 text-[10px]' : 'mt-2.5 px-3.5 py-1.5 text-[11px]'
+                }`}
+              >
+                <Film className="h-3 w-3" />
+                <span>
+                  {item.flashbackFlag && flags.includes(item.flashbackFlag)
+                    ? 'Putar Ulang Kilas Balik'
+                    : 'Hidupkan Kilas Balik Sinematik'}
+                </span>
+              </button>
+            )}
           </div>
         </div>
 

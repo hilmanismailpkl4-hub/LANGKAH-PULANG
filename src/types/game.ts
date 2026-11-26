@@ -130,6 +130,15 @@ export interface DialogueEffect {
   playSfx?: SfxType;
   phoneMessage?: PhoneMessage;
   toast?: string;
+  launchDialogueId?: string;
+}
+
+export interface FlashbackMeta {
+  yearLabel: string;
+  title: string;
+  locationLabel: string;
+  mood: 'warm_sepia' | 'rain_melancholy' | 'quiet_night';
+  epigraph?: string;
 }
 
 export interface DialogueChoice {
@@ -155,6 +164,7 @@ export interface DialogueNode {
 export interface DialogueScript {
   id: string;
   startNodeId: string;
+  flashback?: FlashbackMeta;
   nodes: Record<string, DialogueNode>;
 }
 
