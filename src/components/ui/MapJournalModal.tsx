@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   BookOpen,
   CheckCircle2,
   Compass,
+  Feather,
+  Film,
+  GitBranch,
   Heart,
   Map as MapIcon,
   Navigation,
+  Play,
   Sparkles,
   X,
   ZoomIn,
@@ -15,12 +19,101 @@ import { sfxEngine } from '../../audio/sfxEngine';
 import { MAIN_STEP_BY_ID } from '../../data/dialogues';
 import { EASTER_EGGS } from '../../data/easterEggs';
 import { SIDE_QUESTS } from '../../data/sideQuests';
+import {
+  buildStoryTimeline,
+  classifyJournalSketch,
+  getJournalMoodNote,
+  JOURNAL_FLASHBACK_REELS,
+  JournalSketchKind,
+} from '../../data/storyJournal';
 import { LOCATION_BY_ID, WORLD_LOCATIONS } from '../../data/worldLocations';
 import { playerRuntime } from '../../store/playerRuntime';
 import { useGameStore } from '../../store/useGameStore';
 import { LocationId } from '../../types/game';
 import { useMobileViewport } from '../../utils/mobileUtils';
 import { Portal } from './Portal';
+
+/**
+ * Sketsa tinta tangan mungil (hand-drawn vintage diary ink art) untuk menghidupkan
+ * setiap lembar catatan harian Damar Pratama.
+ */
+const JournalInkSketch: React.FC<{ kind: JournalSketchKind }> = ({ kind }) => {
+  const stroke = '#e7b87d';
+  return (
+    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-amber-300/25 bg-[#1b1612]/90 shadow-inner">
+      <svg viewBox="0 0 48 48" className="h-9 w-9" fill="none" stroke={stroke} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        {kind === 'guitar' && (
+          <>
+            <ellipse cx="18" cy="31" rx="8" ry="6.5" transform="rotate(-35 18 31)" fill="rgba(231,184,125,0.12)" />
+            <circle cx="18" cy="31" r="2.2" />
+            <line x1="23" y1="26" x2="36" y2="12" />
+            <line x1="34" y1="10" x2="39" y2="14" />
+            <path d="M29 9 Q31 6 33 8" opacity="0.7" />
+          </>
+        )}
+        {kind === 'coffee' && (
+          <>
+            <path d="M12 20 H30 V31 C30 35 26 37 21 37 C16 37 12 35 12 31 Z" fill="rgba(231,184,125,0.12)" />
+            <path d="M30 22 H34 C36 22 36 29 34 29 H30" />
+            <line x1="10" y1="39" x2="33" y2="39" />
+            <path d="M17 15 Q19 12 17 9" opacity="0.8" />
+            <path d="M24 15 Q26 12 24 9" opacity="0.8" />
+          </>
+        )}
+        {kind === 'rain' && (
+          <>
+            <path d="M12 25 C12 20 16 17 20 18 C22 14 29 14 31 18 C35 18 37 21 36 25 Z" fill="rgba(147,197,253,0.14)" stroke="#93c5fd" />
+            <line x1="17" y1="30" x2="15" y2="36" stroke="#93c5fd" />
+            <line x1="24" y1="30" x2="22" y2="37" stroke="#93c5fd" />
+            <line x1="31" y1="30" x2="29" y2="36" stroke="#93c5fd" />
+          </>
+        )}
+        {kind === 'star' && (
+          <>
+            <polygon
+              points="24,9 28.2,18.2 38,19.4 30.8,26 32.6,36 24,31 15.4,36 17.2,26 10,19.4 19.8,18.2"
+              fill="rgba(246,209,122,0.18)"
+              stroke="#f6d17a"
+            />
+            <circle cx="37" cy="12" r="1.4" fill="#f6d17a" stroke="none" />
+          </>
+        )}
+        {kind === 'lake' && (
+          <>
+            <polygon points="15,27 33,27 29,33 19,33" fill="rgba(231,184,125,0.14)" />
+            <polygon points="24,14 24,27 31,27" fill="rgba(231,184,125,0.1)" />
+            <path d="M9 36 Q16 33 24 36 T39 36" stroke="#7dd3fc" />
+          </>
+        )}
+        {kind === 'office' && (
+          <>
+            <rect x="14" y="10" width="20" height="29" rx="1.5" fill="rgba(148,163,184,0.12)" stroke="#94a3b8" />
+            <line x1="19" y1="16" x2="22" y2="16" stroke="#94a3b8" />
+            <line x1="26" y1="16" x2="29" y2="16" stroke="#94a3b8" />
+            <line x1="19" y1="22" x2="22" y2="22" stroke="#94a3b8" />
+            <line x1="26" y1="22" x2="29" y2="22" stroke="#94a3b8" />
+            <line x1="19" y1="28" x2="22" y2="28" stroke="#f6d17a" />
+            <line x1="26" y1="28" x2="29" y2="28" stroke="#94a3b8" />
+          </>
+        )}
+        {kind === 'photo' && (
+          <>
+            <rect x="10" y="13" width="28" height="22" rx="2.5" fill="rgba(231,184,125,0.12)" />
+            <circle cx="19" cy="21" r="2.6" />
+            <path d="M12 32 L21 24 L27 29 L31 25 L36 32" />
+          </>
+        )}
+        {kind === 'home' && (
+          <>
+            <path d="M10 23 L24 11 L38 23" />
+            <rect x="14" y="23" width="20" height="15" rx="1" fill="rgba(231,184,125,0.12)" />
+            <rect x="20" y="28" width="8" height="10" fill="rgba(246,209,122,0.3)" />
+          </>
+        )}
+      </svg>
+    </div>
+  );
+};
 
 // Konversi koordinat dunia 3D (x: -112..102, z: -68..92) ke viewBox SVG 800x600
 function toSvg(x: number, z: number): { sx: number; sy: number } {
@@ -36,17 +129,25 @@ export const MapJournalModal: React.FC = () => {
   const closeMapJournal = useGameStore((s) => s.closeMapJournal);
   const journalName = useGameStore((s) => s.journalName);
   const chapter = useGameStore((s) => s.chapter);
+  const timeOfDay = useGameStore((s) => s.timeOfDay);
   const mainStepId = useGameStore((s) => s.mainStepId);
+  const emotions = useGameStore((s) => s.emotions);
+  const flags = useGameStore((s) => s.flags);
+  const repliedPhonePrompts = useGameStore((s) => s.repliedPhonePrompts);
+  const activeEnding = useGameStore((s) => s.activeEnding);
   const sideQuests = useGameStore((s) => s.sideQuests);
   const discoveredEasterEggs = useGameStore((s) => s.discoveredEasterEggs);
   const journalEntries = useGameStore((s) => s.journalEntries);
   const currentLocation = useGameStore((s) => s.currentLocation);
   const customWaypoint = useGameStore((s) => s.customWaypoint);
   const setCustomWaypoint = useGameStore((s) => s.setCustomWaypoint);
+  const startDialogue = useGameStore((s) => s.startDialogue);
 
   const [selectedLocId, setSelectedLocId] = useState<LocationId>(currentLocation);
   const [zoom, setZoom] = useState(1);
   const [filterMode, setFilterMode] = useState<'all' | 'quests' | 'memories'>('all');
+  const [journalSubTab, setJournalSubTab] = useState<'diary' | 'timeline' | 'flashbacks' | 'memories'>('diary');
+  const [memoryFilter, setMemoryFilter] = useState<'all' | 'found' | 'missing'>('all');
   const [livePos, setLivePos] = useState({
     x: playerRuntime.position[0],
     z: playerRuntime.position[2],
@@ -54,6 +155,39 @@ export const MapJournalModal: React.FC = () => {
   });
   const { isMobile, isCompactLandscape } = useMobileViewport();
   const compact = isMobile || isCompactLandscape;
+
+  const storyTimeline = useMemo(
+    () =>
+      buildStoryTimeline({
+        chapter,
+        mainStepId,
+        flags,
+        repliedPhonePrompts,
+        activeEnding,
+      }),
+    [chapter, mainStepId, flags, repliedPhonePrompts, activeEnding],
+  );
+
+  const heartMoodNote = useMemo(
+    () =>
+      getJournalMoodNote({
+        chapter,
+        timeOfDay,
+        emotions,
+        sideQuests,
+        flags,
+      }),
+    [chapter, timeOfDay, emotions, sideQuests, flags],
+  );
+
+  const flashbacksSeenCount = JOURNAL_FLASHBACK_REELS.filter((r) => flags.includes(r.flag)).length;
+  const totalHeart = Math.max(
+    1,
+    emotions.kejujuranDiri + emotions.kehadiranKeluarga + emotions.ambisiPelarian,
+  );
+  const honestyPct = Math.round((emotions.kejujuranDiri / totalHeart) * 100);
+  const familyPct = Math.round((emotions.kehadiranKeluarga / totalHeart) * 100);
+  const ambitionPct = Math.round((emotions.ambisiPelarian / totalHeart) * 100);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -873,73 +1007,451 @@ export const MapJournalModal: React.FC = () => {
               </div>
             )}
 
-            {/* === TAB 3: CATATAN HARIAN & FRAGMEN MEMORI === */}
+            {/* === TAB 3: JURNAL BATIN BERILUSTRASI, PETA CABANG & KILAS BALIK === */}
             {tab === 'journal' && (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="space-y-3.5">
-                  <div className="flex items-center gap-2">
-                    <BookOpen className="h-4 w-4 text-warm-300" />
-                    <h3 className="font-serif text-lg text-warm-50">{journalName}</h3>
-                  </div>
-                  <div className="space-y-3">
-                    {journalEntries.map((entry) => (
-                      <div
-                        key={entry.id}
-                        className="rounded-xl border border-warm-200/15 bg-dusk-950/65 p-4"
+              <div className="space-y-4">
+                {/* Bar Sub-Tab Penanda Buku Harian Damar */}
+                <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-amber-300/20 bg-dusk-950/75 p-2">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {(
+                      [
+                        { id: 'diary', label: `Buku Harian (${journalEntries.length})`, icon: Feather },
+                        { id: 'timeline', label: 'Peta Cabang Cerita', icon: GitBranch },
+                        { id: 'flashbacks', label: `Kilas Balik (${flashbacksSeenCount}/3)`, icon: Film },
+                        {
+                          id: 'memories',
+                          label: `Fragmen Memori (${discoveredEasterEggs.length}/${EASTER_EGGS.length})`,
+                          icon: Heart,
+                        },
+                      ] as const
+                    ).map(({ id, label, icon: Icon }) => (
+                      <button
+                        key={id}
+                        type="button"
+                        onClick={() => {
+                          sfxEngine.play('page');
+                          setJournalSubTab(id);
+                        }}
+                        className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition ${
+                          journalSubTab === id
+                            ? 'bg-amber-400/90 font-semibold text-dusk-950 shadow'
+                            : 'text-warm-200/80 hover:bg-white/5 hover:text-warm-50'
+                        }`}
                       >
-                        <div className="flex items-center justify-between">
-                          <h4 className="font-serif text-sm font-medium text-warm-200">
-                            {entry.title}
-                          </h4>
-                          <span className="text-[10px] uppercase tracking-wider text-warm-200/45">
-                            Bab {entry.chapter}
-                          </span>
-                        </div>
-                        <p className="mt-2 text-xs leading-relaxed text-warm-100/80">{entry.body}</p>
-                      </div>
+                        <Icon className="h-3.5 w-3.5" />
+                        <span>{label}</span>
+                      </button>
                     ))}
                   </div>
+                  {!compact && (
+                    <span className="px-2 font-serif text-xs italic text-amber-200/70">
+                      “{journalName}”
+                    </span>
+                  )}
                 </div>
 
-                <div className="space-y-3.5">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Heart className="h-4 w-4 text-warm-300" />
-                      <h3 className="font-serif text-lg text-warm-50">
-                        Fragmen Memori ({discoveredEasterEggs.length}/{EASTER_EGGS.length})
-                      </h3>
-                    </div>
-                    <span className="text-[11px] text-warm-300/80">Membuka Rahasia Masa Lalu</span>
-                  </div>
-                  <div className="space-y-2.5">
-                    {EASTER_EGGS.map((ee) => {
-                      const found = discoveredEasterEggs.includes(ee.id);
-                      const locName = LOCATION_BY_ID[ee.location].name;
-                      return (
-                        <div
-                          key={ee.id}
-                          className={`rounded-xl border p-3.5 ${
-                            found
-                              ? 'border-warm-300/30 bg-dusk-950/75'
-                              : 'border-warm-100/10 bg-dusk-950/40'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="font-serif text-sm text-warm-100">
-                              {found ? ee.title : 'Fragmen Belum Ditemukan'}
-                            </span>
-                            <span className="text-[10px] text-warm-200/50">{locName}</span>
-                          </div>
-                          <p className="mt-1 text-xs leading-relaxed text-warm-200/70">
-                            {found
-                              ? ee.memorySummary
-                              : `Telusuri sudut-sudut di sekitar ${locName} untuk menemukan kenangan kecil yang tertinggal.`}
+                {/* === SUBTAB 3A: BUKU HARIAN BERILUSTRASI & PERKEMBANGAN HATI === */}
+                {journalSubTab === 'diary' && (
+                  <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+                    {/* Kolom Kiri (4/12): Perkembangan Hati Damar dari Pagi hingga Malam */}
+                    <div className="space-y-3.5 lg:col-span-4">
+                      <div className="rounded-2xl border border-amber-300/25 bg-gradient-to-b from-[#201914]/95 to-dusk-950/90 p-4 shadow-lg">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-300/85">
+                          {heartMoodNote.phaseLabel}
+                        </p>
+                        <h3 className="mt-1 font-serif text-lg text-amber-50">
+                          {heartMoodNote.headline}
+                        </h3>
+                        <p className="mt-2 font-serif text-xs italic leading-relaxed text-warm-100/85">
+                          “{heartMoodNote.body}”
+                        </p>
+
+                        {/* Kompas Perkembangan Hati Organik */}
+                        <div className="mt-4 space-y-2.5 border-t border-amber-200/15 pt-3.5">
+                          <p className="text-[10px] font-semibold uppercase tracking-wider text-warm-300/75">
+                            Arah Hati Damar Hari Ini
                           </p>
+                          {[
+                            { label: 'Kejujuran pada Diri', pct: honestyPct, bar: 'bg-amber-400/85' },
+                            { label: 'Kehadiran untuk Rumah', pct: familyPct, bar: 'bg-rose-400/85' },
+                            { label: 'Beban & Pelarian', pct: ambitionPct, bar: 'bg-slate-400/80' },
+                          ].map((axis) => (
+                            <div key={axis.label}>
+                              <div className="flex items-center justify-between text-[11px]">
+                                <span className="text-warm-200/80">{axis.label}</span>
+                                <span className="font-mono text-warm-100">{axis.pct}%</span>
+                              </div>
+                              <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white/10">
+                                <div
+                                  className={`h-full rounded-full transition-all duration-500 ${axis.bar}`}
+                                  style={{ width: `${axis.pct}%` }}
+                                />
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                      );
-                    })}
+                      </div>
+
+                      {/* Pintasan Cepat Peta Cabang & Kilas Balik */}
+                      <div className="rounded-2xl border border-warm-100/10 bg-dusk-950/65 p-3.5 text-xs">
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-warm-300">
+                          Ringkasan Arsip Cerita
+                        </p>
+                        <div className="mt-2.5 grid grid-cols-2 gap-2 text-center">
+                          <button
+                            type="button"
+                            onClick={() => setJournalSubTab('flashbacks')}
+                            className="rounded-xl border border-amber-300/25 bg-amber-500/10 p-2.5 transition hover:border-amber-300/60"
+                          >
+                            <p className="font-serif text-lg text-amber-200">{flashbacksSeenCount}/3</p>
+                            <p className="text-[10px] text-warm-200/75">Kilas Balik</p>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setJournalSubTab('timeline')}
+                            className="rounded-xl border border-sky-300/25 bg-sky-500/10 p-2.5 transition hover:border-sky-300/60"
+                          >
+                            <p className="font-serif text-lg text-sky-200">
+                              {storyTimeline.echoBadges.length}
+                            </p>
+                            <p className="text-[10px] text-warm-200/75">Gema Pilihan</p>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Kolom Kanan (8/12): Lembaran Catatan Harian Berilustrasi Sketsa Tinta */}
+                    <div className="space-y-3 lg:col-span-8">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <BookOpen className="h-4 w-4 text-amber-300" />
+                          <h3 className="font-serif text-lg text-warm-50">
+                            Lembar Catatan {journalName}
+                          </h3>
+                        </div>
+                        <span className="text-[11px] text-warm-200/55">
+                          Terbaru di atas · {journalEntries.length} catatan
+                        </span>
+                      </div>
+
+                      <div className="space-y-3">
+                        {journalEntries.map((entry) => {
+                          const sketchKind = classifyJournalSketch(entry.id, entry.title);
+                          return (
+                            <div
+                              key={entry.id}
+                              className="flex items-start gap-3.5 rounded-2xl border border-amber-200/15 bg-gradient-to-r from-[#17151c]/95 to-dusk-950/85 p-4 shadow-sm transition hover:border-amber-300/35"
+                            >
+                              <JournalInkSketch kind={sketchKind} />
+                              <div className="min-w-0 flex-1">
+                                <div className="flex flex-wrap items-center justify-between gap-2">
+                                  <h4 className="font-serif text-base font-medium text-amber-100">
+                                    {entry.title}
+                                  </h4>
+                                  <span className="rounded-full border border-warm-200/15 bg-white/5 px-2 py-0.5 text-[10px] uppercase tracking-wider text-warm-200/65">
+                                    Bab {entry.chapter}
+                                  </span>
+                                </div>
+                                <p className="mt-1.5 font-serif text-[13px] leading-relaxed text-warm-100/85">
+                                  {entry.body}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {/* === SUBTAB 3B: PETA CABANG CERITA (GARIS WAKTU KEPUTUSAN BAB 1-3) === */}
+                {journalSubTab === 'timeline' && (
+                  <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+                    <div className="space-y-4 lg:col-span-8">
+                      <div>
+                        <h3 className="font-serif text-lg text-warm-50">
+                          Garis Waktu &amp; Cabang Keputusan Damar
+                        </h3>
+                        <p className="text-xs text-warm-200/65">
+                          Setiap simpul mencatat langkah nyata dan arah cabang yang telah kamu pilih dari pagi hingga malam.
+                        </p>
+                      </div>
+
+                      <div className="relative space-y-3 pl-6 before:absolute before:bottom-3 before:left-[9px] before:top-3 before:w-0.5 before:bg-gradient-to-b before:from-amber-400/70 before:via-sky-400/40 before:to-warm-200/15">
+                        {storyTimeline.nodes.map((node) => {
+                          const isDone = node.status === 'done';
+                          const isCur = node.status === 'current';
+                          const badgeTone =
+                            node.tone === 'gold'
+                              ? 'border-amber-300/40 bg-amber-500/15 text-amber-100'
+                              : node.tone === 'rose'
+                                ? 'border-rose-300/40 bg-rose-500/15 text-rose-100'
+                                : node.tone === 'sky'
+                                  ? 'border-sky-300/40 bg-sky-500/15 text-sky-100'
+                                  : 'border-slate-300/35 bg-slate-500/15 text-slate-200';
+
+                          return (
+                            <div
+                              key={node.id}
+                              className={`relative rounded-2xl border p-3.5 transition ${
+                                isCur
+                                  ? 'border-amber-300/60 bg-amber-400/10 shadow-md'
+                                  : isDone
+                                    ? 'border-warm-200/15 bg-dusk-950/80'
+                                    : 'border-white/5 bg-dusk-950/35 opacity-60'
+                              }`}
+                            >
+                              {/* Titik Simpul Timeline */}
+                              <span
+                                className={`absolute -left-[22px] top-4 h-3.5 w-3.5 rounded-full border-2 ${
+                                  isCur
+                                    ? 'animate-pulse border-amber-200 bg-amber-400 shadow-[0_0_12px_rgba(251,191,36,0.9)]'
+                                    : isDone
+                                      ? 'border-amber-300 bg-amber-400/80'
+                                      : 'border-warm-200/30 bg-dusk-900'
+                                }`}
+                              />
+
+                              <div className="flex flex-wrap items-center justify-between gap-2">
+                                <div>
+                                  <span className="font-mono text-[10px] uppercase tracking-wider text-warm-300/75">
+                                    {node.timeStamp}
+                                  </span>
+                                  <h4 className="font-serif text-sm font-medium text-warm-50">
+                                    {node.status === 'upcoming' ? 'Simpul Cerita Mendatang' : node.title}
+                                  </h4>
+                                </div>
+                                <span
+                                  className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${
+                                    isCur
+                                      ? 'bg-amber-400 text-dusk-950'
+                                      : isDone
+                                        ? 'bg-emerald-500/20 text-emerald-300'
+                                        : 'bg-white/5 text-warm-200/50'
+                                  }`}
+                                >
+                                  {isCur ? 'Sedang Berlangsung' : isDone ? 'Tercatat' : 'Belum Tiba'}
+                                </span>
+                              </div>
+
+                              {isDone && node.chosenBranchLabel && (
+                                <div className={`mt-2.5 rounded-xl border px-3 py-2 ${badgeTone}`}>
+                                  <p className="text-[11px] font-semibold">
+                                    ↳ {node.chosenBranchLabel}
+                                  </p>
+                                  {node.chosenOutcomeNote && (
+                                    <p className="mt-0.5 text-[11px] leading-relaxed opacity-85">
+                                      {node.chosenOutcomeNote}
+                                    </p>
+                                  )}
+                                </div>
+                              )}
+
+                              {isCur && mainStep && (
+                                <p className="mt-2 text-xs leading-relaxed text-amber-100/85">
+                                  {mainStep.description}
+                                </p>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Panel Kanan (4/12): Cabang Gema Spesial yang Aktif */}
+                    <div className="space-y-3 lg:col-span-4">
+                      <div className="rounded-2xl border border-amber-300/25 bg-dusk-950/75 p-4">
+                        <div className="flex items-center gap-2 text-amber-300">
+                          <Sparkles className="h-4 w-4" />
+                          <h4 className="font-serif text-base text-warm-50">
+                            Gema Pilihan yang Aktif
+                          </h4>
+                        </div>
+                        <p className="mt-1 text-[11px] leading-relaxed text-warm-200/65">
+                          Tindakan dan balasan kecilmu di kota ini diingat oleh Nadia, Kira, Bima, Pak Hendra, dan Mas Bagas hingga akhir cerita.
+                        </p>
+
+                        {storyTimeline.echoBadges.length === 0 ? (
+                          <div className="mt-3 rounded-xl border border-dashed border-white/15 bg-black/20 p-3.5 text-xs italic text-warm-200/60">
+                            Belum ada gema spesial yang tercatat. Coba hidupkan Kilas Balik Memori, balas pesan di HP, atau temukan foto arsip kota 1996!
+                          </div>
+                        ) : (
+                          <div className="mt-3 space-y-2.5">
+                            {storyTimeline.echoBadges.map((eb) => (
+                              <div
+                                key={eb.id}
+                                className={`rounded-xl border p-3 ${
+                                  eb.tone === 'gold'
+                                    ? 'border-amber-300/35 bg-amber-500/10 text-amber-100'
+                                    : eb.tone === 'rose'
+                                      ? 'border-rose-300/35 bg-rose-500/10 text-rose-100'
+                                      : 'border-sky-300/35 bg-sky-500/10 text-sky-100'
+                                }`}
+                              >
+                                <p className="text-xs font-semibold">{eb.title}</p>
+                                <p className="mt-1 text-[11px] leading-relaxed opacity-85">{eb.detail}</p>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* === SUBTAB 3C: ARSIP 3 KILAS BALIK MEMORI SINEMATIK (PUTAR ULANG KAPAN SAJA) === */}
+                {journalSubTab === 'flashbacks' && (
+                  <div className="space-y-4">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div>
+                        <h3 className="font-serif text-lg text-warm-50">
+                          Gulungan Kilas Balik Memori ({flashbacksSeenCount}/3)
+                        </h3>
+                        <p className="text-xs text-warm-200/65">
+                          Hidupkan atau putar ulang 3 malam penting yang membentuk siapa Damar hari ini.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                      {JOURNAL_FLASHBACK_REELS.map((reel, idx) => {
+                        const seen = flags.includes(reel.flag);
+                        const cardBg =
+                          reel.mood === 'warm_sepia'
+                            ? 'from-[#2e1e14] via-[#1c1410] to-dusk-950'
+                            : reel.mood === 'rain_melancholy'
+                              ? 'from-[#162233] via-[#141a26] to-dusk-950'
+                              : 'from-[#231918] via-[#14131c] to-dusk-950';
+
+                        return (
+                          <div
+                            key={reel.id}
+                            className={`flex flex-col justify-between rounded-2xl border bg-gradient-to-b ${cardBg} p-4 shadow-lg ${
+                              seen ? 'border-amber-300/45' : 'border-white/15'
+                            }`}
+                          >
+                            <div>
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="font-mono text-[10px] tracking-[0.16em] text-amber-300">
+                                  REEL 0{idx + 1} · {reel.yearLabel}
+                                </span>
+                                {seen && (
+                                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                                    <CheckCircle2 className="h-3 w-3" /> Terkenang
+                                  </span>
+                                )}
+                              </div>
+                              <h4 className="mt-2 font-serif text-lg text-amber-50">{reel.title}</h4>
+                              <p className="mt-0.5 text-[11px] text-amber-200/65">{reel.locationLabel}</p>
+                              <p className="mt-3 font-serif text-xs italic leading-relaxed text-warm-100/85">
+                                “{reel.epigraph}”
+                              </p>
+                              <p className="mt-3 text-[10.5px] text-warm-200/55">{reel.worldHint}</p>
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                closeMapJournal();
+                                startDialogue(reel.dialogueId);
+                              }}
+                              className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-amber-400/90 px-4 py-2.5 text-xs font-semibold text-dusk-950 shadow transition hover:bg-amber-300"
+                            >
+                              <Play className="h-3.5 w-3.5 fill-current" />
+                              <span>{seen ? 'Putar Ulang Kilas Balik' : 'Hidupkan Kilas Balik'}</span>
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* === SUBTAB 3D: FRAGMEN MEMORI KOTA (20 KEPINGAN MASA LALU) === */}
+                {journalSubTab === 'memories' && (
+                  <div className="space-y-3.5">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <Heart className="h-4 w-4 text-amber-300" />
+                        <h3 className="font-serif text-lg text-warm-50">
+                          Fragmen Memori Kota ({discoveredEasterEggs.length}/{EASTER_EGGS.length})
+                        </h3>
+                      </div>
+                      <div className="flex items-center gap-1 rounded-xl bg-dusk-950/80 p-1 text-[11px]">
+                        {(
+                          [
+                            { id: 'all', label: 'Semua' },
+                            { id: 'found', label: 'Ditemukan' },
+                            { id: 'missing', label: 'Belum Ditemukan' },
+                          ] as const
+                        ).map((f) => (
+                          <button
+                            key={f.id}
+                            type="button"
+                            onClick={() => setMemoryFilter(f.id)}
+                            className={`rounded-lg px-2.5 py-1 transition ${
+                              memoryFilter === f.id
+                                ? 'bg-warm-400 font-semibold text-dusk-950'
+                                : 'text-warm-200/70 hover:text-warm-50'
+                            }`}
+                          >
+                            {f.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      {EASTER_EGGS.filter((ee) => {
+                        const found = discoveredEasterEggs.includes(ee.id);
+                        if (memoryFilter === 'found') return found;
+                        if (memoryFilter === 'missing') return !found;
+                        return true;
+                      }).map((ee) => {
+                        const found = discoveredEasterEggs.includes(ee.id);
+                        const locInfo = LOCATION_BY_ID[ee.location];
+                        return (
+                          <div
+                            key={ee.id}
+                            className={`rounded-xl border p-3.5 transition ${
+                              found
+                                ? 'border-warm-300/35 bg-dusk-950/80'
+                                : 'border-warm-100/10 bg-dusk-950/45'
+                            }`}
+                          >
+                            <div className="flex items-start justify-between gap-2">
+                              <div>
+                                <span className="font-serif text-sm font-medium text-warm-100">
+                                  {found ? ee.title : 'Fragmen Belum Ditemukan'}
+                                </span>
+                                <p className="text-[10px] text-warm-300/70">{locInfo.name}</p>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  sfxEngine.play('switch');
+                                  setSelectedLocId(ee.location);
+                                  setFilterMode('memories');
+                                  toggleMapJournal('map');
+                                }}
+                                className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-[10px] text-warm-200/80 hover:border-warm-300/45 hover:text-warm-50"
+                                title="Lihat wilayah ini di Peta Kota"
+                              >
+                                <MapIcon className="h-3 w-3" />
+                                Peta
+                              </button>
+                            </div>
+                            <p className="mt-1.5 text-xs leading-relaxed text-warm-200/75">
+                              {found
+                                ? ee.memorySummary
+                                : `Telusuri sudut-sudut di sekitar ${locInfo.name} untuk menemukan kenangan kecil yang tertinggal.`}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
