@@ -13,10 +13,12 @@ import {
   Navigation,
   Sliders,
   Smartphone,
+  Sunrise,
   Umbrella,
 } from 'lucide-react';
 import { CHARACTERS } from '../../data/characters';
 import { MAIN_STEP_BY_ID } from '../../data/dialogues';
+import { EPILOGUE_MORNING_META } from '../../data/epilogueMorning';
 import { PHONE_THREADS } from '../../data/phoneContent';
 import { LOCATION_BY_ID } from '../../data/worldLocations';
 import { playerRuntime } from '../../store/playerRuntime';
@@ -58,6 +60,11 @@ export const GameHUD: React.FC = () => {
   const isPhotoMode = useGameStore((s) => s.isPhotoMode);
   const isPhoneOpen = useGameStore((s) => s.isPhoneOpen);
   const isGuitarOpen = useGameStore((s) => s.isGuitarOpen);
+  const isNadiaLetterOpen = useGameStore((s) => s.isNadiaLetterOpen);
+  const isEpilogueMode = useGameStore((s) => s.isEpilogueMode);
+  const epilogueCompleted = useGameStore((s) => s.epilogueCompleted);
+  const activeEnding = useGameStore((s) => s.activeEnding);
+  const exitEpilogueToEnding = useGameStore((s) => s.exitEpilogueToEnding);
   const isBagOpen = useGameStore((s) => s.isBagOpen);
   const activeCulinarySpot = useGameStore((s) => s.activeCulinarySpot);
   const isWardrobeOpen = useGameStore((s) => s.isWardrobeOpen);
@@ -185,6 +192,7 @@ export const GameHUD: React.FC = () => {
     isPhotoMode ||
     isPhoneOpen ||
     isGuitarOpen ||
+    isNadiaLetterOpen ||
     isBagOpen ||
     Boolean(activeCulinarySpot) ||
     isWardrobeOpen ||
@@ -320,27 +328,59 @@ export const GameHUD: React.FC = () => {
           <div className="flex items-start gap-2">
             {compact && showMinimap && renderRadarButton('h-[64px] w-[64px]')}
 
-            <div
-              className={`rounded-2xl border border-warm-100/15 bg-dusk-950/65 backdrop-blur-md ${
-                compact ? 'max-w-[195px] px-3 py-1.5' : 'max-w-xs px-4 py-3'
-              }`}
-            >
-              <div className="flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-warm-300/90">
-                <span>Bab {chapter}</span>
-                <span className="text-warm-200/40">•</span>
-                <span>{TIME_LABELS[timeOfDay]}</span>
-              </div>
-              {step && (
-                <>
-                  <p className={`mt-0.5 font-serif text-warm-50 ${compact ? 'text-xs leading-tight' : 'text-sm'}`}>
-                    {step.title}
+            {isEpilogueMode && activeEnding ? (
+              <div
+                className={`pointer-events-auto rounded-2xl border border-amber-300/45 bg-[#1b140d]/85 backdrop-blur-md shadow-lg ${
+                  compact ? 'max-w-[215px] px-3 py-1.5' : 'max-w-xs px-4 py-3'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-2 text-[9px] font-semibold uppercase tracking-[0.16em] text-amber-300">
+                  <span className="inline-flex items-center gap-1">
+                    <Sunrise className="h-3 w-3" />
+                    Epilog Playable
+                  </span>
+                  <button
+                    type="button"
+                    onClick={exitEpilogueToEnding}
+                    className="rounded-full border border-amber-300/35 bg-amber-400/15 px-2 py-0.5 text-[9px] text-amber-100 hover:bg-amber-400/30"
+                  >
+                    Layar Ending
+                  </button>
+                </div>
+                <p className={`mt-0.5 font-serif text-amber-50 ${compact ? 'text-xs leading-tight' : 'text-sm'}`}>
+                  {EPILOGUE_MORNING_META[activeEnding].title.replace('Epilog · ', '')}
+                </p>
+                {!compact && (
+                  <p className="mt-0.5 text-[11px] leading-snug text-amber-100/80">
+                    {epilogueCompleted
+                      ? 'Epilog selesai — kamu bebas menikmati pagi Kota Senja atau kembali ke Layar Ending.'
+                      : EPILOGUE_MORNING_META[activeEnding].objectiveText}
                   </p>
-                  {!compact && (
-                    <p className="mt-0.5 text-[11px] leading-snug text-warm-200/70">{step.hint}</p>
-                  )}
-                </>
-              )}
-            </div>
+                )}
+              </div>
+            ) : (
+              <div
+                className={`rounded-2xl border border-warm-100/15 bg-dusk-950/65 backdrop-blur-md ${
+                  compact ? 'max-w-[195px] px-3 py-1.5' : 'max-w-xs px-4 py-3'
+                }`}
+              >
+                <div className="flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-warm-300/90">
+                  <span>Bab {chapter}</span>
+                  <span className="text-warm-200/40">•</span>
+                  <span>{TIME_LABELS[timeOfDay]}</span>
+                </div>
+                {step && (
+                  <>
+                    <p className={`mt-0.5 font-serif text-warm-50 ${compact ? 'text-xs leading-tight' : 'text-sm'}`}>
+                      {step.title}
+                    </p>
+                    {!compact && (
+                      <p className="mt-0.5 text-[11px] leading-snug text-warm-200/70">{step.hint}</p>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Tengah Atas: Kompas Penunjuk Misi Utama + Custom GPS */}

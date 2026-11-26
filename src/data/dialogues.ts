@@ -2,6 +2,7 @@ import { DialogueScript, MainObjectiveStep } from '../types/game';
 import { GIFT_DIALOGUES } from './bagItems';
 import { CHARACTER_ECHO_DIALOGUES } from './characterEchoes';
 import { EASTER_EGG_DIALOGUES } from './easterEggs';
+import { EPILOGUE_DIALOGUES } from './epilogueMorning';
 import { FLASHBACK_DIALOGUES } from './flashbacks';
 import { SIDE_QUEST_DIALOGUES } from './sideQuests';
 import { CHAPTER_1_DIALOGUES, CHAPTER_1_STEPS } from './storyChapter1';
@@ -579,6 +580,7 @@ export const ALL_DIALOGUES: Record<string, DialogueScript> = {
   ...SIDE_QUEST_DIALOGUES,
   ...EASTER_EGG_DIALOGUES,
   ...FLASHBACK_DIALOGUES,
+  ...EPILOGUE_DIALOGUES,
   ...CHARACTER_ECHO_DIALOGUES,
   ...GIFT_DIALOGUES,
   ...AMBIENT_DIALOGUES,

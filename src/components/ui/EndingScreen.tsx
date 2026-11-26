@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { BookOpen, Compass, Film, Heart, Home, MailOpen, MessageCircle, Music, Sparkles } from 'lucide-react';
+import { BookOpen, Compass, Film, Heart, Home, MailOpen, MessageCircle, Music, Sparkles, Sunrise } from 'lucide-react';
 import { buildEndingJourneyRecap } from '../../data/characterEchoes';
 import { EASTER_EGGS } from '../../data/easterEggs';
 import { ENDINGS } from '../../data/endings';
@@ -237,6 +237,7 @@ export const EndingScreen: React.FC = () => {
   const finishChapterTransition = useGameStore((s) => s.finishChapterTransition);
   const setGuitarOpen = useGameStore((s) => s.setGuitarOpen);
   const setNadiaLetterOpen = useGameStore((s) => s.setNadiaLetterOpen);
+  const startPlayableEpilogue = useGameStore((s) => s.startPlayableEpilogue);
 
   const [revealedCount, setRevealedCount] = useState(1);
   const [selectedHintEnding, setSelectedHintEnding] = useState<EndingId | null>(null);
@@ -469,6 +470,21 @@ export const EndingScreen: React.FC = () => {
                   </p>
                 )}
               </div>
+
+              {/* Epilog Playable 3D "Pagi Setelah Pulang" */}
+              <button
+                type="button"
+                onClick={startPlayableEpilogue}
+                className="flex w-full flex-col items-center justify-center gap-0.5 rounded-2xl border border-amber-300/65 bg-gradient-to-r from-amber-500/85 via-warm-400 to-amber-500/85 px-6 py-3.5 text-center text-dusk-950 shadow-[0_12px_36px_rgba(245,194,107,0.3)] transition hover:brightness-105"
+              >
+                <span className="inline-flex items-center gap-2 font-serif text-base font-semibold md:text-lg">
+                  <Sunrise className="h-5 w-5" />
+                  <span>Mainkan Epilog 3D: &ldquo;Pagi Setelah Pulang&rdquo;</span>
+                </span>
+                <span className="text-[11px] font-medium opacity-85">
+                  Bangun di pagi baru Jl. Melati No. 14 sesuai akhir cerita yang kamu raih
+                </span>
+              </button>
 
               {/* Momen Epilog Interaktif: Surat Nadia & Konser Mini Track 4 */}
               <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">

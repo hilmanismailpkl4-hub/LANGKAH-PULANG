@@ -1,9 +1,11 @@
 {
+  "id": "/",
   "name": "LANGKAH PULANG — Steps Home",
   "short_name": "Langkah Pulang",
   "description": "Game naratif 3D modern Indonesia tentang pulang ke rumah, kejujuran, dan keluarga.",
   "start_url": "/",
-  "display": "fullscreen",
+  "scope": "/",
+  "display": "standalone",
   "orientation": "landscape",
   "background_color": "#0d0f14",
   "theme_color": "#0d0f14",
@@ -11,7 +13,8 @@
     {
       "src": "/favicon.svg",
       "sizes": "any",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }

@@ -30,8 +30,16 @@ const EMBER_DOTS = [
   { left: '44%', top: '68%', size: 3, delay: '1.4s', duration: '6.0s' },
 ];
 
-// Perkiraan total ukuran berkas aplikasi + aset 3D prosedural (sesuai hasil build Vite ~2.42 MB)
-const ESTIMATED_TOTAL_APP_BYTES = 2420 * 1024;
+// Ukuran total berkas build terbaru yang dihitung otomatis saat Vite build (naik atau turun)
+function getLiveBuildBytes(): number {
+  if (typeof window !== 'undefined') {
+    const injected = (window as unknown as { __LP_BUILD_BYTES__?: number }).__LP_BUILD_BYTES__;
+    if (typeof injected === 'number' && Number.isFinite(injected) && injected > 0) {
+      return injected;
+    }
+  }
+  return 2900 * 1024;
+}
 
 function formatByteSize(bytes: number): string {
   if (bytes >= 1024 * 1024) {
@@ -63,17 +71,12 @@ function readBrowserAssetStats(displayPct: number): AssetDownloadSnapshot {
         count += 1;
       }
     }
-    const navEntries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
-    if (navEntries.length > 0) {
-      const n = navEntries[0];
-      decodedSum += n.decodedBodySize || n.encodedBodySize || n.transferSize || 0;
-      transferSum += n.transferSize || 0;
-    }
   } catch {
     // Abaikan jika browser membatasi Performance API
   }
 
-  const totalBytes = Math.max(ESTIMATED_TOTAL_APP_BYTES, decodedSum);
+  // Selalu ikuti ukuran build terbaru secara persis (bisa naik maupun turun saat update!)
+  const totalBytes = getLiveBuildBytes();
   const clamped = Math.max(0, Math.min(100, displayPct));
   const loadedBytes = clamped >= 100 ? totalBytes : Math.round((clamped / 100) * totalBytes);
   const fromCache = count > 0 && decodedSum > 400 * 1024 && transferSum === 0;
@@ -141,29 +144,32 @@ export const LoadingScreenOverlay: React.FC = () => {
     prevVisibleRef.current = loadingOverlay.visible;
   }, [loadingOverlay.visible]);
 
-  // Loop animasi requestAnimationFrame bertahap konstan 0% -> 100% (tidak ngebut lalu berhenti!)
+  // Loop animasi requestAnimationFrame bertahap konstan 0% -> 100% (dijamin paling lama 15 detik!)
   useEffect(() => {
     if (!rendered) return;
     let rafId = 0;
-    let lastTime = performance.now();
+    const startedAt = performance.now();
+    let lastTime = startedAt;
     let lastReportedInt = Math.round(curPctRef.current);
     let reached100At: number | null = null;
 
     const tick = (now: number) => {
       const dtSec = Math.min(0.06, Math.max(0.008, (now - lastTime) / 1000));
       lastTime = now;
+      const elapsedMs = now - startedAt;
 
       const wantVisible = wantVisibleRef.current;
-      const readyToFinish = !wantVisible || targetPctRef.current >= 100;
+      const forceDoneByCap = elapsedMs >= 14000;
+      const readyToFinish = !wantVisible || targetPctRef.current >= 100 || elapsedMs >= 11500;
 
       let cur = curPctRef.current;
-      if (readyToFinish) {
-        // Berjalan konstan & nyaman (~28%/detik) menyusuri tiap angka sampai 100% tanpa melompat!
-        const steadyFinishSpeed = 28;
+      if (forceDoneByCap) {
+        cur = 100;
+      } else if (readyToFinish) {
+        const steadyFinishSpeed = 36;
         cur = Math.min(100, cur + steadyFinishSpeed * dtSec);
       } else {
-        // Berjalan bertahap stabil ~22%/detik hingga 86%, lalu melambat halus sampai 96% bila masih menunggu jaringan/shader
-        const stepSpeed = cur < 72 ? 23 : cur < 88 ? 14 : Math.max(2.5, (96 - cur) * 0.65);
+        const stepSpeed = cur < 72 ? 25 : cur < 88 ? 15 : Math.max(2.5, (96 - cur) * 0.65);
         cur = Math.min(96, cur + stepSpeed * dtSec);
       }
 
@@ -175,18 +181,17 @@ export const LoadingScreenOverlay: React.FC = () => {
         setAssetStats(readBrowserAssetStats(rounded));
       }
 
-      // Hanya mulai fade-out setelah progres visual benar-benar menyentuh 100% & store selesai
-      if (!wantVisible && rounded >= 100) {
+      if ((!wantVisible || forceDoneByCap) && rounded >= 100) {
         if (reached100At === null) {
           reached100At = now;
-        } else if (now - reached100At >= 260) {
+        } else if (now - reached100At >= 200 || forceDoneByCap) {
           setFadingOut(true);
           if (hideTimerRef.current === null) {
             hideTimerRef.current = window.setTimeout(() => {
               setRendered(false);
               setFadingOut(false);
               hideTimerRef.current = null;
-            }, 380);
+            }, 340);
           }
           return;
         }

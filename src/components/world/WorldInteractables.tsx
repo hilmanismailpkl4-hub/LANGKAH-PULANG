@@ -6,6 +6,7 @@ import { resolveDynamicNpcAmbient } from '../../data/characterEchoes';
 import { CHARACTERS } from '../../data/characters';
 import { KIRA_OUTFIT_BY_ID, KiraOutfitId, NADIA_OUTFIT_BY_ID, NadiaOutfitId } from '../../data/damarOutfits';
 import { EASTER_EGGS } from '../../data/easterEggs';
+import { EPILOGUE_MORNING_META } from '../../data/epilogueMorning';
 import {
   EVENT_FAMILY_BANTERS,
   LOCATION_FAMILY_BANTERS,
@@ -478,6 +479,9 @@ export const WorldInteractables: React.FC = () => {
   const timeOfDay = useGameStore((s) => s.timeOfDay);
   const nadiaOutfitId = useGameStore((s) => s.nadiaOutfitId);
   const kiraOutfitId = useGameStore((s) => s.kiraOutfitId);
+  const isEpilogueMode = useGameStore((s) => s.isEpilogueMode);
+  const epilogueCompleted = useGameStore((s) => s.epilogueCompleted);
+  const activeEnding = useGameStore((s) => s.activeEnding);
 
   const heardBantersRef = useRef<Set<string>>(new Set());
   const lastBanterTimeRef = useRef(0);
@@ -507,6 +511,13 @@ export const WorldInteractables: React.FC = () => {
       const store = useGameStore.getState();
 
       if (npcId === 'nadia' || npcId === 'kira') {
+        if (store.isEpilogueMode && !store.epilogueCompleted && store.activeEnding) {
+          return {
+            dialogueId: EPILOGUE_MORNING_META[store.activeEnding].familyDialogueId,
+            highlight: 'main',
+            sublabel: 'Epilog · Pagi Setelah Pulang',
+          };
+        }
         if (store.mainStepId === 'ch1_1_sarapan') {
           return { dialogueId: 'ch1_sarapan_main', highlight: 'main', sublabel: 'Cerita Utama' };
         }
@@ -660,7 +671,7 @@ export const WorldInteractables: React.FC = () => {
         sublabel: 'Berbincang',
       };
     };
-  }, [mainStepId, sideQuests, flags]);
+  }, [mainStepId, sideQuests, flags, isEpilogueMode, epilogueCompleted, activeEnding]);
 
   useFrame((_, delta) => {
     const store = useGameStore.getState();

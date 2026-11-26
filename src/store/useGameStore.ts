@@ -23,6 +23,7 @@ import { LAKE_CATCHES, LakeCatchDef } from '../data/lakeAndBooks';
 import { HOME_KITCHEN_RECIPES } from '../data/homeKitchenRecipes';
 import { PhotoFilterId, PhotoFrameId } from '../data/photoFilters';
 import { evaluateEnding } from '../data/endings';
+import { EPILOGUE_MORNING_META } from '../data/epilogueMorning';
 import {
   CASUAL_FAMILY_BANTERS,
   EVENT_FAMILY_BANTERS,
@@ -159,6 +160,8 @@ interface GameStoreState {
   isRidingBicycle: boolean;
   isGuitarOpen: boolean;
   isNadiaLetterOpen: boolean;
+  isEpilogueMode: boolean;
+  epilogueCompleted: boolean;
   isBagOpen: boolean;
   umbrellaForcedOff: boolean;
   isFamilyWalkActive: boolean;
@@ -229,6 +232,8 @@ interface GameStoreState {
   setRidingBicycle: (riding: boolean) => void;
   setGuitarOpen: (open: boolean) => void;
   setNadiaLetterOpen: (open: boolean) => void;
+  startPlayableEpilogue: () => void;
+  exitEpilogueToEnding: () => void;
   setBagOpen: (open: boolean) => void;
   toggleUmbrella: () => void;
   setFreeTimeOfDay: (time: TimeOfDay) => void;
@@ -403,6 +408,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     isRidingBicycle: false,
     isGuitarOpen: false,
     isNadiaLetterOpen: false,
+    isEpilogueMode: false,
+    epilogueCompleted: false,
     isBagOpen: false,
     umbrellaForcedOff: false,
     isFamilyWalkActive: false,
@@ -1212,6 +1219,48 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       });
     },
 
+    startPlayableEpilogue: () => {
+      const endingId = get().activeEnding ?? 'good';
+      const meta = EPILOGUE_MORNING_META[endingId];
+      clearBanterTimers();
+      resetCompanionsToHome();
+      setRuntimePosition([-20.8, 0.08, 69.2], 0.9);
+      musicEngine.start();
+      musicEngine.setContext('home', meta.timeOfDay);
+      sfxEngine.playMemoryChime();
+      set({
+        screen: 'playing',
+        isEpilogueMode: true,
+        epilogueCompleted: false,
+        isFamilyWalkActive: false,
+        familyBanter: null,
+        timeOfDay: meta.timeOfDay,
+        currentLocation: 'rumah_damar',
+        isGuitarOpen: false,
+        isNadiaLetterOpen: false,
+        isMapJournalOpen: false,
+        isPauseOpen: false,
+        isPhoneOpen: false,
+      });
+      get().startDialogue(meta.introDialogueId);
+    },
+
+    exitEpilogueToEnding: () => {
+      voiceManager.stop();
+      clearBanterTimers();
+      if (get().activeEnding) {
+        musicEngine.setContext('ending', 'night');
+        set({
+          isEpilogueMode: false,
+          activeDialogue: null,
+          activeNodeId: null,
+          screen: 'ending',
+        });
+      } else {
+        set({ isEpilogueMode: false });
+      }
+    },
+
     setBagOpen: (open) => {
       const s = get();
       if (open && (s.screen !== 'playing' || s.activeDialogue)) return;
@@ -1731,6 +1780,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         discoveredEasterEggs: [],
         journalEntries: [...fresh.journalEntries],
         activeEnding: null,
+        isEpilogueMode: false,
+        epilogueCompleted: false,
         activeDialogue: null,
         activeNodeId: null,
         isMapJournalOpen: false,
@@ -1795,6 +1846,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         journalEntries: [...slot.journalEntries],
         unlockedEndings: Array.from(new Set([...get().unlockedEndings, ...(slot.unlockedEndings || [])])),
         activeEnding: null,
+        isEpilogueMode: false,
+        epilogueCompleted: false,
         activeDialogue: null,
         activeNodeId: null,
         isMapJournalOpen: false,
@@ -1917,6 +1970,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         isWardrobeOpen: false,
         isGuitarOpen: false,
         isNadiaLetterOpen: false,
+        isEpilogueMode: false,
+        epilogueCompleted: false,
         interactPrompt: null,
       });
     },
@@ -2171,6 +2226,31 @@ export const useGameStore = create<GameStoreState>((set, get) => {
 
       if (effect.toast) {
         get().showToast(effect.toast);
+      }
+
+      if (effect.markEpilogueDone) {
+        set({ epilogueCompleted: true });
+      }
+
+      if (effect.openGuitarConcert) {
+        window.setTimeout(() => {
+          sfxEngine.playGuitarChord(0);
+          get().setGuitarOpen(true);
+        }, 120);
+      }
+
+      if (effect.openNadiaLetter) {
+        window.setTimeout(() => {
+          get().setNadiaLetterOpen(true);
+        }, 120);
+      }
+
+      if (effect.startMorningFamilyWalk) {
+        window.setTimeout(() => {
+          if (!get().isFamilyWalkActive) {
+            get().toggleFamilyWalk();
+          }
+        }, 180);
       }
 
       if (effect.triggerChapterTransition) {

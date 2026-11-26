@@ -131,6 +131,10 @@ export interface DialogueEffect {
   phoneMessage?: PhoneMessage;
   toast?: string;
   launchDialogueId?: string;
+  openGuitarConcert?: boolean;
+  openNadiaLetter?: boolean;
+  startMorningFamilyWalk?: boolean;
+  markEpilogueDone?: boolean;
 }
 
 export interface FlashbackMeta {
