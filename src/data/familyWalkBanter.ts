@@ -458,4 +458,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'Kincir angin kecil di atas papan kantor Ayah muter-muter terus!! Suhu kotanya kelihatan besar banget!' },
     { speaker: 'nadia', text: 'Kualitas udaranya masih baik dan segar ya hari ini, Mas. Pas banget buat jalan sore tanpa buru-buru.' },
   ],
+  activity_melati_birdcage: [
+    { speaker: 'kira', text: 'Cuit-cuit!! Burung kuning kecilnya nyanyi merdu banget di sangkar bambu, Ayah!! Dia loncat-loncat!' },
+    { speaker: 'nadia', text: 'Suara burung kicau dari teras tetangga itu bikin pagi di Jl. Melati terasa damai sekali ya, Mas.' },
+  ],
+  activity_nada_poster_bench: [
+    { speaker: 'nadia', text: 'Lihat deh Mas, poster konser akustik tahun sembilan puluhan itu masih tertempel rapi di samping Toko Musik Nada Lama!' },
+    { speaker: 'kira', text: 'Wah, bangkunya adem banget di bawah pohon! Nanti kalau Ayah manggung lagi, poster Ayah ditempel di sini ya!' },
+  ],
 };

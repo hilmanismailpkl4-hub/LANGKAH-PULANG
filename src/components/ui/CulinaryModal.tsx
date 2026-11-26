@@ -45,7 +45,7 @@ export const CulinaryModal: React.FC = () => {
                   compact ? 'h-8 w-8' : 'h-10 w-10'
                 }`}
               >
-                {activeSpot === 'cafe' || activeSpot === 'office_pantry' ? (
+                {activeSpot === 'cafe' || activeSpot === 'office_pantry' || activeSpot === 'warkop_stasiun' ? (
                   <Coffee className="h-4 w-4 sm:h-5 sm:w-5" />
                 ) : activeSpot === 'martabak' ||
                   activeSpot === 'bakso' ||

@@ -211,6 +211,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= 10.0 && x <= 13.0 && z >= -27.2 && z <= -24.0) return true;
   // Payung Teduh Gerobak Ketoprak Jakarta Bang Jaja (Promenade Tepi Sungai Timur)
   if (x >= -38.2 && x <= -35.0 && z >= 34.6 && z <= 37.8) return true;
+  // Payung Teduh Warkop & Kue Pasar Mang Dadang (Gerbang Barat Stasiun Senja)
+  if (x >= 70.0 && x <= 73.2 && z >= -12.2 && z <= -9.2) return true;
   return false;
 }
 
@@ -429,6 +431,12 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'ketoprak_cart', minX: -37.1, maxX: -35.9, minZ: 35.15, maxZ: 37.25 },
   { id: 'ketoprak_bench', minX: -38.62, maxX: -38.08, minZ: 35.45, maxZ: 36.95 },
   { id: 'plaza_weather_totem', minX: 23.58, maxX: 25.22, minZ: -15.54, maxZ: -14.86 },
+
+  // === 33. Warkop Kue Pasar Mang Dadang & Sudut Poster Konser Samping Toko Musik Nada Lama ===
+  { id: 'warkop_stasiun_counter', minX: 70.55, maxX: 72.65, minZ: -11.35, maxZ: -10.25 },
+  { id: 'warkop_stasiun_bench', minX: 70.85, maxX: 72.35, minZ: -9.22, maxZ: -8.68 },
+  { id: 'nada_poster_board', minX: -13.75, maxX: -13.15, minZ: -25.65, maxZ: -23.55 },
+  { id: 'nada_poster_bench', minX: -12.15, maxX: -11.45, minZ: -25.6, maxZ: -23.6 },
 ];
 
 /**
@@ -571,6 +579,12 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: 84.4, z: -2.2, r: 0.28 },
   // Bang Jaja Ketoprak Tepi Sungai
   { x: -35.4, z: 36.2, r: 0.42 },
+  // Mang Dadang Warkop Stasiun, 2 Tiang Sangkar Burung Jl. Melati & Pohon/Lampu Sudut Nada Lama
+  { x: 71.6, z: -11.85, r: 0.42 },
+  { x: -2.4, z: 64.9, r: 0.24 },
+  { x: 1.8, z: 64.9, r: 0.24 },
+  { x: -12.6, z: -27.2, r: 0.66 },
+  { x: -12.6, z: -22.2, r: 0.18 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],

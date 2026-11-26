@@ -38,6 +38,7 @@ import { RiversideNightMarket } from './RiversideNightMarket';
 import { RooftopLakeAndRtBoard } from './RooftopLakeAndRtBoard';
 import { ScooterEntity } from './ScooterEntity';
 import { StationAndBuskerLife } from './StationAndBuskerLife';
+import { StationWarkopBirdsAndMusicBench } from './StationWarkopBirdsAndMusicBench';
 import { StreetRealismAndSate } from './StreetRealismAndSate';
 import { TropicalLandmarkAndDawet } from './TropicalLandmarkAndDawet';
 import { WaypointBeacon } from './WaypointBeacon';
@@ -124,6 +125,7 @@ export const GameCanvas: React.FC = () => {
               <RetroStreetAndParkSwing timeOfDay={effectiveTime} settings={settings} />
               <DogerChessAndKrlBoard timeOfDay={effectiveTime} settings={settings} />
               <KetoprakLotusAndWeatherPlaza timeOfDay={effectiveTime} settings={settings} />
+              <StationWarkopBirdsAndMusicBench timeOfDay={effectiveTime} settings={settings} />
               <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
             </group>
 

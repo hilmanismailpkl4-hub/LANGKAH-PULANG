@@ -903,6 +903,39 @@ class SfxEngine {
     this.softTone(ctx, 880.0, now + 0.42, 0.42, 0.036 * v, 'sine');
   }
 
+  /**
+   * Melodi kicauan burung kenari & perkutut pagi/sore yang merdu dari sangkar kayu Jl. Melati.
+   */
+  public playBirdcageChirp() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // 4 frasa kicau bernada tinggi meluncur halus khas burung kenari peliharaan
+    const chirps: [number, number, number, number][] = [
+      [0.0, 2250, 2980, 0.095],
+      [0.12, 2640, 3250, 0.085],
+      [0.24, 3120, 2480, 0.11],
+      [0.4, 2420, 3420, 0.13],
+    ];
+    chirps.forEach(([offset, fStart, fEnd, dur]) => {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(fStart, now + offset);
+      osc.frequency.exponentialRampToValueAtTime(fEnd, now + offset + dur * 0.72);
+      osc.frequency.exponentialRampToValueAtTime(fStart * 1.06, now + offset + dur);
+      g.gain.setValueAtTime(0.0008, now + offset);
+      g.gain.linearRampToValueAtTime(0.068 * v, now + offset + 0.016);
+      g.gain.exponentialRampToValueAtTime(0.0008, now + offset + dur);
+      osc.connect(g).connect(ctx.destination);
+      osc.start(now + offset);
+      osc.stop(now + offset + dur + 0.02);
+    });
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

@@ -15,7 +15,8 @@ export type CulinarySpotId =
   | 'gorengan'
   | 'pecel_lele'
   | 'doger'
-  | 'ketoprak';
+  | 'ketoprak'
+  | 'warkop_stasiun';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -33,7 +34,8 @@ export type HeldDrinkVisual =
   | 'gorengan'
   | 'pecel_lele'
   | 'doger'
-  | 'ketoprak';
+  | 'ketoprak'
+  | 'kue_pasar';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -227,6 +229,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [-38.35, 0, 34.8],
     seatYaw: Math.PI / 2,
     tablePropPos: [-37.05, 1.14, 36.2],
+  },
+  warkop_stasiun: {
+    id: 'warkop_stasiun',
+    title: 'Warkop & Kue Pasar Subuh Mang Dadang',
+    hostName: 'Mang Dadang',
+    subtitle: 'Gerbang Barat Stasiun Senja · Kopi Tubruk, Teh Tarik, Klepon, Lemper & Kue Lumpur',
+    seatPos: [71.6, 0.14, -8.95],
+    lookAt: [71.6, 1.35, -10.8],
+    standPos: [71.6, 0, -7.85],
+    seatYaw: Math.PI,
+    tablePropPos: [71.6, 1.14, -10.32],
   },
 };
 
@@ -903,6 +916,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Yeeey!! Ketoprak pakai kerupuk banyaaak!! Bang Jaja baik banget kasih kerupuk ekstra buat Kira!' },
       { speaker: 'nadia', text: 'Enak banget ya Mas makan ketoprak hangat di pinggir sungai begini... terima kasih sudah traktir kami.' },
+    ],
+  },
+
+  // === 16. WARKOP & KUE PASAR TRADISIONAL MANG DADANG (GERBANG STASIUN SENJA) ===
+  {
+    id: 'warkop_kopi_klepon',
+    spot: 'warkop_stasiun',
+    name: 'Kopi Tubruk Panas & Klepon Pandan Gula Merah',
+    priceLabel: 'Rp 10.000',
+    tagline: 'Kopi tubruk harum seduh termos panas ditemani klepon hijau kenyal tabur kelapa parut segar.',
+    tasteNote: 'Begitu digigit, gula merah cair hangat pecah di mulut—berpadu pas dengan pahit lembut kopi tubruk di depan stasiun.',
+    drinkVisual: 'kue_pasar',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Kleponnya masih hangat dan wangi daun pandan banget ya, Mas! Kelapa parutnya juga gurih segar.' },
+    ],
+  },
+  {
+    id: 'warkop_lemper_lumpur',
+    spot: 'warkop_stasiun',
+    name: 'Teh Tarik Hangat, Lemper Ayam & Kue Lumpur',
+    priceLabel: 'Rp 13.000',
+    tagline: 'Lemper ketan bungkus daun pisang bakar, kue lumpur kentang kismis lembut, plus segelas teh tarik hangat.',
+    tasteNote: 'Aroma daun pisang dan manis legit kue lumpur menghangatkan langkah para komuter di gerbang Stasiun Senja.',
+    drinkVisual: 'kue_pasar',
+    isHot: true,
+    familyReaction: [
+      { speaker: 'kira', text: 'Kue lumpur kuningnya lembut banget kayak puding, Yah! Ada kismis manis di tengahnya!' },
+    ],
+  },
+  {
+    id: 'warkop_family',
+    spot: 'warkop_stasiun',
+    name: 'Traktir Keluarga Nampan Kue Pasar & Minuman Hangat',
+    priceLabel: 'Rp 32.000',
+    tagline: 'Aneka jajanan pasar lengkap (klepon, kue lumpur, lemper, pastel), kopi tubruk, teh tarik & susu hangat Kira.',
+    tasteNote: 'Mang Dadang menata jajanan pasar di atas daun pisang sambil mengobrol hangat—stasiun yang sibuk pun terasa seperti beranda rumah.',
+    drinkVisual: 'kue_pasar',
+    isHot: true,
+    isFamilyTreat: true,
+    journalTitle: 'Jajan Pasar & Kopi Tubruk di Gerbang Stasiun Senja',
+    journalBody: 'Di warkop kayu Mang Dadang tepat di depan gerbang Stasiun Senja, aku mengajak Nadia dan Kira duduk menyantap klepon pandan, kue lumpur hangat, dan lemper daun pisang. Ternyata sudut stasiun yang dulu hanya kulewati sambil berlari menyimpan kehangatan yang luar biasa akrab.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Horeee!! Klepon hijaunya meletus manis di mulut Kira, Bunda!! Hihihi enak banget!' },
+      { speaker: 'nadia', text: 'Jajanan pasar Mang Dadang beneran buatan rumahan ya, Mas... senang banget mampir sini bertiga.' },
     ],
   },
 ];

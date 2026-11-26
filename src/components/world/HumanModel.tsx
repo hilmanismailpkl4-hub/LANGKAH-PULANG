@@ -259,7 +259,35 @@ export const HumanModel: React.FC<HumanModelProps> = ({
           {/* Visual Gelas Hangat / Es Krim / Jajanan Martabak & Kacang Rebus di Tangan Kanan */}
           {holdingDrink && (
             <group position={[0, -0.48, 0.05]} rotation={[0.92, 0, 0]}>
-              {holdingDrink === 'ketoprak' ? (
+              {holdingDrink === 'kue_pasar' ? (
+                <group>
+                  {/* Piring Daun Pisang Jajanan Pasar (Klepon Hijau, Kue Lumpur Kuning & Lemper) */}
+                  <mesh position={[0, 0.026, 0.02]} castShadow>
+                    <cylinderGeometry args={[0.1, 0.078, 0.022, 14]} />
+                    <meshStandardMaterial color="#2f6f3e" roughness={0.76} />
+                  </mesh>
+                  {/* 2 Butir Klepon Hijau Pandan Tabur Kelapa */}
+                  <mesh position={[-0.032, 0.052, 0.028]}>
+                    <sphereGeometry args={[0.022, 10, 8]} />
+                    <meshStandardMaterial color="#4ade80" roughness={0.68} />
+                  </mesh>
+                  <mesh position={[0.002, 0.052, 0.048]}>
+                    <sphereGeometry args={[0.021, 10, 8]} />
+                    <meshStandardMaterial color="#86efac" roughness={0.68} />
+                  </mesh>
+                  {/* Kue Lumpur Kuning Kismis */}
+                  <mesh position={[0.036, 0.05, 0.012]}>
+                    <cylinderGeometry args={[0.028, 0.026, 0.022, 12]} />
+                    <meshStandardMaterial color="#facc15" roughness={0.55} />
+                  </mesh>
+                  {/* Lemper Daun Pisang */}
+                  <mesh position={[-0.014, 0.048, -0.018]} rotation={[0, 0.4, Math.PI / 2]}>
+                    <capsuleGeometry args={[0.015, 0.048, 5, 8]} />
+                    <meshStandardMaterial color="#4d7c0f" roughness={0.78} />
+                  </mesh>
+                  <CupSteam position={[0, 0.095, 0.02]} />
+                </group>
+              ) : holdingDrink === 'ketoprak' ? (
                 <group>
                   {/* Piring Ketoprak Jakarta + Bumbu Kacang, Tahu, Ketupat & Kerupuk Renyah */}
                   <mesh position={[0, 0.028, 0.02]} castShadow>

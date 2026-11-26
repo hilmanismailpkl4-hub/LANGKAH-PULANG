@@ -2738,6 +2738,91 @@ export const WorldInteractables: React.FC = () => {
         2.9,
       );
 
+      consider(
+        {
+          id: 'culinary_warkop_dadang',
+          kind: 'story_object',
+          label: 'Pesan Kopi Tubruk & Kue Pasar Mang Dadang',
+          sublabel: 'Gerbang Barat Stasiun Senja · Klepon, Kue Lumpur & Lemper',
+          position: [71.6, 0, -9.4],
+          onInteract: () => {
+            store.openCulinarySpot('warkop_stasiun');
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'activity_melati_birdcages',
+          kind: 'story_object',
+          label: 'Dengarkan Kicauan Burung di Teras Tetangga',
+          sublabel: 'Jl. Melati · Sangkar Bambu Kenari & Cucak Ijo',
+          position: [-0.3, 0, 63.6],
+          onInteract: () => {
+            sfxEngine.playBirdcageChirp();
+            playerRuntime.birdcageChirpTimer = 4.6;
+            if (!store.flags.includes('listened_melati_birds')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                kehadiranKeluarga: 1,
+                setFlags: ['listened_melati_birds'],
+                journalEntry: {
+                  id: 'je_melati_birdcages',
+                  title: 'Kicauan Kenari di Beranda Tetangga Jl. Melati',
+                  body: 'Di halaman rumah sebelah, dua sangkar burung kayu bergoyang pelan ditiup angin sementara burung kenari kuning berkicau merdu dari tangkringannya. Suara kecil yang selama ini menandai pagi di perumahan ternyata menenangkan sekali saat sungguh-sungguh didengarkan.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_melati_birdcage, 'fw_melati_birdcage');
+            }
+            store.showToast('Cuit-cuit merdu! Burung kenari & cucak ijo melompat riang menyambut sapaanmu dari sangkar bambu.');
+          },
+        },
+        3.0,
+      );
+
+      consider(
+        {
+          id: 'sit_nada_poster_bench',
+          kind: 'story_object',
+          label: 'Duduk Santai di Sudut Poster Konser Nada Lama',
+          sublabel: 'Samping Toko Musik Nada Lama · Bangku Teduh & Poster Indie',
+          position: [-10.9, 0, -24.6],
+          onInteract: () => {
+            sfxEngine.play('interact');
+            playerRuntime.sitState = {
+              active: true,
+              label: 'Sudut Poster Konser Nada Lama',
+              seatPos: [-11.8, 0.14, -24.6],
+              lookAt: [4.0, 1.35, -24.6],
+              standPos: [-10.5, 0, -24.6],
+              seatYaw: Math.PI / 2,
+            };
+            store.setSitting(true);
+            if (!store.flags.includes('sat_nada_poster_bench')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                setFlags: ['sat_nada_poster_bench'],
+                journalEntry: {
+                  id: 'je_nada_poster_bench',
+                  title: 'Bangku Teduh di Samping Poster Konser Nada Lama',
+                  body: 'Di bawah pohon teduh samping Toko Musik Nada Lama, aku duduk sejenak membaca poster-poster konser akustik lama yang masih tertempel rapi. Musik dan kenangan muda itu rupanya tidak pernah hilang—ia hanya menungguku kembali berdamai dengannya.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_nada_poster_bench, 'fw_nada_poster_bench');
+            }
+            store.showToast('Damar duduk teduh di samping papan poster konser klasik Nada Lama... (Tekan WASD/E untuk berdiri)');
+          },
+        },
+        2.7,
+      );
+
     consider(
       {
         id: 'portal_up',
