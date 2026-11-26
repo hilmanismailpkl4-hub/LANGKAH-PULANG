@@ -207,6 +207,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= 74.4 && x <= 78.6 && z >= 18.4 && z <= 21.4) return true;
   // Kanopi Pergola Kursi Ayunan Kayu Taman Kota
   if (x >= -65.2 && x <= -63.2 && z >= -29.0 && z <= -26.2) return true;
+  // Payung Teduh Gerobak Es Doger Bang Toni (Trotoar Timur Jl. Cempaka Utara)
+  if (x >= 10.0 && x <= 13.0 && z >= -27.2 && z <= -24.0) return true;
   return false;
 }
 
@@ -415,6 +417,11 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'park_garden_swing_l', minX: -64.95, maxX: -63.45, minZ: -29.0, maxZ: -28.65 },
   { id: 'park_garden_swing_r', minX: -64.95, maxX: -63.45, minZ: -26.55, maxZ: -26.2 },
   { id: 'park_garden_swing_seat', minX: -64.62, maxX: -63.78, minZ: -28.55, maxZ: -26.65 },
+
+  // === 31. Gerobak Es Doger Bang Toni & Meja Catur Warga Pos Ronda RT 04 Melati ===
+  { id: 'doger_cart', minX: 11.0, maxX: 12.2, minZ: -26.65, maxZ: -24.55 },
+  { id: 'doger_bench', minX: 9.48, maxX: 10.02, minZ: -26.35, maxZ: -24.85 },
+  { id: 'melati_chess_table', minX: 22.68, maxX: 23.92, minZ: 56.18, maxZ: 57.42 },
 ];
 
 /**
@@ -549,6 +556,12 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: 41.65, z: 13.48, r: 0.42 },
   { x: 76.5, z: 19.15, r: 0.42 },
   { x: -86.4, z: 17.6, r: 0.62 },
+  // Bang Toni Es Doger, Warga Catur Pos Ronda (Pak Yanto & Pak Hendro), Tiang Lampu Catur & Tiang LED KRL Stasiun
+  { x: 12.75, z: -25.6, r: 0.42 },
+  { x: 23.3, z: 57.68, r: 0.48 },
+  { x: 23.3, z: 55.92, r: 0.48 },
+  { x: 22.22, z: 55.72, r: 0.14 },
+  { x: 84.4, z: -2.2, r: 0.28 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],

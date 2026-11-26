@@ -818,6 +818,52 @@ class SfxEngine {
     }
   }
 
+  /**
+   * Bunyi khas ketukan bidak catur kayu ("tok!") saat meletakkan bidak di papan catur Pos Ronda.
+   */
+  public playChessTap() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // Resonansi kayu pendek tajam seperti pion/kuda diletakkan mantap di papan jati
+    const osc = ctx.createOscillator();
+    const filter = ctx.createBiquadFilter();
+    const g = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(520, now);
+    osc.frequency.exponentialRampToValueAtTime(170, now + 0.052);
+    filter.type = 'bandpass';
+    filter.frequency.value = 920;
+    filter.Q.value = 2.4;
+    g.gain.setValueAtTime(0.001, now);
+    g.gain.linearRampToValueAtTime(0.18 * v, now + 0.004);
+    g.gain.exponentialRampToValueAtTime(0.0008, now + 0.068);
+    osc.connect(filter).connect(g).connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.08);
+
+    // Sedikit gesekan papan kayu lembut sebelum ketukan
+    this.softTone(ctx, 290, now + 0.015, 0.05, 0.045 * v, 'sine');
+  }
+
+  /**
+   * Nada informatif dua nada lembut papan LED KRL Commuter Line Stasiun Senja ("ting-tong!").
+   */
+  public playKrlBoardChime() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+    this.softTone(ctx, 659.25, now, 0.24, 0.075 * v, 'sine');
+    this.softTone(ctx, 1318.5, now, 0.14, 0.025 * v, 'triangle');
+    this.softTone(ctx, 880.0, now + 0.18, 0.34, 0.08 * v, 'sine');
+    this.softTone(ctx, 1760.0, now + 0.18, 0.18, 0.024 * v, 'triangle');
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

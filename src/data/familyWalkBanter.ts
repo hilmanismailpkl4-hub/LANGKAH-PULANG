@@ -442,4 +442,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'nadia', text: 'Adem banget ya Mas berayun pelan di kursi kayu ini sambil memandang Danau Senja...' },
     { speaker: 'kira', text: 'Ayun pelan-pelan ya Ayah! Enak banget anginnya, kayak lagi liburan!' },
   ],
+  activity_melati_chess: [
+    { speaker: 'kira', text: 'Waaah!! Kuda putihnya Ayah melompat "tok!" di papan kotak-kotak!! Pak Yanto sampai ketawa!' },
+    { speaker: 'nadia', text: 'Akrab banget ya Mas tetangga RT 04 kita, sore-sore santai main catur sambil ngopi di dekat Pos Ronda.' },
+  ],
+  activity_krl_led_board: [
+    { speaker: 'kira', text: 'Lihat deh Bunda, papan lampunya bisa ngasih tahu berapa meter lagi keretanya datang!! Keren banget!' },
+    { speaker: 'nadia', text: 'Sekarang Stasiun Senja makin rapi dan informatif ya, Mas... nggak perlu bingung lagi menunggu kereta.' },
+  ],
 };

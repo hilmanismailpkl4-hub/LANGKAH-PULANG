@@ -163,6 +163,8 @@ export const playerRuntime = {
   windChimeTimer: 0,
   stationGateTimer: 0,
   pingPongRallyTimer: 0,
+  chessMoveTimer: 0,
+  chessMoveStep: 0,
   gardenSwingTimer: 0,
   swingBoostTimer: 0,
   kiteHeight: 0,
@@ -174,6 +176,8 @@ export const playerRuntime = {
   trainZ: -80,
   trainSpeed: 12,
   trainAtPlatform: false,
+  trainPhase: 'approaching' as 'approaching' | 'boarding' | 'departing' | 'away',
+  trainDwellTimer: 0,
 
   // Input kontrol sentuh layar HP (Virtual Joystick kiri + tombol Lari)
   touchInput: {
@@ -262,6 +266,8 @@ export function resetScooterToHome() {
   playerRuntime.windChimeTimer = 0;
   playerRuntime.stationGateTimer = 0;
   playerRuntime.pingPongRallyTimer = 0;
+  playerRuntime.chessMoveTimer = 0;
+  playerRuntime.chessMoveStep = 0;
   playerRuntime.gardenSwingTimer = 0;
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;

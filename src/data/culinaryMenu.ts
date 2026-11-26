@@ -13,7 +13,8 @@ export type CulinarySpotId =
   | 'dawet'
   | 'siomay'
   | 'gorengan'
-  | 'pecel_lele';
+  | 'pecel_lele'
+  | 'doger';
 export type HeldDrinkVisual =
   | 'wedang'
   | 'coffee'
@@ -29,7 +30,8 @@ export type HeldDrinkVisual =
   | 'dawet'
   | 'siomay'
   | 'gorengan'
-  | 'pecel_lele';
+  | 'pecel_lele'
+  | 'doger';
 
 export interface CulinaryMenuItem {
   id: string;
@@ -201,6 +203,17 @@ export const CULINARY_SPOTS: Record<CulinarySpotId, CulinarySpotInfo> = {
     standPos: [44.05, 0, 10.1],
     seatYaw: 0,
     tablePropPos: [44.05, 0.84, 12.15],
+  },
+  doger: {
+    id: 'doger',
+    title: 'Gerobak Es Doger Segar Bang Toni',
+    hostName: 'Bang Toni',
+    subtitle: 'Trotoar Jl. Cempaka Utara · Es Kelapa Merah Muda, Tape Ketan, Alpukat & Mutiara',
+    seatPos: [9.75, 0.14, -25.6],
+    lookAt: [11.6, 1.35, -25.6],
+    standPos: [8.6, 0, -25.6],
+    seatYaw: Math.PI / 2,
+    tablePropPos: [11.05, 1.14, -25.6],
   },
 };
 
@@ -787,6 +800,51 @@ export const CULINARY_MENU_ITEMS: CulinaryMenuItem[] = [
     familyReaction: [
       { speaker: 'kira', text: 'Yeeey makan malam di tenda gambar ikan lele!! Ayam kremesnya enak bangettt, Makasih Ayah!' },
       { speaker: 'nadia', text: 'Makasih ya Mas sudah traktir makan malam di sini—hari ini aku nggak usah cuci piring deh, hehe.' },
+    ],
+  },
+
+  // === 14. GEROBAK ES DOGER SEGAR BANG TONI (TEPI JL. CEMPAKA UTARA) ===
+  {
+    id: 'doger_spesial',
+    spot: 'doger',
+    name: 'Es Doger Spesial Tape Ketan & Alpukat',
+    priceLabel: 'Rp 10.000',
+    tagline: 'Es serut santan kelapa merah muda lembut, tape ketan hitam, alpukat mentega, dan susu kental manis.',
+    tasteNote: 'Dingin manis dan sedikit gurih santan—langsung menghilangkan gerah sore di pinggir Jl. Cempaka.',
+    drinkVisual: 'doger',
+    isHot: false,
+    familyReaction: [
+      { speaker: 'nadia', text: 'Enak banget ya Mas es doger Bang Toni, santannya gurih terus alpukatnya matang pas!' },
+    ],
+  },
+  {
+    id: 'doger_mutiara',
+    spot: 'doger',
+    name: 'Es Doger Mutiara Pacar Cina & Roti Tawar',
+    priceLabel: 'Rp 12.000',
+    tagline: 'Porsi melimpah dengan butiran mutiara kenyal, potongan roti tawar lembut, & serutan es cocopandan.',
+    tasteNote: 'Manis segar berwarna merah muda ceria—persis jajanan sore klasik yang bikin hati ikut ringan.',
+    drinkVisual: 'doger',
+    isHot: false,
+    familyReaction: [
+      { speaker: 'kira', text: 'Waaah warnanya pink cantik bangettt, Yah!! Ada bola-bola mutiara kenyalnya juga!' },
+    ],
+  },
+  {
+    id: 'doger_family',
+    spot: 'doger',
+    name: 'Traktir Keluarga Es Doger Sore (Paket Bertiga)',
+    priceLabel: 'Rp 30.000',
+    tagline: 'Tiga gelas besar Es Doger komplit dengan ekstra alpukat & mutiara merah muda untuk dinikmati bertiga.',
+    tasteNote: 'Bang Toni cekatan mengerok es doger dari tong stainless sambil tertawa ramah—sore di trotoar Jl. Cempaka terasa manis sekali.',
+    drinkVisual: 'doger',
+    isHot: false,
+    isFamilyTreat: true,
+    journalTitle: 'Manisnya Es Doger Bang Toni di Sore Jl. Cempaka',
+    journalBody: 'Di bawah payung merah muda Gerobak Es Doger Bang Toni di tepi Jl. Cempaka, aku mengajak Nadia dan Kira menikmati tiga gelas es doger dingin. Melihat Kira bersemangat menyendok mutiara merah muda membuat penat seharian menguap begitu saja.',
+    familyReaction: [
+      { speaker: 'kira', text: 'Horeee!! Es doger pink bertiga!! Dingin manis enak bangettt, makasih banyak Ayah!' },
+      { speaker: 'nadia', text: 'Segar banget ya Mas... terima kasih sudah mengajak mampir jajan es doger sore-sore begini.' },
     ],
   },
 ];

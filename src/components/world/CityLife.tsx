@@ -722,6 +722,8 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
       playerRuntime.trainZ = tr.z;
       playerRuntime.trainSpeed = tr.speed;
       playerRuntime.trainAtPlatform = tr.phase === 'boarding';
+      playerRuntime.trainPhase = tr.phase;
+      playerRuntime.trainDwellTimer = tr.dwellTimer;
     }
 
     // === 3. KUCING ORANYE "SORE" ===

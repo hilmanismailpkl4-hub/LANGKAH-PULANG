@@ -259,7 +259,34 @@ export const HumanModel: React.FC<HumanModelProps> = ({
           {/* Visual Gelas Hangat / Es Krim / Jajanan Martabak & Kacang Rebus di Tangan Kanan */}
           {holdingDrink && (
             <group position={[0, -0.48, 0.05]} rotation={[0.92, 0, 0]}>
-              {holdingDrink === 'pecel_lele' ? (
+              {holdingDrink === 'doger' ? (
+                <group>
+                  {/* Gelas Es Doger Merah Muda Segar + Alpukat, Mutiara & Sendok Plastik */}
+                  <mesh position={[0, 0.058, 0]} castShadow>
+                    <cylinderGeometry args={[0.044, 0.032, 0.115, 14]} />
+                    <meshStandardMaterial color="#f472b6" roughness={0.32} />
+                  </mesh>
+                  {/* Gunungan Es Serut Santan Merah Muda Lembut */}
+                  <mesh position={[0, 0.122, 0]}>
+                    <sphereGeometry args={[0.042, 12, 10]} />
+                    <meshStandardMaterial color="#fbcfe8" roughness={0.45} />
+                  </mesh>
+                  {/* Topping Potongan Alpukat Hijau & Mutiara Merah */}
+                  <mesh position={[-0.015, 0.145, 0.012]}>
+                    <boxGeometry args={[0.02, 0.014, 0.02]} />
+                    <meshStandardMaterial color="#84cc16" roughness={0.5} />
+                  </mesh>
+                  <mesh position={[0.016, 0.146, -0.008]}>
+                    <sphereGeometry args={[0.012, 8, 8]} />
+                    <meshStandardMaterial color="#e11d48" roughness={0.35} />
+                  </mesh>
+                  {/* Sendok Plastik Putih Menancap Miring */}
+                  <mesh position={[0.02, 0.155, 0]} rotation={[0, 0, -0.32]}>
+                    <boxGeometry args={[0.011, 0.095, 0.004]} />
+                    <meshStandardMaterial color="#fffbeb" roughness={0.4} />
+                  </mesh>
+                </group>
+              ) : holdingDrink === 'pecel_lele' ? (
                 <group>
                   {/* Piring Anyaman Rotan / Kertas Minyak Pecel Lele + Nasi Uduk, Lalapan Kemangi & Sambal */}
                   <mesh position={[0, 0.032, 0.02]} castShadow>

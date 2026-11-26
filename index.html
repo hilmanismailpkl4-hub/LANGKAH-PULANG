@@ -48,10 +48,10 @@
       }
       #preboot-bar-fill {
         height: 100%;
-        width: 8%;
+        width: 0%;
         border-radius: 999px;
         background: linear-gradient(90deg, #d9823c, #f5c26b, #fde68a);
-        transition: width 180ms ease-out;
+        transition: width 140ms ease-out;
       }
       #preboot-meta {
         width: min(360px, 84vw);
@@ -82,18 +82,19 @@
           <div id="preboot-bar-fill"></div>
         </div>
         <div id="preboot-meta">
-          <span id="preboot-size">0.18 MB / 2.38 MB</span>
-          <strong id="preboot-pct" style="color: #f5c26b;">8%</strong>
+          <span id="preboot-size">0.00 MB / 2.38 MB</span>
+          <strong id="preboot-pct" style="color: #f5c26b;">0%</strong>
         </div>
       </div>
     </div>
     <script>
       (function () {
         var estTotalBytes = 2380 * 1024;
-        var pct = 8;
+        var pct = 0;
+        window.__lpBootPct = 0;
         function fmtSize(bytes) {
           if (bytes >= 1048576) return (bytes / 1048576).toFixed(2) + ' MB';
-          return Math.max(1, Math.round(bytes / 1024)) + ' KB';
+          return Math.max(0, Math.round(bytes / 1024)) + ' KB';
         }
         var timer = window.setInterval(function () {
           var fill = document.getElementById('preboot-bar-fill');
@@ -112,13 +113,14 @@
             }
           } catch (_) {}
           var realPct = loadedBytes > 0 ? Math.min(82, Math.round((loadedBytes / estTotalBytes) * 82)) : 0;
-          pct = Math.min(86, Math.max(pct + 2, realPct));
+          pct = Math.min(85, Math.max(pct + 2, realPct));
+          window.__lpBootPct = pct;
           var displayBytes = Math.max(loadedBytes, Math.round((pct / 100) * estTotalBytes));
           var totalBytes = Math.max(estTotalBytes, displayBytes);
           fill.style.width = pct + '%';
           pctEl.textContent = pct + '%';
           sizeEl.textContent = fmtSize(displayBytes) + ' / ' + fmtSize(totalBytes);
-        }, 120);
+        }, 90);
       })();
     </script>
     <script type="module" src="/src/main.tsx"></script>

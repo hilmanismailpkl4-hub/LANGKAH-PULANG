@@ -2558,6 +2558,104 @@ export const WorldInteractables: React.FC = () => {
         2.5,
       );
 
+      consider(
+        {
+          id: 'culinary_doger_toni',
+          kind: 'story_object',
+          label: 'Pesan Es Doger Segar Bang Toni',
+          sublabel: 'Trotoar Jl. Cempaka Utara · Tape Ketan, Alpukat & Mutiara',
+          position: [10.2, 0, -25.6],
+          onInteract: () => {
+            store.openCulinarySpot('doger');
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'activity_melati_chess',
+          kind: 'story_object',
+          label: 'Ikut 1 Langkah Catur Santai bersama Pak Yanto',
+          sublabel: 'Meja Catur Pos Ronda RT 04 · Perumahan Melati',
+          position: [22.4, 0, 56.8],
+          onInteract: () => {
+            sfxEngine.playChessTap();
+            playerRuntime.chessMoveStep += 1;
+            playerRuntime.chessMoveTimer = 4.4;
+            const chessLines = [
+              'Tok! Kuda putih melompat taktis — Pak Yanto: "Waduh, langkah kuda Mas Damar tajam banget! Pak Hendro, bantuin mikir dong!"',
+              'Tok! Strategi rapi di tengah papan — Pak Hendro: "Nah ini baru lawan sepadan! Ngopi dulu, Mas, jangan buru-buru pulang!"',
+              'Tok! Langkah pertahanan mantap — Pak Yanto: "Skak tipis nih! Sore-sore main catur bareng tetangga begini rasanya adem banget ya, Mas."',
+              'Tok! Bidak putih membuka jalur baru — Pak Hendro: "Mantap Mas Damar! Kapan-kapan malam minggu kita tanding satu babak penuh di Pos Ronda!"',
+            ];
+            if (!store.flags.includes('played_melati_chess')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                kehadiranKeluarga: 1,
+                setFlags: ['played_melati_chess'],
+                journalEntry: {
+                  id: 'je_melati_chess',
+                  title: 'Satu Langkah Catur di Samping Pos Ronda RT 04',
+                  body: 'Di samping Pos Ronda RT 04 Melati, aku berhenti sejenak dan ikut menggerakkan satu bidak catur bersama Pak Yanto dan Pak Hendro. Bunyi "tok!" bidak kayu dan tawa akrab para tetangga mengingatkan bahwa rumah bukan hanya empat dinding, tapi juga lingkungan tempat kita saling menyapa.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_melati_chess, 'fw_melati_chess');
+            }
+            store.showToast(chessLines[playerRuntime.chessMoveStep % chessLines.length]);
+          },
+        },
+        2.8,
+      );
+
+      consider(
+        {
+          id: 'activity_krl_led_board',
+          kind: 'story_object',
+          label: 'Cek Papan LED Jadwal Kedatangan KRL',
+          sublabel: 'Peron Jalur 1 Stasiun Senja · Sinkron Real-Time',
+          position: [84.4, 0.1, -2.2],
+          onInteract: () => {
+            sfxEngine.playKrlBoardChime();
+            const phase = playerRuntime.trainPhase;
+            let liveMsg = '';
+            if (phase === 'boarding') {
+              const rem = Math.max(1, Math.ceil(playerRuntime.trainDwellTimer));
+              liveMsg = `Papan LED KRL: Kereta Jalur 1 sedang DI PERON (pintu terbuka) — berangkat dalam ±${rem} detik menuju Stasiun Kota Barat.`;
+            } else if (phase === 'approaching') {
+              const distM = Math.max(2, Math.round(Math.max(0, -4 - playerRuntime.trainZ)));
+              const eta = Math.max(1, Math.ceil(distM / Math.max(4, playerRuntime.trainSpeed)));
+              liveMsg = `Papan LED KRL: Rangkaian Jalur 1 MENDEKAT (${distM} meter lagi, tiba ±${eta} detik). Harap berdiri di belakang garis kuning!`;
+            } else if (phase === 'departing') {
+              liveMsg = 'Papan LED KRL: Kereta Jalur 1 baru saja BERANGKAT menuju Stasiun Kota Barat — rangkaian berikutnya segera bersiap.';
+            } else {
+              const waitSec = Math.max(1, Math.ceil(playerRuntime.trainDwellTimer + 7));
+              liveMsg = `Papan LED KRL: Kereta Komuter berikutnya tiba dari Utara dalam ±${waitSec} detik (Tarif Rp 3.000 · 6 Gerbong).`;
+            }
+            if (!store.flags.includes('checked_krl_led_board')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                setFlags: ['checked_krl_led_board'],
+                journalEntry: {
+                  id: 'je_krl_led_board',
+                  title: 'Menatap Papan Jadwal KRL di Peron Stasiun Senja',
+                  body: 'Di tengah peron Stasiun Senja, papan LED jadwal KRL berkedip menunjukkan jarak rangkaian yang mendekat dengan teliti. Dulu aku selalu terburu-buru mengejar setiap hitungan detik di layar itu—hari ini aku hanya berdiri tenang menikmati sore.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_krl_led_board, 'fw_krl_led_board');
+            }
+            store.showToast(liveMsg);
+          },
+        },
+        3.0,
+      );
+
     consider(
       {
         id: 'portal_up',

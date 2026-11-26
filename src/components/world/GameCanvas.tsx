@@ -13,6 +13,7 @@ import { CityDetails } from './CityDetails';
 import { CityGeometry } from './CityGeometry';
 import { CityLife } from './CityLife';
 import { CraftAndPingPongLife } from './CraftAndPingPongLife';
+import { DogerChessAndKrlBoard } from './DogerChessAndKrlBoard';
 import { FishingAndFlowerLibrary } from './FishingAndFlowerLibrary';
 import { HomeKitchenAndParkNature } from './HomeKitchenAndParkNature';
 import { HomeLivingAndBusStop } from './HomeLivingAndBusStop';
@@ -120,6 +121,7 @@ export const GameCanvas: React.FC = () => {
               <CraftAndPingPongLife timeOfDay={effectiveTime} settings={settings} />
               <NightDiningAtmAndOpang timeOfDay={effectiveTime} settings={settings} />
               <RetroStreetAndParkSwing timeOfDay={effectiveTime} settings={settings} />
+              <DogerChessAndKrlBoard timeOfDay={effectiveTime} settings={settings} />
               <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
             </group>
 

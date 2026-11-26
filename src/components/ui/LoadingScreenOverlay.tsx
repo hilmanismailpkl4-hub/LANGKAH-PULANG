@@ -30,20 +30,19 @@ const EMBER_DOTS = [
   { left: '44%', top: '68%', size: 3, delay: '1.4s', duration: '6.0s' },
 ];
 
-// Perkiraan ukuran total bundle aplikasi + aset 3D prosedural (sesuai hasil build Vite ~2.38 MB)
+// Perkiraan total ukuran berkas aplikasi + aset 3D prosedural (sesuai hasil build Vite ~2.38 MB)
 const ESTIMATED_TOTAL_APP_BYTES = 2380 * 1024;
 
 function formatByteSize(bytes: number): string {
   if (bytes >= 1024 * 1024) {
     return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
   }
-  return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+  return `${Math.max(0, Math.round(bytes / 1024))} KB`;
 }
 
 interface AssetDownloadSnapshot {
   loadedBytes: number;
   totalBytes: number;
-  transferBytes: number;
   resourceCount: number;
   fromCache: boolean;
 }
@@ -75,83 +74,144 @@ function readBrowserAssetStats(displayPct: number): AssetDownloadSnapshot {
   }
 
   const totalBytes = Math.max(ESTIMATED_TOTAL_APP_BYTES, decodedSum);
-  const progressBytes = Math.round((Math.min(100, Math.max(5, displayPct)) / 100) * totalBytes);
-  const loadedBytes = displayPct >= 99 ? totalBytes : Math.min(totalBytes, Math.max(decodedSum > 0 ? Math.min(decodedSum, progressBytes) : progressBytes, progressBytes));
+  const clamped = Math.max(0, Math.min(100, displayPct));
+  const loadedBytes = clamped >= 100 ? totalBytes : Math.round((clamped / 100) * totalBytes);
   const fromCache = count > 0 && decodedSum > 400 * 1024 && transferSum === 0;
 
   return {
     loadedBytes,
     totalBytes,
-    transferBytes: transferSum,
-    resourceCount: Math.max(count, 6),
+    resourceCount: Math.max(count, 7),
     fromCache,
   };
 }
 
 /**
  * Layar Loading Sinematik Bernuansa Senja Indonesia:
- * Menampilkan angka persentase (%) berjalan mulus, ukuran aset (MB / KB) real-time,
+ * Menampilkan progres 0% -> 100% yang benar-benar berjalan mulus (requestAnimationFrame,
+ * tanpa nested setState), ukuran aset real-time (MB / KB), skala 0–25–50–75–100%,
  * serta tata letak 2 kolom mendatar khusus HP landscape agar tidak pernah terpotong!
  */
 export const LoadingScreenOverlay: React.FC = () => {
   const loadingOverlay = useGameStore((s) => s.loadingOverlay);
   const { isMobile, isCompactLandscape } = useMobileViewport();
 
+  const initialBootPct =
+    typeof window !== 'undefined' && typeof (window as unknown as { __lpBootPct?: number }).__lpBootPct === 'number'
+      ? Math.min(18, Math.max(0, Math.round((window as unknown as { __lpBootPct?: number }).__lpBootPct ?? 0)))
+      : 0;
+
   const [rendered, setRendered] = useState(loadingOverlay.visible);
+  const [fadingOut, setFadingOut] = useState(false);
   const [tipIndex, setTipIndex] = useState(0);
-  const [displayProgress, setDisplayProgress] = useState(() =>
-    Math.max(8, Math.min(100, Math.round(loadingOverlay.progress))),
-  );
+  const [displayProgress, setDisplayProgress] = useState(initialBootPct);
   const [assetStats, setAssetStats] = useState<AssetDownloadSnapshot>(() =>
-    readBrowserAssetStats(loadingOverlay.progress),
+    readBrowserAssetStats(initialBootPct),
   );
-  const targetProgressRef = useRef(loadingOverlay.progress);
+
+  const curPctRef = useRef(initialBootPct);
+  const targetPctRef = useRef(loadingOverlay.progress);
+  const wantVisibleRef = useRef(loadingOverlay.visible);
+  const prevVisibleRef = useRef(loadingOverlay.visible);
+  const hideTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    targetProgressRef.current = loadingOverlay.progress;
-    if (loadingOverlay.progress <= 30 && loadingOverlay.visible) {
-      setDisplayProgress((prev) => (prev > 88 ? Math.max(10, Math.round(loadingOverlay.progress)) : prev));
-    }
-  }, [loadingOverlay.progress, loadingOverlay.visible]);
+    targetPctRef.current = loadingOverlay.progress;
+  }, [loadingOverlay.progress]);
 
   useEffect(() => {
+    wantVisibleRef.current = loadingOverlay.visible;
+
     if (loadingOverlay.visible) {
+      if (hideTimerRef.current !== null) {
+        window.clearTimeout(hideTimerRef.current);
+        hideTimerRef.current = null;
+      }
+      setFadingOut(false);
       setRendered(true);
-      setTipIndex(Math.floor(Math.random() * CITY_TIPS.length));
-      setDisplayProgress(Math.max(10, Math.min(95, Math.round(loadingOverlay.progress))));
-      return;
+      // Setiap kali layar loading baru dibuka (transisi false -> true), mulai bersih dari 0%!
+      if (!prevVisibleRef.current) {
+        curPctRef.current = 0;
+        setDisplayProgress(0);
+        setAssetStats(readBrowserAssetStats(0));
+        setTipIndex(Math.floor(Math.random() * CITY_TIPS.length));
+      }
     }
-    setDisplayProgress(100);
-    const timer = window.setTimeout(() => {
-      setRendered(false);
-    }, 480);
-    return () => window.clearTimeout(timer);
+    prevVisibleRef.current = loadingOverlay.visible;
   }, [loadingOverlay.visible]);
 
-  // Ticker halus (45ms) agar progres % & ukuran MB/KB selalu terlihat bergerak aktif & tidak pernah terasa macet
+  // Loop animasi requestAnimationFrame mulus 0% -> 100% (bebas StrictMode nested setState)
   useEffect(() => {
     if (!rendered) return;
-    const id = window.setInterval(() => {
-      setDisplayProgress((prev) => {
-        const target = Math.max(8, Math.min(100, targetProgressRef.current));
-        let next = prev;
-        if (target >= 100) {
-          next = Math.min(100, prev + Math.max(2, Math.ceil((100 - prev) * 0.32)));
-        } else if (prev < target) {
-          next = Math.min(target, prev + Math.max(1, Math.ceil((target - prev) * 0.22)));
-        } else {
-          // Merayap lembut hingga batas aman (target + 16, maks 95%) saat menunggu jaringan/shader
-          const softCap = Math.min(95, target + 16);
-          if (prev < softCap) {
-            next = prev + 0.35;
-          }
+    let rafId = 0;
+    let lastTime = performance.now();
+    let lastReportedInt = Math.round(curPctRef.current);
+    let reached100At: number | null = null;
+
+    const tick = (now: number) => {
+      const dtSec = Math.min(0.08, Math.max(0.008, (now - lastTime) / 1000));
+      lastTime = now;
+
+      const wantVisible = wantVisibleRef.current;
+      const target = wantVisible ? Math.max(0, Math.min(100, targetPctRef.current)) : 100;
+
+      let cur = curPctRef.current;
+      if (target >= 100 || !wantVisible) {
+        // Mengalir mulus menuju 100% (~85% per detik) agar angka 0 -> 100% selalu terlihat utuh
+        const speed = Math.max(48, (100 - cur) * 2.8);
+        cur = Math.min(100, cur + speed * dtSec);
+      } else if (cur < target) {
+        const speed = Math.max(28, (target - cur) * 2.4);
+        cur = Math.min(target, cur + speed * dtSec);
+      } else {
+        // Merayap halus saat menunggu jaringan/shader agar layar loading tidak pernah tampak diam
+        const softCap = Math.min(95, target + 16);
+        if (cur < softCap) {
+          cur = Math.min(softCap, cur + 8 * dtSec);
         }
-        setAssetStats(readBrowserAssetStats(next));
-        return next;
-      });
-    }, 45);
-    return () => window.clearInterval(id);
+      }
+
+      curPctRef.current = cur;
+      const rounded = Math.round(cur);
+      if (rounded !== lastReportedInt) {
+        lastReportedInt = rounded;
+        setDisplayProgress(rounded);
+        setAssetStats(readBrowserAssetStats(rounded));
+      }
+
+      // Hanya mulai fade-out setelah progres visual benar-benar menyentuh 100% & store meminta tutup
+      if (!wantVisible && rounded >= 100) {
+        if (reached100At === null) {
+          reached100At = now;
+        } else if (now - reached100At >= 260) {
+          setFadingOut(true);
+          if (hideTimerRef.current === null) {
+            hideTimerRef.current = window.setTimeout(() => {
+              setRendered(false);
+              setFadingOut(false);
+              hideTimerRef.current = null;
+            }, 420);
+          }
+          return;
+        }
+      }
+
+      rafId = window.requestAnimationFrame(tick);
+    };
+
+    rafId = window.requestAnimationFrame(tick);
+    return () => {
+      window.cancelAnimationFrame(rafId);
+    };
   }, [rendered]);
+
+  useEffect(() => {
+    return () => {
+      if (hideTimerRef.current !== null) {
+        window.clearTimeout(hideTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!loadingOverlay.visible) return;
@@ -178,14 +238,14 @@ export const LoadingScreenOverlay: React.FC = () => {
 
   const compact = isMobile || isCompactLandscape;
   const isAuthMode = loadingOverlay.mode === 'login' || loadingOverlay.mode === 'register';
-  const clampedProgress = Math.max(6, Math.min(100, Math.round(displayProgress)));
+  const clampedProgress = Math.max(0, Math.min(100, displayProgress));
   const footerNote = isAuthMode
     ? LOGIN_QUOTES[tipIndex % LOGIN_QUOTES.length]
     : CITY_TIPS[tipIndex % CITY_TIPS.length];
   const BadgeIcon = modeBadge.Icon;
 
   const sizeReadout = isAuthMode
-    ? `Sinkronisasi data · ${formatByteSize(assetStats.loadedBytes)} siap`
+    ? `Sinkronisasi akun · ${formatByteSize(assetStats.loadedBytes)} siap`
     : `${formatByteSize(assetStats.loadedBytes)} / ${formatByteSize(assetStats.totalBytes)}${
         assetStats.fromCache ? ' (cache)' : ''
       }`;
@@ -278,37 +338,53 @@ export const LoadingScreenOverlay: React.FC = () => {
   );
 
   const renderProgressBlock = () => (
-    <div className={`w-full space-y-2 ${compact ? 'mt-3' : 'mt-5 max-w-md'}`}>
-      {/* Baris Utama Persentase Besar & Ukuran Aset MB/KB */}
+    <div className={`w-full space-y-2 ${compact ? 'mt-2.5' : 'mt-5 max-w-md'}`}>
+      {/* Baris Utama: Ukuran Aset MB/KB + Angka Persentase Besar 0%–100% */}
       <div className="flex items-end justify-between gap-2">
-        <div className="flex items-center gap-1.5 text-[11px] font-medium text-warm-200/85">
+        <div className="flex items-center gap-1.5 text-[11px] font-medium text-warm-200/90">
           <HardDriveDownload className="h-3.5 w-3.5 shrink-0 text-warm-300" />
           <span className="font-mono tabular-nums">{sizeReadout}</span>
         </div>
         <div className="flex items-baseline gap-1">
-          <span className={`font-mono font-bold tabular-nums text-warm-300 ${compact ? 'text-xl' : 'text-2xl'}`}>
+          <span
+            className={`font-mono font-bold tabular-nums leading-none text-warm-300 ${
+              compact ? 'text-2xl' : 'text-3xl'
+            }`}
+          >
             {clampedProgress}%
           </span>
         </div>
       </div>
 
-      {/* Bilah Progres Halus dengan Shimmer */}
-      <div className="relative h-2.5 w-full overflow-hidden rounded-full bg-warm-100/15 ring-1 ring-warm-200/10">
+      {/* Bilah Progres 0%–100% dengan Shimmer Halus */}
+      <div className="relative h-3 w-full overflow-hidden rounded-full bg-warm-100/15 ring-1 ring-warm-200/15">
         <div
-          className="relative h-full rounded-full bg-gradient-to-r from-warm-500 via-warm-300 to-amber-200 transition-[width] duration-150 ease-out"
+          className="relative h-full rounded-full bg-gradient-to-r from-warm-500 via-warm-300 to-amber-200"
           style={{ width: `${clampedProgress}%` }}
         >
-          <div className="animate-shimmer-bar absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/50 to-transparent" />
+          <div className="animate-shimmer-bar absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/55 to-transparent" />
         </div>
       </div>
 
+      {/* Skala Visual 0% — 25% — 50% — 75% — 100% */}
+      <div className="flex items-center justify-between font-mono text-[9.5px] tabular-nums text-warm-200/50">
+        {[0, 25, 50, 75, 100].map((tick) => (
+          <span
+            key={tick}
+            className={clampedProgress >= tick ? 'font-semibold text-warm-300/90' : undefined}
+          >
+            {tick}%
+          </span>
+        ))}
+      </div>
+
       {/* Label Tahapan & Jumlah Berkas */}
-      <div className="flex items-center justify-between gap-2 text-[11px] text-warm-200/75">
+      <div className="flex items-center justify-between gap-2 text-[11px] text-warm-200/80">
         <span className="flex min-w-0 items-center gap-1.5">
           <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-warm-300" />
           <span className="truncate">{loadingOverlay.stageLabel}</span>
         </span>
-        <span className="shrink-0 font-mono text-[10px] text-warm-200/55">
+        <span className="shrink-0 font-mono text-[10px] text-warm-200/60">
           {assetStats.resourceCount} aset
         </span>
       </div>
@@ -318,11 +394,10 @@ export const LoadingScreenOverlay: React.FC = () => {
   return (
     <Portal>
       <div
-        className={`fixed inset-0 z-[9999] flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#0b0e17] via-[#151824] to-[#23191d] text-warm-50 transition-opacity duration-500 ${
+        className={`fixed inset-0 z-[9999] flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#0b0e17] via-[#151824] to-[#23191d] text-warm-50 transition-opacity duration-400 ${
           compact ? 'px-5 py-3' : 'px-6 py-8 md:px-14 md:py-10'
-        } ${loadingOverlay.visible ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}
+        } ${fadingOut ? 'pointer-events-none opacity-0' : 'pointer-events-auto opacity-100'}`}
       >
-        {/* Pendar Langit Senja & Partikel Hangat Mengambang */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
@@ -360,7 +435,7 @@ export const LoadingScreenOverlay: React.FC = () => {
           </div>
         </div>
 
-        {/* Bagian Tengah: 2-Kolom Mendatar di HP Landscape (anti-terpotong!) atau Centered Sinematik di Desktop */}
+        {/* Bagian Tengah: 2-Kolom Mendatar di HP Landscape atau Centered Sinematik di Desktop */}
         {compact ? (
           <div className="relative z-10 mx-auto my-auto grid w-full max-w-3xl grid-cols-12 items-center gap-5">
             <div className="col-span-5">{renderSkylineCard()}</div>
@@ -372,7 +447,7 @@ export const LoadingScreenOverlay: React.FC = () => {
                 {loadingOverlay.subtitle}
               </p>
               {loadingOverlay.userEmail && (
-                <div className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-warm-300/30 bg-warm-400/12 px-2.5 py-0.5 text-[10.5px] text-warm-200">
+                <div className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-warm-300/30 bg-warm-400/12 px-2.5 py-0.5 text-[10.5px] text-warm-200">
                   <Cloud className="h-3 w-3 text-warm-300" />
                   <span>{loadingOverlay.userEmail}</span>
                 </div>
@@ -402,7 +477,7 @@ export const LoadingScreenOverlay: React.FC = () => {
           </div>
         )}
 
-        {/* Bar Bawah: Catatan Hangat / Petunjuk Kota */}
+        {/* Bar Bawah */}
         <div
           className={`relative z-10 mx-auto max-w-2xl shrink-0 border-t border-warm-100/10 text-center ${
             compact ? 'pt-2' : 'pt-4'
