@@ -239,6 +239,10 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= 70.6 && x <= 73.2 && z >= 11.2 && z <= 14.0) return true;
   // Payung Gerobak Bandrek & Bajigur Abah Udin (Jl. Cempaka Utara)
   if (x >= -12.8 && x <= -9.5 && z >= -36.8 && z <= -33.6) return true;
+  // Payung Sayur Ibu Tati, Kanopi Penjahit Sari Jahit & Atap Pos JPL 04 Stasiun Senja
+  if (x >= 41.6 && x <= 44.8 && z >= 52.0 && z <= 55.0) return true;
+  if (x >= 40.4 && x <= 44.0 && z >= 39.6 && z <= 41.3) return true;
+  if (x >= 84.4 && x <= 87.5 && z >= 18.4 && z <= 21.2) return true;
   return false;
 }
 
@@ -508,6 +512,11 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'bandrek_udin_cart', minX: -11.74, maxX: -10.66, minZ: -36.28, maxZ: -34.12 },
   { id: 'bandrek_udin_bench', minX: -9.62, maxX: -9.08, minZ: -35.98, maxZ: -34.42 },
   { id: 'park_lights_plaza_bench', minX: -86.5, maxX: -84.3, minZ: 11.65, maxZ: 12.35 },
+
+  // === 42. Gerobak Sayur Ibu Tati, Kios Penjahit Sari Jahit & Pos JPL 04 Stasiun Senja ===
+  { id: 'veggie_tati_cart', minX: 42.12, maxX: 44.28, minZ: 52.86, maxZ: 53.94 },
+  { id: 'sari_tailor_kiosk', minX: 40.66, maxX: 43.74, minZ: 38.28, maxZ: 40.15 },
+  { id: 'rail_crossing_hut', minX: 85.22, maxX: 87.22, minZ: 18.68, maxZ: 20.92 },
 ];
 
 /**
@@ -700,6 +709,11 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: -88.2, z: 14.0, r: 0.16 },
   { x: -82.6, z: 14.0, r: 0.16 },
   { x: -85.4, z: 9.6, r: 0.22 },
+  // Ibu Tati Sayur, Ibu Sari Penjahit, Tiang Palang Rel KA JPL 04 & Pak Maman Penjaga Rel
+  { x: 43.2, z: 54.42, r: 0.42 },
+  { x: 40.35, z: 40.2, r: 0.42 },
+  { x: 87.6, z: 17.5, r: 0.34 },
+  { x: 84.85, z: 20.3, r: 0.42 },
   { x: 13.6, z: -14.8, r: 1.94 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],

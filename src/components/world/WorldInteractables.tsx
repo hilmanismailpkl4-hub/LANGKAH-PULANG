@@ -3552,6 +3552,117 @@ export const WorldInteractables: React.FC = () => {
         2.0,
       );
 
+      consider(
+        {
+          id: 'activity_ibu_tati_veggie',
+          kind: 'story_object',
+          label: 'Belanja Sayur Segar & Tempe di Gerobak Ibu Tati',
+          sublabel: 'Gang Perumahan Melati · Bayam, Wortel, Tahu & Tempe Pagi',
+          position: [43.2, 0, 52.0],
+          onInteract: () => {
+            sfxEngine.playMarketScaleClink();
+            playerRuntime.veggieScaleTimer = 3.8;
+            const baskets = [
+              'Ibu Tati menimbang bayam segar, jagung manis & tempe daun: "Pas buat sayur bening hangat di rumah, Mas Damar!"',
+              'Ibu Tati membungkus wortel oranye, tomat & tahu putih: "Nadia pasti senang Mas, bahan sop kesukaan Kira lengkap semua!"',
+              'Ibu Tati tersenyum ramah: "Kangkung sama cabai merahnya baru petik subuh tadi, Mas—harganya tetap ramah tetangga!"',
+            ];
+            const msg = baskets[playerRuntime.veggiePurchaseStep % baskets.length];
+            playerRuntime.veggiePurchaseStep += 1;
+            if (!store.flags.includes('shopped_ibu_tati_veggie')) {
+              store.applyEffect({
+                kehadiranKeluarga: 1,
+                kejujuranDiri: 1,
+                setFlags: ['shopped_ibu_tati_veggie'],
+                journalEntry: {
+                  id: 'je_ibu_tati_veggie',
+                  title: 'Belanja Pagi di Gerobak Sayur Ibu Tati',
+                  body: 'Di tepi Gang Perumahan Melati, aku mampir menimbang seikat bayam segar, wortel, dan tempe daun di gerobak Ibu Tati. Ternyata hal sederhana seperti membantu menyiapkan bahan dapur pulang ke rumah bisa membuat hari terasa begitu penuh.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_ibu_tati_veggie, 'fw_ibu_tati_veggie');
+            }
+            store.showToast(msg);
+          },
+        },
+        3.0,
+      );
+
+      consider(
+        {
+          id: 'activity_sari_tailor',
+          kind: 'story_object',
+          label: 'Mampir Kios Penjahit & Permak "Sari Jahit"',
+          sublabel: 'Tepi Jl. Melati Timur · Jahit Rapi, Permak Celana & Seragam',
+          position: [42.2, 0, 41.0],
+          onInteract: () => {
+            sfxEngine.playSewingMachineWhir();
+            playerRuntime.sewingMachineTimer = 4.6;
+            if (!store.flags.includes('visited_sari_tailor')) {
+              store.applyEffect({
+                kehadiranKeluarga: 1,
+                kejujuranDiri: 1,
+                setFlags: ['visited_sari_tailor'],
+                journalEntry: {
+                  id: 'je_sari_tailor',
+                  title: 'Derit Halus Mesin Jahit di Kios "Sari Jahit"',
+                  body: 'Di deretan kios Jl. Melati Timur, Ibu Sari merapikan kancing kemeja kerja dan keliman seragam Kira dengan telaten. Mesin jahit hitam klasiknya berderit tenang—mengingatkan bahwa banyak hal yang robek masih selalu bisa dirapikan kembali.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_sari_tailor, 'fw_sari_tailor');
+            }
+            store.showToast('Trrrrr—krik! Ibu Sari tersenyum menyerahkan lipatan rapi: "Kancing kemeja & keliman baju Kira sudah beres, Mas Damar!"');
+          },
+        },
+        2.9,
+      );
+
+      consider(
+        {
+          id: 'activity_rail_crossing_post',
+          kind: 'story_object',
+          label: 'Sapa Pak Maman & Cek Sinyal Pelintasan KA (JPL 04)',
+          sublabel: 'Sisi Selatan Rel Stasiun Senja · Palang & Lampu Silang KRL',
+          position: [84.4, 0, 19.2],
+          onInteract: () => {
+            sfxEngine.playRailCrossingBell();
+            playerRuntime.railCrossingBellTimer = 5.2;
+            const distRail = Math.round(Math.abs(playerRuntime.trainZ - 18));
+            const krlInfo =
+              playerRuntime.trainPhase === 'boarding'
+                ? 'KRL sedang berhenti naik-turun penumpang di Peron Stasiun Senja.'
+                : playerRuntime.trainPhase === 'approaching'
+                  ? `KRL sedang mendekat (±${distRail} m lagi)! Lampu silang merah & palang aktif.`
+                  : playerRuntime.trainPhase === 'departing'
+                    ? `KRL baru saja melintas meninggalkan stasiun (±${distRail} m).`
+                    : `Jalur rel terpantau aman (KRL terdekat ±${distRail} m).`;
+            if (!store.flags.includes('visited_rail_crossing_post')) {
+              store.applyEffect({
+                kejujuranDiri: 1,
+                setFlags: ['visited_rail_crossing_post'],
+                journalEntry: {
+                  id: 'je_rail_crossing_post',
+                  title: 'Penjaga Setia di Pos JPL 04 Stasiun Senja',
+                  body: 'Di sisi selatan rel Stasiun Senja, Pak Maman berjaga penuh disiplin memastikan lampu silang merah dan palang pintu bekerja tepat waktu setiap KRL melintas. Dering "teng-teng-teng" pelintasan kereta selalu membawa nuansa sore kota yang tak tergantikan.',
+                  chapter: store.chapter,
+                },
+              });
+            }
+            if (store.isFamilyWalkActive) {
+              store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_rail_crossing_post, 'fw_rail_crossing_post');
+            }
+            store.showToast(`Teng-teng-teng! Pak Maman (JPL 04): "${krlInfo}"`);
+          },
+        },
+        3.2,
+      );
+
     consider(
       {
         id: 'portal_up',
@@ -4227,6 +4338,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-85.4, 1.65, 9.6]}>
         <sphereGeometry args={[0.08, 8, 8]} />
         <meshBasicMaterial color="#fde047" />
+      </mesh>
+      <mesh position={[43.2, 1.92, 53.4]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#4ade80" />
+      </mesh>
+      <mesh position={[42.2, 2.15, 40.3]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#2dd4bf" />
+      </mesh>
+      <mesh position={[86.2, 2.25, 19.8]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#f87171" />
       </mesh>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

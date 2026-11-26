@@ -538,4 +538,16 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'nadia', text: 'Cantik banget ya Mas deretan lampu gantung hangat di atas alun-alun taman ini... rasanya syahdu sekali.' },
     { speaker: 'kira', text: 'Bintang-bintang kecilnya nyala di atas kepala Kira, Ayah!! Kayak langit senja turun ke taman!' },
   ],
+  activity_ibu_tati_veggie: [
+    { speaker: 'nadia', text: 'Wah, bayam sama tempe Ibu Tati masih segar banget, Mas! Malam ini aku bikin sayur bening sama tempe goreng hangat ya!' },
+    { speaker: 'kira', text: 'Wortelnya warna oranye terang banget, Bunda!! Kira mau ikut bantuin cuci sayur di dapur nanti!' },
+  ],
+  activity_sari_tailor: [
+    { speaker: 'nadia', text: 'Jahitan Bu Sari tuh rapi banget lho Mas—seragam Kira sama kemeja kerjamu selalu awet kalau dipermak di sini.' },
+    { speaker: 'kira', text: 'Trrrrr!! Mesin jahit hitam Bu Sari bunyinya lucu banget, Yah!! Benangnya warna-warni kayak pelangi!' },
+  ],
+  activity_rail_crossing_post: [
+    { speaker: 'kira', text: 'TENG-TENG-TENG!! Lampu merah silangnya kedip-kedip terus palangnya gerak, Ayah!! Kereta KRL-nya mau lewat!' },
+    { speaker: 'nadia', text: 'Terima kasih ya Pak Maman selalu sigap menjaga pintu pelintasan Stasiun Senja pagi sampai malam.' },
+  ],
 };

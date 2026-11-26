@@ -186,6 +186,10 @@ export const playerRuntime = {
   pedalBoatWaveTimer: 0,
   bandrekSteamTimer: 0,
   parkLightsPulseTimer: 0,
+  veggieScaleTimer: 0,
+  veggiePurchaseStep: 0,
+  sewingMachineTimer: 0,
+  railCrossingBellTimer: 0,
   gardenSwingTimer: 0,
   swingBoostTimer: 0,
   kiteHeight: 0,
@@ -310,6 +314,10 @@ export function resetScooterToHome() {
   playerRuntime.pedalBoatWaveTimer = 0;
   playerRuntime.bandrekSteamTimer = 0;
   playerRuntime.parkLightsPulseTimer = 0;
+  playerRuntime.veggieScaleTimer = 0;
+  playerRuntime.veggiePurchaseStep = 0;
+  playerRuntime.sewingMachineTimer = 0;
+  playerRuntime.railCrossingBellTimer = 0;
   playerRuntime.gardenSwingTimer = 0;
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;

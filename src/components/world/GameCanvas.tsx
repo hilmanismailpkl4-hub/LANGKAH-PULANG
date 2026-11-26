@@ -49,6 +49,7 @@ import { StationAndBuskerLife } from './StationAndBuskerLife';
 import { StationWarkopBirdsAndMusicBench } from './StationWarkopBirdsAndMusicBench';
 import { StreetRealismAndSate } from './StreetRealismAndSate';
 import { TropicalLandmarkAndDawet } from './TropicalLandmarkAndDawet';
+import { VeggieTailorAndRailCrossing } from './VeggieTailorAndRailCrossing';
 import { WaypointBeacon } from './WaypointBeacon';
 import { WorldInteractables } from './WorldInteractables';
 
@@ -142,6 +143,7 @@ export const GameCanvas: React.FC = () => {
               <PutuWorkshopAndLaundry timeOfDay={effectiveTime} settings={settings} />
               <CilokBikeShareAndWatchmaker timeOfDay={effectiveTime} settings={settings} />
               <LakeBoatsBandrekAndParkLights timeOfDay={effectiveTime} settings={settings} />
+              <VeggieTailorAndRailCrossing timeOfDay={effectiveTime} settings={settings} />
               <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
             </group>
 

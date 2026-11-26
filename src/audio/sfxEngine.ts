@@ -1380,6 +1380,71 @@ class SfxEngine {
     });
   }
 
+  /**
+   * Denting timbangan kuningan & kresek segar gerobak sayur keliling pagi hari.
+   */
+  public playMarketScaleClink() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    this.softTone(ctx, 1840, now, 0.14, 0.055 * v, 'triangle');
+    this.softTone(ctx, 2320, now + 0.12, 0.16, 0.048 * v, 'sine');
+
+    const src = ctx.createBufferSource();
+    src.buffer = this.getNoiseBuffer(ctx);
+    const hp = ctx.createBiquadFilter();
+    hp.type = 'bandpass';
+    hp.frequency.setValueAtTime(3400, now + 0.22);
+    hp.Q.value = 1.5;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.001, now + 0.22);
+    g.gain.linearRampToValueAtTime(0.058 * v, now + 0.26);
+    g.gain.exponentialRampToValueAtTime(0.0008, now + 0.56);
+    src.connect(hp).connect(g).connect(ctx.destination);
+    src.start(now + 0.22, 0.1, 0.38);
+  }
+
+  /**
+   * Derit ritmis halus mesin jahit klasik ("trrrrrr—krik!") di Kios Penjahit Sari Jahit.
+   */
+  public playSewingMachineWhir() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // 7 jahitan cepat ritmis lembut
+    for (let i = 0; i < 7; i++) {
+      const off = i * 0.075;
+      this.softTone(ctx, 420 + (i % 2) * 55, now + off, 0.045, 0.05 * v, 'triangle');
+      this.softTone(ctx, 1950, now + off, 0.024, 0.022 * v, 'sine');
+    }
+    // Gunting benang penutup ("krik!")
+    this.softTone(ctx, 3200, now + 0.58, 0.06, 0.045 * v, 'triangle');
+  }
+
+  /**
+   * Lonceng besi khas pintu pelintasan kereta api Indonesia ("teng-teng-teng-teng!").
+   */
+  public playRailCrossingBell() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // 4 ketukan lonceng logam nyaring namun tidak memekakkan
+    [0.0, 0.36, 0.72, 1.08].forEach((off) => {
+      this.softTone(ctx, 1396.9, now + off, 0.34, 0.078 * v, 'sine');
+      this.softTone(ctx, 2793.8, now + off, 0.22, 0.032 * v, 'triangle');
+      this.softTone(ctx, 3520.0, now + off, 0.14, 0.016 * v, 'sine');
+    });
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,
