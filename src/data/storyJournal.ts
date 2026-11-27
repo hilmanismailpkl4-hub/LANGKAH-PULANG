@@ -92,7 +92,7 @@ export const JOURNAL_FLASHBACK_REELS: FlashbackReelInfo[] = [
  */
 export function classifyJournalSketch(entryId: string, title: string): JournalSketchKind {
   const hay = `${entryId} ${title}`.toLowerCase();
-  if (hay.includes('gitar') || hay.includes('lagu') || hay.includes('pick') || hay.includes('2018') || hay.includes('2020') || hay.includes('musik')) {
+  if (hay.includes('gitar') || hay.includes('lagu') || hay.includes('pick') || hay.includes('2018') || hay.includes('2020') || hay.includes('musik') || hay.includes('kaset') || hay.includes('pita') || hay.includes('1997') || hay.includes('akor')) {
     return 'guitar';
   }
   if (hay.includes('hujan') || hay.includes('jembatan') || hay.includes('payung') || hay.includes('pelangi')) {
@@ -303,7 +303,13 @@ export function buildStoryTimeline(params: {
   const s9Branch =
     s9Status !== 'done'
       ? undefined
-      : flags.includes('ch3_confessed_guitar_2020')
+      : flags.includes('ch3_shared_father_tape_finale')
+        ? {
+            label: 'Meletakkan Tas & Kaset Bapak 1997 di Meja Makan',
+            note: 'Pesan almarhum Bapak dari tahun 1997 meruntuhkan topeng kuatmu—Nadia menyambutmu pulang dengan air mata lega.',
+            tone: 'gold' as const,
+          }
+        : flags.includes('ch3_confessed_guitar_2020')
         ? {
             label: 'Pengakuan Rahasia Gitar Agustus 2020',
             note: 'Kamu meruntuhkan tembok enam tahun—dan Nadia mengaku ia selalu duduk di barisan depan.',
@@ -468,6 +474,21 @@ export function buildStoryTimeline(params: {
       tone: 'gold',
     });
   }
+  if (flags.includes('played_father_cassette_1997')) {
+    echoBadges.push({
+      id: 'eb_father_tape_1997',
+      title: 'Pita Kaset Almarhum Bapak (16 Nov 1997)',
+      detail: 'Suara Bapak di Radio Dapur membuka cabang pengakuan lintas generasi di Meja Makan Bab 3, rooftop malam, dan Pesan Suara HP.',
+      tone: 'gold',
+    });
+  } else if (flags.includes('has_father_cassette_1997')) {
+    echoBadges.push({
+      id: 'eb_father_tape_held',
+      title: 'Kaset C-60 Bapak Tersimpan di Tas',
+      detail: 'Putar kaset titipan Pak Darman di Radio Kayu Dapur Rumah Jl. Melati No. 14 untuk mendengar ujung pitanya.',
+      tone: 'gold',
+    });
+  }
   if (flags.includes('remembered_father_1996')) {
     echoBadges.push({
       id: 'eb_1996',
@@ -535,6 +556,14 @@ export function getJournalMoodNote(params: {
       phaseLabel,
       headline: 'Bahu yang Masih Tegang oleh Target',
       body: 'Kepalaku penuh oleh angka, jadwal revisi, dan ketakutan tertinggal. Setiap kali aku memilih sibuk, ada satu suara kecil di rumah yang makin pelan memanggilku.',
+    };
+  }
+
+  if (flags.includes('played_father_cassette_1997')) {
+    return {
+      phaseLabel,
+      headline: 'Suara dari Tahun 1997 yang Menuntun Pulang',
+      body: 'Sejak mendengar bisikan almarhum Bapak di ujung pita C-60 bahwa rumah adalah tempat meletakkan tas, langkahku tidak lagi diburu rasa takut harus selalu terlihat kuat sendirian.',
     };
   }
 

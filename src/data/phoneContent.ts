@@ -47,6 +47,7 @@ export interface VoiceNoteItem {
   title: string;
   duration: string;
   chapterMin: ChapterNumber;
+  requiredFlag?: string;
   transcript: string;
 }
 
@@ -149,6 +150,14 @@ export const PHONE_THREADS: PhoneContactThread[] = [
         time: 'Baru saja',
         chapterMin: 1,
         requiredFlag: 'remembered_father_1996',
+      },
+      {
+        id: 'nd_father_tape_1997',
+        from: 'them',
+        text: 'Mas... barusan aku merinding banget dengar desis kaset tua dari radio kayu di dapur. Itu beneran suara asli almarhum Bapak tahun 1997 waktu ngajarin kamu gitar? Sini duduk sama aku kalau dadamu lagi penuh ❤️',
+        time: 'Baru saja',
+        chapterMin: 1,
+        requiredFlag: 'played_father_cassette_1997',
       },
       {
         id: 'nd_3',
@@ -302,6 +311,50 @@ export const PHONE_THREADS: PhoneContactThread[] = [
             replyFromThem: 'Mau banget, Mas. Kira pasti seneng dengar cerita waktu Ayah masih seumuran dia dulu.',
             replyTime: 'Baru saja',
             effects: { kehadiranKeluarga: 2, kejujuranDiri: 1 },
+          },
+        ],
+      },
+      {
+        id: 'prompt_nadia_father_tape',
+        chapterMin: 1,
+        requiredFlag: 'played_father_cassette_1997',
+        contextHint: 'Menanggapi rekaman pita kaset suara almarhum Bapak (1997)',
+        options: [
+          {
+            id: 'rep_nd_ft_honest',
+            toneLabel: 'Jujur',
+            text: 'Aku nangis di dapur barusan, Nad. Di ujung pitanya Bapak bilang rumah itu bukan tempat pamer kuat, tapi tempat aku boleh meletakkan tasku.',
+            replyFromThem: 'Ya Tuhan, Mas... aku ikut berkaca-kaca bacanya. Almarhum Bapak bener banget. Letakkan semua capekmu di sini ya, pelukanku selalu siap buat kamu ❤️',
+            replyTime: 'Baru saja',
+            effects: {
+              kejujuranDiri: 3,
+              kehadiranKeluarga: 2,
+              setFlags: ['replied_nadia_father_tape_chat'],
+            },
+          },
+          {
+            id: 'rep_nd_ft_listen_together',
+            toneLabel: 'Hangat',
+            text: 'Nanti malam kita putar lagi kasetnya berdua ya, Nad. Aku pengin kamu kenal suara tawa Bapak waktu aku masih tujuh tahun.',
+            replyFromThem: 'Mau banget, Mas... terima kasih sudah mengizinkan aku ikut menjaga kenangan sepenting itu. Aku seduhin teh hangat nanti malam ya.',
+            replyTime: 'Baru saja',
+            effects: {
+              kehadiranKeluarga: 3,
+              kejujuranDiri: 1,
+              setFlags: ['replied_nadia_father_tape_chat'],
+            },
+          },
+          {
+            id: 'rep_nd_ft_kira',
+            toneLabel: 'Tenang',
+            text: 'Ternyata dulu Bapak ngajarin aku akor G sambil niup jariku yang perih, Nad. Besok aku mau ngajarin Kira main gitar sesabar itu.',
+            replyFromThem: 'Pantesan cara kamu meluk Kira kalau dia jatuh selalu lembut banget—ternyata itu warisan langsung dari almarhum Bapak ya 🥺',
+            replyTime: 'Baru saja',
+            effects: {
+              kehadiranKeluarga: 2,
+              kejujuranDiri: 2,
+              setFlags: ['replied_nadia_father_tape_chat'],
+            },
           },
         ],
       },
@@ -837,6 +890,17 @@ export const PHONE_THREADS: PhoneContactThread[] = [
 ];
 
 export const VOICE_NOTES: VoiceNoteItem[] = [
+  {
+    id: 'vn_bapak_1997',
+    speakerId: 'pak_darman',
+    senderName: 'Almarhum Bapak (Pita C-60 · 1997)',
+    title: 'Ujung Pita Radio Dapur: "Rumah Tempat Meletakkan Tas"',
+    duration: '0:24',
+    chapterMin: 1,
+    requiredFlag: 'played_father_cassette_1997',
+    transcript:
+      'Jangan takut kelihatan lelah di depan istrimu atau anakmu nanti ya, Mar. Rumah itu bukan tempat orang pamer kuat—rumah itu tempat kamu boleh meletakkan tasmu. Bapak bangga sama kamu, bukan karena pangkatmu nanti tinggi, tapi karena kamu anak Bapak.',
+  },
   {
     id: 'vn_kira_pagi',
     speakerId: 'kira',

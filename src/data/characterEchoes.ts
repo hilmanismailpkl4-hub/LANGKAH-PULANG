@@ -32,6 +32,26 @@ export const CHARACTER_ECHO_DIALOGUES: Record<string, DialogueScript> = {
       },
     },
   },
+  echo_nadia_father_tape_1997: {
+    id: 'echo_nadia_father_tape_1997',
+    startNodeId: 'en_ft97_1',
+    nodes: {
+      en_ft97_1: {
+        id: 'en_ft97_1',
+        speaker: 'nadia',
+        emotion: 'haru',
+        echoTag: 'Ingatan Nadia · Pita Kaset Bapak 1997',
+        text: 'Mas... kalimat almarhum Bapak di kaset radio dapur tadi nggak hilang-hilang dari kepalaku. Kapan pun pundakmu pegal, ingat ya: di rumah ini kamu nggak pernah dituntut kelihatan tak terkalahkan.',
+        nextNodeId: 'en_ft97_2',
+      },
+      en_ft97_2: {
+        id: 'en_ft97_2',
+        speaker: 'damar',
+        emotion: 'hangat',
+        text: 'Makasih ya, Nad. Mendengar suara Bapak hari ini—dan melihat kamu menerimaku apa adanya—rasanya seperti menyembuhkan dua masa sekaligus.',
+      },
+    },
+  },
   echo_nadia_father_1996: {
     id: 'echo_nadia_father_1996',
     startNodeId: 'en_f96_1',
@@ -274,6 +294,9 @@ export function resolveDynamicNpcAmbient(
   repliedPhonePrompts: Record<string, string>,
 ): { dialogueId: string; sublabel: string } | null {
   if (npcId === 'nadia') {
+    if (flags.includes('played_father_cassette_1997')) {
+      return { dialogueId: 'echo_nadia_father_tape_1997', sublabel: 'Ingatan Nadia · Kaset 1997' };
+    }
     if (flags.includes('reconciled_dinner_memory_chat') || flags.includes('flashback_dinner_done')) {
       return { dialogueId: 'echo_nadia_dinner_apology', sublabel: 'Ingatan Nadia · Hangat' };
     }
@@ -403,6 +426,16 @@ export function buildEndingJourneyRecap(params: {
 
   const echoCards: JourneyEchoCard[] = [];
 
+  if (flags.includes('played_father_cassette_1997')) {
+    echoCards.push({
+      id: 'ec_father_tape_1997',
+      label: 'Pita Kaset Bapak (16 Nov 1997)',
+      summary: flags.includes('ch3_shared_father_tape_finale')
+        ? 'Kamu menemukan rekaman suara almarhum Bapak dari kaleng tua Pak Darman, memutarnya di Radio Dapur, dan meletakkan bebanmu di meja makan bersama Nadia.'
+        : 'Di balik desis pita C-60 tahun 1997, kamu mendengar bisikan almarhum Bapak bahwa rumah adalah tempat meletakkan tas, bukan tempat pamer kuat.',
+      tone: 'gold',
+    });
+  }
   if (flags.includes('ch3_told_kira_bedtime_story')) {
     echoCards.push({
       id: 'ec_kira_bedtime',

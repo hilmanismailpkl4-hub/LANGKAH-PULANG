@@ -938,7 +938,9 @@ export const SmartphoneModal: React.FC = () => {
                     <p className="text-[10px] font-semibold uppercase tracking-wider text-warm-300">
                       Pesan Suara Tersimpan
                     </p>
-                    {VOICE_NOTES.filter((v) => v.chapterMin <= chapter).map((vn) => {
+                    {VOICE_NOTES.filter(
+                      (v) => v.chapterMin <= chapter && (!v.requiredFlag || flags.includes(v.requiredFlag)),
+                    ).map((vn) => {
                       const playing = playingVoiceId === vn.id;
                       return (
                         <div

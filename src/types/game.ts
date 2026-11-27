@@ -126,6 +126,7 @@ export interface DialogueEffect {
   triggerChapterTransition?: ChapterNumber;
   triggerEnding?: boolean;
   teleportPlayer?: { pos: [number, number, number]; rot?: number };
+  customWaypoint?: { label: string; position: [number, number, number] } | null;
   journalEntry?: { id: string; title: string; body: string; chapter: ChapterNumber };
   playSfx?: SfxType;
   phoneMessage?: PhoneMessage;

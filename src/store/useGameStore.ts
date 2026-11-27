@@ -2249,6 +2249,10 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         setRuntimePosition(effect.teleportPlayer.pos, effect.teleportPlayer.rot);
       }
 
+      if (effect.customWaypoint !== undefined) {
+        get().setCustomWaypoint(effect.customWaypoint);
+      }
+
       if (effect.toast) {
         get().showToast(effect.toast);
       }

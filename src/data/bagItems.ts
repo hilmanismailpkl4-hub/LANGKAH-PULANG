@@ -7,7 +7,7 @@ export interface BagItemDef {
   subtitle: string;
   description: string;
   monologue: string;
-  iconType: 'wallet' | 'keys' | 'pick' | 'notebook' | 'icecream' | 'flower' | 'bookmark' | 'tea' | 'coffee' | 'archive_key' | 'sketchbook' | 'ginger' | 'capo';
+  iconType: 'wallet' | 'keys' | 'pick' | 'notebook' | 'cassette_1997' | 'icecream' | 'flower' | 'bookmark' | 'tea' | 'coffee' | 'archive_key' | 'sketchbook' | 'ginger' | 'capo';
   giftTarget?: 'kira' | 'nadia';
   giftDialogueId?: string;
 }
@@ -48,6 +48,15 @@ export const ALL_BAG_ITEMS: BagItemDef[] = [
     description: 'Buku catatan bersampul cokelat berisi bait lagu yang pernah Damar tulis untuk Kira sebelum ia lahir.',
     monologue: 'Aku pernah berjanji rumah kami akan selalu punya lagu yang hangat. Belum terlambat untuk menepatinya.',
     iconType: 'notebook',
+  },
+  {
+    id: 'item_kaset_bapak_1997',
+    name: 'Kaset Pita C-60 Bapak (1997)',
+    category: 'kenangan',
+    subtitle: 'Titipan Almarhum Bapak · Stasiun Senja',
+    description: 'Kaset analog cokelat transparan bertuliskan spidol biru pudar tangan almarhum Bapak: "Suara Damar Latihan Gitar — Minggu Sore, 16 Nov 1997". Ujung pitanya baru selesai disambung rapi oleh Pak Darman.',
+    monologue: 'Empat belas tahun kaset ini menunggu di dalam kaleng biskuit tua Pak Darman. Radio kayu Bapak di dapur rumah pasti masih sanggup memutarnya.',
+    iconType: 'cassette_1997',
   },
   {
     id: 'item_gift_kira',

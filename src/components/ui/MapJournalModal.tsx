@@ -1354,6 +1354,80 @@ export const MapJournalModal: React.FC = () => {
                       </div>
                     </div>
 
+                    {/* Kartu Khusus Rekaman Suara Keluarga: Pita Tua di Balik Radio Dapur (16 Nov 1997) */}
+                    <div className="rounded-2xl border border-amber-300/35 bg-gradient-to-r from-[#2c1e15]/95 via-[#1e1612]/95 to-dusk-950 p-4 shadow-lg">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="max-w-xl">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-amber-300">
+                              REKAMAN PITA C-60 · 16 NOVEMBER 1997
+                            </span>
+                            {flags.includes('played_father_cassette_1997') && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                                <CheckCircle2 className="h-3 w-3" /> Terkenang
+                              </span>
+                            )}
+                          </div>
+                          <h4 className="mt-1 font-serif text-base text-amber-50 md:text-lg">
+                            Pita Tua di Balik Radio Dapur (Suara Almarhum Bapak)
+                          </h4>
+                          <p className="mt-1 text-xs leading-relaxed text-warm-200/80">
+                            {flags.includes('played_father_cassette_1997')
+                              ? 'Rekaman suara almarhum Bapak saat mengajari Damar usia tujuh tahun memetik akor gitar pertama—dan bisikan rahasia di ujung pita yang baru tersambung setelah 29 tahun.'
+                              : flags.includes('has_father_cassette_1997')
+                                ? 'Kaset C-60 titipan Bapak dari kaleng tua Pak Darman sudah ada di Tas Selempang [I]. Bawa pulang ke Radio Kayu Dapur Rumah Jl. Melati No. 14 untuk memutarnya.'
+                                : 'Periksa tutup dek kaset di balik Radio Kayu Dapur rumah atau temui Pak Darman di Stasiun Kereta Tua Senja untuk menelusuri kaset tahun 1997 milik Bapak.'}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2">
+                          {flags.includes('played_father_cassette_1997') ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                closeMapJournal();
+                                startDialogue('flashback_kaset_bapak_1997');
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-xl bg-amber-400/95 px-3.5 py-2 text-xs font-semibold text-dusk-950 shadow transition hover:bg-amber-300"
+                            >
+                              <Play className="h-3.5 w-3.5 fill-current" />
+                              <span>Putar Ulang Pita 1997</span>
+                            </button>
+                          ) : flags.includes('has_father_cassette_1997') ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setCustomWaypoint({
+                                  label: 'Radio Kayu Dapur (Putar Kaset Bapak 1997)',
+                                  position: [-17.42, 0.08, 71.95],
+                                });
+                                closeMapJournal();
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-xl bg-cyan-400 px-3.5 py-2 text-xs font-semibold text-dusk-950 shadow transition hover:bg-cyan-300"
+                            >
+                              <Navigation className="h-3.5 w-3.5" />
+                              <span>GPS ke Radio Dapur</span>
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setCustomWaypoint({
+                                  label: 'Lapak Pak Darman (Stasiun Senja)',
+                                  position: [75.2, 0.1, -3.2],
+                                });
+                                closeMapJournal();
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-xl border border-amber-300/40 bg-amber-400/15 px-3.5 py-2 text-xs font-semibold text-amber-100 transition hover:bg-amber-400/25"
+                            >
+                              <Navigation className="h-3.5 w-3.5" />
+                              <span>GPS ke Stasiun Senja</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div>
                         <h3 className="font-serif text-lg text-warm-50">

@@ -3,6 +3,7 @@ import { GIFT_DIALOGUES } from './bagItems';
 import { CHARACTER_ECHO_DIALOGUES } from './characterEchoes';
 import { EASTER_EGG_DIALOGUES } from './easterEggs';
 import { EPILOGUE_DIALOGUES } from './epilogueMorning';
+import { FATHER_CASSETTE_DIALOGUES } from './fatherCassetteStory';
 import { FLASHBACK_DIALOGUES } from './flashbacks';
 import { KIRA_BEDTIME_DIALOGUES } from './kiraBedtimeStory';
 import { PROLOGUE_DIALOGUES } from './prologueAndChapters';
@@ -583,6 +584,7 @@ export const ALL_DIALOGUES: Record<string, DialogueScript> = {
   ...CHAPTER_3_DIALOGUES,
   ...SIDE_QUEST_DIALOGUES,
   ...EASTER_EGG_DIALOGUES,
+  ...FATHER_CASSETTE_DIALOGUES,
   ...FLASHBACK_DIALOGUES,
   ...EPILOGUE_DIALOGUES,
   ...CHARACTER_ECHO_DIALOGUES,

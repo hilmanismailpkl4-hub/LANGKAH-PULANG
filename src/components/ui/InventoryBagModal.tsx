@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Backpack, Gift, Navigation, Sparkles, Volume2, Waves, X } from 'lucide-react';
+import { Backpack, Gift, Navigation, Play, Sparkles, Volume2, Waves, X } from 'lucide-react';
 import { sfxEngine } from '../../audio/sfxEngine';
 import { voiceManager } from '../../audio/voiceManager';
 import { ALL_BAG_ITEMS, BagItemDef } from '../../data/bagItems';
@@ -50,6 +50,23 @@ const ItemArtwork: React.FC<{ iconType: BagItemDef['iconType']; size?: 'sm' | 'm
           <line x1="33" y1="28" x2="56" y2="28" stroke="#f5dfba" strokeWidth="2" />
           <line x1="33" y1="38" x2="56" y2="38" stroke="#f5dfba" strokeWidth="2" />
           <line x1="33" y1="48" x2="48" y2="48" stroke="#f5dfba" strokeWidth="2" />
+        </svg>
+      );
+    case 'cassette_1997':
+      return (
+        <svg viewBox="0 0 80 80" className={cls}>
+          <rect x="10" y="20" width="60" height="40" rx="5" fill="#4e3222" stroke="#e5b578" strokeWidth="2" />
+          <rect x="15" y="24" width="50" height="19" rx="2.5" fill="#f5e6c8" />
+          <line x1="18" y1="29" x2="62" y2="29" stroke="#3b5b8c" strokeWidth="1.5" opacity="0.75" />
+          <rect x="21" y="34" width="38" height="12" rx="6" fill="#2a1a12" stroke="#c8965e" strokeWidth="1.2" />
+          <circle cx="29" cy="40" r="4.2" fill="#f5e6c8" />
+          <circle cx="29" cy="40" r="1.8" fill="#2a1a12" />
+          <circle cx="51" cy="40" r="4.2" fill="#f5e6c8" />
+          <circle cx="51" cy="40" r="1.8" fill="#2a1a12" />
+          <polygon points="22,60 26,51 54,51 58,60" fill="#382216" stroke="#c8965e" strokeWidth="1.2" />
+          <text x="40" y="28.5" textAnchor="middle" fill="#2c446e" fontSize="6.5" fontFamily="monospace" fontWeight="bold">
+            NOV 1997
+          </text>
         </svg>
       );
     case 'icecream':
@@ -130,6 +147,9 @@ export const InventoryBagModal: React.FC = () => {
     if (flags.includes('found_rooftop_notebook') || discoveredEasterEggs.includes('ee_buku_rooftop')) {
       has('item_rooftop_notebook');
     }
+    if (flags.includes('has_father_cassette_1997')) {
+      has('item_kaset_bapak_1997');
+    }
 
     // Hadiah kejutan untuk keluarga (hilang dari tas setelah diberikan)
     if (flags.includes('has_gift_kira') && !flags.includes('gave_gift_kira')) {
@@ -175,6 +195,7 @@ export const InventoryBagModal: React.FC = () => {
   const nadiaPos = playerRuntime.companions.nadia.pos;
   const distKira = Math.abs(py - kiraPos[1]) > 5 ? 999 : Math.round(Math.hypot(px - kiraPos[0], pz - kiraPos[2]));
   const distNadia = Math.abs(py - nadiaPos[1]) > 5 ? 999 : Math.round(Math.hypot(px - nadiaPos[0], pz - nadiaPos[2]));
+  const distKitchenRadio = Math.abs(py - 0.08) > 4 ? 999 : Math.round(Math.hypot(px - -17.42, pz - 71.95));
 
   // Deteksi suasana suara spasial 3D aktif di sekitar Damar
   const activeSoundTags: string[] = [];
@@ -369,6 +390,60 @@ export const InventoryBagModal: React.FC = () => {
                       "{selected.monologue}"
                     </p>
                   </div>
+
+                  {/* Aksi Khusus Kaset Pita C-60 Bapak (1997) */}
+                  {selected.id === 'item_kaset_bapak_1997' && (
+                    <div className={`rounded-xl border border-amber-300/30 bg-amber-950/25 ${compact ? 'p-2.5' : 'p-4'}`}>
+                      {flags.includes('played_father_cassette_1997') ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setBagOpen(false);
+                            startDialogue('flashback_kaset_bapak_1997');
+                          }}
+                          className={`flex w-full items-center justify-center gap-2 rounded-xl bg-amber-400 text-xs font-semibold text-dusk-950 shadow-lg hover:bg-amber-300 ${
+                            compact ? 'py-2' : 'py-3'
+                          }`}
+                        >
+                          <Play className="h-3.5 w-3.5 fill-current" />
+                          <span>Putar Ulang Rekaman Kaset Suara Bapak (1997)</span>
+                        </button>
+                      ) : distKitchenRadio <= 5.5 ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setBagOpen(false);
+                            startDialogue('flashback_kaset_bapak_1997');
+                          }}
+                          className={`flex w-full items-center justify-center gap-2 rounded-xl bg-amber-400 text-xs font-semibold text-dusk-950 shadow-lg hover:bg-amber-300 ${
+                            compact ? 'py-2' : 'py-3'
+                          }`}
+                        >
+                          <Play className="h-3.5 w-3.5 fill-current" />
+                          <span>Masukkan Kaset ke Radio Kayu Dapur Sekarang!</span>
+                        </button>
+                      ) : (
+                        <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                          <span className="text-warm-200/85">
+                            Bawa ke <strong>Radio Kayu Dapur</strong> di Rumah Jl. Melati No. 14 ({distKitchenRadio} m lagi) untuk memutar ujung pitanya.
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setCustomWaypoint({
+                                label: 'Radio Kayu Dapur (Putar Kaset Bapak 1997)',
+                                position: [-17.42, 0.08, 71.95],
+                              });
+                              setBagOpen(false);
+                            }}
+                            className="flex items-center gap-1.5 rounded-lg bg-cyan-400 px-3 py-1.5 font-semibold text-dusk-950 hover:bg-cyan-300"
+                          >
+                            <Navigation className="h-3 w-3" /> Pasang GPS Radio Dapur
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   {/* Aksi Pemberian Hadiah ke Kira atau Nadia */}
                   {selected.giftTarget && selected.giftDialogueId && (

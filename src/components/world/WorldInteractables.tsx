@@ -632,9 +632,18 @@ export const WorldInteractables: React.FC = () => {
           return { dialogueId: 'sq_helper_darman_sketchbook', highlight: 'side', sublabel: 'Misi Sampingan' };
         }
         const sq = store.sideQuests.sq_pak_darman;
-        if (!sq) return { dialogueId: 'sq_pak_darman_start', highlight: 'side', sublabel: 'Misi Warga' };
-        if (sq.status === 'active' && sq.stage === 2) {
+        if (sq?.status === 'active' && sq.stage === 2) {
           return { dialogueId: 'sq_pak_darman_complete', highlight: 'side', sublabel: 'Selesaikan Misi' };
+        }
+        if (store.flags.includes('inspected_father_radio_slot') && !store.flags.includes('has_father_cassette_1997')) {
+          return { dialogueId: 'story_darman_father_cassette', highlight: 'side', sublabel: 'Titipan Almarhum Bapak' };
+        }
+        if (!sq) return { dialogueId: 'sq_pak_darman_start', highlight: 'side', sublabel: 'Misi Warga' };
+        if (!store.flags.includes('has_father_cassette_1997')) {
+          return { dialogueId: 'story_darman_father_cassette', highlight: 'side', sublabel: 'Titipan Almarhum Bapak' };
+        }
+        if (store.flags.includes('played_father_cassette_1997') && !store.flags.includes('thanked_darman_father_tape')) {
+          return { dialogueId: 'story_darman_after_cassette', highlight: 'side', sublabel: 'Kaset Bapak 1997' };
         }
         return { dialogueId: 'ambient_darman', highlight: null, sublabel: 'Berbincang' };
       }
@@ -1671,6 +1680,45 @@ export const WorldInteractables: React.FC = () => {
       2.5,
     );
 
+    if (!store.flags.includes('thanked_darman_father_tape')) {
+      consider(
+        {
+          id: 'father_cassette_darman_tin',
+          kind: 'story_object',
+          label: !store.flags.includes('has_father_cassette_1997')
+            ? 'Periksa Kaleng Kaset Tua Titipan Almarhum Bapak'
+            : store.flags.includes('played_father_cassette_1997')
+              ? 'Ceritakan pada Pak Darman Soal Suara Kaset Bapak'
+              : 'Kaleng Kaset Tua (Pasang GPS ke Radio Dapur Rumah)',
+          sublabel: !store.flags.includes('has_father_cassette_1997')
+            ? 'Lapak Pak Darman · Pita C-60 Tahun 1997'
+            : store.flags.includes('played_father_cassette_1997')
+              ? 'Stasiun Kereta Tua Senja · Terima Kasih Empat Belas Tahun'
+              : 'Kaset Bapak Sudah di Tas [I] · Bawa ke Rumah Jl. Melati',
+          position: [75.15, 0.1, -3.35],
+          onInteract: () => {
+            if (!store.flags.includes('has_father_cassette_1997')) {
+              playerRuntime.activeSpeakerPos = [76.2, 0.1, -4.0];
+              playerRuntime.activeSpeakerId = 'pak_darman';
+              store.startDialogue('story_darman_father_cassette');
+            } else if (store.flags.includes('played_father_cassette_1997')) {
+              playerRuntime.activeSpeakerPos = [76.2, 0.1, -4.0];
+              playerRuntime.activeSpeakerId = 'pak_darman';
+              store.startDialogue('story_darman_after_cassette');
+            } else {
+              sfxEngine.play('chime');
+              store.setCustomWaypoint({
+                label: 'Radio Kayu Dapur (Putar Kaset Bapak 1997)',
+                position: [-17.42, 0.08, 71.95],
+              });
+              store.showToast('Penanda GPS dipasang ke Radio Kayu Dapur di Rumah Jl. Melati No. 14!');
+            }
+          },
+        },
+        2.3,
+      );
+    }
+
     consider(
       {
         id: 'activity_station_newsstand',
@@ -1926,6 +1974,33 @@ export const WorldInteractables: React.FC = () => {
         },
       },
       1.45,
+    );
+
+    consider(
+      {
+        id: 'father_cassette_kitchen_slot',
+        kind: 'story_object',
+        label: store.flags.includes('played_father_cassette_1997')
+          ? 'Putar Ulang Rekaman Kaset Suara Bapak (1997)'
+          : store.flags.includes('has_father_cassette_1997')
+            ? 'Masukkan Kaset Pita C-60 Bapak (1997) ke Radio Dapur'
+            : 'Periksa Slot Pita Kaset di Balik Radio Bapak',
+        sublabel: store.flags.includes('played_father_cassette_1997')
+          ? 'Kenangan Tersimpan · Pita Tua di Balik Radio Dapur'
+          : store.flags.includes('has_father_cassette_1997')
+            ? 'Cerita Keluarga · Pita Tua di Balik Radio Dapur'
+            : 'Radio Kayu Peninggalan Bapak · Petunjuk Kaset 1997',
+        position: [-17.42, 0.08, 71.85],
+        onInteract: () => {
+          playerRuntime.activeSpeakerPos = [-17.8, 0.95, 72.15];
+          if (store.flags.includes('has_father_cassette_1997') || store.flags.includes('played_father_cassette_1997')) {
+            store.startDialogue('flashback_kaset_bapak_1997');
+          } else {
+            store.startDialogue('story_radio_empty_hint');
+          }
+        },
+      },
+      1.48,
     );
 
     consider(
@@ -4873,6 +4948,65 @@ export const WorldInteractables: React.FC = () => {
         <mesh position={[0, 0.28, 0]}>
           <sphereGeometry args={[0.065, 10, 10]} />
           <meshBasicMaterial color="#fda4af" />
+        </mesh>
+      </group>
+
+      {/* Kaleng Biskuit Tua & Kaset C-60 Bapak (1997) di Samping Lapak Pak Darman Stasiun Senja */}
+      <group position={[75.15, 0.1, -3.35]} rotation={[0, 0.28, 0]}>
+        {/* Bangku kayu kecil penyangga kaleng */}
+        <mesh position={[0, 0.22, 0]} castShadow receiveShadow>
+          <boxGeometry args={[0.46, 0.44, 0.38]} />
+          <meshStandardMaterial color="#6e4b30" roughness={0.85} />
+        </mesh>
+        {/* Kaleng biskuit tua antik tempat menyimpan kaset titipan Bapak */}
+        <mesh position={[0, 0.5, 0]} castShadow>
+          <boxGeometry args={[0.28, 0.12, 0.22]} />
+          <meshStandardMaterial
+            color="#8c4b32"
+            emissive="#f59e0b"
+            emissiveIntensity={flags.includes('has_father_cassette_1997') ? 0.08 : 0.42}
+            metalness={0.35}
+            roughness={0.55}
+          />
+        </mesh>
+        {/* Tutup kaleng emas kusam */}
+        <mesh position={[0, 0.565, 0]}>
+          <boxGeometry args={[0.29, 0.02, 0.23]} />
+          <meshStandardMaterial color="#cfa058" metalness={0.45} roughness={0.45} />
+        </mesh>
+        {!flags.includes('thanked_darman_father_tape') && (
+          <mesh position={[0, 0.86, 0]}>
+            <sphereGeometry args={[0.075, 10, 10]} />
+            <meshBasicMaterial color={flags.includes('has_father_cassette_1997') ? '#fde68a' : '#fbbf24'} />
+          </mesh>
+        )}
+      </group>
+
+      {/* Kotak Mika & Kaset Pita C-60 Bapak (1997) di Samping Radio Kayu Dapur Rumah Jl. Melati */}
+      <group position={[-17.45, 0.91, 72.18]} rotation={[0, -0.22, 0]}>
+        {/* Nota kertas kecil / kotak kaset mika */}
+        <mesh castShadow>
+          <boxGeometry args={[0.18, 0.024, 0.12]} />
+          <meshStandardMaterial
+            color={flags.includes('has_father_cassette_1997') ? '#5c3a24' : '#f4e6c6'}
+            emissive="#f59e0b"
+            emissiveIntensity={
+              flags.includes('has_father_cassette_1997') && !flags.includes('played_father_cassette_1997') ? 0.65 : 0.22
+            }
+            roughness={0.6}
+          />
+        </mesh>
+        <mesh position={[0, 0.26, 0]}>
+          <sphereGeometry args={[0.065, 10, 10]} />
+          <meshBasicMaterial
+            color={
+              flags.includes('played_father_cassette_1997')
+                ? '#6ee7b7'
+                : flags.includes('has_father_cassette_1997')
+                  ? '#fbbf24'
+                  : '#fde68a'
+            }
+          />
         </mesh>
       </group>
 

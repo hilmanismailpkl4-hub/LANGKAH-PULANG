@@ -41,6 +41,10 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
         text: 'Dan jauh di ujung selatan sana, di antara barisan atap Perumahan Melati, satu lampu teras kuning masih menyala terang. Rumah kami.',
         conditionalNext: [
           {
+            requiredFlag: 'played_father_cassette_1997',
+            nextNodeId: 'ch3_rt_echo_father_tape',
+          },
+          {
             requiredFlag: 'flashback_2020_done',
             nextNodeId: 'ch3_rt_echo_guitar',
           },
@@ -53,6 +57,14 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
             nextNodeId: 'ch3_rt_echo_citizens',
           },
         ],
+        nextNodeId: 'ch3_rt_3',
+      },
+      ch3_rt_echo_father_tape: {
+        id: 'ch3_rt_echo_father_tape',
+        speaker: 'damar_batin',
+        emotion: 'haru',
+        echoTag: 'Gema Memori · Pita Kaset Almarhum Bapak (1997)',
+        text: 'Di sela desir angin rooftop, bisikan serak almarhum Bapak dari ujung kaset tahun 1997 itu kembali memeluk telingaku: "Rumah itu bukan tempat orang pamer kuat—rumah itu tempat kamu boleh meletakkan tasmu." Empat belas tahun beliau tiada, tapi suaranya yang membukakan jalan pulangku malam ini.',
         nextNodeId: 'ch3_rt_3',
       },
       ch3_rt_echo_guitar: {
@@ -197,6 +209,7 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
         echoTag: 'Gema Dongeng · Nakhoda Perahu Kertas',
         text: 'Kira langsung pulas sambil memeluk perahu kertasnya, Mas... Aku tadi berdiri di dekat kusen pintu dan dengar seluruh dongeng Nakhoda Perahu Kertasmu. Sekarang... giliran Nakhodanya duduk di sini dan bicara jujur sama Ratu Pelabuhannya, ya.',
         conditionalNext: [
+          { requiredFlag: 'played_father_cassette_1997', nextNodeId: 'ch3_fin_nadia_echo_father_tape' },
           { requiredFlag: 'reconciled_dinner_memory_chat', nextNodeId: 'ch3_fin_nadia_echo_chat' },
           { requiredFlag: 'flashback_dinner_done', nextNodeId: 'ch3_fin_nadia_echo_fb' },
           { requiredFlag: 'gave_gift_nadia', nextNodeId: 'ch3_fin_nadia_echo_flower' },
@@ -280,10 +293,19 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
         emotion: 'haru',
         text: 'Kira sudah masuk kamar... Mas, lihat mataku. Tolong jangan pakai topeng "aku baik-baik saja" lagi malam ini. Sebenarnya apa yang sedang kamu lawan di dalam kepalamu?',
         conditionalNext: [
+          { requiredFlag: 'played_father_cassette_1997', nextNodeId: 'ch3_fin_nadia_echo_father_tape' },
           { requiredFlag: 'reconciled_dinner_memory_chat', nextNodeId: 'ch3_fin_nadia_echo_chat' },
           { requiredFlag: 'flashback_dinner_done', nextNodeId: 'ch3_fin_nadia_echo_fb' },
           { requiredFlag: 'gave_gift_nadia', nextNodeId: 'ch3_fin_nadia_echo_flower' },
         ],
+        nextNodeId: 'ch3_fin_9',
+      },
+      ch3_fin_nadia_echo_father_tape: {
+        id: 'ch3_fin_nadia_echo_father_tape',
+        speaker: 'nadia',
+        emotion: 'haru',
+        echoTag: 'Ingatan Nadia · Suara Pita Kaset Bapak 1997',
+        text: 'Tadi waktu kamu memutar kaset lama almarhum Bapak di radio dapur, aku sempat terdiam di dekat rak piring, Mas... Suara Bapakmu hangat sekali. Kamu nggak perlu jadi baja sendirian lagi di rumah ini.',
         nextNodeId: 'ch3_fin_9',
       },
       ch3_fin_nadia_echo_chat: {
@@ -316,6 +338,19 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
         emotion: 'haru',
         text: 'Lampu ruang makan memantul lembut di mata Nadia. Ini saatnya menentukan arah hidupku—apakah aku akhirnya berani pulang sepenuhnya, atau terus bersembunyi di balik kesibukan.',
         choices: [
+          {
+            id: 'ch3_fin_c_father_tape',
+            requiredFlag: 'played_father_cassette_1997',
+            echoBadge: 'Terbuka dari Kaset Suara Bapak 1997',
+            text: 'Letakkan kaset C-60 tahun 1997 milik Bapak di atas meja makan—akui seluruh ketakutanmu dan berjanji menjadikan rumah tempat kalian saling meletakkan beban, bukan pamer kuat.',
+            subtext: 'Rekonsiliasi lintas generasi seorang anak yang kini menjadi ayah',
+            nextNodeId: 'ch3_fin_father_tape_1',
+            effects: {
+              kejujuranDiri: 5,
+              kehadiranKeluarga: 5,
+              setFlags: ['ch3_chose_honest_home', 'ch3_shared_father_tape_finale'],
+            },
+          },
           {
             id: 'ch3_fin_c_guitar_truth',
             requiredFlag: 'flashback_2020_done',
@@ -362,6 +397,24 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
             },
           },
         ],
+      },
+      ch3_fin_father_tape_1: {
+        id: 'ch3_fin_father_tape_1',
+        speaker: 'damar',
+        emotion: 'haru',
+        echoTag: 'Pengakuan Lintas Generasi · Pesan Bapak 1997',
+        text: 'Nad... selama ini aku lari mengejar kerjaan karena takut kalau aku berhenti, aku gagal jadi kepala keluarga. Sampai hari ini aku dengar rekaman almarhum Bapak tahun 1997 di radio dapur. Beliau berbisik waktu aku tidur umur tujuh tahun... katanya rumah itu bukan tempat orang pamer kuat, tapi tempat aku boleh meletakkan tasku. Maafin aku baru berani meletakkan tasku di depanmu malam ini.',
+        nextNodeId: 'ch3_fin_father_tape_2',
+      },
+      ch3_fin_father_tape_2: {
+        id: 'ch3_fin_father_tape_2',
+        speaker: 'nadia',
+        emotion: 'haru',
+        text: 'Nadia menggenggam kedua tangan Damar di samping kaset tua itu sambil menangis lega. "Andai almarhum Bapak masih ada malam ini, aku mau bilang terima kasih karena sudah nitipin kalimat itu buat kamu, Mas. Taruh tasmu, duduklah... mulai malam ini kita pikul semuanya berdua. Selamat pulang ke rumah, Damar."',
+        onEnd: {
+          playSfx: 'guitar',
+          triggerEnding: true,
+        },
       },
       ch3_fin_guitar_1: {
         id: 'ch3_fin_guitar_1',
