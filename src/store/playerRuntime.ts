@@ -219,11 +219,12 @@ export const playerRuntime = {
   trainPhase: 'approaching' as 'approaching' | 'boarding' | 'departing' | 'away',
   trainDwellTimer: 0,
 
-  // Input kontrol sentuh layar HP (Virtual Joystick kiri + tombol Lari)
+  // Input kontrol sentuh layar HP (Virtual Joystick kiri + tombol Lari & Lompat)
   touchInput: {
     moveX: 0,
     moveZ: 0,
     sprint: false,
+    jumpQueued: false,
   },
 
   // Telemetri & throttle performa 3D real-time (tanpa React re-render per frame!)

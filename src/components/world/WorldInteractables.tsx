@@ -138,7 +138,9 @@ const NpcFigure: React.FC<{
   const [compIndoors, setCompIndoors] = useState(true);
   const indoorsCheckRef = useRef(0);
 
-  const companionUmbrella = isFamilyCompanion && timeOfDay === 'rain_dusk' && !compIndoors;
+  const isSittingStore = useGameStore((s) => s.isSitting);
+  const companionSitting = isFamilyCompanion && isSittingStore;
+  const companionUmbrella = isFamilyCompanion && timeOfDay === 'rain_dusk' && !compIndoors && !companionSitting;
   const companionUmbrellaRef = useRef(companionUmbrella);
   companionUmbrellaRef.current = companionUmbrella;
 
@@ -160,8 +162,9 @@ const NpcFigure: React.FC<{
     const store = useGameStore.getState();
 
     let isWalkingCompanion = false;
+    let isSittingCompanion = false;
 
-    // === AI PENGIKUT KELUARGA (NADIA & KIRA BERJALAN BERSAMA DAMAR) ===
+    // === AI PENGIKUT KELUARGA (NADIA & KIRA BERJALAN & DUDUK BARENG DAMAR!) ===
     if (isFamilyCompanion && (npc.id === 'nadia' || npc.id === 'kira')) {
       const yaw = playerRuntime.rotationY;
       const fwdX = Math.sin(yaw);
@@ -170,98 +173,114 @@ const NpcFigure: React.FC<{
       const leftZ = -Math.sin(yaw);
       const sideSign = npc.id === 'nadia' ? 1 : -1; // Nadia kiri, Kira kanan
 
-      let desiredX: number;
-      let desiredZ: number;
-
       if (store.isSitting && playerRuntime.sitState) {
-        const sitYaw = playerRuntime.sitState.seatYaw;
+        // Duduk rapi berdampingan di bangku/kursi bersama Damar (tanpa terhalang collider bangku!)
+        isSittingCompanion = true;
+        const sit = playerRuntime.sitState;
+        const sitYaw = sit.seatYaw;
         const sLeftX = Math.cos(sitYaw);
         const sLeftZ = -Math.sin(sitYaw);
-        const sFwdX = Math.sin(sitYaw);
-        const sFwdZ = Math.cos(sitYaw);
-        desiredX = px + sLeftX * sideSign * 1.15 - sFwdX * 0.15;
-        desiredZ = pz + sLeftZ * sideSign * 1.15 - sFwdZ * 0.15;
-      } else if (store.isPhotoMode) {
-        // Berpose manis di sisi Damar menghadap kamera saat Mode Foto [P]!
-        desiredX = px + leftX * sideSign * 1.05 + fwdX * 0.15;
-        desiredZ = pz + leftZ * sideSign * 1.05 + fwdZ * 0.15;
-      } else {
-        const sideDist = npc.id === 'nadia' ? 1.32 : 1.2;
-        const backDist = npc.id === 'nadia' ? 0.58 : 0.28;
-        desiredX = px + leftX * sideSign * sideDist - fwdX * backDist;
-        desiredZ = pz + leftZ * sideSign * sideDist - fwdZ * backDist;
-      }
+        const sideOffset = npc.id === 'nadia' ? 0.66 : 0.58;
+        const seatX = sit.seatPos[0] + sLeftX * sideSign * sideOffset;
+        const seatY = sit.seatPos[1];
+        const seatZ = sit.seatPos[2] + sLeftZ * sideSign * sideOffset;
 
-      const [cx, cy, cz] = posRef.current;
-      const elevDiff = Math.abs(py - cy);
-      const distToDamar = Math.hypot(px - cx, pz - cz);
-
-      // Sinkron instan saat naik/turun lift Rooftop, memanggil dari jauh, atau tertinggal jauh
-      if (playerRuntime.companions.snapPending || elevDiff > 5.0 || distToDamar > 16.0) {
-        const snapped = resolveCompanionMovement(
-          px,
-          py,
-          pz,
-          desiredX,
-          desiredZ,
-          isChild ? 0.28 : 0.34,
-        );
-        posRef.current = snapped;
-        if (npc.id === 'kira') {
-          playerRuntime.companions.snapPending = false;
-        }
-      } else {
-        // Beri ruang jika Damar berjalan tepat ke arah mereka (anti macet di pintu!)
-        if (distToDamar < 0.85 && distToDamar > 0.01) {
-          const awayX = (cx - px) / distToDamar;
-          const awayZ = (cz - pz) / distToDamar;
-          desiredX += awayX * 0.45;
-          desiredZ += awayZ * 0.45;
+        const [cx, , cz] = posRef.current;
+        if (Math.hypot(seatX - cx, seatZ - cz) > 3.5 || playerRuntime.companions.snapPending) {
+          posRef.current = [seatX, seatY, seatZ];
+        } else {
+          posRef.current = [
+            THREE.MathUtils.lerp(cx, seatX, Math.min(1, dt * 10)),
+            seatY,
+            THREE.MathUtils.lerp(cz, seatZ, Math.min(1, dt * 10)),
+          ];
         }
 
-        const toTargetX = desiredX - cx;
-        const toTargetZ = desiredZ - cz;
-        const distTarget = Math.hypot(toTargetX, toTargetZ);
+        let diff = sitYaw - currentYawRef.current;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        currentYawRef.current += diff * Math.min(1, dt * 9);
+      } else {
+        let desiredX: number;
+        let desiredZ: number;
 
-        if (distTarget > 0.24) {
-          isWalkingCompanion = true;
-          const maxSpd = playerRuntime.isRunning ? 7.9 : 4.95;
-          const spd = Math.min(maxSpd, 1.55 + distTarget * 2.25);
-          const step = Math.min(distTarget, spd * dt);
-          const nextX = cx + (toTargetX / distTarget) * step;
-          const nextZ = cz + (toTargetZ / distTarget) * step;
-          posRef.current = resolveCompanionMovement(
-            cx,
+        if (store.isPhotoMode) {
+          // Berpose manis di sisi Damar menghadap kamera saat Mode Foto [P]!
+          desiredX = px + leftX * sideSign * 1.05 + fwdX * 0.15;
+          desiredZ = pz + leftZ * sideSign * 1.05 + fwdZ * 0.15;
+        } else {
+          const sideDist = npc.id === 'nadia' ? 1.32 : 1.2;
+          const backDist = npc.id === 'nadia' ? 0.58 : 0.28;
+          desiredX = px + leftX * sideSign * sideDist - fwdX * backDist;
+          desiredZ = pz + leftZ * sideSign * sideDist - fwdZ * backDist;
+        }
+
+        const [cx, cy, cz] = posRef.current;
+        const elevDiff = Math.abs(py - cy);
+        const distToDamar = Math.hypot(px - cx, pz - cz);
+
+        // Sinkron instan saat naik/turun lift Rooftop, bangun dari duduk, atau tertinggal jauh
+        if (playerRuntime.companions.snapPending || elevDiff > 5.0 || distToDamar > 16.0) {
+          const snapped = resolveCompanionMovement(
+            px,
             py,
-            cz,
-            nextX,
-            nextZ,
+            pz,
+            desiredX,
+            desiredZ,
             isChild ? 0.28 : 0.34,
           );
-          strideRef.current += dt * (isChild ? 9.8 : 7.4) * Math.min(1.35, spd / 3.8);
-
-          const walkYaw = Math.atan2(toTargetX, toTargetZ);
-          let diff = walkYaw - currentYawRef.current;
-          while (diff > Math.PI) diff -= Math.PI * 2;
-          while (diff < -Math.PI) diff += Math.PI * 2;
-          currentYawRef.current += diff * Math.min(1, dt * 9.5);
-        } else {
-          // Berhenti halus — hadap pemandangan / kamera / Damar
-          let idleYaw = yaw;
-          if (store.isPhotoMode) {
-            idleYaw = Math.atan2(camera.position.x - cx, camera.position.z - cz);
-          } else if (store.isSitting && playerRuntime.sitState) {
-            idleYaw = Math.atan2(
-              playerRuntime.sitState.lookAt[0] - cx,
-              playerRuntime.sitState.lookAt[2] - cz,
-            );
-          } else if (distToDamar < 3.4) {
-            idleYaw = Math.atan2(px - cx, pz - cz);
+          posRef.current = snapped;
+          if (npc.id === 'kira') {
+            playerRuntime.companions.snapPending = false;
           }
-          let diff = idleYaw - currentYawRef.current;
-          while (diff > Math.PI) diff -= Math.PI * 2;
-          while (diff < -Math.PI) diff += Math.PI * 2;
-          currentYawRef.current += diff * Math.min(1, dt * 5.5);
+        } else {
+          // Beri ruang jika Damar berjalan tepat ke arah mereka (anti macet di pintu!)
+          if (distToDamar < 0.85 && distToDamar > 0.01) {
+            const awayX = (cx - px) / distToDamar;
+            const awayZ = (cz - pz) / distToDamar;
+            desiredX += awayX * 0.45;
+            desiredZ += awayZ * 0.45;
+          }
+
+          const toTargetX = desiredX - cx;
+          const toTargetZ = desiredZ - cz;
+          const distTarget = Math.hypot(toTargetX, toTargetZ);
+
+          if (distTarget > 0.24) {
+            isWalkingCompanion = true;
+            const maxSpd = playerRuntime.isRunning ? 7.9 : 4.95;
+            const spd = Math.min(maxSpd, 1.55 + distTarget * 2.25);
+            const step = Math.min(distTarget, spd * dt);
+            const nextX = cx + (toTargetX / distTarget) * step;
+            const nextZ = cz + (toTargetZ / distTarget) * step;
+            posRef.current = resolveCompanionMovement(
+              cx,
+              py,
+              cz,
+              nextX,
+              nextZ,
+              isChild ? 0.28 : 0.34,
+            );
+            strideRef.current += dt * (isChild ? 9.8 : 7.4) * Math.min(1.35, spd / 3.8);
+
+            const walkYaw = Math.atan2(toTargetX, toTargetZ);
+            let diff = walkYaw - currentYawRef.current;
+            while (diff > Math.PI) diff -= Math.PI * 2;
+            while (diff < -Math.PI) diff += Math.PI * 2;
+            currentYawRef.current += diff * Math.min(1, dt * 9.5);
+          } else {
+            // Berhenti halus — hadap pemandangan / kamera / Damar
+            let idleYaw = yaw;
+            if (store.isPhotoMode) {
+              idleYaw = Math.atan2(camera.position.x - cx, camera.position.z - cz);
+            } else if (distToDamar < 3.4) {
+              idleYaw = Math.atan2(px - cx, pz - cz);
+            }
+            let diff = idleYaw - currentYawRef.current;
+            while (diff > Math.PI) diff -= Math.PI * 2;
+            while (diff < -Math.PI) diff += Math.PI * 2;
+            currentYawRef.current += diff * Math.min(1, dt * 5.5);
+          }
         }
       }
 
@@ -315,12 +334,13 @@ const NpcFigure: React.FC<{
     const isNear = dist < 5.6;
     const isVeryNear = dist < 4.2 || isTalkingNow || damarWaving;
 
-    // 1. Posisi root + bob langkah berjalan / napas alami
+    // 1. Posisi root + bob langkah berjalan / duduk bersama Damar / napas alami
     if (rootRef.current) {
+      const sitDrop = isSittingCompanion ? -(isChild ? 0.02 : 0.18) : 0;
       const walkBob = isWalkingCompanion
         ? Math.abs(Math.sin(strideRef.current)) * (isChild ? 0.075 : 0.048)
         : 0;
-      rootRef.current.position.set(myX, myY + walkBob, myZ);
+      rootRef.current.position.set(myX, myY + sitDrop + walkBob, myZ);
 
       if (!isFamilyCompanion) {
         const desiredYaw = isVeryNear ? Math.atan2(dx, dz) : npc.rot;
@@ -334,29 +354,45 @@ const NpcFigure: React.FC<{
 
     if (torsoRef.current) {
       const bounce =
-        !isWalkingCompanion && isChild && isNear
+        !isWalkingCompanion && !isSittingCompanion && isChild && isNear
           ? Math.abs(Math.sin(t * 5.2)) * 0.045
           : Math.sin(t * 2.1 + npc.pos[0]) * 0.012;
       torsoRef.current.position.y = 0.92 + bounce;
-      torsoRef.current.rotation.x = isWalkingCompanion
-        ? 0.06
-        : isTalkingNow
-          ? Math.sin(t * 3.5) * 0.045
-          : 0;
+      torsoRef.current.rotation.x = isSittingCompanion
+        ? -0.03
+        : isWalkingCompanion
+          ? 0.06
+          : isTalkingNow
+            ? Math.sin(t * 3.5) * 0.045
+            : 0;
     }
 
-    // 2. Animasi kaki berjalan
+    // 2. Animasi kaki berjalan ATAU menekuk rapi saat duduk bersama Damar!
     const legSwing = isWalkingCompanion ? Math.sin(strideRef.current) * (isChild ? 0.62 : 0.52) : 0;
-    if (leftLegRef.current) {
-      leftLegRef.current.rotation.x = THREE.MathUtils.lerp(leftLegRef.current.rotation.x, legSwing, dt * 12);
-    }
-    if (rightLegRef.current) {
-      rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, -legSwing, dt * 12);
+    if (isSittingCompanion) {
+      const childSwing = isChild ? Math.sin(t * 3.1) * 0.16 : 0;
+      if (leftLegRef.current) {
+        leftLegRef.current.rotation.x = THREE.MathUtils.lerp(leftLegRef.current.rotation.x, -1.35 + childSwing, dt * 12);
+      }
+      if (rightLegRef.current) {
+        rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, -1.35 - childSwing, dt * 12);
+      }
+    } else {
+      if (leftLegRef.current) {
+        leftLegRef.current.rotation.x = THREE.MathUtils.lerp(leftLegRef.current.rotation.x, legSwing, dt * 12);
+      }
+      if (rightLegRef.current) {
+        rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, -legSwing, dt * 12);
+      }
     }
 
-    // 3. Kontak mata — kepala menoleh ke kamera saat Mode Foto atau ke Damar saat dekat!
+    // 3. Kontak mata — kepala menoleh ke pemandangan saat duduk, ke kamera saat Mode Foto, atau ke Damar!
     if (headRef.current) {
-      if (isFamilyCompanion && store.isPhotoMode) {
+      if (isSittingCompanion) {
+        const softTurn = Math.sin(t * 0.75 + (isChild ? 1.5 : 0)) * 0.22;
+        headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, softTurn, dt * 4);
+        headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, isChild ? -0.08 : -0.02, dt * 5);
+      } else if (isFamilyCompanion && store.isPhotoMode) {
         const angCam = Math.atan2(camera.position.x - myX, camera.position.z - myZ);
         let rel = angCam - currentYawRef.current;
         while (rel > Math.PI) rel -= Math.PI * 2;
@@ -378,23 +414,29 @@ const NpcFigure: React.FC<{
       }
     }
 
-    // 4. Lengan: payung bening di tangan kiri saat hujan, lambaian ramah saat [F]/Mode Foto, & gestur bicara!
+    // 4. Lengan: pangku santai saat duduk, payung bening saat hujan, lambaian ramah, & gestur bicara!
     if (rightArmRef.current && leftArmRef.current) {
       const holdUmb = companionUmbrellaRef.current;
       const shouldWave =
-        damarWaving ||
-        (isFamilyCompanion && store.isPhotoMode) ||
-        (!isFamilyCompanion &&
-          isNear &&
-          !store.activeDialogue &&
-          (isChild ||
-            npc.id === 'bima' ||
-            npc.id === 'bu_wati' ||
-            npc.id === 'mbak_lilis' ||
-            npc.id === 'pak_slamet' ||
-            npc.id === 'bang_ari'));
+        !isSittingCompanion &&
+        (damarWaving ||
+          (isFamilyCompanion && store.isPhotoMode) ||
+          (!isFamilyCompanion &&
+            isNear &&
+            !store.activeDialogue &&
+            (isChild ||
+              npc.id === 'bima' ||
+              npc.id === 'bu_wati' ||
+              npc.id === 'mbak_lilis' ||
+              npc.id === 'pak_slamet' ||
+              npc.id === 'bang_ari')));
 
-      if (shouldWave) {
+      if (isSittingCompanion) {
+        rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, -0.42, dt * 10);
+        rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, -0.06, dt * 8);
+        leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, -0.42, dt * 10);
+        leftArmRef.current.rotation.z = THREE.MathUtils.lerp(leftArmRef.current.rotation.z, 0.06, dt * 8);
+      } else if (shouldWave) {
         rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, -2.35, dt * 8);
         rightArmRef.current.rotation.z = Math.sin(t * 10.5) * 0.28 + 0.32;
         leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, holdUmb ? -1.28 : 0, dt * 8);

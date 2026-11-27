@@ -38,6 +38,8 @@ export const PlayerController: React.FC = () => {
   const pinchDistRef = useRef<number | null>(null);
   const zoomRef = useRef(5.2);
   const velocityRef = useRef({ x: 0, z: 0 });
+  const jumpYRef = useRef(0);
+  const jumpVelRef = useRef(0);
   const strideTimerRef = useRef(0);
   const lastStepHalfRef = useRef(0);
   const locCheckTimerRef = useRef(0);
@@ -81,12 +83,16 @@ export const PlayerController: React.FC = () => {
 
   useEffect(() => {
     const dom = gl.domElement;
+    dom.style.touchAction = 'none';
 
     const standUpIfSitting = () => {
       const st = useGameStore.getState();
       if (st.isSitting && playerRuntime.sitState) {
         playerRuntime.position = [...playerRuntime.sitState.standPos];
         playerRuntime.sitState = null;
+        if (st.isFamilyWalkActive) {
+          playerRuntime.companions.snapPending = true;
+        }
         st.setSitting(false);
         return true;
       }
@@ -166,6 +172,8 @@ export const PlayerController: React.FC = () => {
           state.openCulinarySpot(null);
         } else if (state.isBagOpen) {
           state.setBagOpen(false);
+        } else if (state.isNadiaLetterOpen) {
+          state.setNadiaLetterOpen(false);
         } else if (state.isGuitarOpen) {
           state.setGuitarOpen(false);
         } else if (state.isPhoneOpen) {
@@ -208,6 +216,7 @@ export const PlayerController: React.FC = () => {
 
       if (
         state.isGuitarOpen ||
+        state.isNadiaLetterOpen ||
         state.activeCulinarySpot ||
         state.isWardrobeOpen ||
         state.isLittleLibraryOpen ||
@@ -369,6 +378,15 @@ export const PlayerController: React.FC = () => {
       }
 
       if (
+        code === 'Space' &&
+        !state.activeDialogue &&
+        !state.isMapJournalOpen &&
+        !state.isPauseOpen &&
+        !state.isQuickGraphicsOpen
+      ) {
+        e.preventDefault();
+        playerRuntime.touchInput.jumpQueued = true;
+      } else if (
         code === 'KeyE' &&
         !state.activeDialogue &&
         !state.isMapJournalOpen &&
@@ -605,9 +623,11 @@ export const PlayerController: React.FC = () => {
 
     const onTouchStart = (e: TouchEvent) => {
       if (isCameraBlockedForTouch()) return;
-      if (e.touches.length === 2) {
-        const a = e.touches[0];
-        const b = e.touches[1];
+      // Gunakan e.targetTouches (hanya jari yang menyentuh kanvas 3D, BUKAN jari di Joystick kiri!)
+      // sehingga pemain bisa menggerakkan Joystick kiri sekaligus menggeser arah kamera dengan jari kanan!
+      if (e.targetTouches.length >= 2) {
+        const a = e.targetTouches[0];
+        const b = e.targetTouches[1];
         pinchDistRef.current = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
         touchCamIdRef.current = null;
         return;
@@ -621,16 +641,21 @@ export const PlayerController: React.FC = () => {
 
     const onTouchMove = (e: TouchEvent) => {
       if (isCameraBlockedForTouch()) return;
-      // Cubit dua jari untuk zoom kamera halus di layar HP
-      if (e.touches.length === 2 && pinchDistRef.current !== null) {
+      // Cubit dua jari di atas kanvas 3D untuk zoom kamera halus
+      if (e.targetTouches.length >= 2 && pinchDistRef.current !== null) {
         e.preventDefault();
-        const a = e.touches[0];
-        const b = e.touches[1];
+        const a = e.targetTouches[0];
+        const b = e.targetTouches[1];
         const dist = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
         const delta = pinchDistRef.current - dist;
         pinchDistRef.current = dist;
         zoomRef.current = THREE.MathUtils.clamp(zoomRef.current + delta * 0.015, 2.8, 12.0);
         return;
+      }
+      if (touchCamIdRef.current === null && e.targetTouches.length === 1) {
+        const t = e.targetTouches[0];
+        touchCamIdRef.current = t.identifier;
+        lastTouchRef.current = { x: t.clientX, y: t.clientY };
       }
       if (touchCamIdRef.current === null) return;
       for (let i = 0; i < e.changedTouches.length; i++) {
@@ -640,7 +665,7 @@ export const PlayerController: React.FC = () => {
           const dx = t.clientX - lastTouchRef.current.x;
           const dy = t.clientY - lastTouchRef.current.y;
           lastTouchRef.current = { x: t.clientX, y: t.clientY };
-          const sens = 0.0056 * useGameStore.getState().settings.mouseSensitivity;
+          const sens = 0.0058 * useGameStore.getState().settings.mouseSensitivity;
           playerRuntime.cameraYaw -= dx * sens;
           playerRuntime.cameraPitch = THREE.MathUtils.clamp(
             playerRuntime.cameraPitch + dy * sens * 0.85,
@@ -653,15 +678,22 @@ export const PlayerController: React.FC = () => {
     };
 
     const onTouchEnd = (e: TouchEvent) => {
-      if (e.touches.length < 2) {
+      if (e.targetTouches.length < 2) {
         pinchDistRef.current = null;
       }
-      if (touchCamIdRef.current === null) return;
-      for (let i = 0; i < e.changedTouches.length; i++) {
-        if (e.changedTouches[i].identifier === touchCamIdRef.current) {
-          touchCamIdRef.current = null;
-          break;
+      if (touchCamIdRef.current !== null) {
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === touchCamIdRef.current) {
+            touchCamIdRef.current = null;
+            break;
+          }
         }
+      }
+      // Jika satu jari diangkat setelah cubit 2 jari, jari kanvas yang tersisa langsung lanjut memutar kamera
+      if (touchCamIdRef.current === null && e.targetTouches.length === 1) {
+        const rem = e.targetTouches[0];
+        touchCamIdRef.current = rem.identifier;
+        lastTouchRef.current = { x: rem.clientX, y: rem.clientY };
       }
     };
 
@@ -841,8 +873,10 @@ export const PlayerController: React.FC = () => {
       if (torsoRef.current) torsoRef.current.rotation.x = 0.14;
       if (headRef.current) headRef.current.rotation.y = sc.steer * 0.32;
 
-      // Kamera mengikuti lembut di belakang skuter (bisa tetap digeser mouse)
-      if (!isDraggingRef.current && Math.abs(sc.speed) > 1.2) {
+      // Kamera mengikuti lembut di belakang skuter hanya jika pemain tidak sedang menggeser kamera
+      const userRotatingScooterCam =
+        isDraggingRef.current || touchCamIdRef.current !== null || document.pointerLockElement === gl.domElement;
+      if (!userRotatingScooterCam && Math.abs(sc.speed) > 1.2) {
         const targetCamYaw = sc.yaw + Math.PI;
         let diff = targetCamYaw - playerRuntime.cameraYaw;
         while (diff > Math.PI) diff -= Math.PI * 2;
@@ -989,7 +1023,9 @@ export const PlayerController: React.FC = () => {
         headRef.current.rotation.y = bk.steer * 0.35;
       }
 
-      if (!isDraggingRef.current && Math.abs(bk.speed) > 1.0) {
+      const userRotatingBikeCam =
+        isDraggingRef.current || touchCamIdRef.current !== null || document.pointerLockElement === gl.domElement;
+      if (!userRotatingBikeCam && Math.abs(bk.speed) > 1.0) {
         const targetCamYaw = bk.yaw + Math.PI;
         let diff = targetCamYaw - playerRuntime.cameraYaw;
         while (diff > Math.PI) diff -= Math.PI * 2;
@@ -1174,6 +1210,7 @@ export const PlayerController: React.FC = () => {
       !store.isPhotoMode &&
       !store.isPhoneOpen &&
       !store.isGuitarOpen &&
+      !store.isNadiaLetterOpen &&
       !store.isBagOpen &&
       !store.activeCulinarySpot &&
       !store.isWardrobeOpen &&
@@ -1246,6 +1283,28 @@ export const PlayerController: React.FC = () => {
     );
     playerRuntime.position = [rx, ry, rz];
 
+    // === FISIKA LOMPAT DAMAR ([Spasi] / Tombol Lompat HP) ===
+    const wantJump = canControl && (Boolean(keys['Space']) || touch.jumpQueued);
+    touch.jumpQueued = false;
+    if (wantJump && jumpYRef.current <= 0.001) {
+      jumpVelRef.current = 5.35;
+      jumpYRef.current = 0.02;
+      const surfTakeoff = getSurfaceAtPosition(rx, ry, rz);
+      sfxEngine.playFootstep(surfTakeoff, true);
+    }
+    const wasAirborne = jumpYRef.current > 0.001;
+    if (wasAirborne || jumpVelRef.current > 0) {
+      jumpYRef.current += jumpVelRef.current * dt;
+      jumpVelRef.current -= 15.2 * dt;
+      if (jumpYRef.current <= 0) {
+        jumpYRef.current = 0;
+        jumpVelRef.current = 0;
+        const surfLand = getSurfaceAtPosition(rx, ry, rz);
+        sfxEngine.playFootstep(surfLand, true);
+      }
+    }
+    const isAirborne = jumpYRef.current > 0.02;
+
     if (isMoving) {
       const targetRot = Math.atan2(velocityRef.current.x, velocityRef.current.z);
       let diff = targetRot - playerRuntime.rotationY;
@@ -1253,14 +1312,16 @@ export const PlayerController: React.FC = () => {
       while (diff < -Math.PI) diff += Math.PI * 2;
       playerRuntime.rotationY += diff * Math.min(1, dt * 11);
 
-      const freq = isRunning ? 10.2 : 7.0;
-      strideTimerRef.current += dt * freq * Math.min(1.2, speedMag / 4.2);
-      const halfCycle = Math.floor(strideTimerRef.current / Math.PI);
-      if (halfCycle !== lastStepHalfRef.current) {
-        lastStepHalfRef.current = halfCycle;
-        const surf = getSurfaceAtPosition(rx, ry, rz);
-        sfxEngine.playFootstep(surf, isRunning);
-        store.incrementStepCount();
+      if (!isAirborne) {
+        const freq = isRunning ? 10.2 : 7.0;
+        strideTimerRef.current += dt * freq * Math.min(1.2, speedMag / 4.2);
+        const halfCycle = Math.floor(strideTimerRef.current / Math.PI);
+        if (halfCycle !== lastStepHalfRef.current) {
+          lastStepHalfRef.current = halfCycle;
+          const surf = getSurfaceAtPosition(rx, ry, rz);
+          sfxEngine.playFootstep(surf, isRunning);
+          store.incrementStepCount();
+        }
       }
     } else {
       strideTimerRef.current = 0;
@@ -1276,18 +1337,22 @@ export const PlayerController: React.FC = () => {
 
     if (groupRef.current) {
       const [px, py, pz] = playerRuntime.position;
-      const bob = isMoving
-        ? Math.abs(Math.sin(strideTimerRef.current)) * 0.055
-        : Math.sin(t * 2.0) * 0.012;
+      const bob = isAirborne
+        ? jumpYRef.current
+        : isMoving
+          ? Math.abs(Math.sin(strideTimerRef.current)) * 0.055
+          : Math.sin(t * 2.0) * 0.012;
       groupRef.current.position.set(px, py + bob, pz);
       groupRef.current.rotation.y = playerRuntime.rotationY;
 
       const swing = isMoving ? Math.sin(strideTimerRef.current) * Math.min(0.65, speedMag * 0.085) : 0;
-      if (leftLegRef.current) leftLegRef.current.rotation.x = THREE.MathUtils.lerp(leftLegRef.current.rotation.x, swing, dt * 14);
-      if (rightLegRef.current) rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, -swing, dt * 14);
+      const targetLeftLeg = isAirborne ? -0.54 : swing;
+      const targetRightLeg = isAirborne ? 0.34 : -swing;
+      if (leftLegRef.current) leftLegRef.current.rotation.x = THREE.MathUtils.lerp(leftLegRef.current.rotation.x, targetLeftLeg, dt * 14);
+      if (rightLegRef.current) rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, targetRightLeg, dt * 14);
 
       if (torsoRef.current) {
-        const lean = isMoving ? (isRunning ? 0.12 : 0.045) : 0;
+        const lean = isAirborne ? 0.08 : isMoving ? (isRunning ? 0.12 : 0.045) : 0;
         torsoRef.current.rotation.x = THREE.MathUtils.lerp(torsoRef.current.rotation.x, lean, dt * 8);
       }
 
@@ -1420,10 +1485,10 @@ export const PlayerController: React.FC = () => {
       const camOffsetY = Math.sin(pitch) * desiredDist + 1.75;
       const camOffsetZ = Math.cos(yaw) * Math.cos(pitch) * desiredDist;
 
-      camDesiredVec.current.set(px + camOffsetX, py + camOffsetY, pz + camOffsetZ);
+      camDesiredVec.current.set(px + camOffsetX, py + jumpYRef.current * 0.45 + camOffsetY, pz + camOffsetZ);
       camera.position.lerp(camDesiredVec.current, Math.min(1, dt * 10));
 
-      lookTargetVec.current.set(px, py + 1.48, pz);
+      lookTargetVec.current.set(px, py + jumpYRef.current * 0.55 + 1.48, pz);
       camera.lookAt(lookTargetVec.current);
     }
 

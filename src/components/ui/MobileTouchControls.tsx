@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
+  ArrowUpFromLine,
   Bell,
   Bike,
   Footprints,
@@ -41,6 +42,7 @@ export const MobileTouchControls: React.FC = () => {
   const isPhotoMode = useGameStore((s) => s.isPhotoMode);
   const isPhoneOpen = useGameStore((s) => s.isPhoneOpen);
   const isGuitarOpen = useGameStore((s) => s.isGuitarOpen);
+  const isNadiaLetterOpen = useGameStore((s) => s.isNadiaLetterOpen);
   const isBagOpen = useGameStore((s) => s.isBagOpen);
   const activeCulinarySpot = useGameStore((s) => s.activeCulinarySpot);
   const isWardrobeOpen = useGameStore((s) => s.isWardrobeOpen);
@@ -84,6 +86,7 @@ export const MobileTouchControls: React.FC = () => {
     isPhotoMode ||
     isPhoneOpen ||
     isGuitarOpen ||
+    isNadiaLetterOpen ||
     isBagOpen ||
     Boolean(activeCulinarySpot) ||
     isWardrobeOpen ||
@@ -205,14 +208,15 @@ export const MobileTouchControls: React.FC = () => {
             </button>
           )}
 
-          {/* Basis Joystick 112px */}
+          {/* Basis Joystick 112px (touch-none agar multi-touch kamera kanan bebas digeser bersamaan!) */}
           <div
             ref={stickBaseRef}
             onTouchStart={handleStickTouchStart}
             onTouchMove={handleStickTouchMove}
             onTouchEnd={handleStickTouchEnd}
             onTouchCancel={handleStickTouchEnd}
-            className="relative flex h-[112px] w-[112px] items-center justify-center rounded-full border-2 border-warm-200/25 bg-dusk-950/45 shadow-2xl backdrop-blur-sm"
+            style={{ touchAction: 'none' }}
+            className="relative flex h-[112px] w-[112px] touch-none items-center justify-center rounded-full border-2 border-warm-200/25 bg-dusk-950/45 shadow-2xl backdrop-blur-sm"
           >
             {/* Penanda Arah Halus */}
             <span className="pointer-events-none absolute top-1.5 text-[9px] font-bold text-warm-200/45">
@@ -234,12 +238,13 @@ export const MobileTouchControls: React.FC = () => {
           </div>
         </div>
 
-        {/* === KANAN BAWAH: CLUSTER TOMBOL AKSI KONTEKSTUAL === */}
+        {/* === KANAN BAWAH: CLUSTER TOMBOL AKSI KONTEKSTUAL + LOMPAT === */}
         <div
-          className="pointer-events-auto fixed flex items-end gap-2.5"
+          className="pointer-events-auto fixed flex items-end gap-2.5 touch-none"
           style={{
             right: 'max(14px, env(safe-area-inset-right))',
             bottom: 'max(14px, env(safe-area-inset-bottom))',
+            touchAction: 'none',
           }}
           onTouchStart={(e) => e.stopPropagation()}
         >
@@ -284,6 +289,25 @@ export const MobileTouchControls: React.FC = () => {
                 </button>
               )}
             </div>
+
+            {/* Tombol Lompat Saat Jalan Kaki / Lari */}
+            {!inVehicle && !inActivity && (
+              <button
+                type="button"
+                onTouchStart={(e) => {
+                  e.stopPropagation();
+                  playerRuntime.touchInput.jumpQueued = true;
+                }}
+                onClick={() => {
+                  playerRuntime.touchInput.jumpQueued = true;
+                }}
+                className="flex h-[52px] w-[52px] flex-col items-center justify-center rounded-full border-2 border-warm-200/45 bg-dusk-950/75 text-warm-100 shadow-xl backdrop-blur-md active:scale-90"
+                aria-label="Lompat"
+              >
+                <ArrowUpFromLine className="h-4 w-4 text-warm-300" />
+                <span className="text-[9px] font-bold">Lompat</span>
+              </button>
+            )}
 
             {/* Tombol Aksi Khusus Kendaraan / Memancing / Layangan */}
             {inVehicle && (
