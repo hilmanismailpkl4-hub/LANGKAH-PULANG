@@ -646,4 +646,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'TING-TONG-TING!! Suara perunggu emasnya nyaring dan adem banget kayak gamelan, Ayah!! Kira mau ketuk sekali lagi!' },
     { speaker: 'nadia', text: 'Senang banget ya Mas sekarang taman saku tepi sungai utara punya alat musik publik—anak-anak bisa kenal nada Nusantara.' },
   ],
+  activity_backyard_swing: [
+    { speaker: 'kira', text: 'YEEEY!! Ayunan ban di pohon belakang rumah kita goyang-goyang adem banget, Ayah!! Dorong pelan-pelan ya!' },
+    { speaker: 'nadia', text: 'Halaman belakang rumah kita rasanya jadi tempat paling tenang buat ngadem sore-sore ya, Mas.' },
+  ],
+  activity_nadia_herbs: [
+    { speaker: 'nadia', text: 'Lihat deh Mas, daun pandan sama cabai rawit di bedeng belakang dapur sudah rimbun banget—nanti malam tinggal petik segar!' },
+    { speaker: 'kira', text: 'Bunda!! Daun kemanginya wangi banget pas kesentuh tangan Kira!!' },
+  ],
 };

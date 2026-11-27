@@ -643,6 +643,9 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   // === 50. Taman Saku Tepi Sungai Utara & Saron Taman Publik ===
   { id: 'nw_pocket_park_bench', minX: -37.0, maxX: -36.0, minZ: -40.6, maxZ: -38.4 },
   { id: 'nw_garden_saron', minX: -33.18, maxX: -31.82, minZ: -37.58, maxZ: -36.82 },
+  // === 51. Halaman Belakang Rumah Damar & Kebun TOGA PKK RT 04 Melati ===
+  { id: 'backyard_herb_bed', minX: -18.55, maxX: -15.85, minZ: 75.68, maxZ: 76.72 },
+  { id: 'melati_toga_bale', minX: 3.98, maxX: 6.42, minZ: 79.2, maxZ: 80.4 },
 ];
 
 /**
@@ -869,6 +872,9 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: -75.55, z: -53.05, r: 0.16 },
   { x: -79.45, z: -49.95, r: 0.16 },
   { x: -75.55, z: -49.95, r: 0.16 },
+  // Gentong Terakota Belakang Rumah & Papan Kebun TOGA RT 04
+  { x: -14.2, z: 77.6, r: 0.5 },
+  { x: 2.6, z: 79.4, r: 0.45 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
     [-39.75, -9.5], [-39.75, -19.5], [-39.75, -29.5],

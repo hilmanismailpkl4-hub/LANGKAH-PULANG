@@ -5463,6 +5463,89 @@ export const WorldInteractables: React.FC = () => {
       2.3,
     );
 
+    // === HALAMAN BELAKANG RUMAH DAMAR & KEBUN TOGA PKK RT 04 ===
+    consider(
+      {
+        id: 'sit_backyard_tire_swing',
+        kind: 'story_object',
+        label: 'Duduk Santai di Ayunan Ban Pohon Belakang Rumah',
+        sublabel: 'Halaman Belakang Jl. Melati No. 14',
+        position: [-25.6, 0, 78.1],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Ayunan Ban Pohon Halaman Belakang',
+            seatPos: [-25.6, 0.16, 79.0],
+            lookAt: [-17.2, 0.9, 76.2],
+            standPos: [-25.6, 0, 77.7],
+            seatYaw: Math.PI / 2,
+          };
+          store.setSitting(true);
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_backyard_swing, 'fw_backyard_swing');
+          }
+          store.showToast('Berayun pelan di ayunan ban pohon halaman belakang rumah... (WASD/E berdiri)');
+        },
+      },
+      2.3,
+    );
+
+    consider(
+      {
+        id: 'activity_nadia_herb_garden',
+        kind: 'story_object',
+        label: 'Rawat Bedeng Bumbu Dapur Nadia (Pandan, Serai & Cabai)',
+        sublabel: 'Halaman Belakang Rumah Jl. Melati No. 14',
+        position: [-17.2, 0, 77.35],
+        onInteract: () => {
+          playerRuntime.herbRustleTimer = 3.5;
+          sfxEngine.play('chime');
+          if (!store.flags.includes('tended_nadia_herb_garden')) {
+            store.applyEffect({
+              kehadiranKeluarga: 1,
+              setFlags: ['tended_nadia_herb_garden'],
+              journalEntry: {
+                id: 'je_nadia_herb_garden',
+                title: 'Harum Pandan & Kemangi di Belakang Dapur',
+                body: 'Di balik dinding dapur rumah kami, Nadia merawat bedeng kayu kecil berisi pandan, serai, kemangi, dan cabai rawit merah. Kehidupan kecil yang tumbuh sabar bahkan saat aku jarang menengok ke belakang rumah.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_nadia_herbs, 'fw_nadia_herbs');
+          }
+          store.showToast('Harum segar daun pandan, serai, dan kemangi menyeruak dari kebun dapur belakang rumah.');
+        },
+      },
+      2.3,
+    );
+
+    consider(
+      {
+        id: 'sit_melati_toga_bale',
+        kind: 'story_object',
+        label: 'Duduk di Bale-Bale Bambu Kebun TOGA RT 04',
+        sublabel: 'Halaman Belakang Kompleks Melati · Tanaman Obat Warga',
+        position: [5.2, 0, 78.6],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Bale-Bale Bambu Kebun TOGA RT 04',
+            seatPos: [5.2, 0.14, 79.8],
+            lookAt: [5.2, 1.0, 72.0],
+            standPos: [5.2, 0, 78.4],
+            seatYaw: Math.PI,
+          };
+          store.setSitting(true);
+          store.showToast('Duduk adem di bale-bale bambu Kebun TOGA PKK RT 04... (WASD/E berdiri)');
+        },
+      },
+      2.4,
+    );
+
     // === CERITA SASTRA LEMBAH SAWAH & TERAS RUMAH: BESEK GABAH PANDANWANGI IBU (2015) ===
     consider(
       {
@@ -5906,6 +5989,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-32.5, 1.08, -37.2]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#facc15" />
+      </mesh>
+      <mesh position={[-25.6, 1.05, 79.0]}>
+        <sphereGeometry args={[0.07, 8, 8]} />
+        <meshBasicMaterial color="#fde047" />
+      </mesh>
+      <mesh position={[-17.2, 0.92, 76.2]}>
+        <sphereGeometry args={[0.07, 8, 8]} />
+        <meshBasicMaterial color="#4ade80" />
+      </mesh>
+      <mesh position={[5.2, 0.95, 79.8]}>
+        <sphereGeometry args={[0.07, 8, 8]} />
+        <meshBasicMaterial color="#bef264" />
       </mesh>
 
       {/* Map Portofolio Kanvas Cokelat Bertali Hitam Mas Dimas di Promenade Sungai */}

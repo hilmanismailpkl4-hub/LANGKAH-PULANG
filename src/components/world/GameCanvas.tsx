@@ -28,6 +28,7 @@ import { KetoprakLotusAndWeatherPlaza } from './KetoprakLotusAndWeatherPlaza';
 import { KonterJamuAndLakeBirdScope } from './KonterJamuAndLakeBirdScope';
 import { LakeBoatsBandrekAndParkLights } from './LakeBoatsBandrekAndParkLights';
 import { LivingValleyAndStreetscape } from './LivingValleyAndStreetscape';
+import { MelatiBackyardAndCommunityLife } from './MelatiBackyardAndCommunityLife';
 import { MorningDucksFlowersAndBubur } from './MorningDucksFlowersAndBubur';
 import { MorningParkAndBadminton } from './MorningParkAndBadminton';
 import { MusholaTehPociAndAngkotBoard } from './MusholaTehPociAndAngkotBoard';
@@ -164,6 +165,7 @@ export const GameCanvas: React.FC = () => {
               <TabebuyaAndBambooSanctuary timeOfDay={effectiveTime} settings={settings} />
               <InteriorArchitecturalLife timeOfDay={effectiveTime} settings={settings} />
               <NorthwestRiverPocketPark timeOfDay={effectiveTime} settings={settings} />
+              <MelatiBackyardAndCommunityLife timeOfDay={effectiveTime} settings={settings} />
             </group>
 
             <CityLife timeOfDay={effectiveTime} settings={settings} />

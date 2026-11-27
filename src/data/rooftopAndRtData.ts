@@ -60,6 +60,24 @@ export const ROOFTOP_TELESCOPE_TARGETS: TelescopeTarget[] = [
     caption:
       'Jam bundar besar di atas Stasiun Senja terus berdetak tenang, mengantar dan menyambut setiap penumpang komuter yang pulang menjelang senja.',
   },
+  {
+    id: 'tel_sawah',
+    name: 'Lembah Sawah Senja & Saung Bambu',
+    subtitle: 'Seberang Jembatan Selatan (Barat Daya)',
+    bearingLabel: '226° BD · 8.0× ZOOM',
+    lookAt: [-76.0, 1.2, 60.0],
+    caption:
+      'Petak-petak sawah berair dan kincir irigasi bambu berkilau tenang di ujung selatan sungai—tempat almarhumah Ibu dulu menitipkan pesan Ilmu Padi.',
+  },
+  {
+    id: 'tel_tabebuya',
+    name: 'Koridor Bunga Tabebuya · Jl. Stasiun Timur',
+    subtitle: 'Boulevard Timur Kota (Tenggara)',
+    bearingLabel: '136° TG · 8.0× ZOOM',
+    lookAt: [64.0, 2.8, 28.0],
+    caption:
+      'Deretan kanopi Tabebuya merah muda dan kuning keemasan mekar semarak di sepanjang jalan menuju Stasiun Senja.',
+  },
 ];
 
 /**
@@ -125,5 +143,17 @@ export const RT_BOARD_NOTICES: RtBoardNotice[] = [
     tiltDeg: -1.1,
     body: 'Lampu sorot Lapangan Bulu Tangkis ujung timur Gang Melati sudah menyala terang kembali! Warga dewasa maupun anak-anak dipersilakan meramaikan lapangan. Raket cadangan dan kok tersedia di bangku tepi lapangan.',
     footer: 'Sehat bareng, guyub bareng!',
+  },
+  {
+    id: 'rt_kebun_toga',
+    category: 'PKK & Lingkungan Hijau',
+    title: 'Kebun TOGA Belakang Gang & Panen Sawah Selatan',
+    dateLabel: 'Program Hijau RT 04',
+    author: 'Ibu-Ibu PKK Melati',
+    paperColor: '#ecfccb',
+    pinColor: '#15803d',
+    tiltDeg: 1.0,
+    body: 'Kebun Tanaman Obat Keluarga (Jahe Merah, Kunyit, Serai & Lidah Buaya) di halaman belakang deretan rumah Jl. Melati sudah rimbun! Warga boleh memetik secukupnya untuk wedang keluarga. Jangan lupa mampir menikmati udara sore di Saung Bambu Lembah Sawah seberang Jembatan Selatan.',
+    footer: 'Hijau halaman kita, sehat keluarga kita!',
   },
 ];
