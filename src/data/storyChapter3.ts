@@ -17,7 +17,7 @@ export const CHAPTER_3_STEPS: MainObjectiveStep[] = [
     description: 'Saatnya turun dan berjalan pulang ke rumah di Jl. Melati No. 14. Lampu ruang makan masih menyala menunggumu.',
     targetLocation: 'rumah_damar',
     waypoint: [-17.5, 1.5, 65.8],
-    hint: 'Turun menggunakan Lift Rooftop, lalu berjalan pulang ke Rumah Keluarga Damar dan temui Nadia di meja makan.',
+    hint: 'Turun menggunakan Lift Rooftop, lalu pulang ke Rumah Keluarga Damar. Hampiri Kira untuk membacakan dongeng sebelum tidur, lalu temui Nadia di meja makan.',
   },
 ];
 
@@ -159,7 +159,49 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
         emotion: 'tenang',
         text: 'Kamu pulang, Mas... Masuk, duduk dulu. Sup ayamnya baru aku hangatkan lagi sepuluh menit lalu.',
         onEnter: { playSfx: 'door' },
-        nextNodeId: 'ch3_fin_2',
+        conditionalNext: [
+          {
+            requiredFlag: 'ch3_told_kira_bedtime_story',
+            nextNodeId: 'ch3_fin_after_bedtime',
+          },
+        ],
+        nextNodeId: 'ch3_fin_bedtime_prompt',
+      },
+      ch3_fin_bedtime_prompt: {
+        id: 'ch3_fin_bedtime_prompt',
+        speaker: 'nadia',
+        emotion: 'hangat',
+        text: 'Kira dari tadi nahan kantuk di sudut karpet sambil megang perahu kertas birunya—katanya pengin didongengin Ayah dua menit sebelum tidur.',
+        choices: [
+          {
+            id: 'ch3_fin_go_bedtime',
+            text: 'Hampiri Kira sebentar dan rangkai dongeng pengantar tidur untuknya dulu',
+            subtext: 'Adegan intim bersama Kira sebelum berbicara empat mata dengan Nadia',
+            nextNodeId: 'ch3_fin_2',
+            effects: {
+              launchDialogueId: 'ch3_kira_dongeng_malam',
+            },
+          },
+          {
+            id: 'ch3_fin_skip_to_table',
+            text: 'Peluk Kira sebentar di dekat meja makan, lalu langsung bicara dengan Nadia',
+            subtext: 'Langsung melanjutkan ke percakapan meja makan',
+            nextNodeId: 'ch3_fin_2',
+          },
+        ],
+      },
+      ch3_fin_after_bedtime: {
+        id: 'ch3_fin_after_bedtime',
+        speaker: 'nadia',
+        emotion: 'haru',
+        echoTag: 'Gema Dongeng · Nakhoda Perahu Kertas',
+        text: 'Kira langsung pulas sambil memeluk perahu kertasnya, Mas... Aku tadi berdiri di dekat kusen pintu dan dengar seluruh dongeng Nakhoda Perahu Kertasmu. Sekarang... giliran Nakhodanya duduk di sini dan bicara jujur sama Ratu Pelabuhannya, ya.',
+        conditionalNext: [
+          { requiredFlag: 'reconciled_dinner_memory_chat', nextNodeId: 'ch3_fin_nadia_echo_chat' },
+          { requiredFlag: 'flashback_dinner_done', nextNodeId: 'ch3_fin_nadia_echo_fb' },
+          { requiredFlag: 'gave_gift_nadia', nextNodeId: 'ch3_fin_nadia_echo_flower' },
+        ],
+        nextNodeId: 'ch3_fin_9',
       },
       ch3_fin_2: {
         id: 'ch3_fin_2',

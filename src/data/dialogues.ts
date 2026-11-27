@@ -4,6 +4,7 @@ import { CHARACTER_ECHO_DIALOGUES } from './characterEchoes';
 import { EASTER_EGG_DIALOGUES } from './easterEggs';
 import { EPILOGUE_DIALOGUES } from './epilogueMorning';
 import { FLASHBACK_DIALOGUES } from './flashbacks';
+import { KIRA_BEDTIME_DIALOGUES } from './kiraBedtimeStory';
 import { PROLOGUE_DIALOGUES } from './prologueAndChapters';
 import { SIDE_QUEST_DIALOGUES } from './sideQuests';
 import { CHAPTER_1_DIALOGUES, CHAPTER_1_STEPS } from './storyChapter1';
@@ -576,6 +577,7 @@ const AMBIENT_DIALOGUES: Record<string, DialogueScript> = {
 
 export const ALL_DIALOGUES: Record<string, DialogueScript> = {
   ...PROLOGUE_DIALOGUES,
+  ...KIRA_BEDTIME_DIALOGUES,
   ...CHAPTER_1_DIALOGUES,
   ...CHAPTER_2_DIALOGUES,
   ...CHAPTER_3_DIALOGUES,

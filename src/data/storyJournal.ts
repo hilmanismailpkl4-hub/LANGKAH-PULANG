@@ -476,6 +476,14 @@ export function buildStoryTimeline(params: {
       tone: 'gold',
     });
   }
+  if (flags.includes('ch3_told_kira_bedtime_story')) {
+    echoBadges.push({
+      id: 'eb_kira_bedtime',
+      title: 'Dongeng Nakhoda Perahu Kertas (Bab 3)',
+      detail: 'Nadia mendengarkan dongeng pengantar tidurmu untuk Kira dari ambang pintu sebelum kalian bicara di meja makan.',
+      tone: 'rose',
+    });
+  }
   if (flags.includes('drew_with_kira_corner') || flags.includes('gave_gift_kira')) {
     echoBadges.push({
       id: 'eb_kira',

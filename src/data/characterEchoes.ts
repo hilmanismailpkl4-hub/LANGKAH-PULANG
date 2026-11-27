@@ -403,6 +403,15 @@ export function buildEndingJourneyRecap(params: {
 
   const echoCards: JourneyEchoCard[] = [];
 
+  if (flags.includes('ch3_told_kira_bedtime_story')) {
+    echoCards.push({
+      id: 'ec_kira_bedtime',
+      label: 'Dongeng Nakhoda Perahu Kertas',
+      summary:
+        'Sebelum duduk di meja makan Bab 3, kamu menidurkan Kira dengan dongeng perahu kertas—dan mendengar bisikannya agar Ayah membawa pulang tawanya lagi.',
+      tone: 'rose',
+    });
+  }
   if (flags.includes('flashback_2020_done')) {
     echoCards.push({
       id: 'ec_fb2020',

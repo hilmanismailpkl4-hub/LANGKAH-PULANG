@@ -9,6 +9,7 @@ import { DAMAR_OUTFIT_BY_ID } from '../../data/damarOutfits';
 import { ROOFTOP_TELESCOPE_TARGETS } from '../../data/rooftopAndRtData';
 import {
   GROUND_COLLIDERS,
+  ROOFTOP_COLLIDERS,
   getLocationAtPosition,
   getSurfaceAtPosition,
   isPositionIndoors,
@@ -1476,6 +1477,25 @@ export const PlayerController: React.FC = () => {
           );
           if (insideWall) {
             desiredDist = Math.max(1.65, step - 0.35);
+            break;
+          }
+        }
+      } else {
+        const dirX = Math.sin(yaw) * Math.cos(pitch);
+        const dirZ = Math.cos(yaw) * Math.cos(pitch);
+        for (let step = 1.4; step <= desiredDist; step += 0.4) {
+          const tx = px + dirX * step;
+          const tz = pz + dirZ * step;
+          const hitsCabin = ROOFTOP_COLLIDERS.some(
+            (b) =>
+              b.id === 'rooftop_elevator_cabin' &&
+              tx > b.minX - 0.2 &&
+              tx < b.maxX + 0.2 &&
+              tz > b.minZ - 0.2 &&
+              tz < b.maxZ + 0.2,
+          );
+          if (hitsCabin) {
+            desiredDist = Math.max(1.55, step - 0.35);
             break;
           }
         }

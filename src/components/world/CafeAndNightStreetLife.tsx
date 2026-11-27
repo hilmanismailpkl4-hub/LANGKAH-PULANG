@@ -283,7 +283,7 @@ export const CafeAndNightStreetLife: React.FC<CafeAndNightStreetLifeProps> = ({
     }
 
     // 2. Animasi Mas Agung mengetuk mangkuk bakso & bunyi "ting-ting-ting!" berkala
-    const distBakso = py > 4 ? 99 : Math.hypot(px - -26.8, pz - 47.8);
+    const distBakso = py > 4 ? 99 : Math.hypot(px - -35.2, pz - 53.6);
     if (agungHeadRef.current) {
       agungHeadRef.current.rotation.y = Math.sin(t * 0.85) * 0.3;
     }
@@ -419,9 +419,9 @@ export const CafeAndNightStreetLife: React.FC<CafeAndNightStreetLifeProps> = ({
       </group>
 
       {/* ==================================================================== */}
-      {/* 2. GEROBAK BAKSO MALANG KELILING MAS AGUNG (TEPI JL. MELATI)         */}
+      {/* 2. GEROBAK BAKSO MALANG KELILING MAS AGUNG (TEPI SELATAN JL. MELATI)  */}
       {/* ==================================================================== */}
-      <group position={[-26.8, 0, 47.8]}>
+      <group position={[-35.2, 0, 53.6]}>
         {/* Badan Kayu Gerobak Bakso Biru-Krem */}
         <mesh position={[0, 0.68, 0]} castShadow receiveShadow>
           <boxGeometry args={[2.05, 0.86, 0.92]} />
@@ -585,9 +585,9 @@ export const CafeAndNightStreetLife: React.FC<CafeAndNightStreetLifeProps> = ({
 
       {/* ==================================================================== */}
       {/* 3. WARUNG SUDUT PERUMAHAN MELATI ("WARUNG BU RINA") + NEON MALAM     */}
-      {/*    Kavling trotoar utara Jl. Melati ([18.8, 0, 39.6], bersih dari jalan!) */}
+      {/*    Kavling halaman Perumahan Melati ([-34.8, 0, 60.2], menghadap Jl. Melati!) */}
       {/* ==================================================================== */}
-      <group position={[18.8, 0, 39.6]}>
+      <group position={[-34.8, 0, 60.2]} rotation={[0, Math.PI, 0]}>
         {/* Bangunan Warung Krem-Hijau Mint Khas Perumahan Indonesia */}
         <mesh position={[0, 1.55, 0]} castShadow receiveShadow>
           <boxGeometry args={[4.4, 3.1, 3.0]} />

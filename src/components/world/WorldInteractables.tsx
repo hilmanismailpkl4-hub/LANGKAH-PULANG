@@ -575,6 +575,13 @@ export const WorldInteractables: React.FC = () => {
           return { dialogueId: 'ch1_sarapan_main', highlight: 'main', sublabel: 'Cerita Utama' };
         }
         if (store.mainStepId === 'ch3_2_kembali_ke_rumah') {
+          if (npcId === 'kira' && !store.flags.includes('ch3_told_kira_bedtime_story')) {
+            return {
+              dialogueId: 'ch3_kira_dongeng_malam',
+              highlight: 'main',
+              sublabel: 'Dongeng Sebelum Tidur · Bab 3',
+            };
+          }
           return { dialogueId: 'ch3_meja_makan_finale', highlight: 'main', sublabel: 'Momen Penentu' };
         }
         if (npcId === 'kira' && store.flags.includes('has_gift_kira') && !store.flags.includes('gave_gift_kira')) {
@@ -963,8 +970,8 @@ export const WorldInteractables: React.FC = () => {
         id: 'activity_bakso_cart',
         kind: 'story_object',
         label: 'Pesan Bakso Malang & Mie Ayam Hangat Mas Agung',
-        sublabel: 'Gerobak Bakso Keliling · Tepi Jl. Melati',
-        position: [-25.6, 0, 48.8],
+        sublabel: 'Gerobak Bakso Keliling · Tepi Selatan Jl. Melati',
+        position: [-35.2, 0, 54.6],
         onInteract: () => {
           sfxEngine.playBaksoClink(0.95);
           store.openCulinarySpot('bakso');
@@ -1037,8 +1044,8 @@ export const WorldInteractables: React.FC = () => {
         id: 'activity_corner_warung',
         kind: 'story_object',
         label: 'Mampir Sapa Warung Sudut Bu Rina',
-        sublabel: 'Tepi Utara Jl. Melati · Sembako, Kopi & Gorengan Sore',
-        position: [18.8, 0, 42.2],
+        sublabel: 'Kawasan Perumahan Melati · Sembako, Kopi & Gorengan Sore',
+        position: [-34.8, 0, 57.5],
         onInteract: () => {
           sfxEngine.play('interact');
           if (!store.flags.includes('visited_warung_bu_rina')) {
@@ -1073,7 +1080,7 @@ export const WorldInteractables: React.FC = () => {
         kind: 'story_object',
         label: 'Pukul & Rally Kok Bulu Tangkis di Lapangan Gang Melati',
         sublabel: 'Lapangan Bulu Tangkis RT · Perumahan Melati',
-        position: [36.0, 0, 49.8],
+        position: [-1.0, 0, 59.8],
         onInteract: () => {
           playerRuntime.badmintonRallyTimer = 7.4;
           sfxEngine.playBadmintonHit(1.0);
@@ -4082,15 +4089,15 @@ export const WorldInteractables: React.FC = () => {
         id: 'portal_up',
         kind: 'portal',
         label: 'Naik Lift ke Rooftop Pemandangan Kota',
-        sublabel: 'Menara Nusantara',
+        sublabel: 'Pintu Lift Lobi · Menara Nusantara',
         position: ELEVATOR_PORTALS.lobbyPos,
         onInteract: () => {
           sfxEngine.play('door');
-          setRuntimePosition([20.8, 22, -23.0], 0);
-          store.showToast('Tiba di Rooftop Menara Nusantara');
+          setRuntimePosition([19.8, 22.02, -22.2], 0);
+          store.showToast('Pintu lift terbuka — tiba di Rooftop Sky Deck Lt. 18');
         },
       },
-      3.0,
+      3.2,
     );
 
     consider(
@@ -4155,12 +4162,12 @@ export const WorldInteractables: React.FC = () => {
         id: 'portal_down',
         kind: 'portal',
         label: 'Turun Lift ke Lobi Menara Nusantara',
-        sublabel: 'Kembali ke Jalan Kota',
+        sublabel: 'Pintu Lift Rooftop · Lt. 18 → Lt. 01',
         position: ELEVATOR_PORTALS.rooftopPos,
         onInteract: () => {
           sfxEngine.play('door');
-          setRuntimePosition([20.5, 0.08, -21.5], 0);
-          store.showToast('Kembali ke Lobi Menara Nusantara');
+          setRuntimePosition([19.5, 0.08, -22.8], 0);
+          store.showToast('Kembali ke Lobi Utama Menara Nusantara');
         },
       },
       3.2,
@@ -4495,11 +4502,11 @@ export const WorldInteractables: React.FC = () => {
         </mesh>
       )}
 
-      <mesh position={[ELEVATOR_PORTALS.lobbyPos[0], 1.4, ELEVATOR_PORTALS.lobbyPos[2] - 2.6]}>
+      <mesh position={[19.5, 1.45, -25.1]}>
         <sphereGeometry args={[0.1, 8, 8]} />
         <meshBasicMaterial color="#f6d17a" />
       </mesh>
-      <mesh position={[ELEVATOR_PORTALS.rooftopPos[0], 23.4, ELEVATOR_PORTALS.rooftopPos[2] - 0.8]}>
+      <mesh position={[19.8, 23.45, -23.5]}>
         <sphereGeometry args={[0.12, 8, 8]} />
         <meshBasicMaterial color="#f6d17a" />
       </mesh>
@@ -4577,15 +4584,15 @@ export const WorldInteractables: React.FC = () => {
         <sphereGeometry args={[0.065, 8, 8]} />
         <meshBasicMaterial color="#fda4af" />
       </mesh>
-      <mesh position={[-26.8, 1.85, 47.8]}>
+      <mesh position={[-35.2, 1.85, 53.6]}>
         <sphereGeometry args={[0.08, 8, 8]} />
         <meshBasicMaterial color="#fde047" />
       </mesh>
-      <mesh position={[18.8, 2.08, 41.4]}>
+      <mesh position={[-34.8, 2.08, 58.4]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#fcd34d" />
       </mesh>
-      <mesh position={[34.3, 1.05, 46.55]}>
+      <mesh position={[-2.7, 1.05, 56.55]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#fde047" />
       </mesh>

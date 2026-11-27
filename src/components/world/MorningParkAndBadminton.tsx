@@ -322,7 +322,7 @@ export const MorningParkAndBadminton: React.FC<MorningParkAndBadmintonProps> = (
         if (cycleIdx !== rallyCycleRef.current) {
           rallyCycleRef.current = cycleIdx;
           const [px, py, pz] = playerRuntime.position;
-          const dist = py > 4 ? 99 : Math.hypot(px - 38.5, pz - 49.8);
+          const dist = py > 4 ? 99 : Math.hypot(px - 1.5, pz - 59.8);
           if (dist < 22) {
             sfxEngine.playBadmintonHit(Math.max(0.25, 1 - dist / 24));
           }
@@ -339,9 +339,9 @@ export const MorningParkAndBadminton: React.FC<MorningParkAndBadmintonProps> = (
   return (
     <group>
       {/* ==================================================================== */}
-      {/* 1. LAPANGAN BULU TANGKIS GANG MELATI ([38.5, 0, 49.8])               */}
+      {/* 1. LAPANGAN BULU TANGKIS GANG MELATI ([1.5, 0, 59.8])                */}
       {/* ==================================================================== */}
-      <group position={[38.5, 0, 49.8]}>
+      <group position={[1.5, 0, 59.8]}>
         {/* Permukaan Semen Lapangan Hijau-Abu Tipis */}
         <mesh position={[0, 0.015, 0]} receiveShadow>
           <boxGeometry args={[10.8, 0.03, 5.6]} />

@@ -244,6 +244,139 @@ const StreetLamps: React.FC<{ lit: boolean; glow: boolean }> = ({ lit, glow }) =
 };
 
 /**
+ * Model 3D Pintu Lift Modern Menara Nusantara (Pintu Geser Ganda Stainless,
+ * Kusen Granit Gelap, Papan LED "LIFT ROOFTOP / LOBI", Layar Lantai & Tombol Panggil Menyala!)
+ */
+function createElevatorHeaderTexture(title: string, floorBadge: string): THREE.CanvasTexture {
+  const c = document.createElement('canvas');
+  c.width = 512;
+  c.height = 112;
+  const ctx = c.getContext('2d')!;
+
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(0, 0, 512, 112);
+  ctx.strokeStyle = '#fbbf24';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(6, 6, 500, 100);
+
+  // Kotak indikator lantai digital di kiri
+  ctx.fillStyle = '#1e293b';
+  ctx.fillRect(18, 18, 116, 76);
+  ctx.fillStyle = '#38bdf8';
+  ctx.font = 'bold 38px monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(floorBadge, 76, 57);
+
+  // Label tujuan lift jelas
+  ctx.fillStyle = '#fef3c7';
+  ctx.font = 'bold 26px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText(title, 152, 44);
+
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = 'bold 17px monospace';
+  ctx.fillText('TEKAN [E] UNTUK NAIK / TURUN', 152, 76);
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+const ElevatorDoorPortal: React.FC<{
+  position: [number, number, number];
+  title: string;
+  floorBadge: string;
+}> = ({ position, title, floorBadge }) => {
+  const headerTex = useMemo(() => createElevatorHeaderTexture(title, floorBadge), [title, floorBadge]);
+
+  return (
+    <group position={position}>
+      {/* Keset Marmer Gelap di Depan Pintu Lift */}
+      <mesh position={[0, 0.012, 0.62]} receiveShadow>
+        <boxGeometry args={[2.55, 0.02, 1.05]} />
+        <meshStandardMaterial color="#1e293b" roughness={0.75} />
+      </mesh>
+      <mesh position={[0, 0.024, 0.62]}>
+        <boxGeometry args={[2.35, 0.008, 0.86]} />
+        <meshStandardMaterial color="#334155" roughness={0.85} />
+      </mesh>
+
+      {/* Kusen Portal Granit & Aluminium Menonjol Jelas dari Dinding */}
+      <mesh position={[-1.16, 1.62, 0.14]} castShadow receiveShadow>
+        <boxGeometry args={[0.26, 3.24, 0.34]} />
+        <meshStandardMaterial color="#1e2530" metalness={0.55} roughness={0.35} />
+      </mesh>
+      <mesh position={[1.16, 1.62, 0.14]} castShadow receiveShadow>
+        <boxGeometry args={[0.26, 3.24, 0.34]} />
+        <meshStandardMaterial color="#1e2530" metalness={0.55} roughness={0.35} />
+      </mesh>
+      <mesh position={[0, 3.16, 0.16]} castShadow>
+        <boxGeometry args={[2.62, 0.32, 0.38]} />
+        <meshStandardMaterial color="#1e2530" metalness={0.55} roughness={0.35} />
+      </mesh>
+
+      {/* Dua Daun Pintu Geser Stainless Steel Mengkilap + Celah Tengah Tegas */}
+      <mesh position={[-0.51, 1.48, 0.12]} castShadow receiveShadow>
+        <boxGeometry args={[0.98, 2.96, 0.1]} />
+        <meshStandardMaterial color="#cbd5e1" metalness={0.82} roughness={0.2} />
+      </mesh>
+      <mesh position={[0.51, 1.48, 0.12]} castShadow receiveShadow>
+        <boxGeometry args={[0.98, 2.96, 0.1]} />
+        <meshStandardMaterial color="#cbd5e1" metalness={0.82} roughness={0.2} />
+      </mesh>
+      {/* Garis Celah Tengah Pintu Lift */}
+      <mesh position={[0, 1.48, 0.175]}>
+        <boxGeometry args={[0.035, 2.96, 0.02]} />
+        <meshStandardMaterial color="#0f172a" roughness={0.9} />
+      </mesh>
+      {/* Strip Aksen Emas Horizontal pada Daun Pintu */}
+      <mesh position={[-0.51, 1.45, 0.174]}>
+        <boxGeometry args={[0.88, 0.045, 0.012]} />
+        <meshStandardMaterial color="#f59e0b" metalness={0.75} roughness={0.25} />
+      </mesh>
+      <mesh position={[0.51, 1.45, 0.174]}>
+        <boxGeometry args={[0.88, 0.045, 0.012]} />
+        <meshStandardMaterial color="#f59e0b" metalness={0.75} roughness={0.25} />
+      </mesh>
+
+      {/* Papan Nama & Indikator Lantai LED Bercahaya di Atas Pintu */}
+      <mesh position={[0, 3.56, 0.2]}>
+        <boxGeometry args={[2.56, 0.56, 0.14]} />
+        <meshStandardMaterial color="#0f172a" metalness={0.5} roughness={0.35} />
+      </mesh>
+      <mesh position={[0, 3.56, 0.275]}>
+        <planeGeometry args={[2.46, 0.48]} />
+        <meshStandardMaterial
+          map={headerTex}
+          emissiveMap={headerTex}
+          emissive="#ffffff"
+          emissiveIntensity={1.15}
+          roughness={0.2}
+        />
+      </mesh>
+
+      {/* Panel Tombol Panggil Lift Menyala di Kusen Kanan */}
+      <mesh position={[1.16, 1.28, 0.315]}>
+        <boxGeometry args={[0.14, 0.34, 0.03]} />
+        <meshStandardMaterial color="#0f172a" metalness={0.6} roughness={0.3} />
+      </mesh>
+      <mesh position={[1.16, 1.33, 0.335]}>
+        <circleGeometry args={[0.038, 12]} />
+        <meshStandardMaterial color="#fef08a" emissive="#fbbf24" emissiveIntensity={2.8} />
+      </mesh>
+      <mesh position={[1.16, 1.22, 0.335]}>
+        <circleGeometry args={[0.032, 12]} />
+        <meshStandardMaterial color="#6ee7b7" emissive="#10b981" emissiveIntensity={2.4} />
+      </mesh>
+
+      {/* Lampu Sorot Plafon Pintu Lift agar Selalu Terang Siang & Malam */}
+      <pointLight position={[0, 2.9, 0.85]} color="#ffe8b8" intensity={9} distance={7.5} decay={1.7} />
+    </group>
+  );
+};
+
+/**
  * Model 3D Gitar Akustik Detail (dinding kafe & etalase toko musik)
  */
 const DetailedGuitar: React.FC<{ position: [number, number, number]; rotation?: [number, number, number] }> = ({
@@ -329,9 +462,9 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
           metalness={roadMetalness}
         />
       </mesh>
-      {/* Jl. Cempaka (Utara-Selatan, permukaan atas y = 0.044 — bersih 8mm di atas EW + polygonOffset) */}
-      <mesh position={[0, 0.019, 10]} receiveShadow>
-        <boxGeometry args={[11.2, 0.05, 148]} />
+      {/* Jl. Cempaka (Utara-Selatan, berakhir rapi di simpang T Jl. Melati z = 51.8 agar tidak memotong Perumahan!) */}
+      <mesh position={[0, 0.019, -4.1]} receiveShadow>
+        <boxGeometry args={[11.2, 0.05, 111.8]} />
         <meshStandardMaterial
           map={textures.asphalt}
           bumpMap={textures.asphaltBump}
@@ -1304,9 +1437,9 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
           <boxGeometry args={[1.4, 5.6, 6.2]} />
           <meshStandardMaterial color="#3c4757" metalness={0.45} roughness={0.4} />
         </mesh>
-        {/* Menara Kaca Curtain-Wall Bertekstur PBR */}
-        <mesh position={[29, 11.0, -34.6]} castShadow receiveShadow>
-          <boxGeometry args={[24.6, 22.0, 17.5]} />
+        {/* Menara Kaca Curtain-Wall Bertekstur PBR (puncak y = 21.70 di bawah pelat lantai Rooftop agar 0% Z-fighting!) */}
+        <mesh position={[29, 10.85, -34.6]} castShadow receiveShadow>
+          <boxGeometry args={[24.6, 21.7, 17.5]} />
           <meshStandardMaterial
             map={isEveningOrNight ? textures.officeGlassNight : textures.officeGlassDay}
             emissiveMap={isEveningOrNight ? textures.officeGlassNight : undefined}
@@ -1316,8 +1449,8 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
             metalness={0.55}
           />
         </mesh>
-        <mesh position={[29, 13.8, -22.5]} castShadow receiveShadow>
-          <boxGeometry args={[24.6, 16.4, 6.8]} />
+        <mesh position={[29, 13.65, -22.5]} castShadow receiveShadow>
+          <boxGeometry args={[24.6, 16.1, 6.8]} />
           <meshStandardMaterial
             map={isEveningOrNight ? textures.officeGlassNight : textures.officeGlassDay}
             emissiveMap={isEveningOrNight ? textures.officeGlassNight : undefined}
@@ -1326,58 +1459,68 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
             roughness={0.2}
             metalness={0.55}
           />
+        </mesh>
+        {/* Topi Beton Arsitektur Penutup Atap Fasad Depan (mencegah tekstur jendela muncul di bibir luar pagar rooftop) */}
+        <mesh position={[29, 21.84, -22.45]} receiveShadow castShadow>
+          <boxGeometry args={[24.8, 0.24, 7.0]} />
+          <meshStandardMaterial color="#374151" roughness={0.78} metalness={0.2} />
         </mesh>
         {/* Sirip Arsitektur Vertikal Modern */}
         {[19, 24, 29, 34, 39].map((fx) => (
-          <mesh key={`fin-${fx}`} position={[fx, 13.8, -19.0]}>
-            <boxGeometry args={[0.32, 16.4, 0.45]} />
+          <mesh key={`fin-${fx}`} position={[fx, 13.65, -19.0]}>
+            <boxGeometry args={[0.32, 16.1, 0.45]} />
             <meshStandardMaterial color="#9aa6b5" metalness={0.65} roughness={0.3} />
           </mesh>
         ))}
-        {/* Pintu Lift Lobi */}
-        <mesh position={[19.5, 1.65, -25.6]}>
-          <boxGeometry args={[2.1, 3.1, 0.28]} />
-          <meshStandardMaterial
-            color="#b6c2cf"
-            metalness={0.8}
-            roughness={0.18}
-            emissive="#f6d17a"
-            emissiveIntensity={0.35}
-          />
-        </mesh>
+        {/* Pintu Lift Lobi Menara Nusantara (Jelas, Bercahaya & Pintu Ganda Stainless!) */}
+        <ElevatorDoorPortal
+          position={[19.5, 0.08, -25.48]}
+          title="LIFT SKY DECK · ROOFTOP"
+          floorBadge="01 ▲"
+        />
         {/* Meja Kerja Lobi */}
         <mesh position={[34.2, 0.82, -23.4]} castShadow>
           <boxGeometry args={[2.3, 0.12, 1.12]} />
           <meshStandardMaterial map={textures.woodFloor} roughness={0.5} />
         </mesh>
 
-        {/* === ROOFTOP SKY DECK (Y = 22) === */}
+        {/* === ROOFTOP SKY DECK (Y = 22.02, BEBAS Z-FIGHTING 100%) === */}
         <group position={[0, 22, 0]}>
-          <mesh position={[28.8, -0.1, -32]} receiveShadow>
-            <boxGeometry args={[23.6, 0.2, 22.8]} />
+          <mesh position={[28.8, -0.09, -32]} receiveShadow>
+            <boxGeometry args={[23.8, 0.22, 22.8]} />
             <meshStandardMaterial map={textures.paving} color="#686d75" roughness={0.82} />
           </mesh>
           {/* Dek Kayu Lounge Rooftop */}
-          <mesh position={[29.0, 0.02, -25.5]} receiveShadow>
+          <mesh position={[29.0, 0.06, -25.5]} receiveShadow>
             <boxGeometry args={[12.5, 0.08, 7.2]} />
-            <meshStandardMaterial map={textures.woodFloor} roughness={0.7} />
+            <meshStandardMaterial
+              map={textures.woodFloor}
+              roughness={0.7}
+              polygonOffset
+              polygonOffsetFactor={-1}
+              polygonOffsetUnits={-1}
+            />
           </mesh>
-          {/* Pagar Kaca Pengaman + Tiang Baja */}
-          <mesh position={[28.8, 0.65, -20.8]}>
+          {/* Pagar Kaca Pengaman + Handrail Baja Atas */}
+          <mesh position={[28.8, 0.68, -20.8]}>
             <boxGeometry args={[23.6, 1.25, 0.14]} />
-            <meshStandardMaterial color="#a6cde8" transparent opacity={0.38} roughness={0.1} metalness={0.4} />
+            <meshStandardMaterial color="#a6cde8" transparent opacity={0.42} roughness={0.1} metalness={0.4} />
           </mesh>
-          <mesh position={[28.8, 0.65, -43.2]}>
+          <mesh position={[28.8, 1.32, -20.8]}>
+            <boxGeometry args={[23.7, 0.07, 0.18]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.75} roughness={0.25} />
+          </mesh>
+          <mesh position={[28.8, 0.68, -43.2]}>
             <boxGeometry args={[23.6, 1.25, 0.14]} />
-            <meshStandardMaterial color="#a6cde8" transparent opacity={0.38} roughness={0.1} metalness={0.4} />
+            <meshStandardMaterial color="#a6cde8" transparent opacity={0.42} roughness={0.1} metalness={0.4} />
           </mesh>
-          <mesh position={[17.1, 0.65, -32]}>
+          <mesh position={[17.1, 0.68, -32]}>
             <boxGeometry args={[0.14, 1.25, 22.6]} />
-            <meshStandardMaterial color="#a6cde8" transparent opacity={0.38} roughness={0.1} metalness={0.4} />
+            <meshStandardMaterial color="#a6cde8" transparent opacity={0.42} roughness={0.1} metalness={0.4} />
           </mesh>
-          <mesh position={[40.5, 0.65, -32]}>
+          <mesh position={[40.5, 0.68, -32]}>
             <boxGeometry args={[0.14, 1.25, 22.6]} />
-            <meshStandardMaterial color="#a6cde8" transparent opacity={0.38} roughness={0.1} metalness={0.4} />
+            <meshStandardMaterial color="#a6cde8" transparent opacity={0.42} roughness={0.1} metalness={0.4} />
           </mesh>
           {/* Lampu String Light Rooftop */}
           {[24, 27, 30, 33, 36].map((rx) => (
@@ -1400,16 +1543,31 @@ export const CityGeometry: React.FC<CityGeometryProps> = ({ timeOfDay, buWatiLam
               )}
             </group>
           ))}
-          {/* Kabin Lift Rooftop */}
-          <mesh position={[19.8, 1.85, -25.4]} castShadow>
-            <boxGeometry args={[3.4, 3.7, 3.2]} />
+          {/* Ruang Mesin & Pintu Lift Rooftop Lengkap dengan Pintu Ganda Stainless Bercahaya! */}
+          <mesh position={[19.8, 2.1, -25.55]} castShadow receiveShadow>
+            <boxGeometry args={[3.5, 4.15, 3.3]} />
             <meshStandardMaterial color="#364150" roughness={0.55} metalness={0.3} />
           </mesh>
-          {/* Bangku Santai Rooftop */}
-          <mesh position={[28.5, 0.44, -23.0]} castShadow>
-            <boxGeometry args={[3.4, 0.16, 0.85]} />
+          <mesh position={[19.8, 4.24, -25.4]} castShadow>
+            <boxGeometry args={[3.85, 0.18, 3.8]} />
+            <meshStandardMaterial color="#1f2937" roughness={0.5} metalness={0.4} />
+          </mesh>
+          <ElevatorDoorPortal
+            position={[19.8, 0.02, -23.9]}
+            title="LIFT LOBI UTAMA · LT. 01"
+            floorBadge="18 ▼"
+          />
+          {/* Bangku Santai Rooftop + Kaki Besi */}
+          <mesh position={[28.5, 0.48, -23.0]} castShadow receiveShadow>
+            <boxGeometry args={[3.4, 0.14, 0.85]} />
             <meshStandardMaterial map={textures.woodFloor} roughness={0.75} />
           </mesh>
+          {[-1.4, 1.4].map((bx, bi) => (
+            <mesh key={`rbl-${bi}`} position={[28.5 + bx, 0.26, -23.0]} castShadow>
+              <boxGeometry args={[0.14, 0.42, 0.72]} />
+              <meshStandardMaterial color="#1e293b" metalness={0.6} roughness={0.4} />
+            </mesh>
+          ))}
         </group>
       </group>
 

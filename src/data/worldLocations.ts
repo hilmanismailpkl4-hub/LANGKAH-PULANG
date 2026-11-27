@@ -191,8 +191,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= 17.5 && x <= 40.5 && z >= -26.0 && z <= -19.0) return true;
   // Tenda & Payung Lapak Es Kelapa Muda Pak Hasan di Tepi Danau
   if (x >= -86.2 && x <= -80.2 && z >= -11.4 && z <= -8.0) return true;
-  // Kanopi Teras Warung Sudut Bu Rina (Trotoar Utara Jl. Melati)
-  if (x >= 16.2 && x <= 21.4 && z >= 40.8 && z <= 42.5) return true;
+  // Kanopi Teras Warung Sudut Bu Rina (Kawasan Perumahan Melati)
+  if (x >= -37.4 && x <= -32.2 && z >= 57.1 && z <= 58.8) return true;
   // Atap Pos Kamling / Pos Ronda RT 04 Perumahan Melati
   if (x >= 25.3 && x <= 29.1 && z >= 55.2 && z <= 58.4) return true;
   // Payung Teduh Gerobak Es Dawet Ayu Pak Darmo (Plaza Menara Nusantara)
@@ -404,11 +404,11 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'park_coconut_stall', minX: -85.75, maxX: -83.25, minZ: -10.65, maxZ: -8.95 },
   { id: 'park_coconut_bench', minX: -82.45, maxX: -80.75, minZ: -8.82, maxZ: -8.28 },
 
-  // === 19. Gerobak Bakso Keliling Mas Agung & Warung Sudut Bu Rina ===
-  { id: 'bakso_cart', minX: -27.95, maxX: -25.65, minZ: 47.2, maxZ: 48.4 },
-  { id: 'bakso_bench', minX: -25.35, maxX: -23.85, minZ: 47.55, maxZ: 48.1 },
-  { id: 'corner_warung_building', minX: 16.45, maxX: 21.15, minZ: 37.95, maxZ: 41.4 },
-  { id: 'badminton_bench', minX: 33.55, maxX: 35.05, minZ: 46.28, maxZ: 46.82 },
+  // === 19. Gerobak Bakso Keliling Mas Agung & Warung Sudut Bu Rina (Perumahan Melati) ===
+  { id: 'bakso_cart', minX: -36.35, maxX: -34.05, minZ: 53.0, maxZ: 54.2 },
+  { id: 'bakso_bench', minX: -33.75, maxX: -32.25, minZ: 53.35, maxZ: 53.9 },
+  { id: 'corner_warung_building', minX: -37.15, maxX: -32.45, minZ: 58.6, maxZ: 62.05 },
+  { id: 'badminton_bench', minX: -3.45, maxX: -1.95, minZ: 56.28, maxZ: 56.82 },
 
   // === 20. Gerobak Sate Ayam Madura Cak Mat & Meja Makan (Sudut Jl. Cempaka) ===
   { id: 'sate_cart', minX: 12.75, maxX: 14.05, minZ: 28.15, maxZ: 30.85 },
@@ -655,13 +655,13 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   // Kursi Kucing Moka & Papan Kapur Kedai Bima + Mas Agung Bakso + Tiang Teras Warung Bu Rina
   { x: -14.1, z: 17.6, r: 0.58 },
   { x: -16.45, z: 21.65, r: 0.34 },
-  { x: -26.8, z: 46.8, r: 0.42 },
-  { x: 16.7, z: 41.95, r: 0.14 },
-  { x: 20.9, z: 41.95, r: 0.14 },
+  { x: -35.2, z: 52.6, r: 0.42 },
+  { x: -36.9, z: 57.85, r: 0.14 },
+  { x: -32.7, z: 57.85, r: 0.14 },
 
   // Tiang Net Bulu Tangkis Gang Melati, 3 Warga Senam Taman & 2 Tiang Penunjuk Arah Kayu
-  { x: 38.5, z: 46.95, r: 0.16 },
-  { x: 38.5, z: 52.65, r: 0.16 },
+  { x: 1.5, z: 57.0, r: 0.16 },
+  { x: 1.5, z: 62.6, r: 0.16 },
   { x: -83.5, z: 32.15, r: 0.42 },
   { x: -84.95, z: 34.25, r: 0.42 },
   { x: -82.05, z: 34.25, r: 0.42 },
@@ -771,23 +771,23 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
 ];
 
 export const ROOFTOP_BOUNDS = {
-  minX: 18.0,
-  maxX: 39.5,
-  minZ: -42.0,
-  maxZ: -21.8,
-  elevation: 22,
+  minX: 17.8,
+  maxX: 39.8,
+  minZ: -42.4,
+  maxZ: -21.25,
+  elevation: 22.02,
 };
 
 // Objek solid di atas Rooftop (Kabin Lift, Bangku Santai & Teropong Koin Rooftop)
 export const ROOFTOP_COLLIDERS: ColliderBox[] = [
-  { id: 'rooftop_elevator_cabin', minX: 18.0, maxX: 21.6, minZ: -27.1, maxZ: -23.75 },
+  { id: 'rooftop_elevator_cabin', minX: 17.95, maxX: 21.65, minZ: -27.25, maxZ: -23.75 },
   { id: 'rooftop_bench', minX: 26.7, maxX: 30.3, minZ: -23.5, maxZ: -22.5 },
   { id: 'rooftop_telescope', minX: 33.95, maxX: 34.85, minZ: -21.9, maxZ: -21.0 },
 ];
 
 export const ELEVATOR_PORTALS = {
-  lobbyPos: [19.5, 0.08, -22.4] as [number, number, number],
-  rooftopPos: [19.8, 22, -23.2] as [number, number, number],
+  lobbyPos: [19.5, 0.08, -24.1] as [number, number, number],
+  rooftopPos: [19.8, 22.02, -22.7] as [number, number, number],
 };
 
 export function resolvePlayerMovement(
@@ -821,7 +821,8 @@ export function resolvePlayerMovement(
 
     if (hitsRoof(rx, currentZ)) rx = currentX;
     if (hitsRoof(rx, rz)) rz = currentZ;
-    return [rx, ROOFTOP_BOUNDS.elevation, rz];
+    const onWoodDeck = rx >= 22.75 && rx <= 35.25 && rz >= -29.1 && rz <= -21.9;
+    return [rx, onWoodDeck ? 22.1 : ROOFTOP_BOUNDS.elevation, rz];
   }
 
   // === FISIKA SOLID GROUND LEVEL ===
@@ -988,7 +989,8 @@ export function resolveCompanionMovement(
       );
     if (hitsRoof(rx, currentZ)) rx = currentX;
     if (hitsRoof(rx, rz)) rz = currentZ;
-    return [rx, ROOFTOP_BOUNDS.elevation, rz];
+    const onWoodDeck = rx >= 22.75 && rx <= 35.25 && rz >= -29.1 && rz <= -21.9;
+    return [rx, onWoodDeck ? 22.1 : ROOFTOP_BOUNDS.elevation, rz];
   }
 
   let rx = Math.max(WORLD_BOUNDS.minX, Math.min(WORLD_BOUNDS.maxX, nextX));

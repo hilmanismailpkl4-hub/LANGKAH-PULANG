@@ -1,7 +1,10 @@
-import fs from 'node:fs';
-import path from 'node:path';
+/// <reference lib="es2020" />
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { defineConfig, Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
+
+declare const process: { cwd(): string };
 
 function formatBytesLabel(bytes: number): string {
   if (bytes >= 1048576) {
@@ -43,7 +46,7 @@ function langkahPulangBuildMetaPlugin(): Plugin {
     enforce: 'post',
     transformIndexHtml(html, ctx) {
       if (ctx.server) {
-        const devEst = 2940 * 1024;
+        const devEst = 2960 * 1024;
         return html
           .replace(/__LP_TOTAL_BYTES__/g, String(devEst))
           .replace(/__LP_TOTAL_SIZE_LABEL__/g, formatBytesLabel(devEst))
@@ -79,7 +82,7 @@ export default defineConfig({
   plugins: [react(), langkahPulangBuildMetaPlugin()],
   build: {
     target: 'es2020',
-    chunkSizeWarningLimit: 1200,
+    chunkSizeWarningLimit: 1850,
     rollupOptions: {
       output: {
         manualChunks: {
