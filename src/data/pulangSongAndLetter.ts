@@ -191,9 +191,17 @@ export function buildNadiaFinalLetter(params: {
   }
 
   // PARAGRAF 2 — Gema Memori & Rahasia Terdalam
-  if (flags.includes('ch3_confessed_guitar_2020') || flags.includes('flashback_2020_done')) {
+  if (flags.includes('shared_mother_letter_with_nadia')) {
+    paragraphs.push(
+      'Dua kancing mutiara kebaya dari kaleng jahit biru almarhumah Ibu masih kugenggam hangat tadi, Mas. Membaca surat tahun 2016 beliau bersamamu membuatku sadar betapa kedua orang tuamu telah mendoakan rumah kita jauh sebelum kita tinggal di sini. Mulai malam ini, mari kita pegang benangnya dengan dua tangan kita.',
+    );
+  } else if (flags.includes('ch3_confessed_guitar_2020') || flags.includes('flashback_2020_done')) {
     paragraphs.push(
       'Ada satu hal yang selama enam tahun sengaja kusimpan sampai kamu sendiri siap bercerita: aku menemukan kuitansi Toko Musik Nada Lama di saku jaket basahmu seminggu setelah Kira lahir. Malam itu aku menangis diam-diam—bukan karena sedih, melainkan karena aku sadar betapa besarnya pengorbanan yang kamu tanggung sendirian demi kami. Tolong jangan pernah lagi menyembunyikan lukamu dariku, ya Mas.',
+    );
+  } else if (flags.includes('played_father_cassette_1997')) {
+    paragraphs.push(
+      'Suara serak almarhum Bapak dari kaset radio dapur tahun 1997 tadi masih terngiang di telingaku, Mas. Kalimat beliau benar sekali: rumah ini bukan panggung untuk pamer kuat, melainkan tempat kamu selalu boleh meletakkan tasmu di sebelahku.',
     );
   } else if (flags.includes('reconciled_dinner_memory_chat') || flags.includes('flashback_dinner_done')) {
     paragraphs.push(
@@ -213,6 +221,10 @@ export function buildNadiaFinalLetter(params: {
   if (flags.includes('played_track4_concert') || flags.includes('played_guitar_home') || activeEnding === 'secret') {
     paragraphs.push(
       'Mendengar petikan "Track 4 — Pulang" akhirnya selesai kamu mainkan membuat ruang tamu sederhana ini terasa seperti panggung paling indah di seluruh kota. Kira sampai tidak berhenti bercerita ke boneka beruangnya bahwa Ayah adalah pemusik paling hebat sedunia.',
+    );
+  } else if (flags.includes('signed_kira_rainbow_drawing') || flags.includes('found_kira_secret_drawings')) {
+    paragraphs.push(
+      'Tadi Kira memeluk bantal bintangnya erat sekali sambil berbisik senang karena tiga gambar rahasianya sudah dilihat Ayah. Pelangi enam senar yang ia gambar itu adalah doa paling tulus agar kamu kembali tersenyum di rumah.',
     );
   } else if (
     flags.includes('drew_with_kira_corner') ||

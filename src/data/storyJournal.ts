@@ -480,6 +480,16 @@ export function buildStoryTimeline(params: {
       tone: 'gold',
     });
   }
+  if (flags.includes('opened_mother_sewing_tin_2016')) {
+    echoBadges.push({
+      id: 'eb_mother_sewing_tin_2016',
+      title: 'Kaleng Jahit Biru & Surat Ibu (03 Sep 2016)',
+      detail: flags.includes('shared_mother_letter_with_nadia')
+        ? 'Surat dan kancing kebaya almarhumah Ibu telah dibacakan bersama Nadia dan bergema di Meja Makan Bab 3.'
+        : 'Surat 2016 Ibu tersimpan di Tas [I]—dekati Nadia untuk membacakannya berdua.',
+      tone: 'sky',
+    });
+  }
   if (flags.includes('found_kira_secret_drawings')) {
     echoBadges.push({
       id: 'eb_kira_secret_drawings',

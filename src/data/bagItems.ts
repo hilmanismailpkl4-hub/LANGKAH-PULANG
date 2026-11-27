@@ -7,7 +7,7 @@ export interface BagItemDef {
   subtitle: string;
   description: string;
   monologue: string;
-  iconType: 'wallet' | 'keys' | 'pick' | 'notebook' | 'cassette_1997' | 'draft_letter' | 'icecream' | 'flower' | 'bookmark' | 'tea' | 'coffee' | 'archive_key' | 'sketchbook' | 'ginger' | 'capo';
+  iconType: 'wallet' | 'keys' | 'pick' | 'notebook' | 'cassette_1997' | 'draft_letter' | 'sewing_letter' | 'icecream' | 'flower' | 'bookmark' | 'tea' | 'coffee' | 'archive_key' | 'sketchbook' | 'ginger' | 'capo';
   giftTarget?: 'kira' | 'nadia';
   giftDialogueId?: string;
 }
@@ -66,6 +66,15 @@ export const ALL_BAG_ITEMS: BagItemDef[] = [
     description: 'Kertas HVS krem lipat empat yang separuh tercetak sebelas bulan lalu pukul dua pagi—kini menjadi saksi keberanian Damar untuk berhenti menyembunyikan kelelahannya.',
     monologue: 'Aku pernah menulis ini dalam gelap karena takut kehilangan diriku sendiri. Sekarang kertas ini tidak lagi tersembunyi di dasar laci.',
     iconType: 'draft_letter',
+  },
+  {
+    id: 'item_mother_letter_2016',
+    name: 'Surat Biru & Kancing Kebaya Ibu (2016)',
+    category: 'kenangan',
+    subtitle: 'Dari Kaleng Biskuit Jahit Almarhumah Ibu',
+    description: 'Amplop biru muda bertanggal 3 September 2016 beserta sepasang kancing mutiara kebaya akad milik almarhumah Ibu—berisi pesan agar Damar dan Nadia menjahit rumah tangga dengan dua tangan.',
+    monologue: 'Tujuh tahun surat ini bersembunyi di bawah gulungan benang Ibu, menunggu hari ketika aku akhirnya berani berhenti berjalan pincang sendirian.',
+    iconType: 'sewing_letter',
   },
   {
     id: 'item_gift_kira',

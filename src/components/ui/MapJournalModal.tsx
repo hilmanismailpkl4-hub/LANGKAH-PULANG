@@ -1782,6 +1782,63 @@ export const MapJournalModal: React.FC = () => {
                       </div>
                     </div>
 
+                    {/* Kartu Kaleng Jahit Biru & Surat Mendiang Ibu Tahun 2016 */}
+                    <div className="rounded-2xl border border-blue-300/30 bg-gradient-to-r from-[#162038]/95 via-[#131826]/95 to-dusk-950 p-4 shadow-lg">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="max-w-xl">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-blue-300">
+                              WARISAN ALMARHUMAH IBU · 03 SEPTEMBER 2016
+                            </span>
+                            {flags.includes('opened_mother_sewing_tin_2016') && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                                <CheckCircle2 className="h-3 w-3" /> Terkenang
+                              </span>
+                            )}
+                          </div>
+                          <h4 className="mt-1 font-serif text-base text-blue-50 md:text-lg">
+                            Benang yang Menjahit Dua Rumah (Kaleng Biskuit Jahit Biru Ibu)
+                          </h4>
+                          <p className="mt-1 text-xs leading-relaxed text-warm-200/80">
+                            {flags.includes('opened_mother_sewing_tin_2016')
+                              ? 'Sepucuk surat biru muda dan sepasang kancing mutiara kebaya akad yang ditulis almarhumah Ibu untuk Damar dan Nadia setahun sebelum kepergiannya.'
+                              : 'Periksa kaleng biskuit biru berisi benang jahit di sebelah meja Album Foto Keluarga di Ruang Tamu Rumah Jl. Melati No. 14.'}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2">
+                          {flags.includes('opened_mother_sewing_tin_2016') ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                closeMapJournal();
+                                startDialogue('story_mother_sewing_tin_2016');
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-xl bg-blue-400/95 px-3.5 py-2 text-xs font-semibold text-dusk-950 shadow transition hover:bg-blue-300"
+                            >
+                              <Play className="h-3.5 w-3.5 fill-current" />
+                              <span>Baca Ulang Surat Ibu</span>
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setCustomWaypoint({
+                                  label: 'Kaleng Jahit Biru Ibu (Ruang Tamu)',
+                                  position: [-20.42, 0.08, 65.45],
+                                });
+                                closeMapJournal();
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-xl border border-blue-300/40 bg-blue-400/15 px-3.5 py-2 text-xs font-semibold text-blue-100 transition hover:bg-blue-400/25"
+                            >
+                              <Navigation className="h-3.5 w-3.5" />
+                              <span>GPS ke Ruang Tamu</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div>
                         <h3 className="font-serif text-lg text-warm-50">

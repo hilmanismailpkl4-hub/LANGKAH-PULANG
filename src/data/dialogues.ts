@@ -11,6 +11,7 @@ import { HENDRA_NIGHT_DIALOGUES } from './hendraNightStory';
 import { KIRA_BEDTIME_DIALOGUES } from './kiraBedtimeStory';
 import { KIRA_SKETCHBOOK_DIALOGUES } from './kiraSecretSketchbook';
 import { MIDNIGHT_DRAFT_DIALOGUES } from './midnightDraftStory';
+import { MOTHER_SEWING_TIN_DIALOGUES } from './motherSewingTinStory';
 import { NADIA_DIARY_DIALOGUES } from './nadiaPregnancyDiary';
 import { PROLOGUE_DIALOGUES } from './prologueAndChapters';
 import { SIDE_QUEST_DIALOGUES } from './sideQuests';
@@ -597,6 +598,7 @@ export const ALL_DIALOGUES: Record<string, DialogueScript> = {
   ...FLASHBACK_DIALOGUES,
   ...HENDRA_NIGHT_DIALOGUES,
   ...MIDNIGHT_DRAFT_DIALOGUES,
+  ...MOTHER_SEWING_TIN_DIALOGUES,
   ...NADIA_DIARY_DIALOGUES,
   ...EPILOGUE_DIALOGUES,
   ...CHARACTER_ECHO_DIALOGUES,

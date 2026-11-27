@@ -590,6 +590,17 @@ export const WorldInteractables: React.FC = () => {
         if (npcId === 'nadia' && store.flags.includes('has_gift_nadia') && !store.flags.includes('gave_gift_nadia')) {
           return { dialogueId: 'gift_nadia_flower', highlight: 'side', sublabel: 'Berikan Hadiah!' };
         }
+        if (
+          npcId === 'nadia' &&
+          store.flags.includes('has_mother_letter_2016') &&
+          !store.flags.includes('shared_mother_letter_with_nadia')
+        ) {
+          return {
+            dialogueId: 'story_share_mother_letter_nadia',
+            highlight: 'side',
+            sublabel: 'Bacakan Surat Ibu (2016)',
+          };
+        }
       }
       if (npcId === 'bima') {
         if (store.mainStepId === 'ch1_2_kedai_bima') {
@@ -2124,6 +2135,25 @@ export const WorldInteractables: React.FC = () => {
         },
       },
       2.1,
+    );
+
+    consider(
+      {
+        id: 'interior_mother_sewing_tin',
+        kind: 'story_object',
+        label: store.flags.includes('opened_mother_sewing_tin_2016')
+          ? 'Baca Ulang Surat Ibu (2016) di Kaleng Biskuit Jahit Biru'
+          : 'Buka Kaleng Biskuit Biru Alat Jahit Peninggalan Ibu',
+        sublabel: store.flags.includes('opened_mother_sewing_tin_2016')
+          ? 'Kenangan Tersimpan · Benang yang Menjahit Dua Rumah'
+          : 'Ruang Tamu Jl. Melati No. 14 · Benang, Kancing & Amplop 2016',
+        position: [-20.42, 0.08, 65.45],
+        onInteract: () => {
+          playerRuntime.activeSpeakerPos = [-20.42, 0.65, 65.45];
+          store.startDialogue('story_mother_sewing_tin_2016');
+        },
+      },
+      1.7,
     );
 
     consider(
@@ -5324,6 +5354,35 @@ export const WorldInteractables: React.FC = () => {
         <mesh position={[0, 0.36, 0]}>
           <sphereGeometry args={[0.062, 10, 10]} />
           <meshBasicMaterial color={flags.includes('found_kira_secret_drawings') ? '#86efac' : '#fde047'} />
+        </mesh>
+      </group>
+
+      {/* Meja Kecil & Kaleng Biskuit Jahit Bundar Biru Peninggalan Almarhumah Ibu (2016) */}
+      <group position={[-20.42, 0.08, 65.45]} rotation={[0, -0.2, 0]}>
+        {/* Penyangga meja bundar ruang tamu */}
+        <mesh position={[0, 0.24, 0]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.24, 0.26, 0.48, 16]} />
+          <meshStandardMaterial color="#6b442b" roughness={0.82} />
+        </mesh>
+        {/* Kaleng biskuit mentega bundar warna biru klasik */}
+        <mesh position={[0, 0.525, 0]} castShadow>
+          <cylinderGeometry args={[0.145, 0.145, 0.085, 20]} />
+          <meshStandardMaterial
+            color="#1d4ed8"
+            emissive="#60a5fa"
+            emissiveIntensity={flags.includes('opened_mother_sewing_tin_2016') ? 0.12 : 0.48}
+            metalness={0.42}
+            roughness={0.45}
+          />
+        </mesh>
+        {/* Lis emas tutup kaleng biru */}
+        <mesh position={[0, 0.568, 0]}>
+          <cylinderGeometry args={[0.148, 0.148, 0.012, 20]} />
+          <meshStandardMaterial color="#facc15" metalness={0.65} roughness={0.35} />
+        </mesh>
+        <mesh position={[0, 0.82, 0]}>
+          <sphereGeometry args={[0.064, 10, 10]} />
+          <meshBasicMaterial color={flags.includes('opened_mother_sewing_tin_2016') ? '#86efac' : '#93c5fd'} />
         </mesh>
       </group>
 

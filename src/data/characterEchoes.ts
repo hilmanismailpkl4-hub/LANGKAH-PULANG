@@ -506,6 +506,16 @@ export function buildEndingJourneyRecap(params: {
 
   const echoCards: JourneyEchoCard[] = [];
 
+  if (flags.includes('opened_mother_sewing_tin_2016')) {
+    echoCards.push({
+      id: 'ec_mother_sewing_tin_2016',
+      label: 'Kaleng Jahit Biru & Surat Ibu (2016)',
+      summary: flags.includes('shared_mother_letter_with_nadia')
+        ? 'Kamu menemukan surat tahun 2016 beserta kancing mutiara kebaya almarhumah Ibu dan membacakannya bersama Nadia dengan penuh haru.'
+        : 'Di dasar kaleng biskuit biru almarhumah Ibu, kamu menemukan pesan agar tidak berjalan pincang sendirian dan menjahit rumah dengan dua tangan.',
+      tone: 'sky',
+    });
+  }
   if (flags.includes('found_kira_secret_drawings')) {
     echoCards.push({
       id: 'ec_kira_secret_drawings',

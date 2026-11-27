@@ -81,6 +81,19 @@ const ItemArtwork: React.FC<{ iconType: BagItemDef['iconType']; size?: 'sm' | 'm
           <path d="M24 58 Q32 55 48 58" stroke="#1d4ed8" strokeWidth="2" fill="none" strokeLinecap="round" />
         </svg>
       );
+    case 'sewing_letter':
+      return (
+        <svg viewBox="0 0 80 80" className={cls}>
+          <circle cx="34" cy="42" r="22" fill="#1e3a8a" stroke="#93c5fd" strokeWidth="2" />
+          <circle cx="34" cy="42" r="17" fill="none" stroke="#bfdbfe" strokeWidth="1" strokeDasharray="3 2" />
+          <rect x="30" y="16" width="38" height="28" rx="3" fill="#dbeafe" stroke="#60a5fa" strokeWidth="1.8" />
+          <path d="M31 18 L49 31 L67 18" fill="none" stroke="#3b82f6" strokeWidth="1.6" />
+          <circle cx="52" cy="54" r="6" fill="#fffaf0" stroke="#cbd5e1" strokeWidth="1.5" />
+          <circle cx="50.5" cy="52.5" r="1" fill="#64748b" />
+          <circle cx="53.5" cy="55.5" r="1" fill="#64748b" />
+          <circle cx="63" cy="49" r="5" fill="#fffaf0" stroke="#cbd5e1" strokeWidth="1.5" />
+        </svg>
+      );
     case 'icecream':
       return (
         <svg viewBox="0 0 80 80" className={cls}>
@@ -164,6 +177,9 @@ export const InventoryBagModal: React.FC = () => {
     }
     if (flags.includes('rewrote_midnight_draft') || flags.includes('shared_midnight_draft_nadia')) {
       has('item_midnight_draft');
+    }
+    if (flags.includes('has_mother_letter_2016')) {
+      has('item_mother_letter_2016');
     }
 
     // Hadiah kejutan untuk keluarga (hilang dari tas setelah diberikan)
@@ -476,6 +492,45 @@ export const InventoryBagModal: React.FC = () => {
                         <Play className="h-3.5 w-3.5 fill-current" />
                         <span>Baca Ulang Lembar Draf Pukul 02.14 WIB</span>
                       </button>
+                    </div>
+                  )}
+
+                  {/* Aksi Khusus Surat Biru & Kancing Kebaya Ibu (2016) */}
+                  {selected.id === 'item_mother_letter_2016' && (
+                    <div className={`rounded-xl border border-blue-300/30 bg-blue-950/25 ${compact ? 'p-2.5' : 'p-4'}`}>
+                      {!flags.includes('shared_mother_letter_with_nadia') && distNadia <= 5.5 ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setBagOpen(false);
+                            startDialogue('story_share_mother_letter_nadia');
+                          }}
+                          className={`flex w-full items-center justify-center gap-2 rounded-xl bg-amber-400 text-xs font-semibold text-dusk-950 shadow-lg hover:bg-amber-300 ${
+                            compact ? 'py-2' : 'py-3'
+                          }`}
+                        >
+                          <Gift className="h-4 w-4" />
+                          <span>Bacakan Surat Ibu (2016) Bersama Nadia Sekarang!</span>
+                        </button>
+                      ) : (
+                        <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                          <span className="text-warm-200/85">
+                            {flags.includes('shared_mother_letter_with_nadia')
+                              ? 'Sudah dibacakan bersama Nadia — kamu tetap bisa membuka kembali surat Ibu kapan saja.'
+                              : `Dekati Nadia (${distNadia} m lagi) untuk membacakan surat Ibu bersama, atau baca ulang sekarang.`}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setBagOpen(false);
+                              startDialogue('story_mother_sewing_tin_2016');
+                            }}
+                            className="flex items-center gap-1.5 rounded-lg bg-sky-400 px-3 py-1.5 font-semibold text-dusk-950 hover:bg-sky-300"
+                          >
+                            <Play className="h-3 w-3 fill-current" /> Baca Ulang Surat Ibu
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
 
