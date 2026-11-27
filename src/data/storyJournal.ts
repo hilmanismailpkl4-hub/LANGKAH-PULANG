@@ -499,6 +499,16 @@ export function buildStoryTimeline(params: {
       tone: 'gold',
     });
   }
+  if (flags.includes('heard_nenek_sari_rantang')) {
+    echoBadges.push({
+      id: 'eb_nenek_sari_rantang',
+      title: 'Rantang Empat Susun Nenek Sari (Danau Senja)',
+      detail: flags.includes('helped_sari_voice_note')
+        ? 'Pesan suara yang kamu bantu rekam meluluhkan hati putra Nenek Sari hingga berbuah kabar kepulangan di Epilog.'
+        : 'Menemani Nenek Sari di bangku danau agar semur hari Kamisnya tidak dingin sia-sia.',
+      tone: 'gold',
+    });
+  }
   if (flags.includes('opened_mother_sewing_tin_2016')) {
     echoBadges.push({
       id: 'eb_mother_sewing_tin_2016',

@@ -784,6 +784,54 @@ export const EPILOGUE_DIALOGUES: Record<string, DialogueScript> = {
   },
 
   // --- BU WATI (TETANGGA PERUMAHAN MELATI) ---
+  epilogue_sari_warm: {
+    id: 'epilogue_sari_warm',
+    startNodeId: 'ep_sr_w1',
+    nodes: {
+      ep_sr_w1: {
+        id: 'ep_sr_w1',
+        speaker: 'nenek_sari',
+        emotion: 'ceria',
+        text: 'Nak Damar!! Sini sebentar! Pagi ini Nenek bawa kabar paling membahagiakan se-Danau Senja!',
+        onEnter: { playSfx: 'chime' },
+        conditionalNext: [
+          {
+            requiredFlag: 'helped_sari_voice_note',
+            nextNodeId: 'ep_sr_w1_ardi',
+          },
+        ],
+        nextNodeId: 'ep_sr_w2',
+      },
+      ep_sr_w1_ardi: {
+        id: 'ep_sr_w1_ardi',
+        speaker: 'nenek_sari',
+        emotion: 'haru',
+        echoTag: 'Buah Kebaikanmu · Pesan Suara untuk Ardi',
+        text: 'Semalam jam sepuluh setelah dengar rekaman suara yang kamu bantu kirimkan kemarin, Ardi langsung menelepon Nenek sambil menangis! Dia sudah beli tiket kereta buat pulang hari Kamis besok—katanya kangen makan semur dari rantang mawar Nenek!',
+        nextNodeId: 'ep_sr_w2',
+      },
+      ep_sr_w2: {
+        id: 'ep_sr_w2',
+        speaker: 'nenek_sari',
+        emotion: 'hangat',
+        text: 'Senang sekali melihat kamu pagi ini jalan santai menikmati matahari pagi, Nak. Jaga terus hangatnya meja makan keluarga kecilmu ya!',
+      },
+    },
+  },
+
+  epilogue_sari_bad: {
+    id: 'epilogue_sari_bad',
+    startNodeId: 'ep_sr_b1',
+    nodes: {
+      ep_sr_b1: {
+        id: 'ep_sr_b1',
+        speaker: 'nenek_sari',
+        emotion: 'sedih',
+        text: 'Nak Damar... pagi-pagi gerimis begini langkahmu cepat sekali kayak putra Nenek waktu mau berangkat dinas luar kota. Jangan lupa telepon rumah kalau sudah sampai tujuan ya, Nak...',
+      },
+    },
+  },
+
   epilogue_wati_warm: {
     id: 'epilogue_wati_warm',
     startNodeId: 'ep_wt_w1',
@@ -902,6 +950,11 @@ export function resolveEpilogueNpcDialogue(
     return endingId === 'bad'
       ? { dialogueId: 'epilogue_wati_bad', sublabel: 'Epilog · Gerimis di Jl. Melati' }
       : { dialogueId: 'epilogue_wati_warm', sublabel: 'Epilog · Tetangga Jl. Melati' };
+  }
+  if (npcId === 'nenek_sari') {
+    return endingId === 'bad'
+      ? { dialogueId: 'epilogue_sari_bad', sublabel: 'Epilog · Bangku Danau Hujan' }
+      : { dialogueId: 'epilogue_sari_warm', sublabel: 'Epilog · Kabar Bahagia Ardi' };
   }
   if (epilogueCompleted && npcId === 'nadia') {
     return endingId === 'bad'

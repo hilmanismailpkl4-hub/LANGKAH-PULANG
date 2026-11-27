@@ -682,6 +682,9 @@ export const WorldInteractables: React.FC = () => {
         if (sq.status === 'active' && sq.stage === 2) {
           return { dialogueId: 'sq_nenek_sari_complete', highlight: 'side', sublabel: 'Selesaikan Misi' };
         }
+        if (sq.status === 'completed' && !store.flags.includes('heard_nenek_sari_rantang')) {
+          return { dialogueId: 'story_nenek_sari_rantang', highlight: 'side', sublabel: 'Kisah Rantang Kamis' };
+        }
         return { dialogueId: 'ambient_sari', highlight: null, sublabel: 'Berbincang' };
       }
 
@@ -4432,6 +4435,26 @@ export const WorldInteractables: React.FC = () => {
     // Bonus Upgrade: Duduk Reflektif di Bangku Taman Danau & Bangku Rooftop
     consider(
       {
+        id: 'story_nenek_sari_rantang_spot',
+        kind: 'story_object',
+        label: store.flags.includes('heard_nenek_sari_rantang')
+          ? 'Kenang Kembali Kisah Rantang Empat Susun Nenek Sari'
+          : 'Periksa Rantang Kaleng Mawar di Samping Bangku Nenek Sari',
+        sublabel: store.flags.includes('heard_nenek_sari_rantang')
+          ? 'Kenangan Tersimpan · Semur Hari Kamis untuk Ardi'
+          : 'Tepi Danau Senja · Aroma Semur Hangat & Rindu Seorang Ibu',
+        position: [-69.15, 0, -18.35],
+        onInteract: () => {
+          playerRuntime.activeSpeakerPos = [-68.0, 0, -18.0];
+          playerRuntime.activeSpeakerId = 'nenek_sari';
+          store.startDialogue('story_nenek_sari_rantang');
+        },
+      },
+      2.25,
+    );
+
+    consider(
+      {
         id: 'sit_park_bench',
         kind: 'story_object',
         label: 'Duduk Sebentar Menatap Danau Senja',
@@ -5422,6 +5445,35 @@ export const WorldInteractables: React.FC = () => {
         <mesh position={[0, 0.32, 0]}>
           <sphereGeometry args={[0.072, 10, 10]} />
           <meshBasicMaterial color={flags.includes('flashback_bridge_2019_done') ? '#86efac' : '#fde047'} />
+        </mesh>
+      </group>
+
+      {/* Rantang Kaleng Empat Susun Motif Mawar Milik Nenek Sari di Tepi Danau Senja */}
+      <group position={[-69.15, 0, -18.35]} rotation={[0, 0.42, 0]}>
+        {/* Alas serbet kotak-kotak di atas bangku batu kecil */}
+        <mesh position={[0, 0.16, 0]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.24, 0.26, 0.32, 14]} />
+          <meshStandardMaterial color="#64748b" roughness={0.85} />
+        </mesh>
+        {[0.37, 0.46, 0.55, 0.64].map((ry, idx) => (
+          <mesh key={ry} position={[0, ry, 0]} castShadow>
+            <cylinderGeometry args={[0.135, 0.135, 0.08, 16]} />
+            <meshStandardMaterial
+              color={idx % 2 === 0 ? '#f8fafc' : '#d1fae5'}
+              emissive="#34d399"
+              emissiveIntensity={flags.includes('heard_nenek_sari_rantang') ? 0.08 : 0.28}
+              roughness={0.45}
+            />
+          </mesh>
+        ))}
+        {/* Gagang besi penjepit rantang */}
+        <mesh position={[0, 0.54, 0]}>
+          <torusGeometry args={[0.155, 0.012, 8, 18, Math.PI]} />
+          <meshStandardMaterial color="#94a3b8" metalness={0.75} roughness={0.3} />
+        </mesh>
+        <mesh position={[0, 0.92, 0]}>
+          <sphereGeometry args={[0.068, 10, 10]} />
+          <meshBasicMaterial color={flags.includes('heard_nenek_sari_rantang') ? '#86efac' : '#6ee7b7'} />
         </mesh>
       </group>
 

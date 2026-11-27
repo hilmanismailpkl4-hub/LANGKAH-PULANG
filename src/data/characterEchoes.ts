@@ -507,6 +507,16 @@ export function buildEndingJourneyRecap(params: {
 
   const echoCards: JourneyEchoCard[] = [];
 
+  if (flags.includes('heard_nenek_sari_rantang')) {
+    echoCards.push({
+      id: 'ec_nenek_sari_rantang',
+      label: 'Rantang Empat Susun Nenek Sari',
+      summary: flags.includes('helped_sari_voice_note')
+        ? 'Kamu membantu Nenek Sari mengirim pesan suara rindu tanpa menghakimi kepada putranya, Ardi, hingga akhirnya Ardi membeli tiket kereta pulang.'
+        : 'Di tepi Danau Senja, kamu menemani Nenek Sari menyantap semur hangat dan belajar bahwa uang tak pernah menggantikan kehadiran.',
+      tone: 'gold',
+    });
+  }
   if (flags.includes('opened_mother_sewing_tin_2016')) {
     echoCards.push({
       id: 'ec_mother_sewing_tin_2016',
