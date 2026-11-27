@@ -694,6 +694,9 @@ export const WorldInteractables: React.FC = () => {
         if (sq.status === 'active' && sq.stage === 2) {
           return { dialogueId: 'sq_mas_raka_complete', highlight: 'side', sublabel: 'Selesaikan Misi' };
         }
+        if (sq.status === 'completed' && !store.flags.includes('heard_mas_raka_skates_story')) {
+          return { dialogueId: 'story_mas_raka_roller_skates', highlight: 'side', sublabel: 'Sepatu Roda di Ransel' };
+        }
         return { dialogueId: 'ambient_raka', highlight: null, sublabel: 'Berbincang' };
       }
 
@@ -1396,6 +1399,26 @@ export const WorldInteractables: React.FC = () => {
         },
       },
       2.1,
+    );
+
+    consider(
+      {
+        id: 'story_mas_raka_skates_bag',
+        kind: 'story_object',
+        label: store.flags.includes('heard_mas_raka_skates_story')
+          ? 'Kenang Kembali Janji Sesama Ayah & Sepatu Roda Dinda'
+          : 'Periksa Sepatu Roda Pink Kecil di Ransel Kerja Mas Raka',
+        sublabel: store.flags.includes('heard_mas_raka_skates_story')
+          ? 'Kenangan Tersimpan · Janji Minggu Pagi di Taman'
+          : 'Jembatan Tepi Sungai · Tas Proyek & Janji Seorang Ayah',
+        position: [-47.35, 0.24, -6.35],
+        onInteract: () => {
+          playerRuntime.activeSpeakerPos = [-48.0, 0.24, -5.0];
+          playerRuntime.activeSpeakerId = 'mas_raka';
+          store.startDialogue('story_mas_raka_roller_skates');
+        },
+      },
+      2.2,
     );
 
     consider(
@@ -5530,6 +5553,34 @@ export const WorldInteractables: React.FC = () => {
         <mesh position={[0, 0.88, 0]}>
           <sphereGeometry args={[0.068, 10, 10]} />
           <meshBasicMaterial color={flags.includes('heard_bu_wati_rahmat_story') ? '#86efac' : '#fde047'} />
+        </mesh>
+      </group>
+
+      {/* Ransel Kerja Kanvas Mas Raka & Sepatu Roda Pink Kecil Milik Dinda di Jembatan Utara */}
+      <group position={[-47.35, 0.24, -6.35]} rotation={[0, -0.5, 0]}>
+        {/* Ransel kanvas abu-abu kerja malam */}
+        <mesh position={[0, 0.22, 0]} castShadow receiveShadow>
+          <boxGeometry args={[0.32, 0.4, 0.22]} />
+          <meshStandardMaterial color="#475569" roughness={0.85} />
+        </mesh>
+        {/* Sepatu roda anak warna merah muda menyembul dari atas ransel */}
+        <mesh position={[0.04, 0.45, 0.02]} rotation={[0.18, 0.2, -0.25]} castShadow>
+          <boxGeometry args={[0.16, 0.13, 0.09]} />
+          <meshStandardMaterial
+            color="#f472b6"
+            emissive="#fb7185"
+            emissiveIntensity={flags.includes('heard_mas_raka_skates_story') ? 0.12 : 0.45}
+            roughness={0.55}
+          />
+        </mesh>
+        {/* Dua roda putih kecil */}
+        <mesh position={[0.09, 0.41, 0.07]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.028, 0.028, 0.02, 10]} />
+          <meshStandardMaterial color="#f8fafc" roughness={0.35} />
+        </mesh>
+        <mesh position={[0, 0.78, 0]}>
+          <sphereGeometry args={[0.068, 10, 10]} />
+          <meshBasicMaterial color={flags.includes('heard_mas_raka_skates_story') ? '#86efac' : '#67e8f9'} />
         </mesh>
       </group>
 

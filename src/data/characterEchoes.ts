@@ -507,6 +507,16 @@ export function buildEndingJourneyRecap(params: {
 
   const echoCards: JourneyEchoCard[] = [];
 
+  if (flags.includes('heard_mas_raka_skates_story')) {
+    echoCards.push({
+      id: 'ec_mas_raka_skates',
+      label: 'Sepatu Roda Pink & Janji Ayah (Mas Raka)',
+      summary: flags.includes('raka_sunday_park_pact')
+        ? 'Di atas Jembatan Sungai, kamu dan Mas Raka berjabat tangan sebagai sesama ayah untuk tidak lagi menukar hari Minggu putri kalian dengan lembur.'
+        : 'Melihat sepatu roda bekas putri Mas Raka di ransel kerjanya menyadarkanmu betapa pedihnya saat seorang anak berhenti menagih janji.',
+      tone: 'sky',
+    });
+  }
   if (flags.includes('heard_bu_wati_rahmat_story')) {
     echoCards.push({
       id: 'ec_bu_wati_rahmat',

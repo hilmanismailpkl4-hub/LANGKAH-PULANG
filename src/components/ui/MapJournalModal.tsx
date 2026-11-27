@@ -1953,6 +1953,63 @@ export const MapJournalModal: React.FC = () => {
                       </div>
                     </div>
 
+                    {/* Kartu Cerita Mendalam Mas Raka: Sepasang Sepatu Roda Kecil di Dalam Ransel Kerja */}
+                    <div className="rounded-2xl border border-cyan-300/30 bg-gradient-to-r from-[#14242d]/95 via-[#121a22]/95 to-dusk-950 p-4 shadow-lg">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="max-w-xl">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-cyan-300">
+                              CERMIN SESAMA AYAH · JEMBATAN TEPI SUNGAI
+                            </span>
+                            {flags.includes('heard_mas_raka_skates_story') && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                                <CheckCircle2 className="h-3 w-3" /> Terkenang
+                              </span>
+                            )}
+                          </div>
+                          <h4 className="mt-1 font-serif text-base text-cyan-50 md:text-lg">
+                            Sepasang Sepatu Roda Kecil di Dalam Ransel Kerja (Mas Raka &amp; Dinda)
+                          </h4>
+                          <p className="mt-1 text-xs leading-relaxed text-warm-200/80">
+                            {flags.includes('heard_mas_raka_skates_story')
+                              ? 'Kisah sepatu roda bekas berwarna merah muda yang dibawa Mas Raka di ransel proyeknya agar ia sanggup menolak lembur hari Minggu kelima.'
+                              : 'Periksa ransel kerja kanvas milik Mas Raka di dekat tiang lampu sisi utara Jembatan Tepi Sungai.'}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2">
+                          {flags.includes('heard_mas_raka_skates_story') ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                closeMapJournal();
+                                startDialogue('story_mas_raka_roller_skates');
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-xl bg-cyan-400/95 px-3.5 py-2 text-xs font-semibold text-dusk-950 shadow transition hover:bg-cyan-300"
+                            >
+                              <Play className="h-3.5 w-3.5 fill-current" />
+                              <span>Kenang Ulang Kisah</span>
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setCustomWaypoint({
+                                  label: 'Ransel Kerja Mas Raka (Jembatan Sungai)',
+                                  position: [-47.35, 0.24, -6.35],
+                                });
+                                closeMapJournal();
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-xl border border-cyan-300/40 bg-cyan-400/15 px-3.5 py-2 text-xs font-semibold text-cyan-100 transition hover:bg-cyan-400/25"
+                            >
+                              <Navigation className="h-3.5 w-3.5" />
+                              <span>GPS ke Jembatan Utara</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div>
                         <h3 className="font-serif text-lg text-warm-50">

@@ -832,6 +832,54 @@ export const EPILOGUE_DIALOGUES: Record<string, DialogueScript> = {
     },
   },
 
+  epilogue_raka_warm: {
+    id: 'epilogue_raka_warm',
+    startNodeId: 'ep_rk_w1',
+    nodes: {
+      ep_rk_w1: {
+        id: 'ep_rk_w1',
+        speaker: 'mas_raka',
+        emotion: 'ceria',
+        text: 'Pagi, Mas Damar! Baru selesai serah terima shift pagi nih—hari ini saya tolak semua lembur akhir pekan dan mau langsung pulang jemput Dinda!',
+        onEnter: { playSfx: 'chime' },
+        conditionalNext: [
+          {
+            requiredFlag: 'raka_sunday_park_pact',
+            nextNodeId: 'ep_rk_w1_pact',
+          },
+        ],
+        nextNodeId: 'ep_rk_w2',
+      },
+      ep_rk_w1_pact: {
+        id: 'ep_rk_w1_pact',
+        speaker: 'mas_raka',
+        emotion: 'haru',
+        echoTag: 'Janji Sesama Ayah · Sepatu Roda Pink & Sepeda Kira',
+        text: 'Mas Raka menepuk tali sepatu roda pink di ranselnya dengan bangga! "Tadi subuh waktu saya bisikin ke Dinda soal janji ketemu Kira di Taman Kota hari Minggu, dia langsung meluk leher saya kencang banget, Mas! Sampai ketemu hari Minggu jam tujuh ya!"',
+        nextNodeId: 'ep_rk_w2',
+      },
+      ep_rk_w2: {
+        id: 'ep_rk_w2',
+        speaker: 'mas_raka',
+        emotion: 'hangat',
+        text: 'Nikmati pagi cerahnya bareng Mbak Nadia dan Kira ya, Mas Damar!',
+      },
+    },
+  },
+
+  epilogue_raka_bad: {
+    id: 'epilogue_raka_bad',
+    startNodeId: 'ep_rk_b1',
+    nodes: {
+      ep_rk_b1: {
+        id: 'ep_rk_b1',
+        speaker: 'mas_raka',
+        emotion: 'sedih',
+        text: 'Pagi, Mas Damar... wah, koper kerja sama jas rapi pagi-pagi hujan gini mau dinas jauh ya? Hati-hati di jalan, Mas... semoga putri kecil di rumah nggak kelamaan menunggu.',
+      },
+    },
+  },
+
   epilogue_wati_warm: {
     id: 'epilogue_wati_warm',
     startNodeId: 'ep_wt_w1',
@@ -969,6 +1017,11 @@ export function resolveEpilogueNpcDialogue(
     return endingId === 'bad'
       ? { dialogueId: 'epilogue_sari_bad', sublabel: 'Epilog · Bangku Danau Hujan' }
       : { dialogueId: 'epilogue_sari_warm', sublabel: 'Epilog · Kabar Bahagia Ardi' };
+  }
+  if (npcId === 'mas_raka') {
+    return endingId === 'bad'
+      ? { dialogueId: 'epilogue_raka_bad', sublabel: 'Epilog · Jembatan Hujan Pagi' }
+      : { dialogueId: 'epilogue_raka_warm', sublabel: 'Epilog · Sepatu Roda Dinda' };
   }
   if (epilogueCompleted && npcId === 'nadia') {
     return endingId === 'bad'

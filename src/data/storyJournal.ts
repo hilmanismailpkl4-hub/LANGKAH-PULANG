@@ -499,6 +499,16 @@ export function buildStoryTimeline(params: {
       tone: 'gold',
     });
   }
+  if (flags.includes('heard_mas_raka_skates_story')) {
+    echoBadges.push({
+      id: 'eb_mas_raka_skates',
+      title: 'Janji Minggu Pagi · Mas Raka & Sepatu Roda Dinda',
+      detail: flags.includes('raka_sunday_park_pact')
+        ? 'Berjabat tangan dengan Mas Raka untuk membawa Kira dan Dinda bermain di Taman Kota tanpa lembur akhir pekan.'
+        : 'Kisah sepatu roda di ransel kerja Mas Raka mencerminkan perjuangan dua ayah menjaga waktu keluarga.',
+      tone: 'sky',
+    });
+  }
   if (flags.includes('heard_bu_wati_rahmat_story')) {
     echoBadges.push({
       id: 'eb_bu_wati_rahmat',

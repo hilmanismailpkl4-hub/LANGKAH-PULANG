@@ -11,6 +11,7 @@ import { FLASHBACK_DIALOGUES } from './flashbacks';
 import { HENDRA_NIGHT_DIALOGUES } from './hendraNightStory';
 import { KIRA_BEDTIME_DIALOGUES } from './kiraBedtimeStory';
 import { KIRA_SKETCHBOOK_DIALOGUES } from './kiraSecretSketchbook';
+import { MAS_RAKA_DEEP_DIALOGUES } from './masRakaDeepStory';
 import { MIDNIGHT_DRAFT_DIALOGUES } from './midnightDraftStory';
 import { MOTHER_SEWING_TIN_DIALOGUES } from './motherSewingTinStory';
 import { NADIA_DIARY_DIALOGUES } from './nadiaPregnancyDiary';
@@ -600,6 +601,7 @@ export const ALL_DIALOGUES: Record<string, DialogueScript> = {
   ...FATHER_CASSETTE_DIALOGUES,
   ...FLASHBACK_DIALOGUES,
   ...HENDRA_NIGHT_DIALOGUES,
+  ...MAS_RAKA_DEEP_DIALOGUES,
   ...MIDNIGHT_DRAFT_DIALOGUES,
   ...MOTHER_SEWING_TIN_DIALOGUES,
   ...NADIA_DIARY_DIALOGUES,
