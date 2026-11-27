@@ -480,6 +480,16 @@ export function buildStoryTimeline(params: {
       tone: 'gold',
     });
   }
+  if (flags.includes('heard_bagas_rama_story')) {
+    echoBadges.push({
+      id: 'eb_bagas_rama_2014',
+      title: 'Busur Cello Rama 2014 · Sumpah Mas Bagas',
+      detail: flags.includes('dedicated_song_to_rama')
+        ? 'Dedikasi lagumu untuk almarhum adik Mas Bagas bergema di pengakuan gitar Bab 3 dan Epilog Nada Lama.'
+        : 'Menyingkap alasan Mas Bagas menjaga koper gitar mahoni "TITIPAN DAMAR" selama enam tahun.',
+      tone: 'gold',
+    });
+  }
   if (flags.includes('found_midnight_draft')) {
     echoBadges.push({
       id: 'eb_midnight_draft',

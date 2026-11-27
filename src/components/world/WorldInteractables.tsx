@@ -639,6 +639,9 @@ export const WorldInteractables: React.FC = () => {
         if (sq.status === 'active' && sq.stage === 2) {
           return { dialogueId: 'sq_mas_bagas_complete', highlight: 'side', sublabel: 'Selesaikan Misi' };
         }
+        if (sq.status === 'completed' && !store.flags.includes('heard_bagas_rama_story')) {
+          return { dialogueId: 'story_bagas_penjaga_lagu', highlight: 'side', sublabel: 'Kisah Busur Cello 2014' };
+        }
       }
 
       if (npcId === 'pak_darman') {
@@ -2273,6 +2276,26 @@ export const WorldInteractables: React.FC = () => {
         position: [-18.95, 0.08, -27.25],
         onInteract: () => {
           store.cycleNadaLamaVinyl();
+        },
+      },
+      2.2,
+    );
+
+    consider(
+      {
+        id: 'interior_bagas_rama_bow',
+        kind: 'story_object',
+        label: store.flags.includes('heard_bagas_rama_story')
+          ? 'Kenang Kembali Kisah Busur Cello Rama (2014) & Mas Bagas'
+          : 'Periksa Busur Cello Tua "Rama · 2014" di Samping Koper Gitar',
+        sublabel: store.flags.includes('heard_bagas_rama_story')
+          ? 'Kenangan Tersimpan · Penjaga Lagu Orang Lain'
+          : 'Sudut Belakang Nada Lama · Rahasia Enam Tahun Mas Bagas',
+        position: [-22.35, 0.08, -26.55],
+        onInteract: () => {
+          playerRuntime.activeSpeakerPos = [-22.35, 1.15, -26.95];
+          playerRuntime.activeSpeakerId = 'mas_bagas';
+          store.startDialogue('story_bagas_penjaga_lagu');
         },
       },
       2.2,
@@ -5226,6 +5249,39 @@ export const WorldInteractables: React.FC = () => {
         <mesh position={[0.02, 0.72, -0.1]}>
           <sphereGeometry args={[0.065, 10, 10]} />
           <meshBasicMaterial color={flags.includes('found_midnight_draft') ? '#86efac' : '#a5b4fc'} />
+        </mesh>
+      </group>
+
+      {/* Bingkai Beludru Busur Cello "Rama · 2014" & Koper Gitar Mahoni Titipan Damar di Nada Lama */}
+      <group position={[-22.35, 0.08, -26.95]} rotation={[0, 0.06, 0]}>
+        {/* Koper gitar mahoni bersandar berlabel TITIPAN DAMAR */}
+        <mesh position={[-0.28, 0.48, 0.08]} rotation={[-0.12, 0.15, 0]} castShadow>
+          <boxGeometry args={[0.36, 0.94, 0.14]} />
+          <meshStandardMaterial color="#3b2316" roughness={0.68} />
+        </mesh>
+        {/* Label kuning TITIPAN DAMAR */}
+        <mesh position={[-0.25, 0.62, 0.155]} rotation={[-0.12, 0.15, 0]}>
+          <boxGeometry args={[0.16, 0.055, 0.008]} />
+          <meshStandardMaterial color="#fde68a" emissive="#f59e0b" emissiveIntensity={0.28} />
+        </mesh>
+        {/* Kotak bingkai beludru merah tua busur cello 2014 */}
+        <mesh position={[0.2, 1.24, 0]} castShadow>
+          <boxGeometry args={[0.72, 0.24, 0.06]} />
+          <meshStandardMaterial color="#451a23" roughness={0.75} />
+        </mesh>
+        {/* Batang busur cello kayu pernambuco */}
+        <mesh position={[0.2, 1.25, 0.036]} rotation={[0, 0, Math.PI / 2 - 0.06]}>
+          <cylinderGeometry args={[0.008, 0.011, 0.62, 8]} />
+          <meshStandardMaterial color="#b45309" roughness={0.4} />
+        </mesh>
+        {/* Pelat kuningan "Rama · 1993-2014" */}
+        <mesh position={[0.2, 1.15, 0.035]}>
+          <boxGeometry args={[0.22, 0.035, 0.008]} />
+          <meshStandardMaterial color="#eab308" metalness={0.7} roughness={0.3} />
+        </mesh>
+        <mesh position={[0.05, 1.52, 0.08]}>
+          <sphereGeometry args={[0.072, 10, 10]} />
+          <meshBasicMaterial color={flags.includes('heard_bagas_rama_story') ? '#86efac' : '#fbbf24'} />
         </mesh>
       </group>
 

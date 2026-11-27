@@ -294,6 +294,19 @@ export const CHARACTER_ECHO_DIALOGUES: Record<string, DialogueScript> = {
   },
 
   // === MAS BAGAS ===
+  echo_bagas_rama_2014: {
+    id: 'echo_bagas_rama_2014',
+    startNodeId: 'ebg_r14_1',
+    nodes: {
+      ebg_r14_1: {
+        id: 'ebg_r14_1',
+        speaker: 'mas_bagas',
+        emotion: 'haru',
+        echoTag: 'Ingatan Mas Bagas · Busur Cello Rama (2014)',
+        text: 'Terima kasih sudah mau mendengarkan cerita almarhum Rama tadi, Mar. Koper gitar mahonimu di sebelah busur cello itu siap kapan pun kamu dan Nadia datang menjemputnya pulang.',
+      },
+    },
+  },
   echo_bagas_2020_guitar: {
     id: 'echo_bagas_2020_guitar',
     startNodeId: 'ebg_20_1',
@@ -408,6 +421,9 @@ export function resolveDynamicNpcAmbient(
   }
 
   if (npcId === 'mas_bagas') {
+    if (flags.includes('heard_bagas_rama_story')) {
+      return { dialogueId: 'echo_bagas_rama_2014', sublabel: 'Ingatan Mas Bagas · Rama 2014' };
+    }
     if (flags.includes('flashback_2020_done') || flags.includes('thanked_bagas_guitar_chat')) {
       return { dialogueId: 'echo_bagas_2020_guitar', sublabel: 'Ingatan Mas Bagas · 2020' };
     }
@@ -474,6 +490,16 @@ export function buildEndingJourneyRecap(params: {
 
   const echoCards: JourneyEchoCard[] = [];
 
+  if (flags.includes('heard_bagas_rama_story')) {
+    echoCards.push({
+      id: 'ec_bagas_rama_2014',
+      label: 'Penjaga Lagu Orang Lain (Mas Bagas · 2014)',
+      summary: flags.includes('dedicated_song_to_rama')
+        ? 'Kamu mendengar kisah cello almarhum adik Mas Bagas tahun 2014 dan mendedikasikan lagu "Pulang" untuk menghormati sumpah yang menyelamatkan gitarmu.'
+        : 'Di sudut belakang Nada Lama, kamu mengetahui alasan mengharukan mengapa Mas Bagas menolak menjual gitar mahonimu selama enam tahun.',
+      tone: 'gold',
+    });
+  }
   if (flags.includes('found_midnight_draft')) {
     echoCards.push({
       id: 'ec_midnight_draft',

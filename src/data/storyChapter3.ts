@@ -487,6 +487,20 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
         emotion: 'haru',
         echoTag: 'Pengakuan Utuh · Rahasia Enam Tahun',
         text: 'Nad... enam tahun lalu, malam sebelum Kira lahir, gitarku nggak pernah dipinjam teman. Aku menjualnya ke Mas Bagas di tengah hujan demi biaya operasi kamu. Aku nggak pernah menyesal, tapi sejak malam itu aku terlalu takut gagal sampai lupa bagaimana caranya bernyanyi—dan lupa jadi teman hidupmu.',
+        conditionalNext: [
+          {
+            requiredFlag: 'heard_bagas_rama_story',
+            nextNodeId: 'ch3_fin_guitar_bagas_echo',
+          },
+        ],
+        nextNodeId: 'ch3_fin_guitar_2',
+      },
+      ch3_fin_guitar_bagas_echo: {
+        id: 'ch3_fin_guitar_bagas_echo',
+        speaker: 'damar',
+        emotion: 'haru',
+        echoTag: 'Gema Nada Lama · Sumpah Mas Bagas & Busur Rama',
+        text: 'Dan hari ini aku baru tahu mengapa Mas Bagas nggak pernah menjual gitar itu ke orang lain, Nad... ia menjaganya demi mengenang almarhum adiknya tahun 2014, supaya aku masih bisa membawanya pulang ke rumah kita.',
         nextNodeId: 'ch3_fin_guitar_2',
       },
       ch3_fin_guitar_2: {

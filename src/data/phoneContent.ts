@@ -809,6 +809,14 @@ export const PHONE_THREADS: PhoneContactThread[] = [
         requiredFlag: 'flashback_2020_done',
       },
       {
+        id: 'bg_rama_2014',
+        from: 'them',
+        text: 'Mar, lega rasanya akhirnya ada yang tahu cerita busur cello almarhum Rama di pojok belakang toko. Terima kasih sudah dengerin cerita lama gue dengan hati hangat ya.',
+        time: 'Baru saja',
+        chapterMin: 1,
+        requiredFlag: 'heard_bagas_rama_story',
+      },
+      {
         id: 'bg_2',
         from: 'them',
         text: 'Sore-sore mendung gini enaknya dengerin petikan senar nilon sambil ngeteh. Kalau lewat depan Nada Lama, mampir aja Mar—senar gitarmu baru kuganti yang hangat.',
@@ -873,6 +881,38 @@ export const PHONE_THREADS: PhoneContactThread[] = [
             replyFromThem: 'Nah! Itu baru Damar yang gue kenal. Pintu Nada Lama selalu terbuka buat lo dan keluarga.',
             replyTime: 'Baru saja',
             effects: { kehadiranKeluarga: 2, kejujuranDiri: 1 },
+          },
+        ],
+      },
+      {
+        id: 'prompt_bagas_rama_2014',
+        chapterMin: 1,
+        requiredFlag: 'heard_bagas_rama_story',
+        contextHint: 'Menanggapi kisah busur cello almarhum Rama (2014) di Nada Lama',
+        options: [
+          {
+            id: 'rep_bg_rama_honor',
+            toneLabel: 'Hangat',
+            text: 'Rama pasti bangga banget punya kakak kayak kamu, Gas. Karena kamu, banyak musisi di Kota Senja nggak kehilangan rumahnya.',
+            replyFromThem: 'Wah jangan gitu Mar, mata gue jadi berembun lagi nih di meja kasir. Makasih banyak ya sahabatku.',
+            replyTime: 'Baru saja',
+            effects: {
+              kehadiranKeluarga: 2,
+              kejujuranDiri: 2,
+              setFlags: ['replied_bagas_rama_chat'],
+            },
+          },
+          {
+            id: 'rep_bg_rama_kira',
+            toneLabel: 'Jujur',
+            text: 'Nanti waktu Kira belajar musik di Nada Lama, kenalkan dia sama cerita Om Rama ya, Gas—biar dia tahu arti mencintai keluarga lewat nada.',
+            replyFromThem: 'Pasti, Mar! Dengan senang hati gue ceritain ke Kira nanti sambil kita dengerin piringan hitam klasik.',
+            replyTime: 'Baru saja',
+            effects: {
+              kehadiranKeluarga: 3,
+              kejujuranDiri: 1,
+              setFlags: ['replied_bagas_rama_chat'],
+            },
           },
         ],
       },
@@ -1048,6 +1088,17 @@ export const PHONE_THREADS: PhoneContactThread[] = [
 ];
 
 export const VOICE_NOTES: VoiceNoteItem[] = [
+  {
+    id: 'vn_bagas_rama_2014',
+    speakerId: 'mas_bagas',
+    senderName: 'Mas Bagas (Arsip Kaset 2014)',
+    title: 'Catatan Suara: Mengapa Toko Ini Bernama "Nada Lama"',
+    duration: '0:22',
+    chapterMin: 1,
+    requiredFlag: 'heard_bagas_rama_story',
+    transcript:
+      'Dulu almarhum adikku Rama pernah bilang: instrumen kayu itu menyimpan sidik jari dan doa pemiliknya, Bang. Jadi kalau ada orang terpaksa menitipkan alat musiknya karena keadaan, jangan dijual ke orang asing—tunggu sampai hatinya sembuh dan siap menjemputnya pulang.',
+  },
   {
     id: 'vn_nadia_diary_2020',
     speakerId: 'nadia',

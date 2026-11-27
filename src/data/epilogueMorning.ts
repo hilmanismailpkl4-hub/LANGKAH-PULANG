@@ -596,6 +596,20 @@ export const EPILOGUE_DIALOGUES: Record<string, DialogueScript> = {
         emotion: 'haru',
         text: 'Lho, Mar! Lihat tuh penyangga kayu di sudut etalase... akhirnya kosong juga pagi ini setelah enam tahun! Gimana semalam reaksi Nadia sama si kecil Kira waktu gitar mahoninya sampai rumah?',
         onEnter: { playSfx: 'guitar' },
+        conditionalNext: [
+          {
+            requiredFlag: 'dedicated_song_to_rama',
+            nextNodeId: 'ep_bg_s1_rama',
+          },
+        ],
+        nextNodeId: 'ep_bg_s2',
+      },
+      ep_bg_s1_rama: {
+        id: 'ep_bg_s1_rama',
+        speaker: 'mas_bagas',
+        emotion: 'haru',
+        echoTag: 'Buah Janjimu · Bait Lagu untuk Almarhum Rama',
+        text: 'Mas Bagas melirik kotak beludru busur cello 2014 yang kini tampak disinari matahari pagi. "Pagi ini waktu buka toko, rasanya sudut tempat busur Rama itu hangat sekali, Mar. Sumpahku malam Agustus 2020 akhirnya benar-benar tuntas pagi ini."',
         nextNodeId: 'ep_bg_s2',
       },
       ep_bg_s2: {
