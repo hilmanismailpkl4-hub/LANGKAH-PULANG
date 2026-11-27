@@ -135,13 +135,14 @@ export interface DialogueEffect {
   openNadiaLetter?: boolean;
   startMorningFamilyWalk?: boolean;
   markEpilogueDone?: boolean;
+  triggerInitialChapterOne?: boolean;
 }
 
 export interface FlashbackMeta {
   yearLabel: string;
   title: string;
   locationLabel: string;
-  mood: 'warm_sepia' | 'rain_melancholy' | 'quiet_night';
+  mood: 'warm_sepia' | 'rain_melancholy' | 'quiet_night' | 'pre_dawn_dream';
   epigraph?: string;
 }
 

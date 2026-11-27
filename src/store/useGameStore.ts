@@ -94,6 +94,7 @@ export interface LoadingOverlayState {
 interface GameStoreState {
   screen: ScreenMode;
   transitionChapter: ChapterNumber;
+  isTransitionPreview: boolean;
   slots: Record<string, SaveSlotData>;
   activeSlotId: string | null;
   journalName: string;
@@ -283,6 +284,7 @@ interface GameStoreState {
   closeDialogue: () => void;
   discoverEasterEgg: (easterEggId: string) => void;
   applyEffect: (effect?: DialogueEffect) => void;
+  openChapterCardPreview: (chap: ChapterNumber) => void;
   finishChapterTransition: () => void;
 
   // UI Toggles
@@ -338,6 +340,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
   return {
     screen: 'title',
     transitionChapter: 1,
+    isTransitionPreview: false,
     slots: loadLocalSlots(),
     activeSlotId: null,
     journalName: 'Catatan Langkahku',
@@ -1814,8 +1817,12 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         workLaptopClosed: false,
         stepCount: 0,
         transitionChapter: 1,
-        screen: 'chapter_transition',
+        isTransitionPreview: false,
+        screen: 'playing',
       }));
+
+      // Buka permainan baru dengan Prolog Sinematik Interaktif "Mimpi Pukul 05.45" sebelum Kartu Sastra Bab I!
+      get().startDialogue('prologue_mimpi_0545');
     },
 
     loadSlot: (slotId) => {
@@ -2008,7 +2015,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         sfxEngine.playMemoryChime();
         if (script.flashback.mood === 'rain_melancholy') {
           musicEngine.setContext('park', 'rain_dusk');
-        } else if (script.flashback.mood === 'quiet_night') {
+        } else if (script.flashback.mood === 'quiet_night' || script.flashback.mood === 'pre_dawn_dream') {
           musicEngine.setContext('rooftop', 'night');
         } else {
           musicEngine.setContext('cafe', 'sunset');
@@ -2139,8 +2146,26 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     },
 
     closeDialogue: () => {
-      const wasFlashback = Boolean(get().activeDialogue?.flashback);
+      const curDialogue = get().activeDialogue;
+      const wasFlashback = Boolean(curDialogue?.flashback);
+      const isInitialPrologue =
+        curDialogue?.id === 'prologue_mimpi_0545' && !get().flags.includes('prologue_0545_done');
       voiceManager.stop();
+
+      if (isInitialPrologue) {
+        set((st) => ({
+          activeDialogue: null,
+          activeNodeId: null,
+          flags: st.flags.includes('prologue_0545_done') ? st.flags : [...st.flags, 'prologue_0545_done'],
+          chapter: 1,
+          transitionChapter: 1,
+          isTransitionPreview: false,
+          screen: 'chapter_transition',
+        }));
+        void get().saveCurrentGame(true);
+        return;
+      }
+
       set({ activeDialogue: null, activeNodeId: null });
       if (wasFlashback && get().screen === 'playing') {
         const loc = getLocationAtPosition(playerRuntime.position);
@@ -2253,11 +2278,32 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         }, 180);
       }
 
+      if (effect.triggerInitialChapterOne) {
+        const alreadyDone = get().flags.includes('prologue_0545_done');
+        set((st) => ({
+          flags: st.flags.includes('prologue_0545_done') ? st.flags : [...st.flags, 'prologue_0545_done'],
+        }));
+        if (!alreadyDone) {
+          set({
+            chapter: 1,
+            transitionChapter: 1,
+            isTransitionPreview: false,
+            activeDialogue: null,
+            activeNodeId: null,
+            screen: 'chapter_transition',
+          });
+          void get().saveCurrentGame(true);
+        } else {
+          get().showToast('Prolog "Mimpi Pukul 05.45" selesai diputar ulang.');
+        }
+      }
+
       if (effect.triggerChapterTransition) {
         const nextChap = effect.triggerChapterTransition;
         set({
           chapter: nextChap,
           transitionChapter: nextChap,
+          isTransitionPreview: false,
           activeDialogue: null,
           activeNodeId: null,
           screen: 'chapter_transition',
@@ -2287,8 +2333,20 @@ export const useGameStore = create<GameStoreState>((set, get) => {
       }
     },
 
+    openChapterCardPreview: (chap) => {
+      if (document.pointerLockElement) document.exitPointerLock();
+      sfxEngine.play('page');
+      set({
+        transitionChapter: chap,
+        isTransitionPreview: true,
+        isMapJournalOpen: false,
+        screen: 'chapter_transition',
+      });
+    },
+
     finishChapterTransition: () => {
-      set({ screen: 'playing' });
+      voiceManager.stop();
+      set({ screen: 'playing', isTransitionPreview: false });
       const { timeOfDay, currentLocation } = get();
       const mood = getLocationAtPosition(playerRuntime.position).musicMood;
       musicEngine.setContext(mood, timeOfDay);

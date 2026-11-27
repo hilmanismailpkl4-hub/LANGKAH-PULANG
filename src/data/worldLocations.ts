@@ -191,8 +191,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= 17.5 && x <= 40.5 && z >= -26.0 && z <= -19.0) return true;
   // Tenda & Payung Lapak Es Kelapa Muda Pak Hasan di Tepi Danau
   if (x >= -86.2 && x <= -80.2 && z >= -11.4 && z <= -8.0) return true;
-  // Kanopi Teras Warung Sudut Bu Rina (Perumahan Melati)
-  if (x >= 12.2 && x <= 17.4 && z >= 49.4 && z <= 51.0) return true;
+  // Kanopi Teras Warung Sudut Bu Rina (Trotoar Utara Jl. Melati)
+  if (x >= 16.2 && x <= 21.4 && z >= 40.8 && z <= 42.5) return true;
   // Atap Pos Kamling / Pos Ronda RT 04 Perumahan Melati
   if (x >= 25.3 && x <= 29.1 && z >= 55.2 && z <= 58.4) return true;
   // Payung Teduh Gerobak Es Dawet Ayu Pak Darmo (Plaza Menara Nusantara)
@@ -407,7 +407,7 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   // === 19. Gerobak Bakso Keliling Mas Agung & Warung Sudut Bu Rina ===
   { id: 'bakso_cart', minX: -27.95, maxX: -25.65, minZ: 47.2, maxZ: 48.4 },
   { id: 'bakso_bench', minX: -25.35, maxX: -23.85, minZ: 47.55, maxZ: 48.1 },
-  { id: 'corner_warung_building', minX: 12.45, maxX: 17.15, minZ: 46.55, maxZ: 50.0 },
+  { id: 'corner_warung_building', minX: 16.45, maxX: 21.15, minZ: 37.95, maxZ: 41.4 },
   { id: 'badminton_bench', minX: 33.55, maxX: 35.05, minZ: 46.28, maxZ: 46.82 },
 
   // === 20. Gerobak Sate Ayam Madura Cak Mat & Meja Makan (Sudut Jl. Cempaka) ===
@@ -656,8 +656,8 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: -14.1, z: 17.6, r: 0.58 },
   { x: -16.45, z: 21.65, r: 0.34 },
   { x: -26.8, z: 46.8, r: 0.42 },
-  { x: 12.7, z: 50.55, r: 0.14 },
-  { x: 16.9, z: 50.55, r: 0.14 },
+  { x: 16.7, z: 41.95, r: 0.14 },
+  { x: 20.9, z: 41.95, r: 0.14 },
 
   // Tiang Net Bulu Tangkis Gang Melati, 3 Warga Senam Taman & 2 Tiang Penunjuk Arah Kayu
   { x: 38.5, z: 46.95, r: 0.16 },

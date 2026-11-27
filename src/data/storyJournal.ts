@@ -422,6 +422,28 @@ export function buildStoryTimeline(params: {
 
   // Cabang Gema Sampingan yang Aktif Memengaruhi Dialog Karakter!
   const echoBadges: TimelineEchoBadge[] = [];
+  if (flags.includes('prologue_dream_voice')) {
+    echoBadges.push({
+      id: 'eb_pr_voice',
+      title: 'Mimpi 05.45 · Merindukan Suara Sendiri',
+      detail: 'Sejak sebelum subuh, hatimu memilih menyelamatkan lagu yang sempat terputus di tengah rutinitas.',
+      tone: 'gold',
+    });
+  } else if (flags.includes('prologue_dream_home')) {
+    echoBadges.push({
+      id: 'eb_pr_home',
+      title: 'Mimpi 05.45 · Perahu Kertas di Ambang Pintu',
+      detail: 'Sejak mimpi subuh, ketakutan terbesarmu adalah menjadi orang asing bagi Nadia dan Kira.',
+      tone: 'rose',
+    });
+  } else if (flags.includes('prologue_dream_duty')) {
+    echoBadges.push({
+      id: 'eb_pr_duty',
+      title: 'Mimpi 05.45 · Beban Penjaga Atap',
+      detail: 'Mimpi subuh mencatat betapa lama kamu memikul ketakutan seorang diri demi menjaga rumah tetap berdiri.',
+      tone: 'sky',
+    });
+  }
   if (flags.includes('reconciled_dinner_memory_chat')) {
     echoBadges.push({
       id: 'eb_chat_apology',

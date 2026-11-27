@@ -48,25 +48,35 @@ export const DialogueOverlay: React.FC = () => {
     (c) => !c.requiredFlag || flags.includes(c.requiredFlag),
   );
 
-  // Suasana warna sinematik untuk Mode Kilas Balik Memori
+  const isDreamPrologue = flashback?.mood === 'pre_dawn_dream';
+  const isInitialPrologue =
+    activeDialogue?.id === 'prologue_mimpi_0545' && !flags.includes('prologue_0545_done');
+
+  // Suasana warna sinematik untuk Mode Kilas Balik Memori & Prolog Mimpi 05.45
   const flashbackBackdropStyle: React.CSSProperties | undefined = flashback
-    ? flashback.mood === 'rain_melancholy'
+    ? flashback.mood === 'pre_dawn_dream'
       ? {
-          backdropFilter: 'sepia(0.36) saturate(0.72) contrast(1.06) brightness(0.76)',
+          backdropFilter: 'saturate(0.84) contrast(1.08) brightness(0.68)',
           background:
-            'radial-gradient(circle at 50% 28%, rgba(112, 148, 184, 0.24) 0%, rgba(16, 22, 34, 0.68) 62%, rgba(8, 10, 16, 0.9) 100%)',
+            'radial-gradient(circle at 50% 26%, rgba(129, 140, 248, 0.24) 0%, rgba(19, 24, 46, 0.82) 58%, rgba(7, 9, 18, 0.95) 100%)',
         }
-      : flashback.mood === 'quiet_night'
+      : flashback.mood === 'rain_melancholy'
         ? {
-            backdropFilter: 'sepia(0.48) contrast(1.1) brightness(0.72)',
+            backdropFilter: 'sepia(0.36) saturate(0.72) contrast(1.06) brightness(0.76)',
             background:
-              'radial-gradient(circle at 50% 22%, rgba(235, 178, 96, 0.22) 0%, rgba(24, 18, 16, 0.72) 58%, rgba(8, 7, 10, 0.92) 100%)',
+              'radial-gradient(circle at 50% 28%, rgba(112, 148, 184, 0.24) 0%, rgba(16, 22, 34, 0.68) 62%, rgba(8, 10, 16, 0.9) 100%)',
           }
-        : {
-            backdropFilter: 'sepia(0.68) contrast(1.06) brightness(0.82)',
-            background:
-              'radial-gradient(circle at 50% 24%, rgba(248, 196, 113, 0.28) 0%, rgba(52, 32, 20, 0.56) 62%, rgba(14, 10, 8, 0.88) 100%)',
-          }
+        : flashback.mood === 'quiet_night'
+          ? {
+              backdropFilter: 'sepia(0.48) contrast(1.1) brightness(0.72)',
+              background:
+                'radial-gradient(circle at 50% 22%, rgba(235, 178, 96, 0.22) 0%, rgba(24, 18, 16, 0.72) 58%, rgba(8, 7, 10, 0.92) 100%)',
+            }
+          : {
+              backdropFilter: 'sepia(0.68) contrast(1.06) brightness(0.82)',
+              background:
+                'radial-gradient(circle at 50% 24%, rgba(248, 196, 113, 0.28) 0%, rgba(52, 32, 20, 0.56) 62%, rgba(14, 10, 8, 0.88) 100%)',
+            }
     : undefined;
 
   const showCenteredBanner = Boolean(flashback) && !(compact && visibleChoices.length > 0);
@@ -91,9 +101,15 @@ export const DialogueOverlay: React.FC = () => {
             }`}
           >
             <div className="flex items-center gap-2.5 overflow-hidden">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/35 bg-amber-500/15 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-200">
-                <Film className="h-3 w-3" />
-                Kilas Balik
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] ${
+                  isDreamPrologue
+                    ? 'border-indigo-300/40 bg-indigo-500/20 text-indigo-100'
+                    : 'border-amber-300/35 bg-amber-500/15 text-amber-200'
+                }`}
+              >
+                {isDreamPrologue ? <Sparkles className="h-3 w-3" /> : <Film className="h-3 w-3" />}
+                {isDreamPrologue ? 'Prolog Mimpi' : 'Kilas Balik'}
               </span>
               <span className="truncate font-mono text-[11px] tracking-[0.14em] text-amber-100/85">
                 {flashback.yearLabel}
@@ -107,11 +123,13 @@ export const DialogueOverlay: React.FC = () => {
               <button
                 type="button"
                 onClick={closeDialogue}
-                title="Kembali ke Masa Kini"
+                title={isInitialPrologue ? 'Lewati Mimpi Menuju Bab I' : 'Kembali ke Masa Kini'}
                 className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] text-amber-100/75 transition hover:border-amber-300/45 hover:bg-white/10 hover:text-amber-50"
               >
                 <X className="h-3 w-3" />
-                <span className="hidden sm:inline">Kembali ke Masa Kini</span>
+                <span className="hidden sm:inline">
+                  {isInitialPrologue ? 'Lewati Mimpi' : 'Kembali ke Masa Kini'}
+                </span>
               </button>
             </div>
           </div>

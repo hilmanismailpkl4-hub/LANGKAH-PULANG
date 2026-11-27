@@ -142,6 +142,7 @@ export const MapJournalModal: React.FC = () => {
   const customWaypoint = useGameStore((s) => s.customWaypoint);
   const setCustomWaypoint = useGameStore((s) => s.setCustomWaypoint);
   const startDialogue = useGameStore((s) => s.startDialogue);
+  const openChapterCardPreview = useGameStore((s) => s.openChapterCardPreview);
 
   const [selectedLocId, setSelectedLocId] = useState<LocationId>(currentLocation);
   const [zoom, setZoom] = useState(1);
@@ -1302,6 +1303,57 @@ export const MapJournalModal: React.FC = () => {
                 {/* === SUBTAB 3C: ARSIP 4 KILAS BALIK MEMORI SINEMATIK (PUTAR ULANG KAPAN SAJA) === */}
                 {journalSubTab === 'flashbacks' && (
                   <div className="space-y-4">
+                    {/* Panel Prolog Mimpi Pukul 05.45 & Lembar Kartu Sastra Pembuka Bab */}
+                    <div className="rounded-2xl border border-indigo-300/30 bg-gradient-to-r from-[#181b34]/95 via-[#171625]/95 to-dusk-950 p-4 shadow-lg">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="max-w-xl">
+                          <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-indigo-300">
+                            <Sparkles className="h-3 w-3" />
+                            Prolog &amp; Monolog Pembuka Bab
+                          </span>
+                          <h4 className="mt-1 font-serif text-base text-warm-50 md:text-lg">
+                            Mimpi Pukul 05.45 &amp; Kartu Sastra Dinamis
+                          </h4>
+                          <p className="mt-1 text-xs leading-relaxed text-warm-200/75">
+                            Hidupkan kembali sekuens mimpi sebelum subuh atau baca ulang monolog batin pembuka Bab yang menyesuaikan pilihanmu.
+                          </p>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              closeMapJournal();
+                              startDialogue('prologue_mimpi_0545');
+                            }}
+                            className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-400/90 px-3.5 py-2 text-xs font-semibold text-dusk-950 shadow transition hover:bg-indigo-300"
+                          >
+                            <Play className="h-3.5 w-3.5 fill-current" />
+                            <span>Prolog 05.45</span>
+                          </button>
+
+                          {([1, 2, 3] as const).map((chapNum) => {
+                            const unlocked = chapter >= chapNum || Boolean(activeEnding);
+                            return (
+                              <button
+                                key={chapNum}
+                                type="button"
+                                disabled={!unlocked}
+                                onClick={() => openChapterCardPreview(chapNum)}
+                                className={`rounded-xl border px-3 py-2 text-xs font-medium transition ${
+                                  unlocked
+                                    ? 'border-amber-300/35 bg-amber-400/10 text-amber-100 hover:border-amber-300/75 hover:bg-amber-400/20'
+                                    : 'cursor-not-allowed border-white/10 bg-white/5 text-warm-300/35'
+                                }`}
+                              >
+                                Bab {chapNum === 1 ? 'I' : chapNum === 2 ? 'II' : 'III'}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div>
                         <h3 className="font-serif text-lg text-warm-50">

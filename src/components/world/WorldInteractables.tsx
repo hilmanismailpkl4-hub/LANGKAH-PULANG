@@ -1037,8 +1037,8 @@ export const WorldInteractables: React.FC = () => {
         id: 'activity_corner_warung',
         kind: 'story_object',
         label: 'Mampir Sapa Warung Sudut Bu Rina',
-        sublabel: 'Perumahan Melati · Sembako, Kopi & Gorengan Sore',
-        position: [14.8, 0, 50.8],
+        sublabel: 'Tepi Utara Jl. Melati · Sembako, Kopi & Gorengan Sore',
+        position: [18.8, 0, 42.2],
         onInteract: () => {
           sfxEngine.play('interact');
           if (!store.flags.includes('visited_warung_bu_rina')) {
@@ -4581,7 +4581,7 @@ export const WorldInteractables: React.FC = () => {
         <sphereGeometry args={[0.08, 8, 8]} />
         <meshBasicMaterial color="#fde047" />
       </mesh>
-      <mesh position={[14.8, 2.08, 50.0]}>
+      <mesh position={[18.8, 2.08, 41.4]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#fcd34d" />
       </mesh>

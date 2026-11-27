@@ -585,8 +585,9 @@ export const CafeAndNightStreetLife: React.FC<CafeAndNightStreetLifeProps> = ({
 
       {/* ==================================================================== */}
       {/* 3. WARUNG SUDUT PERUMAHAN MELATI ("WARUNG BU RINA") + NEON MALAM     */}
+      {/*    Kavling trotoar utara Jl. Melati ([18.8, 0, 39.6], bersih dari jalan!) */}
       {/* ==================================================================== */}
-      <group position={[14.8, 0, 48.2]}>
+      <group position={[18.8, 0, 39.6]}>
         {/* Bangunan Warung Krem-Hijau Mint Khas Perumahan Indonesia */}
         <mesh position={[0, 1.55, 0]} castShadow receiveShadow>
           <boxGeometry args={[4.4, 3.1, 3.0]} />
