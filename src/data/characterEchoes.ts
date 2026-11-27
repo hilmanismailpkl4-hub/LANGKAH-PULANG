@@ -474,6 +474,18 @@ export function buildEndingJourneyRecap(params: {
 
   const echoCards: JourneyEchoCard[] = [];
 
+  if (flags.includes('found_midnight_draft')) {
+    echoCards.push({
+      id: 'ec_midnight_draft',
+      label: 'Draf Pukul 02.14 di Laci Meja Kerja',
+      summary: flags.includes('ch3_unfolded_draft_at_table')
+        ? 'Kamu mengeluarkan draf surat pukul dua pagi dari sebelas bulan lalu dan membukanya jujur di hadapan Nadia di meja makan.'
+        : flags.includes('rewrote_midnight_draft')
+          ? 'Kamu menulis ulang surat kelelahan pukul 02.14 menjadi komitmen batas hidup sehat demi keluarga.'
+          : 'Kamu membuka kembali laci meja kerjamu dan berdamai dengan ketakutan yang pernah kau ketik tengah malam.',
+      tone: 'sky',
+    });
+  }
   if (flags.includes('read_nadia_diary_2020')) {
     echoCards.push({
       id: 'ec_nadia_diary_2020',

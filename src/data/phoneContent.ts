@@ -168,6 +168,14 @@ export const PHONE_THREADS: PhoneContactThread[] = [
         requiredFlag: 'read_nadia_diary_2020',
       },
       {
+        id: 'nd_midnight_draft',
+        from: 'them',
+        text: 'Mas... laci bawah meja kerjamu tadi terbuka dikit waktu aku nyapu. Kamu nyimpan apa di situ selama ini? Kalau ada yang bikin kamu sesak tengah malam, jangan diketik sendirian lagi ya.',
+        time: 'Baru saja',
+        chapterMin: 1,
+        requiredFlag: 'found_midnight_draft',
+      },
+      {
         id: 'nd_3',
         from: 'them',
         text: 'Langit udah mulai mendung banget di rumah, Mas. Kalau hujan nanti jangan ngebut ya... aku tunggu kabar kamu.',
@@ -394,6 +402,38 @@ export const PHONE_THREADS: PhoneContactThread[] = [
               kehadiranKeluarga: 3,
               kejujuranDiri: 2,
               setFlags: ['replied_nadia_diary_chat'],
+            },
+          },
+        ],
+      },
+      {
+        id: 'prompt_nadia_midnight_draft',
+        chapterMin: 1,
+        requiredFlag: 'found_midnight_draft',
+        contextHint: 'Menanggapi kertas draf pukul 02.14 dari laci meja kerja',
+        options: [
+          {
+            id: 'rep_nd_md_truth',
+            toneLabel: 'Jujur',
+            text: 'Sebelas bulan lalu aku pernah ngetik surat jam dua pagi karena takut mengecewakan kalian, Nad. Malam ini aku ceritakan semuanya tanpa ada yang kusembunyikan lagi.',
+            replyFromThem: 'Mas... makasih sudah mau bilang itu sekarang. Aku jauh lebih milih kita nangis bareng di ruang makan daripada kamu ngetik sendirian jam dua pagi ❤️',
+            replyTime: 'Baru saja',
+            effects: {
+              kejujuranDiri: 3,
+              kehadiranKeluarga: 2,
+              setFlags: ['replied_nadia_draft_chat'],
+            },
+          },
+          {
+            id: 'rep_nd_md_vow',
+            toneLabel: 'Tenang',
+            text: 'Cuma draf lama yang udah kutulis ulang jadi janji baru kok, Nad. Mulai besok nggak ada lagi urusan kantor yang boleh makan waktu rumah kita.',
+            replyFromThem: 'Lega banget bacanya, Mas. Aku pegang janji barunya ya!',
+            replyTime: 'Baru saja',
+            effects: {
+              kehadiranKeluarga: 2,
+              kejujuranDiri: 2,
+              setFlags: ['replied_nadia_draft_chat'],
             },
           },
         ],

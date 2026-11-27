@@ -1611,6 +1611,63 @@ export const MapJournalModal: React.FC = () => {
                       </div>
                     </div>
 
+                    {/* Kartu Draf Surat Pukul 02.14 di Laci Meja Kerja Damar */}
+                    <div className="rounded-2xl border border-indigo-300/30 bg-gradient-to-r from-[#1a1f33]/95 via-[#151824]/95 to-dusk-950 p-4 shadow-lg">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="max-w-xl">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-indigo-300">
+                              LACI BAWAH MEJA KERJA · PUKUL 02.14 WIB
+                            </span>
+                            {flags.includes('found_midnight_draft') && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                                <CheckCircle2 className="h-3 w-3" /> Terkenang
+                              </span>
+                            )}
+                          </div>
+                          <h4 className="mt-1 font-serif text-base text-indigo-50 md:text-lg">
+                            Kalimat yang Tak Pernah Dicetak (Draf Surat Sebelas Bulan Lalu)
+                          </h4>
+                          <p className="mt-1 text-xs leading-relaxed text-warm-200/80">
+                            {flags.includes('found_midnight_draft')
+                              ? 'Selembar kertas HVS yang separuh tercetak pukul dua dini hari sebelas bulan lalu—pengakuan jujur seorang ayah yang kini berani membuka lacinya.'
+                              : 'Periksa laci bawah di samping meja kerja laptop Damar di Rumah Jl. Melati No. 14 untuk menemukan kertas yang pernah ia sembunyikan sebelas bulan silam.'}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2">
+                          {flags.includes('found_midnight_draft') ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                closeMapJournal();
+                                startDialogue('story_midnight_draft_drawer');
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-400/95 px-3.5 py-2 text-xs font-semibold text-dusk-950 shadow transition hover:bg-indigo-300"
+                            >
+                              <Play className="h-3.5 w-3.5 fill-current" />
+                              <span>Baca Ulang Draf 02.14</span>
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setCustomWaypoint({
+                                  label: 'Laci Meja Kerja Damar (Rumah)',
+                                  position: [-23.15, 0.08, 71.35],
+                                });
+                                closeMapJournal();
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-xl border border-indigo-300/40 bg-indigo-400/15 px-3.5 py-2 text-xs font-semibold text-indigo-100 transition hover:bg-indigo-400/25"
+                            >
+                              <Navigation className="h-3.5 w-3.5" />
+                              <span>GPS ke Meja Kerja</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div>
                         <h3 className="font-serif text-lg text-warm-50">

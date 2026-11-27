@@ -701,7 +701,22 @@ export const EPILOGUE_DIALOGUES: Record<string, DialogueScript> = {
             subtext: 'Mengingatkan Pak Hendra dengan hangat sebagai sesama ayah',
             nextNodeId: 'ep_ph_wr2',
           },
+          {
+            id: 'ep_ph_wc_draft',
+            requiredFlag: 'rewrote_midnight_draft',
+            echoBadge: 'Dari Lembar Pukul 02.14 yang Ditulis Ulang',
+            text: '"Pak, sebelas bulan lalu saya hampir menyerahkan surat pengunduran diri pukul dua pagi. Hari ini saya justru bangga bertahan di sini dengan batas kerja yang sehat."',
+            subtext: 'Menutup lingkaran draf laci meja kerja di hadapan Pak Hendra',
+            nextNodeId: 'ep_ph_wr_draft',
+          },
         ],
+      },
+      ep_ph_wr_draft: {
+        id: 'ep_ph_wr_draft',
+        speaker: 'pak_hendra',
+        emotion: 'haru',
+        text: 'Pak Hendra tertegun mendengar kejujuran itu, lalu menjabat tangan Damar erat. "Syukurlah kamu tidak pergi waktu itu, Damar—dan syukurlah hari ini kita berdua belajar bekerja seperti manusia, bukan mesin. Sampaikan salam hormat saya untuk Nadia!"',
+        onEnd: { playSfx: 'chime' },
       },
       ep_ph_wr1: {
         id: 'ep_ph_wr1',

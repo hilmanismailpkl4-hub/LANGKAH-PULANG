@@ -7,7 +7,7 @@ export interface BagItemDef {
   subtitle: string;
   description: string;
   monologue: string;
-  iconType: 'wallet' | 'keys' | 'pick' | 'notebook' | 'cassette_1997' | 'icecream' | 'flower' | 'bookmark' | 'tea' | 'coffee' | 'archive_key' | 'sketchbook' | 'ginger' | 'capo';
+  iconType: 'wallet' | 'keys' | 'pick' | 'notebook' | 'cassette_1997' | 'draft_letter' | 'icecream' | 'flower' | 'bookmark' | 'tea' | 'coffee' | 'archive_key' | 'sketchbook' | 'ginger' | 'capo';
   giftTarget?: 'kira' | 'nadia';
   giftDialogueId?: string;
 }
@@ -57,6 +57,15 @@ export const ALL_BAG_ITEMS: BagItemDef[] = [
     description: 'Kaset analog cokelat transparan bertuliskan spidol biru pudar tangan almarhum Bapak: "Suara Damar Latihan Gitar — Minggu Sore, 16 Nov 1997". Ujung pitanya baru selesai disambung rapi oleh Pak Darman.',
     monologue: 'Empat belas tahun kaset ini menunggu di dalam kaleng biskuit tua Pak Darman. Radio kayu Bapak di dapur rumah pasti masih sanggup memutarnya.',
     iconType: 'cassette_1997',
+  },
+  {
+    id: 'item_midnight_draft',
+    name: 'Lembar Draf Pukul 02.14 WIB',
+    category: 'kenangan',
+    subtitle: 'Dari Laci Bawah Meja Kerja Rumah',
+    description: 'Kertas HVS krem lipat empat yang separuh tercetak sebelas bulan lalu pukul dua pagi—kini menjadi saksi keberanian Damar untuk berhenti menyembunyikan kelelahannya.',
+    monologue: 'Aku pernah menulis ini dalam gelap karena takut kehilangan diriku sendiri. Sekarang kertas ini tidak lagi tersembunyi di dasar laci.',
+    iconType: 'draft_letter',
   },
   {
     id: 'item_gift_kira',

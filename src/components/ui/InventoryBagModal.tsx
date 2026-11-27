@@ -69,6 +69,18 @@ const ItemArtwork: React.FC<{ iconType: BagItemDef['iconType']; size?: 'sm' | 'm
           </text>
         </svg>
       );
+    case 'draft_letter':
+      return (
+        <svg viewBox="0 0 80 80" className={cls}>
+          <rect x="17" y="10" width="46" height="60" rx="3" fill="#f7eedb" stroke="#c8a97e" strokeWidth="2" />
+          <line x1="17" y1="40" x2="63" y2="40" stroke="#e2d2b5" strokeWidth="1" strokeDasharray="3 2" />
+          <line x1="24" y1="22" x2="54" y2="22" stroke="#64748b" strokeWidth="2" />
+          <line x1="23" y1="22" x2="55" y2="22" stroke="#2563eb" strokeWidth="1.8" />
+          <line x1="24" y1="31" x2="56" y2="31" stroke="#94a3b8" strokeWidth="1.6" />
+          <path d="M24 49 Q34 46 44 50 T56 48" stroke="#1d4ed8" strokeWidth="2" fill="none" strokeLinecap="round" />
+          <path d="M24 58 Q32 55 48 58" stroke="#1d4ed8" strokeWidth="2" fill="none" strokeLinecap="round" />
+        </svg>
+      );
     case 'icecream':
       return (
         <svg viewBox="0 0 80 80" className={cls}>
@@ -149,6 +161,9 @@ export const InventoryBagModal: React.FC = () => {
     }
     if (flags.includes('has_father_cassette_1997')) {
       has('item_kaset_bapak_1997');
+    }
+    if (flags.includes('rewrote_midnight_draft') || flags.includes('shared_midnight_draft_nadia')) {
+      has('item_midnight_draft');
     }
 
     // Hadiah kejutan untuk keluarga (hilang dari tas setelah diberikan)
@@ -442,6 +457,25 @@ export const InventoryBagModal: React.FC = () => {
                           </button>
                         </div>
                       )}
+                    </div>
+                  )}
+
+                  {/* Aksi Khusus Lembar Draf Pukul 02.14 WIB */}
+                  {selected.id === 'item_midnight_draft' && (
+                    <div className={`rounded-xl border border-sky-300/30 bg-sky-950/25 ${compact ? 'p-2.5' : 'p-4'}`}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setBagOpen(false);
+                          startDialogue('story_midnight_draft_drawer');
+                        }}
+                        className={`flex w-full items-center justify-center gap-2 rounded-xl bg-sky-400 text-xs font-semibold text-dusk-950 shadow-lg hover:bg-sky-300 ${
+                          compact ? 'py-2' : 'py-3'
+                        }`}
+                      >
+                        <Play className="h-3.5 w-3.5 fill-current" />
+                        <span>Baca Ulang Lembar Draf Pukul 02.14 WIB</span>
+                      </button>
                     </div>
                   )}
 

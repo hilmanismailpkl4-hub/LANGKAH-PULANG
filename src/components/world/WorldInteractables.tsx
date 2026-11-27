@@ -2000,6 +2000,25 @@ export const WorldInteractables: React.FC = () => {
 
     consider(
       {
+        id: 'interior_midnight_draft_drawer',
+        kind: 'story_object',
+        label: store.flags.includes('found_midnight_draft')
+          ? 'Baca Ulang Draf Pukul 02.14 di Laci Meja Kerja'
+          : 'Tarik Laci Bawah Meja Kerja Damar (Kertas Lipat Tua)',
+        sublabel: store.flags.includes('found_midnight_draft')
+          ? 'Kenangan Tersimpan · Kalimat yang Tak Pernah Dicetak'
+          : 'Sudut Kerja Rumah Jl. Melati · Tersimpan Sebelas Bulan',
+        position: [-23.15, 0.08, 71.35],
+        onInteract: () => {
+          playerRuntime.activeSpeakerPos = [-23.25, 0.58, 71.85];
+          store.startDialogue('story_midnight_draft_drawer');
+        },
+      },
+      1.65,
+    );
+
+    consider(
+      {
         id: 'interior_home_kitchen',
         kind: 'story_object',
         label: 'Masak & Seduh Hangat di Dapur Rumah',
@@ -5179,6 +5198,34 @@ export const WorldInteractables: React.FC = () => {
         <mesh position={[0.02, 0.86, 0]}>
           <sphereGeometry args={[0.068, 10, 10]} />
           <meshBasicMaterial color={flags.includes('read_nadia_diary_2020') ? '#86efac' : '#fda4af'} />
+        </mesh>
+      </group>
+
+      {/* Laci Kayu Bawah Meja Kerja Damar & Kertas Lipat Draf Pukul 02.14 */}
+      <group position={[-23.22, 0.08, 71.92]} rotation={[0, 0.08, 0]}>
+        {/* Kabinet laci samping meja kerja */}
+        <mesh position={[0, 0.28, 0]} castShadow receiveShadow>
+          <boxGeometry args={[0.44, 0.56, 0.46]} />
+          <meshStandardMaterial color="#593d28" roughness={0.82} />
+        </mesh>
+        {/* Laci bawah yang sedikit tertarik keluar */}
+        <mesh position={[0, 0.14, -0.14]} castShadow>
+          <boxGeometry args={[0.38, 0.14, 0.24]} />
+          <meshStandardMaterial color="#6e4b32" roughness={0.78} />
+        </mesh>
+        {/* Kertas HVS krem lipat empat & pena biru di dalam celah laci */}
+        <mesh position={[0.02, 0.22, -0.16]} rotation={[0.08, -0.24, 0]}>
+          <boxGeometry args={[0.18, 0.014, 0.13]} />
+          <meshStandardMaterial
+            color="#f7eedb"
+            emissive="#818cf8"
+            emissiveIntensity={flags.includes('found_midnight_draft') ? 0.18 : 0.55}
+            roughness={0.65}
+          />
+        </mesh>
+        <mesh position={[0.02, 0.72, -0.1]}>
+          <sphereGeometry args={[0.065, 10, 10]} />
+          <meshBasicMaterial color={flags.includes('found_midnight_draft') ? '#86efac' : '#a5b4fc'} />
         </mesh>
       </group>
 

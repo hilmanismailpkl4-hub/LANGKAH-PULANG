@@ -303,7 +303,13 @@ export function buildStoryTimeline(params: {
   const s9Branch =
     s9Status !== 'done'
       ? undefined
-      : flags.includes('ch3_shared_father_tape_finale')
+      : flags.includes('ch3_unfolded_draft_at_table')
+        ? {
+            label: 'Membuka Kertas Laci Pukul 02.14 di Depan Nadia',
+            note: 'Tak ada lagi laci yang dikunci—Nadia memeluk kejujuranmu dan berjanji menghadapi malam berat berdua.',
+            tone: 'sky' as const,
+          }
+        : flags.includes('ch3_shared_father_tape_finale')
         ? {
             label: 'Meletakkan Tas & Kaset Bapak 1997 di Meja Makan',
             note: 'Pesan almarhum Bapak dari tahun 1997 meruntuhkan topeng kuatmu—Nadia menyambutmu pulang dengan air mata lega.',
@@ -472,6 +478,16 @@ export function buildStoryTimeline(params: {
       title: 'Rahasia Gitar Agustus 2020 Hidup Kembali',
       detail: 'Membuka opsi pengakuan rahasia terdalam di klimaks Bab 3 & dialog baru Mas Bagas/Bima.',
       tone: 'gold',
+    });
+  }
+  if (flags.includes('found_midnight_draft')) {
+    echoBadges.push({
+      id: 'eb_midnight_draft',
+      title: 'Draf Pukul 02.14 di Laci Meja Kerja',
+      detail: flags.includes('rewrote_midnight_draft')
+        ? 'Surat pelarian sebelas bulan lalu ditulis ulang dengan pena biru menjadi janji batas kerja sehat & membuka opsi di Bab 3 + Epilog.'
+        : 'Membuka opsi pengakuan tanpa rahasia di Meja Makan Bab 3 serta obrolan jujur bersama Nadia.',
+      tone: 'sky',
     });
   }
   if (flags.includes('read_nadia_diary_2020')) {

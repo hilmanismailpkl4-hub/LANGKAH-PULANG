@@ -373,6 +373,19 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
         text: 'Lampu ruang makan memantul lembut di mata Nadia. Ini saatnya menentukan arah hidupku—apakah aku akhirnya berani pulang sepenuhnya, atau terus bersembunyi di balik kesibukan.',
         choices: [
           {
+            id: 'ch3_fin_c_midnight_draft',
+            requiredFlag: 'found_midnight_draft',
+            echoBadge: 'Terbuka dari Draf Pukul 02.14 di Laci Kerja',
+            text: 'Keluarkan kertas lipat pukul 02.14 dari laci meja kerja ke atas meja makan—buka seluruh ketakutan sebelas bulan terakhir di depan Nadia agar tak ada lagi laci rahasia di rumah ini.',
+            subtext: 'Kejujuran tanpa topeng dari lembar paling sunyi yang pernah kau ketik',
+            nextNodeId: 'ch3_fin_draft_1',
+            effects: {
+              kejujuranDiri: 5,
+              kehadiranKeluarga: 5,
+              setFlags: ['ch3_chose_honest_home', 'ch3_unfolded_draft_at_table'],
+            },
+          },
+          {
             id: 'ch3_fin_c_father_tape',
             requiredFlag: 'played_father_cassette_1997',
             echoBadge: 'Terbuka dari Kaset Suara Bapak 1997',
@@ -431,6 +444,24 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
             },
           },
         ],
+      },
+      ch3_fin_draft_1: {
+        id: 'ch3_fin_draft_1',
+        speaker: 'damar',
+        emotion: 'haru',
+        echoTag: 'Pengakuan Laci Terbuka · Draf Pukul 02.14',
+        text: 'Nad... sebelas bulan lalu pukul dua pagi, waktu kalian tidur, aku pernah mengetik surat ini karena takut kehilangan diriku sendiri. Kusembunyikan di dasar laci karena gengsi terlihat rapuh di depanmu. Malam ini kubuka lipatannya di meja makan kita—aku nggak mau lagi memikul takut sendirian di rumah kita sendiri.',
+        nextNodeId: 'ch3_fin_draft_2',
+      },
+      ch3_fin_draft_2: {
+        id: 'ch3_fin_draft_2',
+        speaker: 'nadia',
+        emotion: 'haru',
+        text: 'Nadia membaca baris ketikan yang memudar itu dengan bibir bergetar, lalu memeluk leher Damar erat-erat. "Kenapa kamu simpan selama sebelas bulan sendirian, Mas...? Mulai malam ini, kalau jam dua pagi dadamu sesak lagi, bangunkan aku. Kita hadapi semuanya berdua. Selamat pulang, suamiku."',
+        onEnd: {
+          playSfx: 'guitar',
+          triggerEnding: true,
+        },
       },
       ch3_fin_father_tape_1: {
         id: 'ch3_fin_father_tape_1',
