@@ -841,6 +841,20 @@ export const EPILOGUE_DIALOGUES: Record<string, DialogueScript> = {
         speaker: 'bu_wati',
         emotion: 'ceria',
         text: 'Pagi, Nak Damar! Aduh, semalam waktu Ibu nutup pagar jam sembilan, terdengar suara ketawa hangat dari ruang makan rumah No. 14—rasanya adem banget kayak waktu kalian baru pindahan bawa dua kardus buku tahun 2019 dulu!',
+        conditionalNext: [
+          {
+            requiredFlag: 'heard_bu_wati_rahmat_story',
+            nextNodeId: 'ep_wt_w1_rahmat',
+          },
+        ],
+        nextNodeId: 'ep_wt_w2',
+      },
+      ep_wt_w1_rahmat: {
+        id: 'ep_wt_w1_rahmat',
+        speaker: 'bu_wati',
+        emotion: 'haru',
+        echoTag: 'Ingatan Bu Wati · Lampu Teras yang Tak Sia-Sia',
+        text: 'Bu Wati menyentuh lembut topi dinas almarhum Pak Rahmat di kursi rotannya. "Lega sekali batin Ibu melihat kamu menepati janjimu untuk tidak membiarkan lampu teras Mbak Nadia menunggu sia-sia semalam, Nak."',
         nextNodeId: 'ep_wt_w2',
       },
       ep_wt_w2: {

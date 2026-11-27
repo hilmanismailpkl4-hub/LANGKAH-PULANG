@@ -507,6 +507,15 @@ export function buildEndingJourneyRecap(params: {
 
   const echoCards: JourneyEchoCard[] = [];
 
+  if (flags.includes('heard_bu_wati_rahmat_story')) {
+    echoCards.push({
+      id: 'ec_bu_wati_rahmat',
+      label: 'Lampu Teras Tiga Puluh Tahun (Bu Wati)',
+      summary:
+        'Dari kursi rotan dan topi sopir bus almarhum Pak Rahmat di teras Bu Wati, kamu belajar betapa berharganya lampu teras yang setiap senja dinyalakan Nadia untukmu.',
+      tone: 'gold',
+    });
+  }
   if (flags.includes('heard_nenek_sari_rantang')) {
     echoCards.push({
       id: 'ec_nenek_sari_rantang',

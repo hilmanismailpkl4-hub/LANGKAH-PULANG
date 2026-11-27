@@ -499,6 +499,14 @@ export function buildStoryTimeline(params: {
       tone: 'gold',
     });
   }
+  if (flags.includes('heard_bu_wati_rahmat_story')) {
+    echoBadges.push({
+      id: 'eb_bu_wati_rahmat',
+      title: 'Kursi Rotan & Lampu Teras Bu Wati',
+      detail: 'Kisah malam terakhir almarhum Pak Rahmat mengingatkanmu untuk tidak menyia-nyiakan lampu teras Jl. Melati No. 14.',
+      tone: 'gold',
+    });
+  }
   if (flags.includes('heard_nenek_sari_rantang')) {
     echoBadges.push({
       id: 'eb_nenek_sari_rantang',

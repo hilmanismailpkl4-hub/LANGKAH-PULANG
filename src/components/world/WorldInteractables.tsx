@@ -718,6 +718,9 @@ export const WorldInteractables: React.FC = () => {
         if (sq.status === 'active' && sq.stage === 2) {
           return { dialogueId: 'sq_bu_wati_complete', highlight: 'side', sublabel: 'Selesaikan Misi' };
         }
+        if (sq.status === 'completed' && !store.flags.includes('heard_bu_wati_rahmat_story')) {
+          return { dialogueId: 'story_bu_wati_porch_light', highlight: 'side', sublabel: 'Kisah Kursi Rotan Teras' };
+        }
         return { dialogueId: 'ambient_wati', highlight: null, sublabel: 'Berbincang' };
       }
 
@@ -4537,6 +4540,26 @@ export const WorldInteractables: React.FC = () => {
 
     consider(
       {
+        id: 'story_bu_wati_rattan_porch',
+        kind: 'story_object',
+        label: store.flags.includes('heard_bu_wati_rahmat_story')
+          ? 'Kenang Kembali Kisah Kursi Rotan & Lampu Teras Bu Wati'
+          : 'Periksa Kursi Rotan & Topi Sopir Bus Tua di Teras Bu Wati',
+        sublabel: store.flags.includes('heard_bu_wati_rahmat_story')
+          ? 'Kenangan Tersimpan · Lampu Teras untuk Pak Rahmat'
+          : 'Perumahan Melati · Dua Tatakan Gelas Rajut & Topi PO Senja Utama',
+        position: [25.35, 0, 62.15],
+        onInteract: () => {
+          playerRuntime.activeSpeakerPos = [24.0, 0, 61.8];
+          playerRuntime.activeSpeakerId = 'bu_wati';
+          store.startDialogue('story_bu_wati_porch_light');
+        },
+      },
+      2.2,
+    );
+
+    consider(
+      {
         id: 'flashback_home_dining_table',
         kind: 'story_object',
         label: 'Renungkan Meja Makan Pukul 22.15 (Kilas Balik)',
@@ -5474,6 +5497,39 @@ export const WorldInteractables: React.FC = () => {
         <mesh position={[0, 0.92, 0]}>
           <sphereGeometry args={[0.068, 10, 10]} />
           <meshBasicMaterial color={flags.includes('heard_nenek_sari_rantang') ? '#86efac' : '#6ee7b7'} />
+        </mesh>
+      </group>
+
+      {/* Meja Rotan Teras Bu Wati, Dua Cangkir Teh Serai & Topi Dinas Sopir Bus Pak Rahmat */}
+      <group position={[25.35, 0, 62.15]} rotation={[0, -0.25, 0]}>
+        {/* Meja rotan bundar teras */}
+        <mesh position={[0, 0.26, 0]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.3, 0.26, 0.52, 16]} />
+          <meshStandardMaterial color="#a16207" roughness={0.78} />
+        </mesh>
+        {/* Taplak rajut putih di atas meja rotan */}
+        <mesh position={[0, 0.525, 0]}>
+          <cylinderGeometry args={[0.24, 0.24, 0.01, 16]} />
+          <meshStandardMaterial color="#f8fafc" roughness={0.85} />
+        </mesh>
+        {/* Topi pet biru tua sopir bus PO Senja Utama */}
+        <mesh position={[-0.06, 0.565, 0.02]} rotation={[0, 0.35, 0]} castShadow>
+          <cylinderGeometry args={[0.11, 0.1, 0.065, 16]} />
+          <meshStandardMaterial
+            color="#1e3a8a"
+            emissive="#fbbf24"
+            emissiveIntensity={flags.includes('heard_bu_wati_rahmat_story') ? 0.08 : 0.32}
+            roughness={0.6}
+          />
+        </mesh>
+        {/* Lidah topi hitam */}
+        <mesh position={[-0.02, 0.54, -0.09]} rotation={[0.12, 0.35, 0]}>
+          <boxGeometry args={[0.14, 0.012, 0.08]} />
+          <meshStandardMaterial color="#0f172a" roughness={0.4} />
+        </mesh>
+        <mesh position={[0, 0.88, 0]}>
+          <sphereGeometry args={[0.068, 10, 10]} />
+          <meshBasicMaterial color={flags.includes('heard_bu_wati_rahmat_story') ? '#86efac' : '#fde047'} />
         </mesh>
       </group>
 

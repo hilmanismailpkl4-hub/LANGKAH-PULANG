@@ -1896,6 +1896,63 @@ export const MapJournalModal: React.FC = () => {
                       </div>
                     </div>
 
+                    {/* Kartu Cerita Mendalam Bu Wati: Lampu Teras Tiga Puluh Tahun untuk Pak Rahmat */}
+                    <div className="rounded-2xl border border-amber-300/30 bg-gradient-to-r from-[#282115]/95 via-[#1b1711]/95 to-dusk-950 p-4 shadow-lg">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="max-w-xl">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-amber-300">
+                              TETANGGA JL. MELATI · BU WATI &amp; PAK RAHMAT
+                            </span>
+                            {flags.includes('heard_bu_wati_rahmat_story') && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                                <CheckCircle2 className="h-3 w-3" /> Terkenang
+                              </span>
+                            )}
+                          </div>
+                          <h4 className="mt-1 font-serif text-base text-amber-50 md:text-lg">
+                            Lampu Teras Tiga Puluh Tahun untuk Pak Rahmat (Kursi Rotan Bu Wati)
+                          </h4>
+                          <p className="mt-1 text-xs leading-relaxed text-warm-200/80">
+                            {flags.includes('heard_bu_wati_rahmat_story')
+                              ? 'Kisah topi pengemudi bus malam di kursi rotan Bu Wati yang mengajarkan betapa berharganya seseorang yang masih menyalakan lampu teras untukmu.'
+                              : 'Periksa kursi rotan & topi dinas sopir bus tua di teras rumah Bu Wati di timur Perumahan Melati.'}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2">
+                          {flags.includes('heard_bu_wati_rahmat_story') ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                closeMapJournal();
+                                startDialogue('story_bu_wati_porch_light');
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-xl bg-amber-400/95 px-3.5 py-2 text-xs font-semibold text-dusk-950 shadow transition hover:bg-amber-300"
+                            >
+                              <Play className="h-3.5 w-3.5 fill-current" />
+                              <span>Kenang Ulang Kisah</span>
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setCustomWaypoint({
+                                  label: 'Kursi Rotan Teras Bu Wati (Perumahan Melati)',
+                                  position: [25.35, 0, 62.15],
+                                });
+                                closeMapJournal();
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-xl border border-amber-300/40 bg-amber-400/15 px-3.5 py-2 text-xs font-semibold text-amber-100 transition hover:bg-amber-400/25"
+                            >
+                              <Navigation className="h-3.5 w-3.5" />
+                              <span>GPS ke Teras Bu Wati</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div>
                         <h3 className="font-serif text-lg text-warm-50">
