@@ -258,7 +258,10 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
 }
 
 export function getSurfaceAtPosition(x: number, y: number, z: number): SurfaceType {
-  if (y > 14) return 'asphalt';
+  if (y > 14) {
+    if (x >= 22.75 && x <= 35.25 && z >= -29.1 && z <= -21.9) return 'wood';
+    return 'asphalt';
+  }
   if (x >= -27 && x <= -13 && z >= 62 && z <= 74) return 'wood';
   if (x >= -28 && x <= -12 && z >= 13 && z <= 27) return 'wood';
   if (x >= -29.4 && x <= -14.6 && z >= -31.4 && z <= -19.6) return 'wood';
@@ -268,6 +271,64 @@ export function getSurfaceAtPosition(x: number, y: number, z: number): SurfaceTy
     if (Math.abs(x - -20) > 2.2) return 'grass';
   }
   return 'asphalt';
+}
+
+/**
+ * Daftar eksplisit collider bangunan/dinding tinggi (> 2.0m) yang memang menghalangi pandangan kamera.
+ * Gerobak rendah, bangku taman, meja makan, pagar pendek, sungai & danau TIDAK masuk di sini
+ * sehingga kamera 360° tidak pernah tersentak maju saat melewati properti setinggi pinggang!
+ */
+const CAMERA_WALL_COLLIDER_IDS = new Set<string>([
+  'rumah_back',
+  'rumah_left',
+  'rumah_right',
+  'rumah_front_l',
+  'rumah_front_r',
+  'rumah_fridge',
+  'house_n1',
+  'house_n2',
+  'house_n3',
+  'cafe_back',
+  'cafe_left',
+  'cafe_right',
+  'kios_back',
+  'kios_left',
+  'kios_right',
+  'kios_front_l',
+  'kios_front_r',
+  'kios_fridges',
+  'kios_atm_booth',
+  'music_back',
+  'music_left',
+  'music_right',
+  'music_front_l',
+  'music_front_r',
+  'office_core',
+  'office_pillar_l',
+  'office_pillar_r',
+  'city_block_ne',
+  'city_block_se',
+  'city_block_nw',
+  'city_block_north1',
+  'city_block_north2',
+  'city_block_se2',
+  'city_block_nw2',
+  'station_office',
+  'corner_warung_building',
+  'barber_rapi_jaya_kiosk',
+  'pak_ahmad_gallon_depot',
+  'mushola_al_ikhlas_main',
+  'bengkel_mas_budi_bay',
+  'laundry_harum_melati_kiosk',
+  'sari_tailor_kiosk',
+  'rail_crossing_hut',
+  'apotek_sehat_melati_kiosk',
+  'konter_berkah_kiosk',
+  'dapur_manis_bakery_kiosk',
+]);
+
+export function isCameraWallCollider(id: string): boolean {
+  return CAMERA_WALL_COLLIDER_IDS.has(id);
 }
 
 /**

@@ -46,6 +46,7 @@ export const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
   const screen = useGameStore((s) => s.screen);
 
   const lightsRef = useRef<TrackedPointLight[]>([]);
+  const scoredLightsRef = useRef<{ item: TrackedPointLight; dSq: number }[]>([]);
   const districtGroupsRef = useRef<TrackedDistrictGroup[]>([]);
   const lastCullRef = useRef(0);
   const lastScanRef = useRef(0);
@@ -257,7 +258,8 @@ export const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
             ? 38 * 38
             : 72 * 72;
 
-      const scored: { item: TrackedPointLight; dSq: number }[] = [];
+      const scored = scoredLightsRef.current;
+      scored.length = 0;
       for (let i = 0; i < list.length; i++) {
         const item = list[i];
         if (!item.light.parent) continue;

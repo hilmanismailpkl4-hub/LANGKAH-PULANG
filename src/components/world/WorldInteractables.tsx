@@ -174,13 +174,13 @@ const NpcFigure: React.FC<{
       const sideSign = npc.id === 'nadia' ? 1 : -1; // Nadia kiri, Kira kanan
 
       if (store.isSitting && playerRuntime.sitState) {
-        // Duduk rapi berdampingan di bangku/kursi bersama Damar (tanpa terhalang collider bangku!)
+        // Duduk rapi berdampingan di bangku/kursi bersama Damar (proporsional untuk semua lebar bangku & ayunan!)
         isSittingCompanion = true;
         const sit = playerRuntime.sitState;
         const sitYaw = sit.seatYaw;
         const sLeftX = Math.cos(sitYaw);
         const sLeftZ = -Math.sin(sitYaw);
-        const sideOffset = npc.id === 'nadia' ? 0.66 : 0.58;
+        const sideOffset = npc.id === 'nadia' ? 0.48 : 0.42;
         const seatX = sit.seatPos[0] + sLeftX * sideSign * sideOffset;
         const seatY = sit.seatPos[1];
         const seatZ = sit.seatPos[2] + sLeftZ * sideSign * sideOffset;
@@ -196,7 +196,8 @@ const NpcFigure: React.FC<{
           ];
         }
 
-        let diff = sitYaw - currentYawRef.current;
+        const cozySitYaw = sitYaw - sideSign * 0.08;
+        let diff = cozySitYaw - currentYawRef.current;
         while (diff > Math.PI) diff -= Math.PI * 2;
         while (diff < -Math.PI) diff += Math.PI * 2;
         currentYawRef.current += diff * Math.min(1, dt * 9);
@@ -284,13 +285,18 @@ const NpcFigure: React.FC<{
         }
       }
 
-      // Perbarui posisi runtime & kolisi real-time Nadia/Kira
+      // Perbarui posisi runtime & kolisi real-time Nadia/Kira (saat duduk bareng, matikan sementara kolisi agar berdiri mulus!)
       playerRuntime.companions[npc.id].pos = [...posRef.current];
       playerRuntime.companions[npc.id].yaw = currentYawRef.current;
       const colEntry = playerRuntime.npcColliders.find((c) => c.id === npc.id);
       if (colEntry) {
-        colEntry.x = posRef.current[0];
-        colEntry.z = posRef.current[2];
+        if (isSittingCompanion) {
+          colEntry.x = -9999;
+          colEntry.z = -9999;
+        } else {
+          colEntry.x = posRef.current[0];
+          colEntry.z = posRef.current[2];
+        }
       }
 
       // Cek apakah pendamping berada di dalam ruangan / atap halte / kanopi stasiun untuk melipat payung!

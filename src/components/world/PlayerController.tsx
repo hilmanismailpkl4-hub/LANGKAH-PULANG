@@ -12,6 +12,7 @@ import {
   ROOFTOP_COLLIDERS,
   getLocationAtPosition,
   getSurfaceAtPosition,
+  isCameraWallCollider,
   isPositionIndoors,
   isPositionSheltered,
   resolvePlayerMovement,
@@ -47,6 +48,8 @@ export const PlayerController: React.FC = () => {
 
   const lookTargetVec = useRef(new THREE.Vector3());
   const camDesiredVec = useRef(new THREE.Vector3());
+  const tmpVecRef = useRef(new THREE.Vector3());
+  const wasSittingRef = useRef(false);
   const [isIndoorsState, setIsIndoorsState] = useState(true);
 
   const timeOfDay = useGameStore((s) => s.timeOfDay);
@@ -739,6 +742,8 @@ export const PlayerController: React.FC = () => {
         playerRuntime.rotationY = playerRuntime.teleportPending.rot;
       }
       velocityRef.current = { x: 0, z: 0 };
+      jumpYRef.current = 0;
+      jumpVelRef.current = 0;
       playerRuntime.teleportPending = null;
     }
 
@@ -761,12 +766,12 @@ export const PlayerController: React.FC = () => {
         ROOFTOP_TELESCOPE_TARGETS[0];
       camDesiredVec.current.set(34.4, 23.62, -21.45);
       camera.position.lerp(camDesiredVec.current, Math.min(1, dt * 8));
-      const desiredLook = new THREE.Vector3(
+      tmpVecRef.current.set(
         target.lookAt[0] + Math.sin(t * 0.4) * 0.35,
         target.lookAt[1] + Math.cos(t * 0.35) * 0.18,
         target.lookAt[2],
       );
-      lookTargetVec.current.lerp(desiredLook, Math.min(1, dt * 4.5));
+      lookTargetVec.current.lerp(tmpVecRef.current, Math.min(1, dt * 4.5));
       camera.lookAt(lookTargetVec.current);
 
       if (Math.abs(pCam.fov - 17.5) > 0.05) {
@@ -1072,9 +1077,18 @@ export const PlayerController: React.FC = () => {
       return;
     }
 
-    // === 2. MODE DUDUK REFLEKTIF DI BANGKU / MEJA KOPI ===
+    // === 2. MODE DUDUK REFLEKTIF DI BANGKU / MEJA KOPI (BISA PUTAR KAMERA 360° & ZOOM HALUS!) ===
     if (store.isSitting && playerRuntime.sitState) {
       const sit = playerRuntime.sitState;
+      jumpYRef.current = 0;
+      jumpVelRef.current = 0;
+      if (!wasSittingRef.current) {
+        wasSittingRef.current = true;
+        const initDx = sit.seatPos[0] - sit.lookAt[0];
+        const initDz = sit.seatPos[2] - sit.lookAt[2];
+        playerRuntime.cameraYaw = Math.atan2(initDx, initDz) + 0.38;
+        playerRuntime.cameraPitch = 0.28;
+      }
       playerRuntime.position = [...sit.seatPos];
       playerRuntime.rotationY = sit.seatYaw;
       if (groupRef.current) {
@@ -1086,22 +1100,39 @@ export const PlayerController: React.FC = () => {
       if (leftArmRef.current) leftArmRef.current.rotation.x = -0.35;
       if (rightArmRef.current) rightArmRef.current.rotation.x = sit.holdingCoffee ? -0.82 : -0.35;
 
-      const dx = sit.lookAt[0] - sit.seatPos[0];
-      const dz = sit.lookAt[2] - sit.seatPos[2];
-      const len = Math.max(1, Math.hypot(dx, dz));
+      const sitDist = THREE.MathUtils.clamp(zoomRef.current * 0.72, 2.35, 6.2);
+      const sitPitch = THREE.MathUtils.clamp(playerRuntime.cameraPitch, 0.12, 0.78);
+      const sitYaw = playerRuntime.cameraYaw;
       camDesiredVec.current.set(
-        sit.seatPos[0] - (dx / len) * 2.8 + 1.2,
-        sit.seatPos[1] + 2.0,
-        sit.seatPos[2] - (dz / len) * 2.8,
+        sit.seatPos[0] + Math.sin(sitYaw) * Math.cos(sitPitch) * sitDist,
+        sit.seatPos[1] + Math.sin(sitPitch) * sitDist + 1.35,
+        sit.seatPos[2] + Math.cos(sitYaw) * Math.cos(sitPitch) * sitDist,
       );
-      camera.position.lerp(camDesiredVec.current, Math.min(1, dt * 3.5));
-      lookTargetVec.current.lerp(new THREE.Vector3(...sit.lookAt), Math.min(1, dt * 3.5));
+      camera.position.lerp(camDesiredVec.current, Math.min(1, dt * 6.5));
+      tmpVecRef.current.set(sit.seatPos[0], sit.seatPos[1] + 1.18, sit.seatPos[2]);
+      lookTargetVec.current.lerp(tmpVecRef.current, Math.min(1, dt * 5.5));
       camera.lookAt(lookTargetVec.current);
+
+      locCheckTimerRef.current += dt;
+      if (locCheckTimerRef.current > 0.3) {
+        locCheckTimerRef.current = 0;
+        const shelteredSit = isPositionSheltered(sit.seatPos[0], sit.seatPos[1], sit.seatPos[2]);
+        setIsIndoorsState((prev) => (prev === shelteredSit ? prev : shelteredSit));
+        spatialAmbientEngine.updateSpatialMix(
+          sit.seatPos,
+          playerRuntime.trainZ,
+          store.timeOfDay,
+          store.screen === 'playing' && !store.isPauseOpen,
+        );
+      }
       return;
     }
+    wasSittingRef.current = false;
 
     // === 2B. MODE MENERBANGKAN LAYANG-LAYANG DI LANGIT TAMAN ===
     if (store.isFlyingKite) {
+      jumpYRef.current = 0;
+      jumpVelRef.current = 0;
       const [px, py, pz] = playerRuntime.position;
       const faceKiteYaw = Math.atan2(-7.8, -6.5);
       playerRuntime.rotationY = faceKiteYaw;
@@ -1131,10 +1162,8 @@ export const PlayerController: React.FC = () => {
         // Sudut kamera rendah menengadah agar Damar, keluarga & layang-layang terlihat megah di langit!
         camDesiredVec.current.set(px + 4.2, py + 1.95, pz + 4.6);
         camera.position.lerp(camDesiredVec.current, Math.min(1, dt * 3.2));
-        lookTargetVec.current.lerp(
-          new THREE.Vector3(px - 3.8, py + 4.4 + playerRuntime.kitePullBoost * 1.4, pz - 3.2),
-          Math.min(1, dt * 3.2),
-        );
+        tmpVecRef.current.set(px - 3.8, py + 4.4 + playerRuntime.kitePullBoost * 1.4, pz - 3.2);
+        lookTargetVec.current.lerp(tmpVecRef.current, Math.min(1, dt * 3.2));
         camera.lookAt(lookTargetVec.current);
       } else {
         const pitch = playerRuntime.cameraPitch;
@@ -1154,6 +1183,8 @@ export const PlayerController: React.FC = () => {
 
     // === 2C. MODE MEMANCING SANTAI DI UJUNG DERMAGA DANAU SENJA ===
     if (store.isFishing) {
+      jumpYRef.current = 0;
+      jumpVelRef.current = 0;
       const fishPos: [number, number, number] = [-76.2, 0.12, -29.2];
       playerRuntime.position = fishPos;
       const faceLakeYaw = Math.atan2(-2.6, -4.2);
@@ -1183,7 +1214,8 @@ export const PlayerController: React.FC = () => {
       if (!store.isPhotoMode) {
         camDesiredVec.current.set(-73.4, 2.35, -26.4);
         camera.position.lerp(camDesiredVec.current, Math.min(1, dt * 3.5));
-        lookTargetVec.current.lerp(new THREE.Vector3(-78.0, 0.55, -32.2), Math.min(1, dt * 3.5));
+        tmpVecRef.current.set(-78.0, 0.55, -32.2);
+        lookTargetVec.current.lerp(tmpVecRef.current, Math.min(1, dt * 3.5));
         camera.lookAt(lookTargetVec.current);
       } else {
         const pitch = playerRuntime.cameraPitch;
@@ -1436,7 +1468,8 @@ export const PlayerController: React.FC = () => {
 
       camDesiredVec.current.set(camX, camY, camZ);
       camera.position.lerp(camDesiredVec.current, Math.min(1, dt * 4.5));
-      lookTargetVec.current.lerp(new THREE.Vector3(midX, midY, midZ), Math.min(1, dt * 5.5));
+      tmpVecRef.current.set(midX, midY, midZ);
+      lookTargetVec.current.lerp(tmpVecRef.current, Math.min(1, dt * 5.5));
       camera.lookAt(lookTargetVec.current);
     } else {
       const isIndoors = isPositionIndoors(px, py, pz);
@@ -1453,23 +1486,7 @@ export const PlayerController: React.FC = () => {
           const tz = pz + dirZ * step;
           const insideWall = GROUND_COLLIDERS.some(
             (b) =>
-              !b.id.startsWith('river') &&
-              !b.id.startsWith('lake') &&
-              !b.id.startsWith('bench') &&
-              !b.id.startsWith('bridge') &&
-              !b.id.startsWith('rumah_table') &&
-              !b.id.startsWith('rumah_fence') &&
-              !b.id.startsWith('rumah_kira') &&
-              !b.id.startsWith('rumah_wardrobe') &&
-              !b.id.startsWith('rumah_tv') &&
-              !b.id.startsWith('bus_stop') &&
-              !b.id.startsWith('playground') &&
-              !b.id.startsWith('kios_shelf') &&
-              !b.id.startsWith('kios_cashier') &&
-              !b.id.startsWith('music_counter') &&
-              !b.id.startsWith('music_cassette') &&
-              !b.id.startsWith('music_amp') &&
-              !b.id.startsWith('angkringan') &&
+              isCameraWallCollider(b.id) &&
               tx > b.minX - 0.15 &&
               tx < b.maxX + 0.15 &&
               tz > b.minZ - 0.15 &&
