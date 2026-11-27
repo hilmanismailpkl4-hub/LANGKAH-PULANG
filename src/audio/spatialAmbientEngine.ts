@@ -91,7 +91,7 @@ class SpatialAmbientEngine {
     const [px, py, pz] = this.lastNaturePos;
     if (py > 10) return;
 
-    // Cek kedekatan dengan Taman Kota atau Perumahan
+    // Cek kedekatan dengan Taman Kota, Lembah Sawah Barat Daya, atau Perumahan
     const inPark = px < -56;
     const inNeighborhood = pz > 46 && px > -36 && px < 46;
     if (!inPark && !inNeighborhood) return;
@@ -158,10 +158,11 @@ class SpatialAmbientEngine {
 
     const [px, py, pz] = playerPos;
 
-    // 1. Air: jarak terdekat ke Sungai (x=-48) atau Danau Senja (-84, -28)
+    // 1. Air: jarak terdekat ke Sungai (x=-48), Danau Senja (-84, -28), atau Kincir Sawah (-62.4, 54.2)
     const distRiver = Math.abs(px - -48);
     const distLake = Math.max(0, Math.hypot(px - -84, pz - -28) - 12);
-    const minWaterDist = py > 10 ? 99 : Math.min(distRiver, distLake);
+    const distPaddy = Math.max(0, Math.hypot(px - -74, pz - 60) - 10);
+    const minWaterDist = py > 10 ? 99 : Math.min(distRiver, distLake, distPaddy);
     const waterLevel = Math.max(0.0001, (1 - Math.min(1, minWaterDist / 26)) * 0.28);
     this.waterGain?.gain.setTargetAtTime(waterLevel, now, 0.35);
 

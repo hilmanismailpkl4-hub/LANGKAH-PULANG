@@ -4738,6 +4738,111 @@ export const WorldInteractables: React.FC = () => {
       );
     }
 
+    // === LEMBAH PEMATANG SAWAH SENJA (SAUNG BAMBU, KINCIR AIR & ORANG-ORANGAN SAWAH) ===
+    consider(
+      {
+        id: 'sit_paddy_saung',
+        kind: 'story_object',
+        label:
+          store.timeOfDay === 'rain_dusk'
+            ? 'Berteduh & Duduk Hangat di Saung Bambu Tepi Sawah'
+            : 'Duduk Bersandar di Saung Bambu Pematang Sawah',
+        sublabel: 'Lembah Sawah Senja · Teh Enamel, Angklung Angin & Hamparan Padi',
+        position: [-68.5, 0, 54.6],
+        onInteract: () => {
+          sfxEngine.playBambooAngklung();
+          playerRuntime.windChimeTimer = 5.5;
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Saung Bambu Lembah Sawah Senja',
+            seatPos: [-68.5, 0.44, 56.25],
+            lookAt: [-82.5, 1.15, 63.0],
+            standPos: [-68.5, 0, 54.45],
+            seatYaw: -1.18,
+            holdingCoffee: true,
+            drinkVisual: 'tea',
+          };
+          store.setSitting(true);
+          if (!store.flags.includes('visited_paddy_saung')) {
+            store.applyEffect({
+              kehadiranKeluarga: 2,
+              kejujuranDiri: 1,
+              setFlags: ['visited_paddy_saung'],
+              journalEntry: {
+                id: 'je_paddy_saung',
+                title: 'Angin Padi & Saung Bambu di Seberang Jembatan Selatan',
+                body: 'Menyeberangi Jembatan Perumahan Selatan, aku menemukan lembah petak sawah kecil yang masih bertahan tenang di tepian Kota Senja. Duduk di atas bale-bale bambu sambil mendengar denting angklung angin membuatku langsung teringat kampung halaman mendiang Ibu.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_paddy_saung, 'fw_paddy_saung');
+          }
+          store.showToast(
+            'Duduk santai di bale-bale Saung Bambu menatap hamparan padi bergelombang... (Geser layar putar 360°, WASD/E berdiri)',
+          );
+        },
+      },
+      2.75,
+    );
+
+    consider(
+      {
+        id: 'activity_bamboo_waterwheel',
+        kind: 'story_object',
+        label: 'Alirkan Pancuran Kincir Air Irigasi Bambu',
+        sublabel: 'Saluran Irigasi Sawah · Gemericik Air Jernih',
+        position: [-62.4, 0, 52.35],
+        onInteract: () => {
+          sfxEngine.playBambooWaterwheel();
+          playerRuntime.waterwheelBoostTimer = 6.5;
+          if (!store.flags.includes('spun_bamboo_waterwheel')) {
+            store.applyEffect({
+              kejujuranDiri: 1,
+              setFlags: ['spun_bamboo_waterwheel'],
+              journalEntry: {
+                id: 'je_bamboo_waterwheel',
+                title: 'Kincir Air Bambu di Saluran Pematang',
+                body: 'Tabung-tabung bambu pada kincir irigasi berputar teratur menumpahkan air jernih ke petak sawah. Irama "kluk-kluk" air dan bambu itu sederhana, tak pernah terburu-buru, namun menghidupi seluruh petak padi di bawahnya.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_bamboo_waterwheel, 'fw_bamboo_waterwheel');
+          }
+          store.showToast('Kluk-kluk-byur! Pancuran bambu mengalir deras memutar roda kincir air sawah lebih kencang!');
+        },
+      },
+      2.65,
+    );
+
+    consider(
+      {
+        id: 'activity_paddy_scarecrow',
+        kind: 'story_object',
+        label: 'Tarik Tali Orang-Orangan Sawah Bertopi Caping',
+        sublabel: 'Jalan Pematang Tengah Sawah · Memedi Sawah Tradisional',
+        position: [-81.8, 0, 62.5],
+        onInteract: () => {
+          sfxEngine.playBambooAngklung();
+          playerRuntime.scarecrowRattleTimer = 4.2;
+          if (!store.flags.includes('greeted_paddy_scarecrow')) {
+            store.applyEffect({
+              kehadiranKeluarga: 1,
+              setFlags: ['greeted_paddy_scarecrow'],
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_paddy_scarecrow, 'fw_paddy_scarecrow');
+          }
+          store.showToast('Klontang-klontang lembut! Orang-orangan sawah bertopi caping bergoyang ramah menjaga bulir padi.');
+        },
+      },
+      2.6,
+    );
+
     if (store.sideQuests.sq_pak_darman?.status === 'active' && store.sideQuests.sq_pak_darman.stage === 1) {
       consider(
         {
@@ -5058,6 +5163,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[16.2, 1.32, 58.35]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#fde047" />
+      </mesh>
+      <mesh position={[-68.5, 1.38, 55.2]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#fde047" />
+      </mesh>
+      <mesh position={[-62.4, 1.65, 53.3]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#7dd3fc" />
+      </mesh>
+      <mesh position={[-83.0, 1.92, 62.5]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#fbbf24" />
       </mesh>
       <mesh position={[-23.6, 1.35, 11.4]}>
         <sphereGeometry args={[0.065, 8, 8]} />

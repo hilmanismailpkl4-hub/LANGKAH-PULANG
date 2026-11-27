@@ -1693,6 +1693,52 @@ class SfxEngine {
     });
   }
 
+  /**
+   * Alunan harmonik bambu Angklung Angin & gemericik pancuran Kincir Air Sawah Senja.
+   */
+  public playBambooAngklung() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // Tangga nada pentatonis Sunda/Jawa hangat (D5 - E5 - F#5 - A5 - B5)
+    const bambooNotes = [587.33, 659.25, 739.99, 880.0, 987.77];
+    bambooNotes.forEach((freq, idx) => {
+      const start = now + idx * 0.11;
+      this.softTone(ctx, freq, start, 0.42, 0.062 * v, 'triangle');
+      this.softTone(ctx, freq * 2, start + 0.02, 0.28, 0.026 * v, 'sine');
+    });
+  }
+
+  public playBambooWaterwheel() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    // Gemericik air pancuran bambu + ketukan halus tabung bambu ("kluk-kluk")
+    const src = ctx.createBufferSource();
+    src.buffer = this.getNoiseBuffer(ctx);
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.setValueAtTime(1150, now);
+    bp.frequency.linearRampToValueAtTime(1750, now + 0.55);
+    bp.Q.value = 1.1;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.001, now);
+    g.gain.linearRampToValueAtTime(0.078 * v, now + 0.08);
+    g.gain.exponentialRampToValueAtTime(0.0008, now + 0.68);
+    src.connect(bp).connect(g).connect(ctx.destination);
+    src.start(now, 0.15, 0.72);
+
+    [0.08, 0.28, 0.48].forEach((off, i) => {
+      this.softTone(ctx, 310 + i * 38, now + off, 0.12, 0.068 * v, 'triangle');
+    });
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

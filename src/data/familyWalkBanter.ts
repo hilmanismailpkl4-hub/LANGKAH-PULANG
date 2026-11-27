@@ -582,4 +582,16 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'Bunda!! Kupu-kupu kuningnya terbang melingkar di atas bunga bugenvil!! Kira diem biar dia hinggap ya!' },
     { speaker: 'nadia', text: 'Ingat kan Mas yang pernah kubilang? Hal terindah itu datang sendiri waktu kita mau berhenti sebentar dan menikmati hari.' },
   ],
+  activity_paddy_saung: [
+    { speaker: 'nadia', text: 'Ya ampun Mas, duduk di saung bambu tepi sawah ini rasanya langsung kayak pulang ke kampung Ibu... anginnya wangi padi.' },
+    { speaker: 'kira', text: 'Ayah! Lihat burung putih panjangnya jalan pelan-pelan di antara padi!! Terus bunyi angklungnya merdu banget!' },
+  ],
+  activity_bamboo_waterwheel: [
+    { speaker: 'kira', text: 'KLUK-KLUK-BYUR!! Kincir bambunya muter makin kencang kena air pancuran, Ayah!! Segar bangeeet!' },
+    { speaker: 'nadia', text: 'Suara air jatuh dari pancuran bambu begini selalu sukses bikin kepala langsung adem ya, Mas.' },
+  ],
+  activity_paddy_scarecrow: [
+    { speaker: 'kira', text: 'Hihihi!! Orang-orangan sawahnya pakai topi caping kayak petani beneran, Bunda!! Tangannya goyang-goyang!' },
+    { speaker: 'nadia', text: 'Lucu ya Mas, jalan bertiga menyusuri pematang sawah sore-sore begini rasanya damai luar biasa.' },
+  ],
 };

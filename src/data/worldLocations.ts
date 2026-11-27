@@ -254,6 +254,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= 47.4 && x <= 51.0 && z >= 39.6 && z <= 41.3) return true;
   // Payung Lapak Serabi Solo & Kue Ape Mbah Karso
   if (x >= 9.7 && x <= 13.0 && z >= -35.8 && z <= -32.6) return true;
+  // Atap Ijuk Saung Bambu Tepian Sawah Senja (Seberang Barat Jembatan Perumahan Selatan)
+  if (x >= -70.7 && x <= -66.3 && z >= 54.7 && z <= 58.3) return true;
   return false;
 }
 
@@ -611,6 +613,13 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'serabi_karso_cart', minX: 10.86, maxX: 11.94, minZ: -35.28, maxZ: -33.12 },
   { id: 'serabi_karso_bench', minX: 9.28, maxX: 9.82, minZ: -34.98, maxZ: -33.42 },
   { id: 'plaza_history_monument', minX: 27.3, maxX: 29.1, minZ: -15.22, maxZ: -14.38 },
+
+  // === 47. Lembah Sawah Senja: Petak Sawah Berair, Saung Bambu & Kincir Air Irigasi ===
+  { id: 'paddy_field_nw', minX: -91.1, maxX: -74.9, minZ: 50.4, maxZ: 60.6 },
+  { id: 'paddy_field_sw', minX: -91.1, maxX: -74.9, minZ: 64.4, maxZ: 75.6 },
+  { id: 'paddy_field_se', minX: -72.1, maxX: -62.9, minZ: 64.4, maxZ: 75.6 },
+  { id: 'paddy_saung_platform', minX: -70.25, maxX: -66.75, minZ: 55.35, maxZ: 57.85 },
+  { id: 'bamboo_waterwheel_basin', minX: -63.45, maxX: -61.35, minZ: 53.25, maxZ: 55.15 },
 ];
 
 /**
@@ -823,6 +832,9 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: 12.42, z: -34.2, r: 0.42 },
   { x: -66.2, z: -41.8, r: 1.48 },
   { x: 13.6, z: -14.8, r: 1.94 },
+  // Tiang Papan Lembah Sawah Senja & Orang-Orangan Sawah Caping Bambu
+  { x: -59.2, z: 45.2, r: 0.24 },
+  { x: -83.0, z: 62.5, r: 0.38 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
     [-39.75, -9.5], [-39.75, -19.5], [-39.75, -29.5],
