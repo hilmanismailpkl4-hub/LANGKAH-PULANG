@@ -710,6 +710,16 @@ export function buildEndingJourneyRecap(params: {
       tone: 'rose',
     });
   }
+  if (flags.includes('found_dimas_bridge_sketch')) {
+    echoCards.push({
+      id: 'ec_dimas_bridge_sketch',
+      label: 'Sketsa Ayah & Perahu Kertas (Mas Dimas)',
+      summary: flags.includes('dimas_completed_bridge_portrait')
+        ? 'Kamu menemukan sketsa 9 bulan lalu di map Mas Dimas dan memintanya menambahkan genggaman tanganmu untuk Kira.'
+        : 'Dari sketsa lama pelukis tepi sungai, kamu menyadari betapa berharganya menoleh dan melangkah sejajar dengan Kira.',
+      tone: 'gold',
+    });
+  }
   if (flags.includes('ch3_bima_night_talk_done')) {
     echoCards.push({
       id: 'ec_bima_night_25',

@@ -272,6 +272,10 @@ export const SmartphoneModal: React.FC = () => {
   const settings = useGameStore((s) => s.settings);
   const updateSettings = useGameStore((s) => s.updateSettings);
   const setFreeTimeOfDay = useGameStore((s) => s.setFreeTimeOfDay);
+  const autoTimeCycle = useGameStore((s) => s.autoTimeCycle);
+  const toggleAutoTimeCycle = useGameStore((s) => s.toggleAutoTimeCycle);
+  const setZenMode = useGameStore((s) => s.setZenMode);
+  const setCustomWaypoint = useGameStore((s) => s.setCustomWaypoint);
   const rainbowActiveUntil = useGameStore((s) => s.rainbowActiveUntil);
   const umbrellaForcedOff = useGameStore((s) => s.umbrellaForcedOff);
   const toggleUmbrella = useGameStore((s) => s.toggleUmbrella);
@@ -1404,6 +1408,18 @@ export const SmartphoneModal: React.FC = () => {
                         );
                       })}
                     </div>
+                    <button
+                      type="button"
+                      onClick={toggleAutoTimeCycle}
+                      className={`mt-2 flex w-full items-center justify-between rounded-xl border px-3 py-1.5 text-[11px] transition ${
+                        autoTimeCycle
+                          ? 'border-emerald-300/45 bg-emerald-500/20 text-emerald-100'
+                          : 'border-white/15 bg-white/5 text-warm-200/80 hover:bg-white/10'
+                      }`}
+                    >
+                      <span>Siklus Langit & Pelangi Otomatis</span>
+                      <span className="font-semibold">{autoTimeCycle ? 'AKTIF' : 'MANUAL'}</span>
+                    </button>
                     {timeOfDay === 'rain_dusk' && (
                       <button
                         type="button"
@@ -1457,18 +1473,58 @@ export const SmartphoneModal: React.FC = () => {
                       Estimasi jarak tempuh: ~{Math.round(stepCount * 0.65)} meter menyusuri kota.
                     </p>
                   </div>
+
+                  {/* Kompas Cepat Sudut Teduh & Baru Kota Senja */}
+                  <div className="rounded-2xl border border-cyan-300/25 bg-black/35 p-3">
+                    <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-cyan-300">
+                      Pasang GPS Cepat ke Sudut Istimewa Kota
+                    </p>
+                    <div className="grid grid-cols-1 gap-1.5 text-[11px]">
+                      {[
+                        { label: 'Saung Bambu Lembah Sawah Senja', pos: [-68.5, 0, 54.4] as [number, number, number] },
+                        { label: 'Paviliun Bambu Teduh Utara Danau', pos: [-77.5, 0.16, -49.5] as [number, number, number] },
+                        { label: 'Koridor Bunga Tabebuya Stasiun', pos: [58.5, 0, 28.2] as [number, number, number] },
+                        { label: 'Taman Saku & Saron Sungai Utara', pos: [-33.2, 0, -37.2] as [number, number, number] },
+                        { label: 'Lift Sky Garden Rooftop Menara', pos: [19.5, 0.08, -24.1] as [number, number, number] },
+                      ].map((spot) => (
+                        <button
+                          key={spot.label}
+                          type="button"
+                          onClick={() => {
+                            sfxEngine.play('interact');
+                            setCustomWaypoint({ label: spot.label, position: spot.pos });
+                            closePhone();
+                          }}
+                          className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-left text-warm-100 hover:border-cyan-300/50 hover:bg-cyan-500/15"
+                        >
+                          <span>{spot.label}</span>
+                          <ChevronRight className="h-3.5 w-3.5 text-cyan-300" />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
-                <div className="mt-3 grid grid-cols-2 gap-2">
+                <div className="mt-3 grid grid-cols-3 gap-1.5">
                   <button
                     type="button"
                     onClick={() => {
                       closePhone();
                       toggleMapJournal('map');
                     }}
-                    className="rounded-xl border border-white/20 bg-black/40 py-2.5 text-xs font-medium hover:bg-black/60"
+                    className="rounded-xl border border-white/20 bg-black/40 py-2.5 text-[11px] font-medium hover:bg-black/60"
                   >
-                    Buka Peta Kota
+                    Peta [M]
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      closePhone();
+                      setZenMode(true);
+                    }}
+                    className="rounded-xl border border-amber-300/35 bg-amber-500/15 py-2.5 text-[11px] font-medium text-amber-200 hover:bg-amber-500/25"
+                  >
+                    Sinema [Z]
                   </button>
                   <button
                     type="button"
@@ -1476,9 +1532,9 @@ export const SmartphoneModal: React.FC = () => {
                       closePhone();
                       setPhotoMode(true);
                     }}
-                    className="rounded-xl bg-warm-400 py-2.5 text-xs font-semibold text-dusk-950 hover:bg-warm-300"
+                    className="rounded-xl bg-warm-400 py-2.5 text-[11px] font-semibold text-dusk-950 hover:bg-warm-300"
                   >
-                    Ambil Foto [P]
+                    Foto [P]
                   </button>
                 </div>
               </div>

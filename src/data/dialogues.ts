@@ -6,6 +6,7 @@ import { BANG_ARI_DEEP_DIALOGUES } from './bangAriDeepStory';
 import { BIMA_NIGHT_DIALOGUES } from './bimaNightStory';
 import { BU_WATI_DEEP_DIALOGUES } from './buWatiDeepStory';
 import { CHARACTER_ECHO_DIALOGUES } from './characterEchoes';
+import { DIMAS_PORTFOLIO_DIALOGUES } from './dimasSketchPortfolioStory';
 import { EASTER_EGG_DIALOGUES } from './easterEggs';
 import { EPILOGUE_DIALOGUES } from './epilogueMorning';
 import { FATHER_CASSETTE_DIALOGUES } from './fatherCassetteStory';
@@ -605,6 +606,7 @@ export const ALL_DIALOGUES: Record<string, DialogueScript> = {
   ...BANG_ARI_DEEP_DIALOGUES,
   ...BIMA_NIGHT_DIALOGUES,
   ...BU_WATI_DEEP_DIALOGUES,
+  ...DIMAS_PORTFOLIO_DIALOGUES,
   ...FATHER_CASSETTE_DIALOGUES,
   ...FLASHBACK_DIALOGUES,
   ...HENDRA_NIGHT_DIALOGUES,

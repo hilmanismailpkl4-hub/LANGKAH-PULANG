@@ -2747,6 +2747,25 @@ export const WorldInteractables: React.FC = () => {
 
       consider(
         {
+          id: 'story_dimas_sketch_portfolio',
+          kind: 'story_object',
+          label: store.flags.includes('found_dimas_bridge_sketch')
+            ? 'Lihat Kembali Sketsa Jembatan 9 Bulan Lalu di Map Mas Dimas'
+            : 'Periksa Map Portofolio Kanvas "Sketsa Pejalan Sore" Mas Dimas',
+          sublabel: store.flags.includes('found_dimas_bridge_sketch')
+            ? 'Kenangan Tersimpan · Potret Ayah & Perahu Kertas Kira'
+            : 'Promenade Tepi Sungai · Koleksi Pribadi Pelukis',
+          position: [-36.6, 0, 14.35],
+          onInteract: () => {
+            playerRuntime.activeSpeakerPos = [-37.7, 0.85, 14.2];
+            store.startDialogue('story_dimas_unclaimed_sketch');
+          },
+        },
+        2.45,
+      );
+
+      consider(
+        {
           id: 'activity_station_tap_gate',
           kind: 'story_object',
           label: 'Tap Kartu Komuter di Gerbang Stasiun Senja',
@@ -5888,6 +5907,27 @@ export const WorldInteractables: React.FC = () => {
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#facc15" />
       </mesh>
+
+      {/* Map Portofolio Kanvas Cokelat Bertali Hitam Mas Dimas di Promenade Sungai */}
+      <group position={[-37.85, 0, 14.25]} rotation={[0, 0.32, 0]}>
+        <mesh position={[0, 0.28, 0]} rotation={[0, 0, -0.18]} castShadow>
+          <boxGeometry args={[0.06, 0.56, 0.44]} />
+          <meshStandardMaterial
+            color="#5c3d28"
+            emissive="#f59e0b"
+            emissiveIntensity={flags.includes('found_dimas_bridge_sketch') ? 0.1 : 0.42}
+            roughness={0.82}
+          />
+        </mesh>
+        <mesh position={[0.032, 0.34, 0]} rotation={[0, 0, -0.18]}>
+          <boxGeometry args={[0.012, 0.08, 0.16]} />
+          <meshStandardMaterial color="#fef3c7" roughness={0.6} />
+        </mesh>
+        <mesh position={[0, 0.72, 0]}>
+          <sphereGeometry args={[0.068, 10, 10]} />
+          <meshBasicMaterial color={flags.includes('found_dimas_bridge_sketch') ? '#86efac' : '#fbbf24'} />
+        </mesh>
+      </group>
 
       {/* Buku Tamu Kulit Cokelat & Sepasang Kelopak Tabebuya Kering di Meja Teh Paviliun Bambu Utara */}
       <group position={[-76.92, 0.445, -51.45]} rotation={[0, 0.28, 0]}>

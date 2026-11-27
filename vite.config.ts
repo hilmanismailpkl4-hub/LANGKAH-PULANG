@@ -85,10 +85,13 @@ export default defineConfig({
     chunkSizeWarningLimit: 2800,
     rollupOptions: {
       output: {
-        manualChunks: {
-          three: ['three'],
-          r3f: ['@react-three/fiber', '@react-three/drei'],
-          supabase: ['@supabase/supabase-js'],
+        manualChunks(id) {
+          const norm = id.replace(/\\/g, '/');
+          if (norm.includes('/node_modules/three/')) return 'three';
+          if (norm.includes('/node_modules/@react-three/')) return 'r3f';
+          if (norm.includes('/node_modules/@supabase/')) return 'supabase';
+          if (norm.includes('/src/data/')) return 'story-data';
+          return undefined;
         },
       },
     },

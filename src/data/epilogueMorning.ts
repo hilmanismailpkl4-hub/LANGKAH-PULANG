@@ -89,10 +89,22 @@ export const EPILOGUE_DIALOGUES: Record<string, DialogueScript> = {
         onEnter: { playSfx: 'chime' },
         conditionalNext: [
           {
+            requiredFlag: 'planted_mother_paddy_home',
+            nextNodeId: 'ep_sec_f1_paddy',
+          },
+          {
             requiredFlag: 'signed_kira_rainbow_drawing',
             nextNodeId: 'ep_sec_f1_rainbow',
           },
         ],
+        nextNodeId: 'ep_sec_f2',
+      },
+      ep_sec_f1_paddy: {
+        id: 'ep_sec_f1_paddy',
+        speaker: 'kira',
+        emotion: 'ceria',
+        echoTag: 'Warisan Ilmu Padi · Tunas Hijau di Teras Rumah',
+        text: 'Kira melompat kecil menunjuk ke arah jendela teras depan. "Ayaaah!! Tadi subuh Kira siram pot benih padi Pandanwangi punya Nenek—pucuk hijaunya udah nongol tiga helai wangi banget!!"',
         nextNodeId: 'ep_sec_f2',
       },
       ep_sec_f1_rainbow: {
@@ -215,10 +227,22 @@ export const EPILOGUE_DIALOGUES: Record<string, DialogueScript> = {
         text: 'Pagi Ayah!! Kira udah pakai sepatu kets nih! Ayah masih ingat janji semalam kan—hari ini Ayah ajarin Kira naik sepeda tanpa roda bantu di ujung gang!!',
         conditionalNext: [
           {
+            requiredFlag: 'shared_tabebuya_2022_with_nadia',
+            nextNodeId: 'ep_tr_f1_tabebuya',
+          },
+          {
             requiredFlag: 'wrote_reply_in_nadia_diary',
             nextNodeId: 'ep_tr_f1_diary',
           },
         ],
+        nextNodeId: 'ep_tr_f2',
+      },
+      ep_tr_f1_tabebuya: {
+        id: 'ep_tr_f1_tabebuya',
+        speaker: 'nadia',
+        emotion: 'haru',
+        echoTag: 'Halaman 47 Terpenuhi · Sepasang Tabebuya di Kamar',
+        text: 'Nadia menatap Damar dengan mata berbinar hangat. "Pagi ini matahari jatuh pas mengenai dua kelopak Tabebuya 2022 dan 2023 yang kamu bawa dari Paviliun Bambu Utara semalam, Mas... rasanya bab baru kita benar-benar dimulai hari ini."',
         nextNodeId: 'ep_tr_f2',
       },
       ep_tr_f1_diary: {

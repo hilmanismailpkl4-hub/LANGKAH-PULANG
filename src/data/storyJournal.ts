@@ -597,6 +597,16 @@ export function buildStoryTimeline(params: {
       tone: 'rose',
     });
   }
+  if (flags.includes('found_dimas_bridge_sketch')) {
+    echoBadges.push({
+      id: 'eb_dimas_bridge_sketch',
+      title: 'Sketsa Jembatan 9 Bulan Lalu · Map Kanvas Mas Dimas',
+      detail: flags.includes('dimas_completed_bridge_portrait')
+        ? 'Sketsa punggungmu yang sibuk menatap HP di depan Kira telah diperbarui Mas Dimas dengan garis tangan yang kembali menggandeng putrimu.'
+        : 'Cermin tak terduga dari pelukis tepi sungai yang membuatmu berjanji tidak lagi berjalan mendahului Kira.',
+      tone: 'gold',
+    });
+  }
   if (flags.includes('heard_bagas_rama_story')) {
     echoBadges.push({
       id: 'eb_bagas_rama_2014',

@@ -213,8 +213,32 @@ export const PHONE_THREADS: PhoneContactThread[] = [
         chapterMin: 1,
         requiredFlag: 'found_bamboo_guestbook_2022',
       },
+      {
+        id: 'nd_dimas_sketch_2024',
+        from: 'them',
+        text: 'Mas, barusan Mbak Yuni bilang lihat kamu ngobrol serius banget sama Mas Dimas pelukis tepi sungai. Dia nunjukin sketsa apa ke kamu, Mas?',
+        time: 'Baru saja',
+        chapterMin: 1,
+        requiredFlag: 'found_dimas_bridge_sketch',
+      },
     ],
     prompts: [
+      {
+        id: 'prompt_nadia_dimas_sketch',
+        chapterMin: 1,
+        requiredFlag: 'found_dimas_bridge_sketch',
+        contextHint: 'Menceritakan sketsa Jembatan 9 bulan lalu dari map Mas Dimas kepada Nadia',
+        options: [
+          {
+            id: 'rep_nd_dimas_honest',
+            toneLabel: 'Jujur',
+            text: 'Ternyata 9 bulan lalu Mas Dimas pernah gambar punggungku yang sibuk HP di jembatan sementara Kira ngangkat perahu kertas di belakangku, Nad. Rasanya tertampar banget... aku janji bakal jalan sejajar sama kalian terus.',
+            replyFromThem: 'Ya ampun Mas... aku ingat sore itu Kira memang sempat cerita perahunya belum sempat dilihat Ayah. Tapi dengar kamu menyadarinya sendiri hari ini bikin hatiku hangat banget ❤️',
+            replyTime: 'Baru saja',
+            effects: { kejujuranDiri: 2, kehadiranKeluarga: 2 },
+          },
+        ],
+      },
       {
         id: 'prompt_nadia_bamboo_2022',
         chapterMin: 1,
