@@ -14,7 +14,7 @@ export const ENDINGS: Record<EndingId, EndingDefinition> = {
       'Di ruang tamu yang lampunya menyala hangat, Damar duduk di lantai kayu. Ia memetik akor pertama yang sudah lama tertunda. Suaranya sedikit bergetar, tapi utuh. Kira ikut menepuk tangan pelan, dan Nadia menyandarkan kepalanya di bahu Damar. Lagu "Pulang" akhirnya selesai ditulis.',
     ],
     finalQuote: '"Kita tidak pernah benar-benar kehilangan diri sendiri; kadang kita hanya terlalu jauh berjalan sampai lupa jalan pulang."',
-    unlockHint: 'Temukan minimal 10 Fragmen Memori (atau hidupkan 3 Kilas Balik Sinematik + 6 Memori) termasuk buku catatan di Rooftop, serta pilih kejujuran di meja makan.',
+    unlockHint: 'Temukan minimal 10 Fragmen Memori (atau hidupkan minimal 3 dari 4 Kilas Balik Sinematik + 6 Memori) termasuk buku catatan di Rooftop, serta pilih kejujuran di meja makan.',
   },
   true: {
     id: 'true',
@@ -74,16 +74,19 @@ export function evaluateEnding(params: {
   const easterCount = discoveredEasterEggs.length;
   const choseWorkEscape = flags.includes('ch3_chose_escape_work');
   const hasRooftopNote = flags.includes('found_rooftop_notebook') || discoveredEasterEggs.includes('ee_buku_rooftop');
-  const allThreeFlashbacks =
-    flags.includes('flashback_2018_done') &&
-    flags.includes('flashback_2020_done') &&
-    flags.includes('flashback_dinner_done');
+  const flashbacksDoneCount = [
+    'flashback_2018_done',
+    'flashback_melati_2019_done',
+    'flashback_2020_done',
+    'flashback_dinner_done',
+  ].filter((f) => flags.includes(f)).length;
+  const threeOrMoreFlashbacks = flashbacksDoneCount >= 3;
 
-  // 1. Secret Ending: mengumpulkan banyak Fragmen Memori ATAU menghidupkan 3 Kilas Balik + buku rooftop + jujur di akhir
+  // 1. Secret Ending: mengumpulkan banyak Fragmen Memori ATAU menghidupkan minimal 3 Kilas Balik + buku rooftop + jujur di akhir
   if (
     !choseWorkEscape &&
     hasRooftopNote &&
-    (easterCount >= 10 || (allThreeFlashbacks && easterCount >= 6))
+    (easterCount >= 10 || (threeOrMoreFlashbacks && easterCount >= 6))
   ) {
     return 'secret';
   }

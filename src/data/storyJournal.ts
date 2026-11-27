@@ -53,6 +53,17 @@ export const JOURNAL_FLASHBACK_REELS: FlashbackReelInfo[] = [
     worldHint: 'Juga dapat dihidupkan dari Poster 2018 di Kedai Kopi Bima & Galeri HP.',
   },
   {
+    id: 'reel_melati_2019',
+    dialogueId: 'flashback_malam_pertama_melati',
+    flag: 'flashback_melati_2019_done',
+    yearLabel: '12 NOVEMBER 2019',
+    title: 'Lantai Dingin & Dua Kardus Buku',
+    locationLabel: 'Ruang Tamu Kosong Jl. Melati No. 14 · Pukul 21.30',
+    epigraph: 'Malam pertama pindah rumah di bawah bohlam 5 watt, jendela berkoran, dan dua bungkus nasi goreng tek-tek yang dimakan pakai satu sendok plastik.',
+    mood: 'warm_sepia',
+    worldHint: 'Juga dapat dihidupkan dari Lantai Ruang Tamu Rumah Jl. Melati No. 14 & Galeri HP.',
+  },
+  {
     id: 'reel_2020',
     dialogueId: 'flashback_jual_gitar_2020',
     flag: 'flashback_2020_done',
@@ -416,6 +427,14 @@ export function buildStoryTimeline(params: {
       id: 'eb_chat_apology',
       title: 'Pesan Maaf Meja Makan Terkirim',
       detail: 'Nadia menyimpan pesan maafmu dan menyinggungnya di telepon hujan & meja makan malam ini.',
+      tone: 'rose',
+    });
+  }
+  if (flags.includes('flashback_melati_2019_done')) {
+    echoBadges.push({
+      id: 'eb_fb2019',
+      title: 'Janji Lantai Kosong 12 November 2019',
+      detail: 'Mengingatkan Nadia pada malam nasi goreng satu sendok plastik & janji meja makan kayu empat kursi.',
       tone: 'rose',
     });
   }

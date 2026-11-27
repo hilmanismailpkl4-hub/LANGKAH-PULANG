@@ -6,7 +6,7 @@ import { resolveDynamicNpcAmbient } from '../../data/characterEchoes';
 import { CHARACTERS } from '../../data/characters';
 import { KIRA_OUTFIT_BY_ID, KiraOutfitId, NADIA_OUTFIT_BY_ID, NadiaOutfitId } from '../../data/damarOutfits';
 import { EASTER_EGGS } from '../../data/easterEggs';
-import { EPILOGUE_MORNING_META } from '../../data/epilogueMorning';
+import { EPILOGUE_MORNING_META, resolveEpilogueNpcDialogue } from '../../data/epilogueMorning';
 import {
   EVENT_FAMILY_BANTERS,
   LOCATION_FAMILY_BANTERS,
@@ -552,14 +552,25 @@ export const WorldInteractables: React.FC = () => {
     return (npcId: CharacterId): { dialogueId: string; highlight: 'main' | 'side' | null; sublabel: string } => {
       const store = useGameStore.getState();
 
-      if (npcId === 'nadia' || npcId === 'kira') {
-        if (store.isEpilogueMode && !store.epilogueCompleted && store.activeEnding) {
+      if (store.isEpilogueMode && store.activeEnding) {
+        if ((npcId === 'nadia' || npcId === 'kira') && !store.epilogueCompleted) {
           return {
             dialogueId: EPILOGUE_MORNING_META[store.activeEnding].familyDialogueId,
             highlight: 'main',
             sublabel: 'Epilog · Pagi Setelah Pulang',
           };
         }
+        const epNpc = resolveEpilogueNpcDialogue(npcId, store.activeEnding, store.epilogueCompleted);
+        if (epNpc) {
+          return {
+            dialogueId: epNpc.dialogueId,
+            highlight: npcId === 'nadia' || npcId === 'kira' ? null : 'side',
+            sublabel: epNpc.sublabel,
+          };
+        }
+      }
+
+      if (npcId === 'nadia' || npcId === 'kira') {
         if (store.mainStepId === 'ch1_1_sarapan') {
           return { dialogueId: 'ch1_sarapan_main', highlight: 'main', sublabel: 'Cerita Utama' };
         }
@@ -1937,6 +1948,23 @@ export const WorldInteractables: React.FC = () => {
         },
       },
       2.1,
+    );
+
+    consider(
+      {
+        id: 'memory_flashback_melati_2019',
+        kind: 'story_object',
+        label: store.flags.includes('flashback_melati_2019_done')
+          ? 'Putar Ulang Kilas Balik: Malam Pertama Pindahan (2019)'
+          : 'Kenang Malam Pertama Pindahan Rumah (Kilas Balik 2019)',
+        sublabel: 'Lantai Ruang Tamu · 12 November 2019',
+        position: [-22.2, 0.08, 66.8],
+        onInteract: () => {
+          sfxEngine.play('chime');
+          store.startDialogue('flashback_malam_pertama_melati');
+        },
+      },
+      2.0,
     );
 
     consider(
@@ -4820,6 +4848,10 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-17.2, 1.15, 69.0]}>
         <sphereGeometry args={[0.085, 10, 10]} />
         <meshBasicMaterial color="#fbbf24" />
+      </mesh>
+      <mesh position={[-22.2, 0.36, 66.8]}>
+        <sphereGeometry args={[0.075, 10, 10]} />
+        <meshBasicMaterial color="#fde68a" />
       </mesh>
       {/* Amplop krem bersegel merah surat tulisan tangan Nadia di Meja Makan Jl. Melati */}
       <group position={[-15.7, 0.86, 68.1]} rotation={[0, -0.35, 0]}>

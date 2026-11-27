@@ -132,6 +132,46 @@ const AlbumMemoryArt: React.FC<{ theme: MemoryPhotoItem['theme'] }> = ({ theme }
       </svg>
     );
   }
+  if (theme === 'moving_boxes') {
+    return (
+      <svg viewBox="0 0 280 170" className="h-full w-full">
+        <defs>
+          <radialGradient id="alb-box19" cx="50%" cy="22%" r="75%">
+            <stop offset="0%" stopColor="#ffe18c" stopOpacity="0.6" />
+            <stop offset="58%" stopColor="#3e2d1f" stopOpacity="0.94" />
+            <stop offset="100%" stopColor="#1b1512" stopOpacity="1" />
+          </radialGradient>
+        </defs>
+        <rect width="280" height="170" fill="url(#alb-box19)" />
+        {/* Jendela berkoran dengan selotip kertas */}
+        <rect x="28" y="30" width="56" height="60" rx="2" fill="#e2d6bf" stroke="#5b4938" strokeWidth="3" />
+        <line x1="35" y1="42" x2="77" y2="42" stroke="#9e8f77" strokeWidth="1.8" />
+        <line x1="35" y1="53" x2="74" y2="53" stroke="#9e8f77" strokeWidth="1.8" />
+        <line x1="35" y1="66" x2="78" y2="66" stroke="#9e8f77" strokeWidth="1.8" />
+        <rect x="23" y="26" width="14" height="5" fill="#f5e7af" transform="rotate(-22 30 28)" />
+        <rect x="74" y="26" width="14" height="5" fill="#f5e7af" transform="rotate(24 81 28)" />
+        {/* Bohlam 5 watt telanjang */}
+        <path d="M140 0 Q144 15 140 30" stroke="#221b17" strokeWidth="2.4" fill="none" />
+        <rect x="136.5" y="29" width="7" height="6" fill="#7d746a" />
+        <circle cx="140" cy="41" r="8" fill="#fff4b5" />
+        {/* Lantai keramik putih dingin */}
+        <rect x="0" y="116" width="280" height="54" fill="#d2c8b6" />
+        <line x1="0" y1="140" x2="280" y2="140" stroke="#b3a793" strokeWidth="1.2" />
+        <line x1="72" y1="116" x2="50" y2="170" stroke="#b3a793" strokeWidth="1.2" />
+        <line x1="140" y1="116" x2="140" y2="170" stroke="#b3a793" strokeWidth="1.2" />
+        <line x1="208" y1="116" x2="230" y2="170" stroke="#b3a793" strokeWidth="1.2" />
+        {/* Dua kardus buku pindahan */}
+        <rect x="180" y="82" width="62" height="42" rx="2.5" fill="#b8844c" stroke="#7d552c" strokeWidth="1.8" />
+        <rect x="190" y="56" width="44" height="26" rx="2.5" fill="#ca965c" stroke="#7d552c" strokeWidth="1.8" />
+        <line x1="180" y1="95" x2="242" y2="95" stroke="#ead8b5" strokeWidth="3" />
+        {/* Dua bungkus nasi goreng tek-tek & satu sendok plastik */}
+        <polygon points="94,132 120,124 130,138 102,144" fill="#b97a45" />
+        <polygon points="136,130 162,124 170,138 142,144" fill="#b97a45" />
+        <line x1="124" y1="138" x2="142" y2="127" stroke="#ffffff" strokeWidth="2.6" strokeLinecap="round" />
+        <ellipse cx="144" cy="126" rx="3.5" ry="2.3" fill="#ffffff" />
+      </svg>
+    );
+  }
   return (
     <svg viewBox="0 0 280 170" className="h-full w-full">
       <rect width="280" height="170" fill="#131a2b" />

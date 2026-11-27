@@ -458,7 +458,7 @@ export const EPILOGUE_DIALOGUES: Record<string, DialogueScript> = {
         text: 'Hati-hati di jalan, Mas. Kalau sempat, baca saja di pesawat nanti...',
         onEnd: { openNadiaLetter: true },
       },
-      ep_bd_r_leave: {
+    ep_bd_r_leave: {
         id: 'ep_bd_r_leave',
         speaker: 'damar_batin',
         emotion: 'sedih',
@@ -467,4 +467,366 @@ export const EPILOGUE_DIALOGUES: Record<string, DialogueScript> = {
       },
     },
   },
+
+  // =========================================================================
+  // 5. DIALOG PASCA-EPILOG WARGA & SAHABAT UTAMA ("PAGI SETELAH PULANG")
+  // =========================================================================
+
+  // --- BIMA (KEDAI KOPI SUDUT) ---
+  epilogue_bima_warm: {
+    id: 'epilogue_bima_warm',
+    startNodeId: 'ep_bm_w1',
+    nodes: {
+      ep_bm_w1: {
+        id: 'ep_bm_w1',
+        speaker: 'bima',
+        emotion: 'ceria',
+        text: 'Woi, Damar! Tumben banget jam segini lewat depan Kopi Sudut jalannya pelan, bahu nggak ngangkat, mata nggak nempel ke layar HP! Ada angin segar apa nih dari Jl. Melati?',
+        onEnter: { playSfx: 'coffee' },
+        nextNodeId: 'ep_bm_w2',
+      },
+      ep_bm_w2: {
+        id: 'ep_bm_w2',
+        speaker: 'damar',
+        emotion: 'hangat',
+        text: 'Semalam akhirnya gue bicara jujur sama Nadia di meja makan, Bim. Rasanya kayak baru nurunin ransel batu yang gue gendong bertahun-tahun.',
+        nextNodeId: 'ep_bm_w3',
+      },
+      ep_bm_w3: {
+        id: 'ep_bm_w3',
+        speaker: 'bima',
+        emotion: 'haru',
+        text: 'Bima berhenti mengelap cangkir keramik, lalu menatap sahabatnya lama sebelum tersenyum lebar. "Nah... akhirnya orang yang dulu bikin lagu bareng gue tahun 2018 beneran pulang juga."',
+        choices: [
+          {
+            id: 'ep_bm_wc1',
+            text: '"Makasih ya Bim, kedai lo kemarin jadi tempat gue berani berhenti lari."',
+            subtext: 'Berterima kasih pada sahabat yang tidak pernah menghakimi',
+            nextNodeId: 'ep_bm_wr1',
+          },
+          {
+            id: 'ep_bm_wc2',
+            text: '"Sabtu sore siapin kursi pojok ya. Gue mau ajak Nadia sama Kira dengerin kita main akustik lagi."',
+            subtext: 'Merencanakan akhir pekan hangat bersama keluarga di Kopi Sudut',
+            nextNodeId: 'ep_bm_wr2',
+          },
+        ],
+      },
+      ep_bm_wr1: {
+        id: 'ep_bm_wr1',
+        speaker: 'bima',
+        emotion: 'hangat',
+        text: 'Santai kali, Mar. Kopi Flores pagi ini gue traktir penuh—nikmatin pelan-pelan udara pagi lo, nggak usah buru-buru ke mana-mana.',
+        onEnd: { playSfx: 'chime' },
+      },
+      ep_bm_wr2: {
+        id: 'ep_bm_wr2',
+        speaker: 'bima',
+        emotion: 'ceria',
+        text: 'Siap komandan! Cokelat panas marshmallow paling spesial buat Kira udah gue masukin daftar VIP Sabtu sore!',
+        onEnd: { playSfx: 'guitar' },
+      },
+    },
+  },
+
+  epilogue_bima_bad: {
+    id: 'epilogue_bima_bad',
+    startNodeId: 'ep_bm_b1',
+    nodes: {
+      ep_bm_b1: {
+        id: 'ep_bm_b1',
+        speaker: 'bima',
+        emotion: 'sedih',
+        text: 'Mar... pagi-pagi hujan gini udah rapi pakai dasi aja. Ngejar penerbangan pagi buat Proyek Kartika ya?',
+        onEnter: { playSfx: 'coffee' },
+        nextNodeId: 'ep_bm_b2',
+      },
+      ep_bm_b2: {
+        id: 'ep_bm_b2',
+        speaker: 'narator',
+        emotion: 'tenang',
+        text: 'Bima tidak melontarkan candaan seperti biasa. Ia masuk sebentar ke balik meja seduh, lalu menyodorkan segelas kopi panas dalam cup kertas ke tangan Damar.',
+        nextNodeId: 'ep_bm_b3',
+      },
+      ep_bm_b3: {
+        id: 'ep_bm_b3',
+        speaker: 'bima',
+        emotion: 'haru',
+        text: '"Gue nggak bakal ceramahin lo pagi ini, Mar—uang kopinya simpen aja. Cuma satu titipan gue sebagai sahabat: kapan pun lo capek jadi patung di gedung kaca itu, putar balik sebelum rumah lo di Jl. Melati bener-bener lupa suara langkah kaki lo."',
+      },
+    },
+  },
+
+  // --- MAS BAGAS (TOKO MUSIK NADA LAMA) ---
+  epilogue_bagas_secret: {
+    id: 'epilogue_bagas_secret',
+    startNodeId: 'ep_bg_s1',
+    nodes: {
+      ep_bg_s1: {
+        id: 'ep_bg_s1',
+        speaker: 'mas_bagas',
+        emotion: 'haru',
+        text: 'Lho, Mar! Lihat tuh penyangga kayu di sudut etalase... akhirnya kosong juga pagi ini setelah enam tahun! Gimana semalam reaksi Nadia sama si kecil Kira waktu gitar mahoninya sampai rumah?',
+        onEnter: { playSfx: 'guitar' },
+        nextNodeId: 'ep_bg_s2',
+      },
+      ep_bg_s2: {
+        id: 'ep_bg_s2',
+        speaker: 'damar',
+        emotion: 'haru',
+        text: 'Nadia langsung berkaca-kaca waktu lihat stiker "TITIPAN DAMAR" tulisan tanganmu di dalam tasnya, Gas. Dan Kira... pagi ini aja masih minta dinyanyiin bait keempat "Pulang" lagi.',
+        nextNodeId: 'ep_bg_s3',
+      },
+      ep_bg_s3: {
+        id: 'ep_bg_s3',
+        speaker: 'mas_bagas',
+        emotion: 'ceria',
+        text: 'Mas Bagas tertawa lega sambil menyodorkan sebungkus senar phosphor bronze dan pick seluloid mungil berwarna kuning matahari. "Ini hadiah dari Om Bagas buat Kira kalau nanti jarinya mulai belajar akor C. Jaga baik-baik musik di rumahmu ya, Mar!"',
+        onEnd: { playSfx: 'chime' },
+      },
+    },
+  },
+
+  epilogue_bagas_warm: {
+    id: 'epilogue_bagas_warm',
+    startNodeId: 'ep_bg_w1',
+    nodes: {
+      ep_bg_w1: {
+        id: 'ep_bg_w1',
+        speaker: 'mas_bagas',
+        emotion: 'hangat',
+        text: 'Pagi, Damar! Wah, mukamu kelihatan jauh lebih segar dibanding kemarin sore. Kebetulan banget—barusan aku selesai nyetem ulang gitar mahoni lamamu di dalam.',
+        onEnter: { playSfx: 'guitar' },
+        nextNodeId: 'ep_bg_w2',
+      },
+      ep_bg_w2: {
+        id: 'ep_bg_w2',
+        speaker: 'mas_bagas',
+        emotion: 'ceria',
+        text: 'Nanti sore atau akhir pekan ajak Nadia sama Kira mampir ke Nada Lama ya! Nggak usah mikirin harga tebusan—gitar itu dari dulu memang cuma nunggu pemilik aslinya siap bernyanyi di rumah lagi.',
+        onEnd: { playSfx: 'chime' },
+      },
+    },
+  },
+
+  epilogue_bagas_bad: {
+    id: 'epilogue_bagas_bad',
+    startNodeId: 'ep_bg_b1',
+    nodes: {
+      ep_bg_b1: {
+        id: 'ep_bg_b1',
+        speaker: 'mas_bagas',
+        emotion: 'tenang',
+        text: 'Pagi, Mar. Mau berangkat dinas pagi-pagi ya? Gue dengar kabar promosi besar lo di Menara Nusantara—selamat ya.',
+        nextNodeId: 'ep_bg_b2',
+      },
+      ep_bg_b2: {
+        id: 'ep_bg_b2',
+        speaker: 'mas_bagas',
+        emotion: 'sedih',
+        text: 'Mas Bagas menoleh sekilas ke arah koper gitar mahoni di sudut dalam toko yang diselimuti bayangan hujan. "Gitar lamamu tetap gue simpan di pojok situ, Mar. Gue bakal terus bersihin debunya tiap minggu... sampai hari di mana jari lo kangen pulang."',
+      },
+    },
+  },
+
+  // --- PAK HENDRA (MENARA NUSANTARA) ---
+  epilogue_hendra_warm: {
+    id: 'epilogue_hendra_warm',
+    startNodeId: 'ep_ph_w1',
+    nodes: {
+      ep_ph_w1: {
+        id: 'ep_ph_w1',
+        speaker: 'pak_hendra',
+        emotion: 'hangat',
+        text: 'Selamat pagi, Damar. Senang melihatmu pagi ini dengan langkah yang tidak terburu-buru. Sebenarnya... semalam saya banyak merenung setelah pembicaraan jujur kita.',
+        nextNodeId: 'ep_ph_w2',
+      },
+      ep_ph_w2: {
+        id: 'ep_ph_w2',
+        speaker: 'pak_hendra',
+        emotion: 'haru',
+        text: 'Waktu kamu memilih menjaga batas untuk keluargamu, saya teringat putri saya sendiri yang dulu tahu-tahu sudah kuliah tanpa sempat saya temani menggambar. Pagi ini saya sudah menandatangani jadwal baru Proyek Kartika: kita bagi dua tim bergilir, tidak ada lagi lembur lewat pukul enam sore.',
+        choices: [
+          {
+            id: 'ep_ph_wc1',
+            text: '"Terima kasih banyak atas pengertiannya, Pak Hendra. Tim pasti bekerja jauh lebih utuh dengan ritme sehat."',
+            subtext: 'Menghormati kebijaksanaan pemimpin yang mau mendengar',
+            nextNodeId: 'ep_ph_wr1',
+          },
+          {
+            id: 'ep_ph_wc2',
+            text: '"Belum terlambat juga buat Bapak menelepon putri Bapak pagi ini sebelum rapat dimulai."',
+            subtext: 'Mengingatkan Pak Hendra dengan hangat sebagai sesama ayah',
+            nextNodeId: 'ep_ph_wr2',
+          },
+        ],
+      },
+      ep_ph_wr1: {
+        id: 'ep_ph_wr1',
+        speaker: 'pak_hendra',
+        emotion: 'hangat',
+        text: 'Justru saya yang berterima kasih sudah diingatkan, Damar. Nikmati pagimu dulu—sampaikan salam hangat saya untuk Nadia dan Kira.',
+        onEnd: { playSfx: 'chime' },
+      },
+      ep_ph_wr2: {
+        id: 'ep_ph_wr2',
+        speaker: 'pak_hendra',
+        emotion: 'haru',
+        text: 'Pak Hendra tersenyum kecil sambil mengeluarkan ponsel dari saku jasnya. "Benar kata kamu, Damar. Habis ini saya telepon dia ajak makan siang akhir pekan. Selamat menikmati pagimu!"',
+        onEnd: { playSfx: 'chime' },
+      },
+    },
+  },
+
+  epilogue_hendra_bad: {
+    id: 'epilogue_hendra_bad',
+    startNodeId: 'ep_ph_b1',
+    nodes: {
+      ep_ph_b1: {
+        id: 'ep_ph_b1',
+        speaker: 'pak_hendra',
+        emotion: 'tenang',
+        text: 'Pagi, Damar. Berkas pengangkatan Senior Manager dan jadwal penuh Proyek Kartika sudah di meja direksi. Di atas kertas, kamu mencapai semuanya dengan sempurna.',
+        nextNodeId: 'ep_ph_b2',
+      },
+      ep_ph_b2: {
+        id: 'ep_ph_b2',
+        speaker: 'pak_hendra',
+        emotion: 'sedih',
+        text: 'Pak Hendra menatap hujan tipis di balik dinding kaca lobi, suaranya merendah. "Hanya saja... sebagai orang yang pernah menukar masa kecil anaknya demi ruangan sudut di lantai delapan belas, saya sungguh berdoa kamu tidak terbangun sepuluh tahun lagi dengan rumah yang sama sunyinya seperti rumah saya."',
+      },
+    },
+  },
+
+  // --- BU WATI (TETANGGA PERUMAHAN MELATI) ---
+  epilogue_wati_warm: {
+    id: 'epilogue_wati_warm',
+    startNodeId: 'ep_wt_w1',
+    nodes: {
+      ep_wt_w1: {
+        id: 'ep_wt_w1',
+        speaker: 'bu_wati',
+        emotion: 'ceria',
+        text: 'Pagi, Nak Damar! Aduh, semalam waktu Ibu nutup pagar jam sembilan, terdengar suara ketawa hangat dari ruang makan rumah No. 14—rasanya adem banget kayak waktu kalian baru pindahan bawa dua kardus buku tahun 2019 dulu!',
+        nextNodeId: 'ep_wt_w2',
+      },
+      ep_wt_w2: {
+        id: 'ep_wt_w2',
+        speaker: 'bu_wati',
+        emotion: 'hangat',
+        text: 'Senang lihat Nak Damar pagi ini nggak keburu-buru ngegas motor lagi. Sehat-sehat terus ya sekeluarga!',
+        onEnd: { playSfx: 'chime' },
+      },
+    },
+  },
+
+  epilogue_wati_bad: {
+    id: 'epilogue_wati_bad',
+    startNodeId: 'ep_wt_b1',
+    nodes: {
+      ep_wt_b1: {
+        id: 'ep_wt_b1',
+        speaker: 'bu_wati',
+        emotion: 'sedih',
+        text: 'Pagi, Nak Damar... sudah mau berangkat kerja jauh lagi di tengah gerimis? Tadi subuh Ibu lihat Mbak Nadia berdiri lama sendirian menatap pot melati di teras. Kalau urusan kantornya sudah reda, cepat pulang ya, Nak...',
+      },
+    },
+  },
+
+  // --- SAPAAN LANJUTAN NADIA & KIRA SETELAH ADEGAN EPILOG SELESAI ---
+  epilogue_nadia_after_warm: {
+    id: 'epilogue_nadia_after_warm',
+    startNodeId: 'ep_na_w1',
+    nodes: {
+      ep_na_w1: {
+        id: 'ep_na_w1',
+        speaker: 'nadia',
+        emotion: 'hangat',
+        text: 'Udara pagi di luar segar banget ya, Mas. Kapan pun kamu mau ngajak aku sama Kira jalan kaki keliling kota atau mampir ke kedai Bima, panggil aja ya ❤️',
+      },
+    },
+  },
+
+  epilogue_kira_after_warm: {
+    id: 'epilogue_kira_after_warm',
+    startNodeId: 'ep_kr_w1',
+    nodes: {
+      ep_kr_w1: {
+        id: 'ep_kr_w1',
+        speaker: 'kira',
+        emotion: 'ceria',
+        text: 'Ayaaah! Pagi ini kita beneran nggak buru-buru kan?! Ayo jalan-jalan lihat merpati taman sama mampir ke tempat Om Bima!',
+      },
+    },
+  },
+
+  epilogue_nadia_after_bad: {
+    id: 'epilogue_nadia_after_bad',
+    startNodeId: 'ep_na_b1',
+    nodes: {
+      ep_na_b1: {
+        id: 'ep_na_b1',
+        speaker: 'nadia',
+        emotion: 'sedih',
+        text: 'Hati-hati di perjalanan ya, Mas... termos kopinya jangan sampai ketinggalan di meja.',
+      },
+    },
+  },
+
+  epilogue_kira_after_bad: {
+    id: 'epilogue_kira_after_bad',
+    startNodeId: 'ep_kr_b1',
+    nodes: {
+      ep_kr_b1: {
+        id: 'ep_kr_b1',
+        speaker: 'kira',
+        emotion: 'lelah',
+        text: 'Eungh... Ayah udah mau pergi kerja lagi ya...? Kira padahal baru bangun...',
+      },
+    },
+  },
 };
+
+/**
+ * Menentukan dialog khusus pasca-Epilog untuk sahabat & tetangga utama saat Mode Epilog Pagi aktif.
+ */
+export function resolveEpilogueNpcDialogue(
+  npcId: string,
+  endingId: EndingId,
+  epilogueCompleted: boolean,
+): { dialogueId: string; sublabel: string } | null {
+  if (npcId === 'bima') {
+    return endingId === 'bad'
+      ? { dialogueId: 'epilogue_bima_bad', sublabel: 'Epilog · Kopi Hujan Pagi' }
+      : { dialogueId: 'epilogue_bima_warm', sublabel: 'Epilog · Pagi Baru di Kopi Sudut' };
+  }
+  if (npcId === 'mas_bagas') {
+    if (endingId === 'secret') {
+      return { dialogueId: 'epilogue_bagas_secret', sublabel: 'Epilog · Gitar yang Telah Pulang' };
+    }
+    return endingId === 'bad'
+      ? { dialogueId: 'epilogue_bagas_bad', sublabel: 'Epilog · Gitar yang Menunggu' }
+      : { dialogueId: 'epilogue_bagas_warm', sublabel: 'Epilog · Undangan Nada Lama' };
+  }
+  if (npcId === 'pak_hendra') {
+    return endingId === 'bad'
+      ? { dialogueId: 'epilogue_hendra_bad', sublabel: 'Epilog · Cermin Lantai 18' }
+      : { dialogueId: 'epilogue_hendra_warm', sublabel: 'Epilog · Jadwal Baru Proyek Kartika' };
+  }
+  if (npcId === 'bu_wati') {
+    return endingId === 'bad'
+      ? { dialogueId: 'epilogue_wati_bad', sublabel: 'Epilog · Gerimis di Jl. Melati' }
+      : { dialogueId: 'epilogue_wati_warm', sublabel: 'Epilog · Tetangga Jl. Melati' };
+  }
+  if (epilogueCompleted && npcId === 'nadia') {
+    return endingId === 'bad'
+      ? { dialogueId: 'epilogue_nadia_after_bad', sublabel: 'Epilog · Pagi Sunyi' }
+      : { dialogueId: 'epilogue_nadia_after_warm', sublabel: 'Epilog · Pagi Hangat' };
+  }
+  if (epilogueCompleted && npcId === 'kira') {
+    return endingId === 'bad'
+      ? { dialogueId: 'epilogue_kira_after_bad', sublabel: 'Epilog · Pagi Sunyi' }
+      : { dialogueId: 'epilogue_kira_after_warm', sublabel: 'Epilog · Pagi Ceria' };
+  }
+  return null;
+}

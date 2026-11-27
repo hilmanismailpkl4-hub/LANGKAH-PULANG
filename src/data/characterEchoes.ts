@@ -248,6 +248,21 @@ export const CHARACTER_ECHO_DIALOGUES: Record<string, DialogueScript> = {
       },
     },
   },
+
+  // === NADIA (MALAM PERTAMA 2019) ===
+  echo_nadia_melati_2019: {
+    id: 'echo_nadia_melati_2019',
+    startNodeId: 'end_19_1',
+    nodes: {
+      end_19_1: {
+        id: 'end_19_1',
+        speaker: 'nadia',
+        emotion: 'hangat',
+        echoTag: 'Ingatan Nadia · Malam Pertama Jl. Melati 2019',
+        text: 'Lucu ya, Mas... dulu di lantai ruang tamu ini kita cuma punya satu bohlam kuning sama satu sendok plastik buat makan berdua, tapi rasanya hangat banget. Jangan pernah nanggung takut sendirian lagi ya.',
+      },
+    },
+  },
 };
 
 /**
@@ -261,6 +276,9 @@ export function resolveDynamicNpcAmbient(
   if (npcId === 'nadia') {
     if (flags.includes('reconciled_dinner_memory_chat') || flags.includes('flashback_dinner_done')) {
       return { dialogueId: 'echo_nadia_dinner_apology', sublabel: 'Ingatan Nadia · Hangat' };
+    }
+    if (flags.includes('remembered_melati_2019_chat') || flags.includes('flashback_melati_2019_done')) {
+      return { dialogueId: 'echo_nadia_melati_2019', sublabel: 'Ingatan Nadia · 2019' };
     }
     if (flags.includes('ch2_stood_up_for_family') || flags.includes('ch2_honest_with_hendra')) {
       return { dialogueId: 'echo_nadia_stood_up', sublabel: 'Ingatan Nadia · Lega' };
@@ -356,9 +374,12 @@ export function buildEndingJourneyRecap(params: {
 }): EndingJourneyRecap {
   const { endingId, flags, sideQuests, discoveredEasterEggs, repliedPhonePrompts } = params;
   const completedSide = Object.values(sideQuests).filter((s) => s.status === 'completed').length;
-  const flashbacksSeen = ['flashback_2018_done', 'flashback_2020_done', 'flashback_dinner_done'].filter((f) =>
-    flags.includes(f),
-  ).length;
+  const flashbacksSeen = [
+    'flashback_2018_done',
+    'flashback_melati_2019_done',
+    'flashback_2020_done',
+    'flashback_dinner_done',
+  ].filter((f) => flags.includes(f)).length;
   const phoneRepliesSent = Object.keys(repliedPhonePrompts).length;
 
   const archetypeByEnding: Record<EndingId, { title: string; note: string }> = {
@@ -406,6 +427,16 @@ export function buildEndingJourneyRecap(params: {
       label: 'Senar Putus & Tawa 2018',
       summary: 'Kamu mengingat malam pertama Nadia duduk di barisan depan Taman Kota—awal dari lagu "Track 4 — Pulang".',
       tone: 'gold',
+    });
+  }
+  if (flags.includes('remembered_melati_2019_chat') || flags.includes('flashback_melati_2019_done')) {
+    echoCards.push({
+      id: 'ec_fb2019',
+      label: 'Malam Pertama Jl. Melati (2019)',
+      summary: flags.includes('remembered_melati_2019_chat')
+        ? 'Kamu dan Nadia mengenang kembali malam nasi goreng satu sendok plastik di bawah bohlam 5 watt—dan berjanji mengisi meja makan dengan kehadiran nyata.'
+        : 'Kamu mengenang malam pertama pindah ke rumah kosong Jl. Melati No. 14 saat meja makan empat kursi masih berupa impian.',
+      tone: 'rose',
     });
   }
   if (flags.includes('ch2_honest_with_hendra') || flags.includes('ch2_stood_up_for_family')) {

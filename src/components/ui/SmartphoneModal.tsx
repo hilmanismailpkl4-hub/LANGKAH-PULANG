@@ -181,6 +181,46 @@ const MemoryIllustration: React.FC<{ theme: MemoryPhotoItem['theme']; large?: bo
       </svg>
     );
   }
+  if (theme === 'moving_boxes') {
+    return (
+      <svg viewBox="0 0 240 140" className={`w-full ${h} rounded-lg`}>
+        <defs>
+          <radialGradient id="bulb2019" cx="50%" cy="22%" r="72%">
+            <stop offset="0%" stopColor="#ffe08a" stopOpacity="0.58" />
+            <stop offset="55%" stopColor="#3b2b1e" stopOpacity="0.92" />
+            <stop offset="100%" stopColor="#1b1512" stopOpacity="1" />
+          </radialGradient>
+        </defs>
+        <rect width="240" height="140" fill="url(#bulb2019)" />
+        {/* Jendela ditutup lembaran koran & selotip kertas */}
+        <rect x="24" y="26" width="46" height="50" rx="2" fill="#dfd3bc" stroke="#5a4938" strokeWidth="2.5" />
+        <line x1="29" y1="36" x2="64" y2="36" stroke="#9e8f77" strokeWidth="1.5" />
+        <line x1="29" y1="44" x2="62" y2="44" stroke="#9e8f77" strokeWidth="1.5" />
+        <line x1="29" y1="56" x2="65" y2="56" stroke="#9e8f77" strokeWidth="1.5" />
+        <rect x="20" y="23" width="12" height="4" fill="#f3e5ab" transform="rotate(-22 26 25)" />
+        <rect x="61" y="23" width="12" height="4" fill="#f3e5ab" transform="rotate(24 67 25)" />
+        {/* Bohlam 5 watt telanjang di kabel hitam melintir */}
+        <path d="M120 0 Q123 12 120 24" stroke="#231c18" strokeWidth="2" fill="none" />
+        <rect x="117" y="23" width="6" height="5" fill="#7c7369" />
+        <circle cx="120" cy="33" r="6.5" fill="#fff3b0" />
+        {/* Lantai keramik ruang tamu kosong */}
+        <rect x="0" y="96" width="240" height="44" fill="#cfc5b4" />
+        <line x1="0" y1="116" x2="240" y2="116" stroke="#b3a793" strokeWidth="1" />
+        <line x1="60" y1="96" x2="42" y2="140" stroke="#b3a793" strokeWidth="1" />
+        <line x1="120" y1="96" x2="120" y2="140" stroke="#b3a793" strokeWidth="1" />
+        <line x1="180" y1="96" x2="198" y2="140" stroke="#b3a793" strokeWidth="1" />
+        {/* Dua kardus buku pindahan */}
+        <rect x="154" y="68" width="52" height="34" rx="2" fill="#b8844c" stroke="#7d552c" strokeWidth="1.5" />
+        <rect x="162" y="46" width="38" height="22" rx="2" fill="#c8945a" stroke="#7d552c" strokeWidth="1.5" />
+        <line x1="154" y1="78" x2="206" y2="78" stroke="#e8d6b3" strokeWidth="2.5" />
+        {/* Dua bungkus kertas nasi goreng & satu sendok plastik putih */}
+        <polygon points="84,108 106,102 114,114 90,118" fill="#b97a45" />
+        <polygon points="118,106 140,102 146,114 122,118" fill="#b97a45" />
+        <line x1="108" y1="114" x2="123" y2="105" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" />
+        <ellipse cx="124.5" cy="104" rx="3" ry="2" fill="#ffffff" />
+      </svg>
+    );
+  }
   return (
     <svg viewBox="0 0 240 140" className={`w-full ${h} rounded-lg`}>
       <rect width="240" height="140" fill="#10182b" />
@@ -290,9 +330,12 @@ export const SmartphoneModal: React.FC = () => {
     return sum + unanswered;
   }, 0);
 
-  const flashbacksCompletedCount = ['flashback_2018_done', 'flashback_2020_done', 'flashback_dinner_done'].filter(
-    (f) => flags.includes(f),
-  ).length;
+  const flashbacksCompletedCount = [
+    'flashback_2018_done',
+    'flashback_melati_2019_done',
+    'flashback_2020_done',
+    'flashback_dinner_done',
+  ].filter((f) => flags.includes(f)).length;
 
   const handleSendReply = (promptId: string, option: ChatReplyOption, thread: PhoneContactThread) => {
     sfxEngine.play('interact');
@@ -341,7 +384,7 @@ export const SmartphoneModal: React.FC = () => {
       done: Object.keys(repliedPhonePrompts).length > 0,
     },
     {
-      label: `Hidupkan Kilas Balik Memori Sinematik di Galeri HP atau Album Rumah (${flashbacksCompletedCount}/3)`,
+      label: `Hidupkan Kilas Balik Memori Sinematik di Galeri HP atau Album Rumah (${flashbacksCompletedCount}/4)`,
       done: flashbacksCompletedCount > 0,
     },
   ];
@@ -1067,7 +1110,7 @@ export const SmartphoneModal: React.FC = () => {
                           <Sparkles className="h-3.5 w-3.5 text-amber-300" />
                           <span>Foto bertanda <strong>Kilas Balik</strong> dapat dihidupkan!</span>
                         </span>
-                        <span className="font-mono text-amber-300">{flashbacksCompletedCount}/3</span>
+                        <span className="font-mono text-amber-300">{flashbacksCompletedCount}/4</span>
                       </div>
                       <div className="grid grid-cols-2 gap-2.5">
                         {MEMORY_PHOTOS.filter((m) => m.chapterMin <= chapter).map((m) => {

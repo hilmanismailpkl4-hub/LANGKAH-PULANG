@@ -1017,7 +1017,7 @@ export const MapJournalModal: React.FC = () => {
                       [
                         { id: 'diary', label: `Buku Harian (${journalEntries.length})`, icon: Feather },
                         { id: 'timeline', label: 'Peta Cabang Cerita', icon: GitBranch },
-                        { id: 'flashbacks', label: `Kilas Balik (${flashbacksSeenCount}/3)`, icon: Film },
+                        { id: 'flashbacks', label: `Kilas Balik (${flashbacksSeenCount}/${JOURNAL_FLASHBACK_REELS.length})`, icon: Film },
                         {
                           id: 'memories',
                           label: `Fragmen Memori (${discoveredEasterEggs.length}/${EASTER_EGGS.length})`,
@@ -1103,7 +1103,7 @@ export const MapJournalModal: React.FC = () => {
                             onClick={() => setJournalSubTab('flashbacks')}
                             className="rounded-xl border border-amber-300/25 bg-amber-500/10 p-2.5 transition hover:border-amber-300/60"
                           >
-                            <p className="font-serif text-lg text-amber-200">{flashbacksSeenCount}/3</p>
+                            <p className="font-serif text-lg text-amber-200">{flashbacksSeenCount}/{JOURNAL_FLASHBACK_REELS.length}</p>
                             <p className="text-[10px] text-warm-200/75">Kilas Balik</p>
                           </button>
                           <button
@@ -1299,21 +1299,21 @@ export const MapJournalModal: React.FC = () => {
                   </div>
                 )}
 
-                {/* === SUBTAB 3C: ARSIP 3 KILAS BALIK MEMORI SINEMATIK (PUTAR ULANG KAPAN SAJA) === */}
+                {/* === SUBTAB 3C: ARSIP 4 KILAS BALIK MEMORI SINEMATIK (PUTAR ULANG KAPAN SAJA) === */}
                 {journalSubTab === 'flashbacks' && (
                   <div className="space-y-4">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div>
                         <h3 className="font-serif text-lg text-warm-50">
-                          Gulungan Kilas Balik Memori ({flashbacksSeenCount}/3)
+                          Gulungan Kilas Balik Memori ({flashbacksSeenCount}/{JOURNAL_FLASHBACK_REELS.length})
                         </h3>
                         <p className="text-xs text-warm-200/65">
-                          Hidupkan atau putar ulang 3 malam penting yang membentuk siapa Damar hari ini.
+                          Hidupkan atau putar ulang 4 malam penting yang membentuk siapa Damar hari ini.
                         </p>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                       {JOURNAL_FLASHBACK_REELS.map((reel, idx) => {
                         const seen = flags.includes(reel.flag);
                         const cardBg =

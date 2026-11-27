@@ -491,4 +491,164 @@ export const FLASHBACK_DIALOGUES: Record<string, DialogueScript> = {
       },
     },
   },
+
+  // =========================================================================
+  // KILAS BALIK 4 — 12 NOVEMBER 2019 · MALAM PERTAMA PINDAHAN DI JL. MELATI
+  // =========================================================================
+  flashback_malam_pertama_melati: {
+    id: 'flashback_malam_pertama_melati',
+    startNodeId: 'fb4_1',
+    flashback: {
+      yearLabel: '12 NOVEMBER 2019',
+      title: 'Lantai Dingin & Dua Kardus Buku',
+      locationLabel: 'Ruang Tamu Kosong Jl. Melati No. 14 · Pukul 21.30',
+      mood: 'warm_sepia',
+      epigraph:
+        'Sebelum ada meja makan dan derit kursi kayu, rumah ini hanyalah sepetak lantai dingin, satu bohlam kuning, dan dua orang yang belum tahu cara saling mendiamkan.',
+    },
+    nodes: {
+      fb4_1: {
+        id: 'fb4_1',
+        speaker: 'narator',
+        emotion: 'tenang',
+        text: '12 November 2019. Bau cat tembok kapur yang masih basah bercampur dengan aroma tanah sehabis hujan. Di langit-langit ruang tamu Jl. Melati No. 14, hanya tergantung satu bohlam kuning lima watt telanjang yang kabel hitamnya masih melintir.',
+        onEnter: { playSfx: 'page' },
+        nextNodeId: 'fb4_2',
+      },
+      fb4_2: {
+        id: 'fb4_2',
+        speaker: 'narator',
+        emotion: 'hangat',
+        text: 'Belum ada sofa. Belum ada gorden—kaca jendela depan ditutup lembaran koran kemarin yang direkatkan selotip kertas oleh Nadia. Seluruh harta mereka malam itu muat di dalam dua kardus bekas kipas angin berisi buku, pakaian, dan piring hadiah pernikahan.',
+        nextNodeId: 'fb4_3',
+      },
+      fb4_3: {
+        id: 'fb4_3',
+        speaker: 'nadia',
+        emotion: 'ceria',
+        text: 'Mas, sendok besinya entah nyelip di kardus yang mana! Kita makan gantian pakai satu sendok plastik bawaan abangnya aja ya—suapan pertama buat pemilik rumah baru!',
+        nextNodeId: 'fb4_4',
+      },
+      fb4_4: {
+        id: 'fb4_4',
+        speaker: 'narator',
+        emotion: 'hangat',
+        text: 'Di atas keramik putih yang dingin, terbuka dua bungkus kertas cokelat nasi goreng tek-tek yang baru lewat di ujung gang. Uap hangatnya mengepul tipis di antara mereka berdua yang duduk bersila bersandar ke tembok.',
+        nextNodeId: 'fb4_5',
+      },
+      fb4_5: {
+        id: 'fb4_5',
+        speaker: 'damar',
+        emotion: 'hangat',
+        text: 'Kamu duluan aja, Nad. Tadi dari sore kamu yang paling sibuk nyapu debu semen sama nempelin koran di jendela.',
+        nextNodeId: 'fb4_6',
+      },
+      fb4_6: {
+        id: 'fb4_6',
+        speaker: 'nadia',
+        emotion: 'hangat',
+        text: 'Nggak mau, pokoknya gantian! Eh Mas... lihat deh sudut kosong dekat dapur sana.',
+        nextNodeId: 'fb4_7',
+      },
+      fb4_7: {
+        id: 'fb4_7',
+        speaker: 'nadia',
+        emotion: 'haru',
+        text: 'Nanti kalau kita udah nabung pelan-pelan, di situ kita taruh meja makan kayu kecil ya. Nggak usah gede-gede, empat kursi aja cukup. Biar sehabis kamu pulang kerja sore, kita selalu punya tempat buat duduk berhadapan dan cerita.',
+        nextNodeId: 'fb4_8',
+      },
+      fb4_8: {
+        id: 'fb4_8',
+        speaker: 'damar_batin',
+        emotion: 'sedih',
+        text: 'Aku menatap sudut kosong yang ditunjuk Nadia, lalu meraba anak kunci kuningan rumah ini di saku kemejaku. Di kepalaku berputar angka saldo rekening kami sore tadi setelah membayar biaya akad dan notaris—sisa uang yang bahkan belum cukup untuk membeli satu lemari pakaian.',
+        choices: [
+          {
+            id: 'fb4_choice_honest',
+            text: '"Jujur Nad... tanganku sebenarnya agak gemetar dari tadi. Tabungan kita tipis banget habis akad—aku takut lama baru bisa ngisi rumah ini."',
+            subtext: 'Membuka rasa cemas sejak malam pertama tanpa berpura-pura gagah',
+            nextNodeId: 'fb4_res_honest',
+            effects: {
+              kejujuranDiri: 3,
+              kehadiranKeluarga: 1,
+            },
+          },
+          {
+            id: 'fb4_choice_laugh',
+            text: '"Empat kursi kebanyakan ah sekarang—mending kosong dulu gini, suara ketawa kamu jadi menggema dua kali lipat di seluruh ruangan!"',
+            subtext: 'Merayakan kesederhanaan malam pertama dengan tawa hangat',
+            nextNodeId: 'fb4_res_laugh',
+            effects: {
+              kehadiranKeluarga: 3,
+              kejujuranDiri: 1,
+            },
+          },
+          {
+            id: 'fb4_choice_ambition',
+            text: '"Aku janji bakal kerja dua kali lipat mulai besok, Nad. Nggak sampai setahun, meja makan sama sofa pasti kubeliin semua buat kamu."',
+            subtext: 'Mengikat janji kerja keras demi membahagiakan pasangan',
+            nextNodeId: 'fb4_res_ambition',
+            effects: {
+              ambisiPelarian: 1,
+              kejujuranDiri: 2,
+              kehadiranKeluarga: 1,
+            },
+          },
+        ],
+      },
+      fb4_res_honest: {
+        id: 'fb4_res_honest',
+        speaker: 'nadia',
+        emotion: 'haru',
+        text: 'Nadia meletakkan sendok plastiknya, lalu menggenggam tangan Damar yang dingin dengan kedua telapak tangannya. "Mas, lihat aku. Aku nggak pindah ke tembok dan perabot—aku pindah ke mana pun ada kamu. Mau setahun kita makan lesehan di lantai juga nggak apa-apa, asal kamu jangan pernah nanggung takutnya sendirian."',
+        nextNodeId: 'fb4_9',
+      },
+      fb4_res_laugh: {
+        id: 'fb4_res_laugh',
+        speaker: 'nadia',
+        emotion: 'ceria',
+        text: 'Tawa Nadia pecah, benar-benar memantul nyaring di dinding rumah kosong yang belum berperabot. Ia menyandarkan kepalanya di bahu Damar. "Iya juga ya! Nanti kalau suatu hari rumah ini udah penuh barang dan ramai suara anak kecil, awas ya kalau kita lupa rasanya makan sepiring pakai satu sendok plastik!"',
+        nextNodeId: 'fb4_9',
+      },
+      fb4_res_ambition: {
+        id: 'fb4_res_ambition',
+        speaker: 'nadia',
+        emotion: 'haru',
+        text: 'Nadia tersenyum tipis dan mengusap pipi Damar, namun sorot matanya mendadak teduh seolah menatap jauh ke masa depan. "Makasih ya, Mas... tapi janji satu hal dulu sama aku. Jangan sampai nanti waktu meja dan kursinya sudah kebeli semua, orang yang duduk makan sama aku malah sibuk terus dan jarang di rumah."',
+        nextNodeId: 'fb4_9',
+      },
+      fb4_9: {
+        id: 'fb4_9',
+        speaker: 'narator',
+        emotion: 'hangat',
+        text: 'Malam itu mereka tertidur beralaskan jaket dan kain batik panjang di atas lantai keramik ruang tamu. Suara jangkrik dari tanah kavling sebelah terdengar jelas, dan bohlam lima watt itu dibiarkan menyala sampai pagi agar rumah baru mereka tidak merasa asing.',
+        onEnter: { playSfx: 'guitar' },
+        nextNodeId: 'fb4_end',
+      },
+      fb4_end: {
+        id: 'fb4_end',
+        speaker: 'damar_batin',
+        emotion: 'haru',
+        text: 'Cahaya bohlam kuning tahun 2019 itu perlahan memudar, mengembalikanku ke ruang tamu hari ini. Meja makan kayu empat kursi impian Nadia kini benar-benar berdiri beberapa langkah di belakangku. Kami dulu tidak punya apa-apa di lantai ini tapi punya seluruh waktu satu sama lain—dan belum terlambat bagiku untuk kembali duduk di sana seutuhnya.',
+        onEnd: {
+          playSfx: 'chime',
+          setFlags: ['flashback_melati_2019_done'],
+          journalEntry: {
+            id: 'je_flashback_melati_2019',
+            title: 'Kilas Balik · 12 November 2019 (Malam Pertama di Jl. Melati)',
+            body: 'Aku mengenang malam pertama kami pindah ke Jl. Melati No. 14—ketika jendela masih ditutup koran, lampu hanya bohlam 5 watt, dan kami berbagi nasi goreng tek-tek dengan satu sendok plastik di lantai dingin. Sejak dulu Nadia tidak pernah meminta kemewahan; ia hanya ingin kursi di seberangnya tidak kosong.',
+            chapter: 1,
+          },
+          phoneMessage: {
+            id: 'msg_nadia_fb_melati2019',
+            sender: 'Nadia ❤️',
+            preview: 'Mas, barusan aku beresin laci bawah nemu kunci serep lama pas kita pertama kali akad rumah tahun 2019... jadi keinget malam kita makan nasi goreng pakai satu sendok plastik 🥺',
+            timeLabel: 'Baru saja',
+            threadId: 'nadia',
+          },
+          toast: 'Kilas Balik 2019 tersimpan di Jurnal — pesan hangat masuk dari Nadia di HP!',
+        },
+      },
+    },
+  },
 };

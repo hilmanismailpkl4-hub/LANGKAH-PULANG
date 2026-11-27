@@ -57,7 +57,7 @@ export interface MemoryPhotoItem {
   locationLabel: string;
   caption: string;
   chapterMin: ChapterNumber;
-  theme: 'stage' | 'bridge' | 'baby' | 'cafe' | 'crayon' | 'home_night' | 'dinner_quiet';
+  theme: 'stage' | 'bridge' | 'baby' | 'cafe' | 'crayon' | 'home_night' | 'dinner_quiet' | 'moving_boxes';
   flashbackDialogueId?: string;
   flashbackFlag?: string;
   flashbackBadge?: string;
@@ -133,6 +133,14 @@ export const PHONE_THREADS: PhoneContactThread[] = [
         time: 'Baru saja',
         chapterMin: 1,
         requiredFlag: 'flashback_dinner_done',
+      },
+      {
+        id: 'nd_fb_melati_2019',
+        from: 'them',
+        text: 'Mas, barusan aku beresin laci bawah nemu kunci serep lama pas kita pertama kali akad rumah tahun 2019... jadi keinget malam kita makan nasi goreng tek-tek pakai satu sendok plastik di lantai kosong 🥺',
+        time: 'Baru saja',
+        chapterMin: 1,
+        requiredFlag: 'flashback_melati_2019_done',
       },
       {
         id: 'nd_1996_archive',
@@ -228,6 +236,48 @@ export const PHONE_THREADS: PhoneContactThread[] = [
             replyFromThem: 'Iya Mas... semoga memang beneran aman, bukan cuma kita pura-pura lupa.',
             replyTime: 'Baru saja',
             effects: { ambisiPelarian: 1 },
+          },
+        ],
+      },
+      {
+        id: 'prompt_nadia_after_melati_fb',
+        chapterMin: 1,
+        requiredFlag: 'flashback_melati_2019_done',
+        contextHint: 'Menanggapi kenangan malam pertama pindahan rumah 12 November 2019',
+        options: [
+          {
+            id: 'rep_nd_melati_honest',
+            toneLabel: 'Jujur',
+            text: 'Aku juga baru aja ngelamunin malam itu, Nad. Meja makannya sekarang udah kebeli—maafin aku kalau belakangan orang yang duduk sama kamu malah sering sibuk sendiri.',
+            replyFromThem: 'Ya ampun Mas... kamu masih inget kalimatku malam itu? Aku terharu banget bacanya. Pulang nanti duduk lama-lama sama aku ya ❤️',
+            replyTime: 'Baru saja',
+            effects: {
+              kejujuranDiri: 2,
+              kehadiranKeluarga: 3,
+              setFlags: ['remembered_melati_2019_chat'],
+              journalEntry: {
+                id: 'je_chat_nadia_melati_2019',
+                title: 'Janji Meja Kayu Tahun 2019',
+                body: 'Lewat pesan singkat, aku dan Nadia mengenang kembali malam pertama kami di Jl. Melati No. 14. Ternyata kebahagiaan paling utuh selalu sesederhana duduk berhadapan tanpa tergesa.',
+                chapter: 1,
+              },
+            },
+          },
+          {
+            id: 'rep_nd_melati_lesehan',
+            toneLabel: 'Hangat',
+            text: 'Kapan-kapan kita gelar kain batik di ruang tamu terus makan nasi goreng tek-tek bareng Kira yuk, biar dia tahu cerita rumah ini!',
+            replyFromThem: 'Hahaha ide bagus banget!! Kira pasti heboh kalau diajak piknik lesehan di ruang tamu sambil matiin lampu besar!',
+            replyTime: 'Baru saja',
+            effects: { kehadiranKeluarga: 3, kejujuranDiri: 1 },
+          },
+          {
+            id: 'rep_nd_melati_calm',
+            toneLabel: 'Tenang',
+            text: 'Nggak kerasa udah bertahun-tahun kita lewati dari lantai kosong itu ya, Nad. Makasih udah selalu nemenin aku dari nol.',
+            replyFromThem: 'Sama-sama, Mas. Dari nol sampai kapan pun, asal kita tetap saling cerita ya.',
+            replyTime: 'Baru saja',
+            effects: { kehadiranKeluarga: 2, kejujuranDiri: 1 },
           },
         ],
       },
@@ -853,6 +903,18 @@ export const MEMORY_PHOTOS: MemoryPhotoItem[] = [
     flashbackBadge: 'Kilas Balik 1',
   },
   {
+    id: 'mem_melati_2019',
+    title: 'Malam Pertama di Jl. Melati',
+    dateLabel: '12 November 2019',
+    locationLabel: 'Ruang Tamu Kosong No. 14',
+    caption: 'Bohlam kuning 5 watt, jendela berkoran, dua kardus buku, dan nasi goreng tek-tek yang dimakan gantian pakai satu sendok plastik.',
+    chapterMin: 1,
+    theme: 'moving_boxes',
+    flashbackDialogueId: 'flashback_malam_pertama_melati',
+    flashbackFlag: 'flashback_melati_2019_done',
+    flashbackBadge: 'Kilas Balik 2',
+  },
+  {
     id: 'mem_kira_2020',
     title: 'Genggaman Pertama Kira',
     dateLabel: '08–09 Agustus 2020',
@@ -862,7 +924,7 @@ export const MEMORY_PHOTOS: MemoryPhotoItem[] = [
     theme: 'baby',
     flashbackDialogueId: 'flashback_jual_gitar_2020',
     flashbackFlag: 'flashback_2020_done',
-    flashbackBadge: 'Kilas Balik 2',
+    flashbackBadge: 'Kilas Balik 3',
   },
   {
     id: 'mem_dinner_quiet',
@@ -874,7 +936,7 @@ export const MEMORY_PHOTOS: MemoryPhotoItem[] = [
     theme: 'dinner_quiet',
     flashbackDialogueId: 'flashback_meja_makan_sunyi',
     flashbackFlag: 'flashback_dinner_done',
-    flashbackBadge: 'Kilas Balik 3',
+    flashbackBadge: 'Kilas Balik 4',
   },
   {
     id: 'mem_bridge_2019',
