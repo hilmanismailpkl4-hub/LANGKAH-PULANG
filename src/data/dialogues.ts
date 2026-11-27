@@ -1,6 +1,7 @@
 import { DialogueScript, MainObjectiveStep } from '../types/game';
 import { GIFT_DIALOGUES } from './bagItems';
 import { BAGAS_ARCHIVE_DIALOGUES } from './bagasArchiveStory';
+import { BANG_ARI_DEEP_DIALOGUES } from './bangAriDeepStory';
 import { BIMA_NIGHT_DIALOGUES } from './bimaNightStory';
 import { BU_WATI_DEEP_DIALOGUES } from './buWatiDeepStory';
 import { CHARACTER_ECHO_DIALOGUES } from './characterEchoes';
@@ -596,6 +597,7 @@ export const ALL_DIALOGUES: Record<string, DialogueScript> = {
   ...SIDE_QUEST_DIALOGUES,
   ...EASTER_EGG_DIALOGUES,
   ...BAGAS_ARCHIVE_DIALOGUES,
+  ...BANG_ARI_DEEP_DIALOGUES,
   ...BIMA_NIGHT_DIALOGUES,
   ...BU_WATI_DEEP_DIALOGUES,
   ...FATHER_CASSETTE_DIALOGUES,

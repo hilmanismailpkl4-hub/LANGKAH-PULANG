@@ -880,6 +880,33 @@ export const EPILOGUE_DIALOGUES: Record<string, DialogueScript> = {
     },
   },
 
+  epilogue_ari_warm: {
+    id: 'epilogue_ari_warm',
+    startNodeId: 'ep_ar_w1',
+    nodes: {
+      ep_ar_w1: {
+        id: 'ep_ar_w1',
+        speaker: 'bang_ari',
+        emotion: 'ceria',
+        text: 'Pagi cerah, Mas Damar! Pagi ini saya bawain lagu bernada mayor buat penumpang berangkat kerja—dan lihat deh langkah Mas Damar sekarang, udah kayak vokalis yang nemu senar keenamnya lagi!',
+        onEnter: { playSfx: 'guitar' },
+      },
+    },
+  },
+
+  epilogue_ari_bad: {
+    id: 'epilogue_ari_bad',
+    startNodeId: 'ep_ar_b1',
+    nodes: {
+      ep_ar_b1: {
+        id: 'ep_ar_b1',
+        speaker: 'bang_ari',
+        emotion: 'sedih',
+        text: 'Mas Damar... mau ngejar kereta bandara pagi di tengah hujan ya? Kapan pun kangen suara gitar kayu, peron terakhir Stasiun Senja selalu nyimpan lagu lama Mas.',
+      },
+    },
+  },
+
   epilogue_wati_warm: {
     id: 'epilogue_wati_warm',
     startNodeId: 'ep_wt_w1',
@@ -1022,6 +1049,11 @@ export function resolveEpilogueNpcDialogue(
     return endingId === 'bad'
       ? { dialogueId: 'epilogue_raka_bad', sublabel: 'Epilog · Jembatan Hujan Pagi' }
       : { dialogueId: 'epilogue_raka_warm', sublabel: 'Epilog · Sepatu Roda Dinda' };
+  }
+  if (npcId === 'bang_ari') {
+    return endingId === 'bad'
+      ? { dialogueId: 'epilogue_ari_bad', sublabel: 'Epilog · Peron Berhujan' }
+      : { dialogueId: 'epilogue_ari_warm', sublabel: 'Epilog · Senar Keenam yang Kembali' };
   }
   if (epilogueCompleted && npcId === 'nadia') {
     return endingId === 'bad'

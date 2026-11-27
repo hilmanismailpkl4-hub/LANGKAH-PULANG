@@ -742,6 +742,9 @@ export const WorldInteractables: React.FC = () => {
         if (sq.status === 'active' && sq.stage === 2) {
           return { dialogueId: 'sq_bang_ari_complete', highlight: 'side', sublabel: 'Selesaikan Misi' };
         }
+        if (sq.status === 'completed' && !store.flags.includes('heard_bang_ari_2018_story')) {
+          return { dialogueId: 'story_bang_ari_ticket_2018', highlight: 'side', sublabel: 'Karcis 14 Oktober 2018' };
+        }
         return { dialogueId: 'ambient_ari', highlight: null, sublabel: 'Berbincang' };
       }
 
@@ -1825,6 +1828,26 @@ export const WorldInteractables: React.FC = () => {
         },
       },
       2.6,
+    );
+
+    consider(
+      {
+        id: 'story_bang_ari_guitar_case',
+        kind: 'story_object',
+        label: store.flags.includes('heard_bang_ari_2018_story')
+          ? 'Kenang Kembali Kisah Karcis 14 Oktober 2018 di Koper Bang Ari'
+          : 'Periksa Karcis Kereta Laminasi 2018 di Koper Gitar Bang Ari',
+        sublabel: store.flags.includes('heard_bang_ari_2018_story')
+          ? 'Kenangan Tersimpan · Lima Senar yang Menyelamatkan'
+          : 'Peron Stasiun Senja · Selebaran Panggung Langkah Kecil 2018',
+        position: [78.55, 0.1, 5.75],
+        onInteract: () => {
+          playerRuntime.activeSpeakerPos = [79.5, 0.1, 4.5];
+          playerRuntime.activeSpeakerId = 'bang_ari';
+          store.startDialogue('story_bang_ari_ticket_2018');
+        },
+      },
+      2.2,
     );
 
     if (store.timeOfDay !== 'rain_dusk') {
@@ -5581,6 +5604,38 @@ export const WorldInteractables: React.FC = () => {
         <mesh position={[0, 0.78, 0]}>
           <sphereGeometry args={[0.068, 10, 10]} />
           <meshBasicMaterial color={flags.includes('heard_mas_raka_skates_story') ? '#86efac' : '#67e8f9'} />
+        </mesh>
+      </group>
+
+      {/* Koper Gitar Beludru Terbuka & Karcis Laminasi 14 Okt 2018 Milik Bang Ari di Peron Stasiun */}
+      <group position={[78.55, 0.11, 5.75]} rotation={[0, -1.25, 0]}>
+        {/* Dasar koper gitar hitam */}
+        <mesh position={[0, 0.03, 0]} castShadow receiveShadow>
+          <boxGeometry args={[0.42, 0.055, 0.88]} />
+          <meshStandardMaterial color="#1f2937" roughness={0.78} />
+        </mesh>
+        {/* Alas beludru merah koper */}
+        <mesh position={[0, 0.06, 0]}>
+          <boxGeometry args={[0.36, 0.012, 0.82]} />
+          <meshStandardMaterial color="#7f1d1d" roughness={0.85} />
+        </mesh>
+        {/* Tutup koper terbuka miring dengan selebaran kuning 2018 */}
+        <mesh position={[-0.22, 0.2, 0]} rotation={[0, 0, 1.05]} castShadow>
+          <boxGeometry args={[0.38, 0.03, 0.84]} />
+          <meshStandardMaterial color="#1e293b" roughness={0.75} />
+        </mesh>
+        <mesh position={[-0.19, 0.21, 0.12]} rotation={[0, 0, 1.05]}>
+          <boxGeometry args={[0.14, 0.008, 0.18]} />
+          <meshStandardMaterial
+            color="#fef08a"
+            emissive="#f59e0b"
+            emissiveIntensity={flags.includes('heard_bang_ari_2018_story') ? 0.15 : 0.55}
+            roughness={0.6}
+          />
+        </mesh>
+        <mesh position={[0, 0.54, 0]}>
+          <sphereGeometry args={[0.068, 10, 10]} />
+          <meshBasicMaterial color={flags.includes('heard_bang_ari_2018_story') ? '#86efac' : '#fbbf24'} />
         </mesh>
       </group>
 

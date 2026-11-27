@@ -499,6 +499,14 @@ export function buildStoryTimeline(params: {
       tone: 'gold',
     });
   }
+  if (flags.includes('heard_bang_ari_2018_story')) {
+    echoBadges.push({
+      id: 'eb_bang_ari_2018',
+      title: 'Karcis Laminasi 14 Okt 2018 · Peron Bang Ari',
+      detail: 'Musik lima senarmu enam tahun silam ternyata menyelamatkan hidup Bang Ari yang kini menemani para pekerja pulang.',
+      tone: 'gold',
+    });
+  }
   if (flags.includes('heard_mas_raka_skates_story')) {
     echoBadges.push({
       id: 'eb_mas_raka_skates',

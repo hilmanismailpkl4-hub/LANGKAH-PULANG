@@ -1169,6 +1169,17 @@ export const PHONE_THREADS: PhoneContactThread[] = [
 
 export const VOICE_NOTES: VoiceNoteItem[] = [
   {
+    id: 'vn_ari_peron_2018',
+    speakerId: 'bang_ari',
+    senderName: 'Bang Ari (Peron Stasiun Senja)',
+    title: 'Petikan Lima Senar untuk Penumpang Terakhir',
+    duration: '0:20',
+    chapterMin: 1,
+    requiredFlag: 'heard_bang_ari_2018_story',
+    transcript:
+      'Kalau suatu malam hidup rasanya kayak senar satu yang putus di tengah lagu, jangan turun panggung dulu ya, Mas Damar. Lima senar yang tersisa masih cukup buat mengantar kita pulang ke orang yang tepuk tangan di barisan depan.',
+  },
+  {
     id: 'vn_kira_rainbow_drawings',
     speakerId: 'kira',
     senderName: 'Kira (Pesan Suara Rahasia)',

@@ -507,6 +507,16 @@ export function buildEndingJourneyRecap(params: {
 
   const echoCards: JourneyEchoCard[] = [];
 
+  if (flags.includes('heard_bang_ari_2018_story')) {
+    echoCards.push({
+      id: 'ec_bang_ari_2018',
+      label: 'Karcis 14 Oktober 2018 di Peron Bang Ari',
+      summary: flags.includes('played_duet_with_bang_ari')
+        ? 'Kamu mengetahui bahwa lima senarmu di panggung 2018 pernah menyelamatkan Bang Ari—lalu berduet di peron kereta terakhir bersamanya.'
+        : 'Di dalam koper gitar Bang Ari, kamu menemukan bukti bahwa lagu tulus masa mudamu diam-diam menyelamatkan langkah pulang orang lain.',
+      tone: 'gold',
+    });
+  }
   if (flags.includes('heard_mas_raka_skates_story')) {
     echoCards.push({
       id: 'ec_mas_raka_skates',
