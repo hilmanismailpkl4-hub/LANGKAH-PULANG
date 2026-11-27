@@ -105,6 +105,17 @@ const ItemArtwork: React.FC<{ iconType: BagItemDef['iconType']; size?: 'sm' | 'm
           <ellipse cx="42" cy="30" rx="4" ry="2.2" fill="#eab308" transform="rotate(-35 42 30)" />
         </svg>
       );
+    case 'tabebuya_petal':
+      return (
+        <svg viewBox="0 0 80 80" className={cls}>
+          <rect x="16" y="14" width="48" height="52" rx="4" fill="#f7efe1" stroke="#b48a5a" strokeWidth="2" />
+          <path d="M34 52 C22 40 24 24 35 22 C43 24 44 40 34 52 Z" fill="#f472b6" stroke="#db2777" strokeWidth="1.5" />
+          <path d="M47 56 C37 44 40 28 50 26 C58 29 57 44 47 56 Z" fill="#facc15" stroke="#ca8a04" strokeWidth="1.5" />
+          <text x="40" y="62" textAnchor="middle" fill="#78350f" fontSize="6.5" fontFamily="Georgia, serif" fontWeight="bold">
+            22 MEI 22·23
+          </text>
+        </svg>
+      );
     case 'icecream':
       return (
         <svg viewBox="0 0 80 80" className={cls}>
@@ -194,6 +205,9 @@ export const InventoryBagModal: React.FC = () => {
     }
     if (flags.includes('kept_mother_rice_seed_2015')) {
       has('item_mother_paddy_seed');
+    }
+    if (flags.includes('kept_pressed_tabebuya_2022')) {
+      has('item_pressed_tabebuya_2022');
     }
 
     // Hadiah kejutan untuk keluarga (hilang dari tas setelah diberikan)
@@ -542,6 +556,45 @@ export const InventoryBagModal: React.FC = () => {
                             className="flex items-center gap-1.5 rounded-lg bg-sky-400 px-3 py-1.5 font-semibold text-dusk-950 hover:bg-sky-300"
                           >
                             <Play className="h-3 w-3 fill-current" /> Baca Ulang Surat Ibu
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Aksi Khusus Sepasang Kelopak Tabebuya Kering (2022 & 2023) */}
+                  {selected.id === 'item_pressed_tabebuya_2022' && (
+                    <div className={`rounded-xl border border-pink-300/30 bg-pink-950/25 ${compact ? 'p-2.5' : 'p-4'}`}>
+                      {!flags.includes('shared_tabebuya_2022_with_nadia') && distNadia <= 5.5 ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setBagOpen(false);
+                            startDialogue('story_share_tabebuya_nadia');
+                          }}
+                          className={`flex w-full items-center justify-center gap-2 rounded-xl bg-amber-400 text-xs font-semibold text-dusk-950 shadow-lg hover:bg-amber-300 ${
+                            compact ? 'py-2' : 'py-3'
+                          }`}
+                        >
+                          <Gift className="h-4 w-4" />
+                          <span>Serahkan Dua Kelopak Tabebuya (2022–2023) kepada Nadia!</span>
+                        </button>
+                      ) : (
+                        <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                          <span className="text-warm-200/85">
+                            {flags.includes('shared_tabebuya_2022_with_nadia')
+                              ? 'Sudah diserahkan dengan penuh haru kepada Nadia — kenangan halaman 47 tetap bisa dibaca ulang.'
+                              : `Dekati Nadia (${distNadia} m lagi) untuk menunjukkan sepasang kelopak Tabebuya dari Paviliun Utara.`}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setBagOpen(false);
+                              startDialogue('story_bamboo_guestbook_2022');
+                            }}
+                            className="flex items-center gap-1.5 rounded-lg bg-pink-400 px-3 py-1.5 font-semibold text-dusk-950 hover:bg-pink-300"
+                          >
+                            <Play className="h-3 w-3 fill-current" /> Baca Ulang Halaman 47
                           </button>
                         </div>
                       )}

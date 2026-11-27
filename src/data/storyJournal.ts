@@ -587,6 +587,16 @@ export function buildStoryTimeline(params: {
       tone: 'gold',
     });
   }
+  if (flags.includes('found_bamboo_guestbook_2022')) {
+    echoBadges.push({
+      id: 'eb_bamboo_guestbook_2022',
+      title: 'Halaman 47 Paviliun Utara · Dua Kelopak Tabebuya (2022–2023)',
+      detail: flags.includes('shared_tabebuya_2022_with_nadia')
+        ? 'Catatan sunyi Nadia 22 Mei 2023 telah ditebus dan kedua kelopak Tabebuya diserahkan kepada Nadia, membuka gema khusus di Meja Makan Bab 3.'
+        : 'Sepasang kelopak Tabebuya kering tersimpan di Tas [I]—dekati Nadia untuk menyerahkannya langsung.',
+      tone: 'rose',
+    });
+  }
   if (flags.includes('heard_bagas_rama_story')) {
     echoBadges.push({
       id: 'eb_bagas_rama_2014',

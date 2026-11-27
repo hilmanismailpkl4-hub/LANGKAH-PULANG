@@ -700,6 +700,16 @@ export function buildEndingJourneyRecap(params: {
       tone: 'gold',
     });
   }
+  if (flags.includes('shared_tabebuya_2022_with_nadia') || flags.includes('found_bamboo_guestbook_2022')) {
+    echoCards.push({
+      id: 'ec_bamboo_tabebuya_2022',
+      label: 'Dua Kelopak Tabebuya Paviliun Utara (2022–2023)',
+      summary: flags.includes('shared_tabebuya_2022_with_nadia')
+        ? 'Kamu menemukan catatan sunyi ulang tahun pernikahan 22 Mei 2023 milik Nadia di Paviliun Bambu Utara dan mengembalikan sepasang kelopak Tabebuya langsung ke tangannya.'
+        : 'Di Paviliun Bambu Utara Danau Senja, halaman 47 buku tamu menyingkap kesetiaan Nadia menunggumu tanpa pernah mengeluh.',
+      tone: 'rose',
+    });
+  }
   if (flags.includes('ch3_bima_night_talk_done')) {
     echoCards.push({
       id: 'ec_bima_night_25',

@@ -7,7 +7,7 @@ export interface BagItemDef {
   subtitle: string;
   description: string;
   monologue: string;
-  iconType: 'wallet' | 'keys' | 'pick' | 'notebook' | 'cassette_1997' | 'draft_letter' | 'sewing_letter' | 'paddy_seed' | 'icecream' | 'flower' | 'bookmark' | 'tea' | 'coffee' | 'archive_key' | 'sketchbook' | 'ginger' | 'capo';
+  iconType: 'wallet' | 'keys' | 'pick' | 'notebook' | 'cassette_1997' | 'draft_letter' | 'sewing_letter' | 'paddy_seed' | 'tabebuya_petal' | 'icecream' | 'flower' | 'bookmark' | 'tea' | 'coffee' | 'archive_key' | 'sketchbook' | 'ginger' | 'capo';
   giftTarget?: 'kira' | 'nadia';
   giftDialogueId?: string;
 }
@@ -84,6 +84,15 @@ export const ALL_BAG_ITEMS: BagItemDef[] = [
     description: 'Kantong belacu mungil berisi butir gabah keemasan beraroma pandan dan surat laminasi Oktober 2015 tentang "Ilmu Padi" dari almarhumah Ibu.',
     monologue: '"Padi yang berisi penuh tidak pernah malu merunduk pulang ke arah tanah." Bawa ke pot teras rumah untuk disemai bersama Kira.',
     iconType: 'paddy_seed',
+  },
+  {
+    id: 'item_pressed_tabebuya_2022',
+    name: 'Sepasang Kelopak Tabebuya Kering (2022 & 2023)',
+    category: 'kenangan',
+    subtitle: 'Buku Tamu Paviliun Bambu Teduh Utara',
+    description: 'Satu kelopak Tabebuya merah muda dari ulang tahun pernikahan 22 Mei 2022 dan satu kelopak kuning yang diselipkan Nadia bersama Kira pada 22 Mei 2023 saat Damar lembur.',
+    monologue: 'Dua tahun kelopak kuning itu menemani kelopak merah mudaku tanpa satu pun keluhan dari Nadia. Aku ingin menyerahkannya langsung ke tangannya.',
+    iconType: 'tabebuya_petal',
   },
   {
     id: 'item_gift_kira',

@@ -5155,6 +5155,47 @@ export const WorldInteractables: React.FC = () => {
       2.15,
     );
 
+    consider(
+      {
+        id: 'story_north_bamboo_guestbook_2022',
+        kind: 'story_object',
+        label: store.flags.includes('found_bamboo_guestbook_2022')
+          ? 'Baca Ulang Halaman 47 Buku Tamu Paviliun Utara (22 Mei 2022–2023)'
+          : 'Buka Buku Tamu Kulit Tua & Kelopak Tabebuya di Meja Paviliun',
+        sublabel: store.flags.includes('found_bamboo_guestbook_2022')
+          ? 'Kenangan Tersimpan · Dua Kelopak Tabebuya Damar & Nadia'
+          : 'Paviliun Bambu Teduh Utara · Terselip Bunga Merah Muda & Kuning',
+        position: [-76.82, 0.16, -50.65],
+        onInteract: () => {
+          playerRuntime.activeSpeakerPos = [-76.82, 0.5, -51.45];
+          store.startDialogue('story_bamboo_guestbook_2022');
+        },
+      },
+      2.2,
+    );
+
+    if (
+      store.flags.includes('kept_pressed_tabebuya_2022') &&
+      !store.flags.includes('shared_tabebuya_2022_with_nadia')
+    ) {
+      const nadPos = playerRuntime.companions.nadia.pos;
+      consider(
+        {
+          id: 'story_give_tabebuya_to_nadia_world',
+          kind: 'story_object',
+          label: 'Serahkan Sepasang Kelopak Tabebuya (2022 & 2023) kepada Nadia',
+          sublabel: 'Dari Buku Tamu Paviliun Bambu Utara · Cerita Pernikahan',
+          position: [nadPos[0] - 0.35, nadPos[1], nadPos[2] - 0.35],
+          onInteract: () => {
+            playerRuntime.activeSpeakerPos = [...nadPos];
+            playerRuntime.activeSpeakerId = 'nadia';
+            store.startDialogue('story_share_tabebuya_nadia');
+          },
+        },
+        2.35,
+      );
+    }
+
     // === INTERAKSI INTERIOR ARSITEKTUR 5 BANGUNAN UTAMA ===
     consider(
       {
@@ -5748,6 +5789,35 @@ export const WorldInteractables: React.FC = () => {
         <sphereGeometry args={[0.064, 8, 8]} />
         <meshBasicMaterial color="#fde047" />
       </mesh>
+
+      {/* Buku Tamu Kulit Cokelat & Sepasang Kelopak Tabebuya Kering di Meja Teh Paviliun Bambu Utara */}
+      <group position={[-76.92, 0.445, -51.45]} rotation={[0, 0.28, 0]}>
+        <mesh castShadow>
+          <boxGeometry args={[0.22, 0.032, 0.16]} />
+          <meshStandardMaterial color="#4a2c18" roughness={0.78} />
+        </mesh>
+        {/* Kelopak Tabebuya merah muda (2022) & kuning (2023) menyembul dari halaman 47 */}
+        <mesh position={[0.1, 0.018, -0.02]} rotation={[0, 0.25, 0]}>
+          <boxGeometry args={[0.06, 0.006, 0.03]} />
+          <meshStandardMaterial
+            color="#f472b6"
+            emissive="#ec4899"
+            emissiveIntensity={flags.includes('found_bamboo_guestbook_2022') ? 0.15 : 0.65}
+          />
+        </mesh>
+        <mesh position={[0.1, 0.02, 0.025]} rotation={[0, -0.2, 0]}>
+          <boxGeometry args={[0.06, 0.006, 0.03]} />
+          <meshStandardMaterial
+            color="#facc15"
+            emissive="#eab308"
+            emissiveIntensity={flags.includes('found_bamboo_guestbook_2022') ? 0.15 : 0.65}
+          />
+        </mesh>
+        <mesh position={[0, 0.28, 0]}>
+          <sphereGeometry args={[0.068, 10, 10]} />
+          <meshBasicMaterial color={flags.includes('found_bamboo_guestbook_2022') ? '#86efac' : '#f9a8d4'} />
+        </mesh>
+      </group>
 
       {/* Besek Anyaman Bambu Berpita Kain Biru Titipan Ibu (2015) di Saung Sawah */}
       <group position={[-67.35, 0.51, 56.75]} rotation={[0, -0.35, 0]}>

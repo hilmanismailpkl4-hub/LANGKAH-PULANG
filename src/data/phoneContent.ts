@@ -205,8 +205,40 @@ export const PHONE_THREADS: PhoneContactThread[] = [
         chapterMin: 1,
         requiredFlag: 'found_mother_paddy_2015',
       },
+      {
+        id: 'nd_bamboo_guestbook_2022',
+        from: 'them',
+        text: 'Mas... kamu beneran jalan sampai ke Paviliun Bambu Teduh Utara di seberang danau ya? Jangan-jangan kamu buka buku tamu kulit tua yang di meja teh itu... 🥺🌸',
+        time: 'Baru saja',
+        chapterMin: 1,
+        requiredFlag: 'found_bamboo_guestbook_2022',
+      },
     ],
     prompts: [
+      {
+        id: 'prompt_nadia_bamboo_2022',
+        chapterMin: 1,
+        requiredFlag: 'found_bamboo_guestbook_2022',
+        contextHint: 'Menanggapi Nadia soal catatan sunyi 22 Mei 2023 di Paviliun Bambu Utara',
+        options: [
+          {
+            id: 'rep_nd_bamboo_vow',
+            toneLabel: 'Jujur',
+            text: 'Aku baca halaman 47-nya sampai habis, Nad. Maafin aku tahun 2023 biarin kamu sama Kira ke sana berdua. Tanggal 22 Mei ke depan aku janji selalu di sampingmu.',
+            replyFromThem: 'Mas... air mataku langsung jatuh pas baca chat ini di dapur. Makasih sudah menemukan halaman itu lagi ya... cepat pulang, aku kangen banget ❤️',
+            replyTime: 'Baru saja',
+            effects: { kejujuranDiri: 2, kehadiranKeluarga: 2 },
+          },
+          {
+            id: 'rep_nd_bamboo_petal',
+            toneLabel: 'Hangat',
+            text: 'Kelopak Tabebuya pink 2022 sama kuning 2023-nya kubawa di tas buat kamu, Nad. Nanti malam kita simpan bareng di kamar ya!',
+            replyFromThem: 'Ya ampun masih utuh dua-duanya?! Kira pasti heboh banget tahu bunga kuning yang dulu dia pungut dibawa pulang Ayahnya! ❤️',
+            replyTime: 'Baru saja',
+            effects: { kehadiranKeluarga: 2, kejujuranDiri: 1 },
+          },
+        ],
+      },
       {
         id: 'prompt_nadia_mother_paddy',
         chapterMin: 1,
@@ -1305,6 +1337,17 @@ export const VOICE_NOTES: VoiceNoteItem[] = [
     chapterMin: 2,
     transcript:
       'Mas... hujan di rumah deras banget. Aku cuma pengin bilang, aku nggak pernah menyesal memilih kamu. Aku cuma kangen kita saling jujur kayak dulu lagi.',
+  },
+  {
+    id: 'vn_nadia_tabebuya_2022',
+    speakerId: 'nadia',
+    senderName: 'Nadia',
+    title: 'Dua Kelopak Tabebuya 22 Mei',
+    duration: '0:17',
+    chapterMin: 1,
+    requiredFlag: 'shared_tabebuya_2022_with_nadia',
+    transcript:
+      'Mas... dua kelopak Tabebuya dari Paviliun Bambu Utara itu barusan kuselipkan di bingkai foto kamar kita. Rasanya kayak dua tahun yang sempat bolong akhirnya tersambung utuh lagi hari ini.',
   },
   {
     id: 'vn_nadia_malam',
