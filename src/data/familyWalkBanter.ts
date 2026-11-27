@@ -618,4 +618,24 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'nadia', text: 'Ya ampun Mas, duduk lesehan di paviliun bambu utara sambil minum teh melati hangat menghadap Danau Senja ini damai sekali...' },
     { speaker: 'kira', text: 'Suara batang bambunya bergesekan tertiup angin kayak bisik-bisik lembut ya, Bunda! Tehnya wangi bunga melati!' },
   ],
+  activity_home_shoes: [
+    { speaker: 'kira', text: 'Hihihi!! Sepatu kuning kecil Kira berbaris rapi sebelahan sama sepatu kerja Ayah dan sepatu Bunda!' },
+    { speaker: 'nadia', text: 'Lihat tiga pasang sepatu kita sejajar di dekat pintu begini saja selalu bikin hati hangat ya, Mas.' },
+  ],
+  activity_bima_roaster: [
+    { speaker: 'nadia', text: 'Mmm!! Wangi biji kopi Gayo yang baru disangrai di mesin tembaga Bima harum banget sampai ke seluruh ruangan!' },
+    { speaker: 'kira', text: 'Ayah! Lihat baling-baling di piringan kopi Om Bima muter-muter mengaduk biji cokelatnya!!' },
+  ],
+  activity_listening_booth: [
+    { speaker: 'kira', text: 'WAAAH!! Jarum lampu kuningnya goyang-goyang mengikuti musik kasetnya, Ayah!! Kira mau coba pakai headphone besarnya!' },
+    { speaker: 'nadia', text: 'Bilik dengar kaset analog di Nada Lama ini bikin kangen zaman kita berburu kaset indie dulu ya, Mas.' },
+  ],
+  activity_kios_steamer: [
+    { speaker: 'kira', text: 'YEEEY!! Bakpao hangat rasa cokelat lumer dari lemari kaca Kios Harmoni lembut banget, Bunda!!' },
+    { speaker: 'nadia', text: 'Pas banget buat ganjal perut waktu jalan sore atau malam ya, Mas—masih mengepul hangat!' },
+  ],
+  activity_lobby_model: [
+    { speaker: 'kira', text: 'AYAAAH!! Lihat di dalam kotak kaca ini ada Kota Senja versi mainan kecil!! Itu jembatan sama rumah kita kelihatan!!' },
+    { speaker: 'nadia', text: 'Detail banget ya maket tata kotanya, Mas... dari sini kelihatan betapa dekatnya kantor dan rumah kita sebenarnya.' },
+  ],
 };

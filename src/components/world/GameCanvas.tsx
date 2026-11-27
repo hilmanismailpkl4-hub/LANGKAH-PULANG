@@ -23,6 +23,7 @@ import { HomeKitchenAndParkNature } from './HomeKitchenAndParkNature';
 import { HomeLivingAndBusStop } from './HomeLivingAndBusStop';
 import { HomeWarmthAndButterflies } from './HomeWarmthAndButterflies';
 import { HomeYardLife } from './HomeYardLife';
+import { InteriorArchitecturalLife } from './InteriorArchitecturalLife';
 import { KetoprakLotusAndWeatherPlaza } from './KetoprakLotusAndWeatherPlaza';
 import { KonterJamuAndLakeBirdScope } from './KonterJamuAndLakeBirdScope';
 import { LakeBoatsBandrekAndParkLights } from './LakeBoatsBandrekAndParkLights';
@@ -160,6 +161,7 @@ export const GameCanvas: React.FC = () => {
               <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
               <LivingValleyAndStreetscape timeOfDay={effectiveTime} settings={settings} />
               <TabebuyaAndBambooSanctuary timeOfDay={effectiveTime} settings={settings} />
+              <InteriorArchitecturalLife timeOfDay={effectiveTime} settings={settings} />
             </group>
 
             <CityLife timeOfDay={effectiveTime} settings={settings} />

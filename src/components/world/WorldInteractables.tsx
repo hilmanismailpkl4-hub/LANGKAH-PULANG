@@ -5155,6 +5155,153 @@ export const WorldInteractables: React.FC = () => {
       2.15,
     );
 
+    // === INTERAKSI INTERIOR ARSITEKTUR 5 BANGUNAN UTAMA ===
+    consider(
+      {
+        id: 'activity_home_shoe_rack',
+        kind: 'story_object',
+        label: 'Lihat Tiga Pasang Sepatu Keluarga di Rak Pintu',
+        sublabel: 'Beranda Dalam Rumah Jl. Melati No. 14',
+        position: [-14.95, 0.08, 63.35],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          if (!store.flags.includes('checked_home_shoe_rack')) {
+            store.applyEffect({
+              kehadiranKeluarga: 1,
+              setFlags: ['checked_home_shoe_rack'],
+              journalEntry: {
+                id: 'je_home_shoe_rack',
+                title: 'Tiga Pasang Sepatu di Dekat Pintu Rumah',
+                body: 'Sepatu kerjaku yang mulai aus bersanding rapat dengan sepatu krem Nadia dan sepatu kets kuning mungil milik Kira. Sesederhana melihat ketiganya pulang ke rak yang sama sudah cukup membuat dada terasa penuh.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_home_shoes, 'fw_home_shoes');
+          }
+          store.showToast('Tiga pasang sepatu berbaris rapi di dekat pintu: sepatu kerja Damar, flat shoes Nadia, & sepatu kets kuning kecil Kira.');
+        },
+      },
+      2.15,
+    );
+
+    consider(
+      {
+        id: 'activity_bima_coffee_roaster',
+        kind: 'story_object',
+        label: 'Aduk Biji Kopi Sangrai di Mesin Tembaga Bima',
+        sublabel: 'Sudut Roastery Kedai Kopi Bima · Arabika Gayo & Toraja',
+        position: [-15.55, 0.08, 25.1],
+        onInteract: () => {
+          playerRuntime.roasterSpinTimer = 5.5;
+          sfxEngine.playCoffeeRoasterCrack();
+          if (!store.flags.includes('inspected_bima_roaster')) {
+            store.applyEffect({
+              kejujuranDiri: 1,
+              setFlags: ['inspected_bima_roaster'],
+              journalEntry: {
+                id: 'je_bima_roaster',
+                title: 'Harum Sangrai Kopi Gayo di Sudut Kedai Bima',
+                body: 'Mesin sangrai tembaga kecil di sudut belakang kedai Bima memutar biji Arabika Gayo yang baru matang. Bima selalu bilang: kopi yang disangrai terburu-buru hanya meninggalkan gosong di luar dan mentah di dalam.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_bima_roaster, 'fw_bima_roaster');
+          }
+          store.showToast('Krak-krak... srrr! Baling pendingin memutar biji Arabika Gayo hangat, memenuhi seluruh Kedai Bima dengan wangi karamel dan cokelat.');
+        },
+      },
+      2.3,
+    );
+
+    consider(
+      {
+        id: 'activity_nada_listening_booth',
+        kind: 'story_object',
+        label: 'Dengarkan Kaset Demo Akustik di Headphone Analog',
+        sublabel: 'Bilik Dengar "Nada Lama" · VU Meter & Rekaman Pita',
+        position: [-26.85, 0.08, -21.4],
+        onInteract: () => {
+          playerRuntime.listeningBoothTimer = 6.5;
+          sfxEngine.playAnalogTapePreview();
+          if (!store.flags.includes('used_nada_listening_booth')) {
+            store.applyEffect({
+              kejujuranDiri: 1,
+              setFlags: ['used_nada_listening_booth'],
+              journalEntry: {
+                id: 'je_nada_listening_booth',
+                title: 'Bilik Headphone Analog di Sudut Nada Lama',
+                body: 'Saat mengenakan headphone kulit tua di sudut Toko Musik Nada Lama, desis halus pita kaset dan jarum VU meter kuning yang bergerak pelan membawaku kembali ke masa ketika sebuah lagu didengarkan dengan sepenuh hati.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_listening_booth, 'fw_listening_booth');
+          }
+          store.showToast('Klik! Rekaman pita analog berputar—petikan gitar akustik hangat mengalir jernih di headphone studio sementara jarum VU Meter menari.');
+        },
+      },
+      2.25,
+    );
+
+    consider(
+      {
+        id: 'activity_kios_steamed_bun',
+        kind: 'story_object',
+        label: 'Ambil Bakpao Kukus Hangat di Etalase 24 Jam',
+        sublabel: 'Kios Harmoni · Bakpao Pandan, Cokelat & Kacang Hijau',
+        position: [19.45, 0.08, 22.8],
+        onInteract: () => {
+          sfxEngine.playMicrowavePing();
+          if (!store.flags.includes('tried_kios_steamed_bun')) {
+            store.applyEffect({
+              kehadiranKeluarga: 1,
+              setFlags: ['tried_kios_steamed_bun'],
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_kios_steamer, 'fw_kios_steamer');
+          }
+          store.showToast('TING! Bakpao kukus pandan & cokelat lumer dari steamer kaca Kios Harmoni terasa lembut dan hangat di tangan.');
+        },
+      },
+      2.2,
+    );
+
+    consider(
+      {
+        id: 'activity_lobby_scale_model',
+        kind: 'story_object',
+        label: 'Amati Maket Kaca Tata Kota Senja (Skala 1:250)',
+        sublabel: 'Lobi Menara Nusantara · Miniatur Gedung, Sungai & Melati',
+        position: [23.5, 0.08, -21.35],
+        onInteract: () => {
+          sfxEngine.play('chime');
+          if (!store.flags.includes('inspected_lobby_scale_model')) {
+            store.applyEffect({
+              kejujuranDiri: 1,
+              setFlags: ['inspected_lobby_scale_model'],
+              journalEntry: {
+                id: 'je_lobby_scale_model',
+                title: 'Melihat Kota Senja dalam Kotak Kaca 1:250',
+                body: 'Di tengah lobi Menara Nusantara, miniatur kaca Kota Senja memperlihatkan betapa dekat jarak menara kantor ini dengan jembatan sungai dan atap terakota rumahku di Jl. Melati—hanya pikiran yang lelah yang membuatnya tampak jauh.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_lobby_model, 'fw_lobby_model');
+          }
+          store.showToast('Di balik kaca maket skala 1:250, lampu miniatur Menara Nusantara, Sungai Kota, dan atap rumah Jl. Melati menyala berdampingan.');
+        },
+      },
+      2.3,
+    );
+
     // === CERITA SASTRA LEMBAH SAWAH & TERAS RUMAH: BESEK GABAH PANDANWANGI IBU (2015) ===
     consider(
       {
@@ -5562,6 +5709,26 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-77.5, 0.85, -51.5]}>
         <sphereGeometry args={[0.08, 8, 8]} />
         <meshBasicMaterial color="#bbf7d0" />
+      </mesh>
+      <mesh position={[-14.1, 0.92, 63.05]}>
+        <sphereGeometry args={[0.065, 8, 8]} />
+        <meshBasicMaterial color="#fde047" />
+      </mesh>
+      <mesh position={[-14.4, 1.85, 25.1]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#f59e0b" />
+      </mesh>
+      <mesh position={[-27.8, 1.55, -21.4]}>
+        <sphereGeometry args={[0.07, 8, 8]} />
+        <meshBasicMaterial color="#fbbf24" />
+      </mesh>
+      <mesh position={[18.55, 1.72, 22.8]}>
+        <sphereGeometry args={[0.07, 8, 8]} />
+        <meshBasicMaterial color="#67e8f9" />
+      </mesh>
+      <mesh position={[23.5, 1.38, -22.6]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#38bdf8" />
       </mesh>
 
       {/* Besek Anyaman Bambu Berpita Kain Biru Titipan Ibu (2015) di Saung Sawah */}

@@ -632,6 +632,12 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'tabebuya_boulevard_bench', minX: 57.2, maxX: 58.0, minZ: 27.1, maxZ: 29.3 },
   { id: 'north_bamboo_tea_table', minX: -78.35, maxX: -76.65, minZ: -52.05, maxZ: -50.95 },
   { id: 'north_bamboo_back_screen', minX: -79.45, maxX: -75.55, minZ: -53.35, maxZ: -52.95 },
+  // === 49. Properti Arsitektur Interior 5 Bangunan Utama ===
+  { id: 'rumah_shoe_rack', minX: -14.88, maxX: -13.45, minZ: 62.65, maxZ: 63.45 },
+  { id: 'cafe_roaster_machine', minX: -15.35, maxX: -13.65, minZ: 24.45, maxZ: 25.85 },
+  { id: 'music_listening_booth', minX: -28.55, maxX: -27.35, minZ: -22.25, maxZ: -20.55 },
+  { id: 'kios_hot_snack_counter', minX: 18.02, maxX: 19.02, minZ: 21.45, maxZ: 24.15 },
+  { id: 'office_city_scale_model', minX: 22.65, maxX: 24.35, minZ: -23.3, maxZ: -21.9 },
 ];
 
 /**

@@ -1785,6 +1785,64 @@ class SfxEngine {
     this.softTone(ctx, 1975, now + 0.72, 0.22, 0.042 * v, 'triangle');
   }
 
+  /**
+   * Gemeretak biji kopi sangrai ("first crack") & desis silinder tembaga di Kedai Kopi Bima.
+   */
+  public playCoffeeRoasterCrack() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    const src = ctx.createBufferSource();
+    src.buffer = this.getNoiseBuffer(ctx);
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'bandpass';
+    lp.frequency.setValueAtTime(520, now);
+    lp.Q.value = 1.4;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.001, now);
+    g.gain.linearRampToValueAtTime(0.062 * v, now + 0.1);
+    g.gain.exponentialRampToValueAtTime(0.0008, now + 0.85);
+    src.connect(lp).connect(g).connect(ctx.destination);
+    src.start(now, 0.1, 0.9);
+
+    [0.12, 0.27, 0.44, 0.61].forEach((off, idx) => {
+      this.softTone(ctx, 880 + (idx % 2) * 260, now + off, 0.05, 0.045 * v, 'triangle');
+    });
+  }
+
+  /**
+   * Klik mekanik tombol kaset tape analog + alunan petikan gitar hangat di headphone studio Nada Lama.
+   */
+  public playAnalogTapePreview() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    this.softTone(ctx, 420, now, 0.045, 0.075 * v, 'square');
+    const demoNotes = [261.63, 329.63, 392.0, 493.88, 587.33, 659.25];
+    demoNotes.forEach((freq, idx) => {
+      this.pluckedNote(ctx, freq, now + 0.12 + idx * 0.13, 1.4, 0.055 * v);
+    });
+  }
+
+  /**
+   * Denting "Ting!" hangat pemanas bakpao / microwave 24 jam di Kios Harmoni.
+   */
+  public playMicrowavePing() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+    this.softTone(ctx, 2093.0, now, 0.48, 0.065 * v, 'sine');
+    this.softTone(ctx, 4186.0, now + 0.01, 0.24, 0.025 * v, 'sine');
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

@@ -220,6 +220,8 @@ export const playerRuntime = {
   butterflyBurstTimer: 0,
   waterwheelBoostTimer: 0,
   scarecrowRattleTimer: 0,
+  roasterSpinTimer: 0,
+  listeningBoothTimer: 0,
   gardenSwingTimer: 0,
   swingBoostTimer: 0,
   kiteHeight: 0,
@@ -367,6 +369,8 @@ export function resetScooterToHome() {
   playerRuntime.butterflyBurstTimer = 0;
   playerRuntime.waterwheelBoostTimer = 0;
   playerRuntime.scarecrowRattleTimer = 0;
+  playerRuntime.roasterSpinTimer = 0;
+  playerRuntime.listeningBoothTimer = 0;
   playerRuntime.gardenSwingTimer = 0;
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;
