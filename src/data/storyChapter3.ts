@@ -41,6 +41,10 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
         text: 'Dan jauh di ujung selatan sana, di antara barisan atap Perumahan Melati, satu lampu teras kuning masih menyala terang. Rumah kami.',
         conditionalNext: [
           {
+            requiredFlag: 'planted_mother_paddy_home',
+            nextNodeId: 'ch3_rt_echo_mother_paddy',
+          },
+          {
             requiredFlag: 'played_father_cassette_1997',
             nextNodeId: 'ch3_rt_echo_father_tape',
           },
@@ -65,6 +69,14 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
             nextNodeId: 'ch3_rt_echo_citizens',
           },
         ],
+        nextNodeId: 'ch3_rt_3',
+      },
+      ch3_rt_echo_mother_paddy: {
+        id: 'ch3_rt_echo_mother_paddy',
+        speaker: 'damar_batin',
+        emotion: 'haru',
+        echoTag: 'Gema Memori · Ilmu Padi Ibu & Tunas Teras Kira',
+        text: 'Jauh di barat daya sana, petak Lembah Sawah Senja berkilau diterpa cahaya bulan—mengingatkanku pada surat tahun 2015 almarhumah Ibu yang tadi kusemai bersama Kira di pot teras: batang padi yang berisi penuh tidak pernah malu menunduk pulang ke arah tanah.',
         nextNodeId: 'ch3_rt_3',
       },
       ch3_rt_echo_father_tape: {

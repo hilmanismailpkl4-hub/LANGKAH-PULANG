@@ -577,6 +577,16 @@ export function buildStoryTimeline(params: {
       tone: 'rose',
     });
   }
+  if (flags.includes('found_mother_paddy_2015')) {
+    echoBadges.push({
+      id: 'eb_mother_paddy_2015',
+      title: 'Ilmu Padi Ibu (2015) · Saung Lembah Sawah',
+      detail: flags.includes('planted_mother_paddy_home')
+        ? 'Benih Pandanwangi almarhumah Ibu telah disemai bersama Kira & Nadia di pot teras rumah dan bergema di Rooftop Bab 3 + Pesan Suara HP.'
+        : 'Besek gabah Pandanwangi Ibu ditemukan di Saung Sawah—bawa ke pot teras Rumah Jl. Melati untuk disemai bersama Kira.',
+      tone: 'gold',
+    });
+  }
   if (flags.includes('heard_bagas_rama_story')) {
     echoBadges.push({
       id: 'eb_bagas_rama_2014',

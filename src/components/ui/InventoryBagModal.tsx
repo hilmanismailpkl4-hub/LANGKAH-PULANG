@@ -94,6 +94,17 @@ const ItemArtwork: React.FC<{ iconType: BagItemDef['iconType']; size?: 'sm' | 'm
           <circle cx="63" cy="49" r="5" fill="#fffaf0" stroke="#cbd5e1" strokeWidth="1.5" />
         </svg>
       );
+    case 'paddy_seed':
+      return (
+        <svg viewBox="0 0 80 80" className={cls}>
+          <path d="M22 30 Q40 20 58 30 L54 64 Q40 70 26 64 Z" fill="#d6c3a5" stroke="#92734b" strokeWidth="2" />
+          <path d="M26 32 Q40 36 54 32" stroke="#3b82f6" strokeWidth="2.5" fill="none" />
+          <path d="M40 56 Q38 34 48 16" stroke="#65a30d" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          <ellipse cx="45" cy="24" rx="4" ry="2.2" fill="#eab308" transform="rotate(-30 45 24)" />
+          <ellipse cx="49" cy="20" rx="4" ry="2.2" fill="#facc15" transform="rotate(-25 49 20)" />
+          <ellipse cx="42" cy="30" rx="4" ry="2.2" fill="#eab308" transform="rotate(-35 42 30)" />
+        </svg>
+      );
     case 'icecream':
       return (
         <svg viewBox="0 0 80 80" className={cls}>
@@ -180,6 +191,9 @@ export const InventoryBagModal: React.FC = () => {
     }
     if (flags.includes('has_mother_letter_2016')) {
       has('item_mother_letter_2016');
+    }
+    if (flags.includes('kept_mother_rice_seed_2015')) {
+      has('item_mother_paddy_seed');
     }
 
     // Hadiah kejutan untuk keluarga (hilang dari tas setelah diberikan)

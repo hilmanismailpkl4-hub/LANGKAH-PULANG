@@ -690,6 +690,16 @@ export function buildEndingJourneyRecap(params: {
       tone: 'rose',
     });
   }
+  if (flags.includes('planted_mother_paddy_home') || flags.includes('found_mother_paddy_2015')) {
+    echoCards.push({
+      id: 'ec_mother_paddy_2015',
+      label: 'Ilmu Padi Ibu & Tunas Teras (2015)',
+      summary: flags.includes('planted_mother_paddy_home')
+        ? 'Kamu menemukan besek benih Pandanwangi almarhumah Ibu di Saung Sawah dan menyemainya bersama Kira & Nadia di teras Jl. Melati.'
+        : 'Di Saung Bambu Lembah Sawah, surat Oktober 2015 Ibu mengajarkan bahwa yang berisi selalu berani merunduk pulang.',
+      tone: 'gold',
+    });
+  }
   if (flags.includes('ch3_bima_night_talk_done')) {
     echoCards.push({
       id: 'ec_bima_night_25',

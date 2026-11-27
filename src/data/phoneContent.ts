@@ -197,8 +197,40 @@ export const PHONE_THREADS: PhoneContactThread[] = [
         time: '20:40',
         chapterMin: 3,
       },
+      {
+        id: 'nd_mother_paddy_2015',
+        from: 'them',
+        text: 'Mas... aku merinding dengar kamu nemu besek benih Pandanwangi almarhumah Ibu di saung seberang jembatan selatan. Waktu awal kita nikah, Ibu memang pernah bilang kalau kangen kampung suka duduk sendiri di saung itu.',
+        time: 'Baru saja',
+        chapterMin: 1,
+        requiredFlag: 'found_mother_paddy_2015',
+      },
     ],
     prompts: [
+      {
+        id: 'prompt_nadia_mother_paddy',
+        chapterMin: 1,
+        requiredFlag: 'found_mother_paddy_2015',
+        contextHint: 'Menanggapi pesan Nadia soal benih Pandanwangi & Ilmu Padi Ibu',
+        options: [
+          {
+            id: 'rep_nd_paddy_sow',
+            toneLabel: 'Hangat',
+            text: 'Aku bawa pulang segenggam gabahnya di tas, Nad. Nanti sore kita ajak Kira semai bareng di pot tanah teras rumah ya!',
+            replyFromThem: 'Siap Mas! Pot terakota kecil dekat rak melati udah kusiapin tanah gembur. Kira pasti girang banget nanam padi warisan Neneknya ❤️',
+            replyTime: 'Baru saja',
+            effects: { kehadiranKeluarga: 2, kejujuranDiri: 1 },
+          },
+          {
+            id: 'rep_nd_paddy_humble',
+            toneLabel: 'Jujur',
+            text: 'Surat Ibu di besek itu beneran nampar aku, Nad. Katanya padi yang berisi nggak malu merunduk—aku nggak mau mendongak kaku sendirian lagi.',
+            replyFromThem: 'Peluk jauh buat kamu, Mas... Ibu pasti tersenyum tenang lihat anaknya akhirnya mau pulang dengan hati lega.',
+            replyTime: 'Baru saja',
+            effects: { kejujuranDiri: 2, kehadiranKeluarga: 2 },
+          },
+        ],
+      },
       {
         id: 'prompt_nadia_ch1',
         chapterMin: 1,
@@ -1168,6 +1200,17 @@ export const PHONE_THREADS: PhoneContactThread[] = [
 ];
 
 export const VOICE_NOTES: VoiceNoteItem[] = [
+  {
+    id: 'vn_kira_paddy_sprout',
+    speakerId: 'kira',
+    senderName: 'Kira (Laporan Tunas Teras)',
+    title: 'Menjaga Pot Padi Wangi Nenek Ratna',
+    duration: '0:17',
+    chapterMin: 1,
+    requiredFlag: 'planted_mother_paddy_home',
+    transcript:
+      'Ayah!! Kira udah kasih label nama di pot teras: "Padi Wangi Nenek Ratna & Kira"! Kata Bunda kalau disiram sabar tiap pagi, nanti tunas hijaunya tumbuh wangi kayak nasi hangat di rumah!',
+  },
   {
     id: 'vn_ari_peron_2018',
     speakerId: 'bang_ari',

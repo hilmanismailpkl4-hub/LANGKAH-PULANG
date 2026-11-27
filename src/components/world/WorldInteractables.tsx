@@ -5050,6 +5050,53 @@ export const WorldInteractables: React.FC = () => {
       2.4,
     );
 
+    // === CERITA SASTRA LEMBAH SAWAH & TERAS RUMAH: BESEK GABAH PANDANWANGI IBU (2015) ===
+    consider(
+      {
+        id: 'story_saung_mother_paddy_besek',
+        kind: 'story_object',
+        label: store.flags.includes('found_mother_paddy_2015')
+          ? 'Baca Ulang Surat "Ilmu Padi" Ibu (2015) di Besek Bambu'
+          : 'Buka Besek Bambu Berpita Biru di Sudut Saung Sawah',
+        sublabel: store.flags.includes('found_mother_paddy_2015')
+          ? 'Kenangan Tersimpan · Ilmu Padi di Ujung Jembatan Selatan'
+          : 'Saung Lembah Sawah Senja · Titipan Almarhumah Ibu (2015)',
+        position: [-67.25, 0, 55.45],
+        onInteract: () => {
+          playerRuntime.activeSpeakerPos = [-67.35, 0.62, 56.75];
+          store.startDialogue('story_saung_mother_paddy_2015');
+        },
+      },
+      2.35,
+    );
+
+    if (store.flags.includes('kept_mother_rice_seed_2015')) {
+      consider(
+        {
+          id: 'story_home_plant_mother_paddy',
+          kind: 'story_object',
+          label: store.flags.includes('planted_mother_paddy_home')
+            ? 'Rawat Tunas Padi Pandanwangi Nenek Bersama Kira'
+            : 'Semai Benih Padi Pandanwangi Ibu Bersama Kira & Nadia',
+          sublabel: store.flags.includes('planted_mother_paddy_home')
+            ? 'Pot Teras Jl. Melati No. 14 · Warisan Tiga Generasi'
+            : 'Halaman Rumah Damar · Gunakan Benih dari Tas [I]',
+          position: [-23.35, 0, 59.45],
+          onInteract: () => {
+            if (!store.flags.includes('planted_mother_paddy_home')) {
+              playerRuntime.activeSpeakerPos = [-23.55, 0.45, 59.65];
+              store.startDialogue('story_plant_mother_paddy_with_kira');
+            } else {
+              sfxEngine.play('chime');
+              playerRuntime.gardenWaterTimer = 3.2;
+              store.showToast('Tunas muda Padi Pandanwangi warisan Ibu bergoyang segar mengharumkan teras Jl. Melati!');
+            }
+          },
+        },
+        2.25,
+      );
+    }
+
     if (store.sideQuests.sq_pak_darman?.status === 'active' && store.sideQuests.sq_pak_darman.stage === 1) {
       consider(
         {
@@ -5403,6 +5450,51 @@ export const WorldInteractables: React.FC = () => {
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#fda4af" />
       </mesh>
+
+      {/* Besek Anyaman Bambu Berpita Kain Biru Titipan Ibu (2015) di Saung Sawah */}
+      <group position={[-67.35, 0.51, 56.75]} rotation={[0, -0.35, 0]}>
+        <mesh position={[0, 0.08, 0]} castShadow>
+          <boxGeometry args={[0.3, 0.16, 0.28]} />
+          <meshStandardMaterial color="#caa05a" roughness={0.82} />
+        </mesh>
+        <mesh position={[0, 0.165, 0]}>
+          <boxGeometry args={[0.32, 0.025, 0.06]} />
+          <meshStandardMaterial
+            color="#3b82f6"
+            emissive="#60a5fa"
+            emissiveIntensity={flags.includes('found_mother_paddy_2015') ? 0.15 : 0.65}
+          />
+        </mesh>
+        <mesh position={[0, 0.42, 0]}>
+          <sphereGeometry args={[0.068, 10, 10]} />
+          <meshBasicMaterial color={flags.includes('found_mother_paddy_2015') ? '#86efac' : '#fde047'} />
+        </mesh>
+      </group>
+
+      {/* Pot Terakota Tunas Padi Pandanwangi Ibu & Kira di Teras Rumah Damar */}
+      {flags.includes('kept_mother_rice_seed_2015') && (
+        <group position={[-23.55, 0, 59.65]}>
+          <mesh position={[0, 0.14, 0]} castShadow>
+            <cylinderGeometry args={[0.17, 0.12, 0.28, 12]} />
+            <meshStandardMaterial color="#b45338" roughness={0.85} />
+          </mesh>
+          <mesh position={[0, 0.275, 0]}>
+            <cylinderGeometry args={[0.15, 0.15, 0.02, 12]} />
+            <meshStandardMaterial color="#3b2618" roughness={0.95} />
+          </mesh>
+          {flags.includes('planted_mother_paddy_home') &&
+            [-0.05, 0, 0.05, -0.02, 0.03].map((ox, si) => (
+              <mesh key={`pspr-${si}`} position={[ox, 0.44, (si % 2 - 0.5) * 0.05]} rotation={[0, si * 0.6, (si - 2) * 0.09]}>
+                <coneGeometry args={[0.024, 0.34, 5]} />
+                <meshStandardMaterial color="#65a30d" emissive="#4d7c0f" emissiveIntensity={0.2} />
+              </mesh>
+            ))}
+          <mesh position={[0, 0.72, 0]}>
+            <sphereGeometry args={[0.066, 10, 10]} />
+            <meshBasicMaterial color={flags.includes('planted_mother_paddy_home') ? '#86efac' : '#fbbf24'} />
+          </mesh>
+        </group>
+      )}
       <mesh position={[-23.6, 1.35, 11.4]}>
         <sphereGeometry args={[0.065, 8, 8]} />
         <meshBasicMaterial color="#fbbf24" />

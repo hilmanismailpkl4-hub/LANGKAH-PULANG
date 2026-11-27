@@ -7,7 +7,7 @@ export interface BagItemDef {
   subtitle: string;
   description: string;
   monologue: string;
-  iconType: 'wallet' | 'keys' | 'pick' | 'notebook' | 'cassette_1997' | 'draft_letter' | 'sewing_letter' | 'icecream' | 'flower' | 'bookmark' | 'tea' | 'coffee' | 'archive_key' | 'sketchbook' | 'ginger' | 'capo';
+  iconType: 'wallet' | 'keys' | 'pick' | 'notebook' | 'cassette_1997' | 'draft_letter' | 'sewing_letter' | 'paddy_seed' | 'icecream' | 'flower' | 'bookmark' | 'tea' | 'coffee' | 'archive_key' | 'sketchbook' | 'ginger' | 'capo';
   giftTarget?: 'kira' | 'nadia';
   giftDialogueId?: string;
 }
@@ -75,6 +75,15 @@ export const ALL_BAG_ITEMS: BagItemDef[] = [
     description: 'Amplop biru muda bertanggal 3 September 2016 beserta sepasang kancing mutiara kebaya akad milik almarhumah Ibu—berisi pesan agar Damar dan Nadia menjahit rumah tangga dengan dua tangan.',
     monologue: 'Tujuh tahun surat ini bersembunyi di bawah gulungan benang Ibu, menunggu hari ketika aku akhirnya berani berhenti berjalan pincang sendirian.',
     iconType: 'sewing_letter',
+  },
+  {
+    id: 'item_mother_paddy_seed',
+    name: 'Kantong Benih Padi Pandanwangi Ibu (2015)',
+    category: 'kenangan',
+    subtitle: 'Saung Bambu Lembah Sawah Senja',
+    description: 'Kantong belacu mungil berisi butir gabah keemasan beraroma pandan dan surat laminasi Oktober 2015 tentang "Ilmu Padi" dari almarhumah Ibu.',
+    monologue: '"Padi yang berisi penuh tidak pernah malu merunduk pulang ke arah tanah." Bawa ke pot teras rumah untuk disemai bersama Kira.',
+    iconType: 'paddy_seed',
   },
   {
     id: 'item_gift_kira',
