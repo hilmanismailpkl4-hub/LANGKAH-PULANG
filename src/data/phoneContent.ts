@@ -58,7 +58,7 @@ export interface MemoryPhotoItem {
   locationLabel: string;
   caption: string;
   chapterMin: ChapterNumber;
-  theme: 'stage' | 'bridge' | 'baby' | 'cafe' | 'crayon' | 'home_night' | 'dinner_quiet' | 'moving_boxes';
+  theme: 'stage' | 'bridge' | 'baby' | 'cafe' | 'crayon' | 'home_night' | 'dinner_quiet' | 'moving_boxes' | 'sawah_2015' | 'bamboo_2022';
   flashbackDialogueId?: string;
   flashbackFlag?: string;
   flashbackBadge?: string;
@@ -221,8 +221,32 @@ export const PHONE_THREADS: PhoneContactThread[] = [
         chapterMin: 1,
         requiredFlag: 'found_dimas_bridge_sketch',
       },
+      {
+        id: 'nd_turmeric_recipe',
+        from: 'them',
+        text: 'Mas... barusan aku ke dapur lihat buku resep spiral Ibu yang sampul plastik posisinya geser dikit. Kamu beneran baca coretan pensilku soal kebun kemangi belakang rumah ya? Malu banget ketahuan 😅🌿',
+        time: 'Baru saja',
+        chapterMin: 1,
+        requiredFlag: 'read_turmeric_recipe_book',
+      },
     ],
     prompts: [
+      {
+        id: 'prompt_nadia_turmeric_recipe',
+        chapterMin: 1,
+        requiredFlag: 'read_turmeric_recipe_book',
+        contextHint: 'Menanggapi Nadia soal buku resep bernoda kunyit & kebun bumbu belakang dapur',
+        options: [
+          {
+            id: 'rep_nd_recipe_thank',
+            toneLabel: 'Hangat',
+            text: 'Aku terharu banget bacanya, Nad. Lima tahun kamu nanam pandan, serai, sama kemangi di belakang demi ngejaga rasa masakan Ibu buatku... nanti malam gantian aku yang seduh wedang serai buat kamu ❤️',
+            replyFromThem: 'Ya ampun Mas... aku senyum-senyum sendiri di depan kulkas baca ini. Ditunggu banget wedang serai buatan Koki Damar malam ini ya! ❤️',
+            replyTime: 'Baru saja',
+            effects: { kehadiranKeluarga: 2, kejujuranDiri: 2 },
+          },
+        ],
+      },
       {
         id: 'prompt_nadia_dimas_sketch',
         chapterMin: 1,
@@ -1374,6 +1398,17 @@ export const VOICE_NOTES: VoiceNoteItem[] = [
       'Mas... dua kelopak Tabebuya dari Paviliun Bambu Utara itu barusan kuselipkan di bingkai foto kamar kita. Rasanya kayak dua tahun yang sempat bolong akhirnya tersambung utuh lagi hari ini.',
   },
   {
+    id: 'vn_nadia_recipe_book',
+    speakerId: 'nadia',
+    senderName: 'Nadia',
+    title: 'Buku Resep Kunyit & Kebun Belakang',
+    duration: '0:19',
+    chapterMin: 1,
+    requiredFlag: 'read_turmeric_recipe_book',
+    transcript:
+      'Mas... dulu waktu aku pertama nanam serai sama kemangi di belakang dapur, aku cuma pengin setiap kamu kecapekan pulang kerja, wangi rumah kita bisa langsung meluk kamu kayak almarhumah Ibu dulu.',
+  },
+  {
     id: 'vn_nadia_malam',
     speakerId: 'nadia',
     senderName: 'Nadia',
@@ -1463,6 +1498,24 @@ export const MEMORY_PHOTOS: MemoryPhotoItem[] = [
     caption: 'Kira menggambar matahari paling besar biar Ayah nggak kedinginan saat pulang malam.',
     chapterMin: 1,
     theme: 'crayon',
+  },
+  {
+    id: 'mem_sawah_ibu_2015',
+    title: 'Saung & Pematang Sawah Ibu',
+    dateLabel: '18 Oktober 2015',
+    locationLabel: 'Lembah Sawah Senja Selatan',
+    caption: 'Sore ketika almarhumah Ibu menunjukkan bulir padi Pandanwangi yang mulai merunduk dan berpesan agar Damar tidak lupa pulang.',
+    chapterMin: 1,
+    theme: 'sawah_2015',
+  },
+  {
+    id: 'mem_bamboo_2022',
+    title: 'Ulang Tahun Pernikahan Ketiga',
+    dateLabel: '22 Mei 2022',
+    locationLabel: 'Paviliun Bambu Teduh Utara',
+    caption: 'Teko teh tanah liat mengepul di antara rimbun bambu hijau dan kelopak Tabebuya merah muda yang jatuh ke pangkuan Nadia.',
+    chapterMin: 1,
+    theme: 'bamboo_2022',
   },
   {
     id: 'mem_home_night',

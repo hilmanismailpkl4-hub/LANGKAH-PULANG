@@ -221,6 +221,44 @@ const MemoryIllustration: React.FC<{ theme: MemoryPhotoItem['theme']; large?: bo
       </svg>
     );
   }
+  if (theme === 'sawah_2015') {
+    return (
+      <svg viewBox="0 0 240 140" className={`w-full ${h} rounded-lg`}>
+        <defs>
+          <linearGradient id="swBg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f59e0b" />
+            <stop offset="55%" stopColor="#fde68a" />
+            <stop offset="100%" stopColor="#3f6212" />
+          </linearGradient>
+        </defs>
+        <rect width="240" height="140" fill="url(#swBg)" />
+        <circle cx="176" cy="42" r="20" fill="#fef3c7" opacity="0.88" />
+        <path d="M0 86 Q80 74 160 88 T240 82 L240 140 L0 140 Z" fill="#65a30d" />
+        <path d="M0 104 Q95 96 185 108 T240 104 L240 140 L0 140 Z" fill="#4d7c0f" />
+        <polygon points="44,74 74,52 104,74" fill="#92400e" />
+        <rect x="52" y="74" width="44" height="22" fill="#b45309" opacity="0.85" />
+        {[128, 148, 168, 188, 208].map((rx) => (
+          <path key={rx} d={`M${rx} 132 Q${rx + 6} 110 ${rx + 12} 116`} stroke="#fde047" strokeWidth="2.2" fill="none" />
+        ))}
+      </svg>
+    );
+  }
+  if (theme === 'bamboo_2022') {
+    return (
+      <svg viewBox="0 0 240 140" className={`w-full ${h} rounded-lg`}>
+        <rect width="240" height="140" fill="#0f291e" />
+        {[24, 46, 72, 182, 204, 222].map((bx) => (
+          <line key={bx} x1={bx} y1="0" x2={bx} y2="140" stroke="#15803d" strokeWidth="6" />
+        ))}
+        <rect x="64" y="96" width="112" height="14" rx="3" fill="#784b2a" />
+        <ellipse cx="116" cy="88" rx="14" ry="10" fill="#9a4429" />
+        <path d="M114 74 Q118 64 114 56" stroke="#e2e8f0" strokeWidth="1.8" fill="none" opacity="0.7" />
+        <circle cx="96" cy="36" r="5" fill="#f472b6" />
+        <circle cx="148" cy="28" r="4.5" fill="#facc15" />
+        <circle cx="136" cy="52" r="4" fill="#f472b6" />
+      </svg>
+    );
+  }
   return (
     <svg viewBox="0 0 240 140" className={`w-full ${h} rounded-lg`}>
       <rect width="240" height="140" fill="#10182b" />

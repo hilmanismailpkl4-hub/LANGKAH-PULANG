@@ -172,6 +172,44 @@ const AlbumMemoryArt: React.FC<{ theme: MemoryPhotoItem['theme'] }> = ({ theme }
       </svg>
     );
   }
+  if (theme === 'sawah_2015') {
+    return (
+      <svg viewBox="0 0 280 170" className="h-full w-full">
+        <defs>
+          <linearGradient id="alb-sw" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f59e0b" />
+            <stop offset="56%" stopColor="#fde68a" />
+            <stop offset="100%" stopColor="#3f6212" />
+          </linearGradient>
+        </defs>
+        <rect width="280" height="170" fill="url(#alb-sw)" />
+        <circle cx="206" cy="48" r="24" fill="#fef3c7" opacity="0.9" />
+        <path d="M0 104 Q95 90 190 106 T280 98 L280 170 L0 170 Z" fill="#65a30d" />
+        <path d="M0 126 Q110 116 215 130 T280 124 L280 170 L0 170 Z" fill="#4d7c0f" />
+        <polygon points="48,90 84,62 120,90" fill="#92400e" />
+        <rect x="58" y="90" width="52" height="28" fill="#b45309" opacity="0.88" />
+        {[146, 170, 194, 218, 242].map((rx) => (
+          <path key={rx} d={`M${rx} 160 Q${rx + 7} 134 ${rx + 14} 140`} stroke="#fde047" strokeWidth="2.5" fill="none" />
+        ))}
+      </svg>
+    );
+  }
+  if (theme === 'bamboo_2022') {
+    return (
+      <svg viewBox="0 0 280 170" className="h-full w-full">
+        <rect width="280" height="170" fill="#0f291e" />
+        {[28, 54, 84, 212, 238, 260].map((bx) => (
+          <line key={bx} x1={bx} y1="0" x2={bx} y2="170" stroke="#15803d" strokeWidth="7" />
+        ))}
+        <rect x="74" y="116" width="132" height="16" rx="3" fill="#784b2a" />
+        <ellipse cx="136" cy="106" rx="17" ry="12" fill="#9a4429" />
+        <path d="M134 90 Q139 76 134 66" stroke="#e2e8f0" strokeWidth="2" fill="none" opacity="0.72" />
+        <circle cx="110" cy="42" r="6" fill="#f472b6" />
+        <circle cx="172" cy="34" r="5.5" fill="#facc15" />
+        <circle cx="158" cy="62" r="5" fill="#f472b6" />
+      </svg>
+    );
+  }
   return (
     <svg viewBox="0 0 280 170" className="h-full w-full">
       <rect width="280" height="170" fill="#131a2b" />

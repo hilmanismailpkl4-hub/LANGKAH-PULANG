@@ -720,6 +720,16 @@ export function buildEndingJourneyRecap(params: {
       tone: 'gold',
     });
   }
+  if (flags.includes('read_turmeric_recipe_book')) {
+    echoCards.push({
+      id: 'ec_turmeric_recipe',
+      label: 'Dua Dapur yang Menjaga Damar (Buku Resep Ibu & Nadia)',
+      summary: flags.includes('shared_recipe_book_with_nadia')
+        ? 'Dari buku resep bernoda kunyit hingga bedeng kemangi & serai di halaman belakang, kamu merayakan cinta sunyi Nadia yang menjaga warisan dapur Ibumu.'
+        : 'Kamu menemukan catatan pensil Nadia di buku resep 2015 almarhumah Ibu—alasan di balik tumbuhnya kebun bumbu di halaman belakang rumah.',
+      tone: 'gold',
+    });
+  }
   if (flags.includes('ch3_bima_night_talk_done')) {
     echoCards.push({
       id: 'ec_bima_night_25',

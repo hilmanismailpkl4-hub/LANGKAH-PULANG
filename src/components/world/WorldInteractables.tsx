@@ -2178,14 +2178,44 @@ export const WorldInteractables: React.FC = () => {
       {
         id: 'interior_home_kitchen',
         kind: 'story_object',
-        label: 'Masak & Seduh Hangat di Dapur Rumah',
-        sublabel: 'Dapur Jl. Melati No. 14 · Teh Melati, Sup Ayam & Nasi Goreng',
+        label: 'Masak & Seduh Hangat di Dapur Rumah (5 Resep)',
+        sublabel: 'Dapur Jl. Melati No. 14 · Teh Melati, Sup Ayam, Nasi Goreng Kemangi & Wedang Serai Ibu',
         position: [-16.55, 0.08, 71.95],
         onInteract: () => {
           store.setKitchenOpen(true);
         },
       },
       1.95,
+    );
+
+    consider(
+      {
+        id: 'story_kitchen_turmeric_notebook',
+        kind: 'story_object',
+        label: store.flags.includes('read_turmeric_recipe_book')
+          ? !store.flags.includes('shared_recipe_book_with_nadia')
+            ? 'Bicarakan Buku Resep Noda Kunyit Ibu & Kebun Belakang Bersama Nadia'
+            : 'Baca Ulang Buku Resep Spiral Ibu & Nadia (2015–2019)'
+          : 'Buka Buku Resep Spiral Bersampul Plastik di Sudut Meja Dapur',
+        sublabel: store.flags.includes('read_turmeric_recipe_book')
+          ? 'Warisan Dapur Dua Perempuan · Pandan, Serai & Kemangi Belakang Rumah'
+          : 'Meja Dapur Jl. Melati No. 14 · Tulisan Tangan Ibu (2015) & Nadia (2019)',
+        position: [-15.82, 0.08, 71.92],
+        onInteract: () => {
+          if (
+            store.flags.includes('read_turmeric_recipe_book') &&
+            !store.flags.includes('shared_recipe_book_with_nadia')
+          ) {
+            playerRuntime.activeSpeakerPos = playerRuntime.companions.nadia.pos;
+            playerRuntime.activeSpeakerId = 'nadia';
+            store.startDialogue('story_share_recipe_book_nadia');
+          } else {
+            playerRuntime.activeSpeakerPos = [-15.82, 0.92, 72.18];
+            store.startDialogue('story_kitchen_turmeric_notebook');
+          }
+        },
+      },
+      1.55,
     );
 
     consider(
@@ -6366,6 +6396,28 @@ export const WorldInteractables: React.FC = () => {
             <meshBasicMaterial color={flags.includes('has_father_cassette_1997') ? '#fde68a' : '#fbbf24'} />
           </mesh>
         )}
+      </group>
+
+      {/* Buku Resep Tulis Tangan Spiral Bersampul Plastik & Noda Kunyit di Sudut Meja Dapur */}
+      <group position={[-15.82, 0.91, 72.18]} rotation={[0, 0.24, 0]}>
+        <mesh castShadow>
+          <boxGeometry args={[0.21, 0.022, 0.16]} />
+          <meshStandardMaterial
+            color="#fef3c7"
+            emissive="#f59e0b"
+            emissiveIntensity={flags.includes('read_turmeric_recipe_book') ? 0.16 : 0.52}
+            roughness={0.5}
+          />
+        </mesh>
+        {/* Punggung kawat spiral hitam */}
+        <mesh position={[-0.105, 0.004, 0]}>
+          <boxGeometry args={[0.018, 0.026, 0.155]} />
+          <meshStandardMaterial color="#1f2937" metalness={0.6} roughness={0.4} />
+        </mesh>
+        <mesh position={[0, 0.25, 0]}>
+          <sphereGeometry args={[0.062, 10, 10]} />
+          <meshBasicMaterial color={flags.includes('read_turmeric_recipe_book') ? '#86efac' : '#fbbf24'} />
+        </mesh>
       </group>
 
       {/* Kotak Mika & Kaset Pita C-60 Bapak (1997) di Samping Radio Kayu Dapur Rumah Jl. Melati */}

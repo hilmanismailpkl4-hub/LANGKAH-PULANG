@@ -7,7 +7,7 @@ export interface BagItemDef {
   subtitle: string;
   description: string;
   monologue: string;
-  iconType: 'wallet' | 'keys' | 'pick' | 'notebook' | 'cassette_1997' | 'draft_letter' | 'sewing_letter' | 'paddy_seed' | 'tabebuya_petal' | 'icecream' | 'flower' | 'bookmark' | 'tea' | 'coffee' | 'archive_key' | 'sketchbook' | 'ginger' | 'capo';
+  iconType: 'wallet' | 'keys' | 'pick' | 'notebook' | 'cassette_1997' | 'draft_letter' | 'sewing_letter' | 'paddy_seed' | 'tabebuya_petal' | 'recipe_card' | 'icecream' | 'flower' | 'bookmark' | 'tea' | 'coffee' | 'archive_key' | 'sketchbook' | 'ginger' | 'capo';
   giftTarget?: 'kira' | 'nadia';
   giftDialogueId?: string;
 }
@@ -93,6 +93,15 @@ export const ALL_BAG_ITEMS: BagItemDef[] = [
     description: 'Satu kelopak Tabebuya merah muda dari ulang tahun pernikahan 22 Mei 2022 dan satu kelopak kuning yang diselipkan Nadia bersama Kira pada 22 Mei 2023 saat Damar lembur.',
     monologue: 'Dua tahun kelopak kuning itu menemani kelopak merah mudaku tanpa satu pun keluhan dari Nadia. Aku ingin menyerahkannya langsung ke tangannya.',
     iconType: 'tabebuya_petal',
+  },
+  {
+    id: 'item_turmeric_recipe_card',
+    name: 'Kartu Resep Noda Kunyit Ibu & Nadia (2015–2019)',
+    category: 'kenangan',
+    subtitle: 'Dari Buku Spiral Meja Dapur Jl. Melati',
+    description: 'Kartu pembatas takaran Wedang Serai Pandan & Nasi Goreng Kemangi tulisan tangan almarhumah Ibu tahun 2015 dengan catatan pensil Nadia tentang kebun bumbu belakang rumah.',
+    monologue: 'Setiap batang serai dan pucuk kemangi di belakang rumah ternyata ditanam Nadia supaya aku tidak pernah kehilangan rasa pelukan Ibu.',
+    iconType: 'recipe_card',
   },
   {
     id: 'item_gift_kira',

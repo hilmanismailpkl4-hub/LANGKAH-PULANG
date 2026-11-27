@@ -680,6 +680,16 @@ export function buildStoryTimeline(params: {
       tone: 'sky',
     });
   }
+  if (flags.includes('read_turmeric_recipe_book')) {
+    echoBadges.push({
+      id: 'eb_turmeric_recipe',
+      title: 'Buku Resep Bernoda Kunyit Ibu & Nadia (2015–2019)',
+      detail: flags.includes('shared_recipe_book_with_nadia')
+        ? 'Kamu mengucapkan terima kasih pada Nadia atas lima tahun ia menanam pandan, serai, dan kemangi di belakang rumah demi menjaga rasa masakan Ibu.'
+        : 'Di meja dapur, kamu menemukan buku resep spiral warisan Ibu yang disambung catatan pensil Nadia tentang kebun bumbu belakang rumah.',
+      tone: 'gold',
+    });
+  }
   if (flags.includes('ch3_told_kira_bedtime_story')) {
     echoBadges.push({
       id: 'eb_kira_bedtime',

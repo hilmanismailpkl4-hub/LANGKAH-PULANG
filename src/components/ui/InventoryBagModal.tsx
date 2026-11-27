@@ -116,6 +116,18 @@ const ItemArtwork: React.FC<{ iconType: BagItemDef['iconType']; size?: 'sm' | 'm
           </text>
         </svg>
       );
+    case 'recipe_card':
+      return (
+        <svg viewBox="0 0 80 80" className={cls}>
+          <rect x="15" y="14" width="50" height="54" rx="5" fill="#fef3c7" stroke="#d97706" strokeWidth="2" />
+          <circle cx="56" cy="24" r="8" fill="#f59e0b" opacity="0.35" />
+          <line x1="23" y1="28" x2="48" y2="28" stroke="#92400e" strokeWidth="2" />
+          <line x1="23" y1="37" x2="55" y2="37" stroke="#b45309" strokeWidth="1.6" />
+          <line x1="23" y1="45" x2="50" y2="45" stroke="#b45309" strokeWidth="1.6" />
+          <path d="M26 58 Q36 50 48 56" stroke="#15803d" strokeWidth="3" fill="none" strokeLinecap="round" />
+          <ellipse cx="47" cy="54" rx="5" ry="2.6" fill="#16a34a" transform="rotate(-20 47 54)" />
+        </svg>
+      );
     case 'icecream':
       return (
         <svg viewBox="0 0 80 80" className={cls}>
@@ -208,6 +220,9 @@ export const InventoryBagModal: React.FC = () => {
     }
     if (flags.includes('kept_pressed_tabebuya_2022')) {
       has('item_pressed_tabebuya_2022');
+    }
+    if (flags.includes('kept_turmeric_recipe_card')) {
+      has('item_turmeric_recipe_card');
     }
 
     // Hadiah kejutan untuk keluarga (hilang dari tas setelah diberikan)
@@ -595,6 +610,45 @@ export const InventoryBagModal: React.FC = () => {
                             className="flex items-center gap-1.5 rounded-lg bg-pink-400 px-3 py-1.5 font-semibold text-dusk-950 hover:bg-pink-300"
                           >
                             <Play className="h-3 w-3 fill-current" /> Baca Ulang Halaman 47
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Aksi Khusus Kartu Resep Noda Kunyit Ibu & Nadia */}
+                  {selected.id === 'item_turmeric_recipe_card' && (
+                    <div className={`rounded-xl border border-amber-300/30 bg-amber-950/25 ${compact ? 'p-2.5' : 'p-4'}`}>
+                      {!flags.includes('shared_recipe_book_with_nadia') && distNadia <= 5.5 ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setBagOpen(false);
+                            startDialogue('story_share_recipe_book_nadia');
+                          }}
+                          className={`flex w-full items-center justify-center gap-2 rounded-xl bg-amber-400 text-xs font-semibold text-dusk-950 shadow-lg hover:bg-amber-300 ${
+                            compact ? 'py-2' : 'py-3'
+                          }`}
+                        >
+                          <Gift className="h-4 w-4" />
+                          <span>Ucapkan Terima Kasih pada Nadia Soal Buku Resep &amp; Kebun Belakang!</span>
+                        </button>
+                      ) : (
+                        <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                          <span className="text-warm-200/85">
+                            {flags.includes('shared_recipe_book_with_nadia')
+                              ? 'Sudah dibicarakan hangat dengan Nadia — masakan kemangi & wedang serai siap diseduh di kompor dapur!'
+                              : `Dekati Nadia (${distNadia} m lagi) untuk mengobrol soal buku resep Ibu & kebun bumbu belakang rumah.`}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setBagOpen(false);
+                              startDialogue('story_kitchen_turmeric_notebook');
+                            }}
+                            className="flex items-center gap-1.5 rounded-lg bg-amber-400 px-3 py-1.5 font-semibold text-dusk-950 hover:bg-amber-300"
+                          >
+                            <Play className="h-3 w-3 fill-current" /> Baca Ulang Buku Resep
                           </button>
                         </div>
                       )}

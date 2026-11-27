@@ -24,6 +24,7 @@ import { NENEK_SARI_DEEP_DIALOGUES } from './nenekSariDeepStory';
 import { PROLOGUE_DIALOGUES } from './prologueAndChapters';
 import { SIDE_QUEST_DIALOGUES } from './sideQuests';
 import { SLAMET_BUDI_DEEP_DIALOGUES } from './slametAndBudiDeepStory';
+import { TURMERIC_RECIPE_DIALOGUES } from './turmericRecipeNotebookStory';
 import { CHAPTER_1_DIALOGUES, CHAPTER_1_STEPS } from './storyChapter1';
 import { CHAPTER_2_DIALOGUES, CHAPTER_2_STEPS } from './storyChapter2';
 import { CHAPTER_3_DIALOGUES, CHAPTER_3_STEPS } from './storyChapter3';
@@ -618,6 +619,7 @@ export const ALL_DIALOGUES: Record<string, DialogueScript> = {
   ...NADIA_DIARY_DIALOGUES,
   ...NENEK_SARI_DEEP_DIALOGUES,
   ...SLAMET_BUDI_DEEP_DIALOGUES,
+  ...TURMERIC_RECIPE_DIALOGUES,
   ...EPILOGUE_DIALOGUES,
   ...CHARACTER_ECHO_DIALOGUES,
   ...GIFT_DIALOGUES,
