@@ -63,6 +63,18 @@ export interface FloatingPaperBoat {
   bornAt: number;
 }
 
+export interface FloatingWaterLantern {
+  id: number;
+  zone: 'river' | 'lake';
+  x: number;
+  baseY: number;
+  z: number;
+  vx: number;
+  vz: number;
+  rotY: number;
+  bornAt: number;
+}
+
 export function getTrafficSignalState(elapsedSec: number): {
   ns: 'green' | 'yellow' | 'red';
   ew: 'green' | 'yellow' | 'red';
@@ -151,6 +163,7 @@ export const playerRuntime = {
 
   // Aktivitas santai: perahu kertas di danau, kucing Sore, ikan koi, ayunan & layang-layang
   paperBoats: [] as FloatingPaperBoat[],
+  waterLanterns: [] as FloatingWaterLantern[],
   catHeartTimer: 0,
   cafeCatHeartTimer: 0,
   koiFeedTimer: 0,
@@ -299,6 +312,7 @@ export function resetScooterToHome() {
     isRiding: false,
   };
   playerRuntime.paperBoats = [];
+  playerRuntime.waterLanterns = [];
   playerRuntime.catHeartTimer = 0;
   playerRuntime.cafeCatHeartTimer = 0;
   playerRuntime.koiFeedTimer = 0;

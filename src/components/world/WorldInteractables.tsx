@@ -4959,6 +4959,97 @@ export const WorldInteractables: React.FC = () => {
       2.5,
     );
 
+    // === PELEPASAN LENTERA AIR TERATAI HARAPAN (SUNGAI KOTA & DANAU SENJA) ===
+    consider(
+      {
+        id: 'activity_river_lantern',
+        kind: 'story_object',
+        label: 'Nyalakan & Hanyutkan Lentera Air Teratai di Sungai',
+        sublabel: 'Bantaran Timur Jembatan · Lentera Harapan Mengapung',
+        position: [-38.8, 0, 9.2],
+        onInteract: () => {
+          sfxEngine.playWaterLanternChime();
+          if (playerRuntime.waterLanterns.length >= 8) {
+            playerRuntime.waterLanterns.shift();
+          }
+          playerRuntime.waterLanterns.push({
+            id: Date.now(),
+            zone: 'river',
+            x: -42.4 - Math.random() * 1.4,
+            baseY: -0.19,
+            z: 9.2 + (Math.random() - 0.5) * 1.2,
+            vx: -0.18 - Math.random() * 0.14,
+            vz: 0.55 + Math.random() * 0.25,
+            rotY: Math.random() * Math.PI * 2,
+            bornAt: Date.now(),
+          });
+          if (!store.flags.includes('released_water_lantern')) {
+            store.applyEffect({
+              kehadiranKeluarga: 1,
+              kejujuranDiri: 1,
+              setFlags: ['released_water_lantern'],
+              journalEntry: {
+                id: 'je_water_lantern',
+                title: 'Cahaya Kecil yang Mengapung Tenang di Air',
+                body: 'Menyalakan lentera teratai kertas dan membiarkannya hanyut perlahan di atas air mengajarkanku cara melepaskan beban: cahaya kecil tidak perlu melawan arus untuk tetap menyala.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_water_lantern, 'fw_water_lantern');
+          }
+          store.showToast('Lentera air teratai menyala hangat dan mulai mengapung mengikuti arus Sungai Kota!');
+        },
+      },
+      2.65,
+    );
+
+    consider(
+      {
+        id: 'activity_lake_lantern',
+        kind: 'story_object',
+        label: 'Nyalakan & Hanyutkan Lentera Air Teratai di Danau',
+        sublabel: 'Dermaga Kayu Danau Senja · Lentera Doa Keluarga',
+        position: [-74.6, 0.12, -29.6],
+        onInteract: () => {
+          sfxEngine.playWaterLanternChime();
+          if (playerRuntime.waterLanterns.length >= 8) {
+            playerRuntime.waterLanterns.shift();
+          }
+          playerRuntime.waterLanterns.push({
+            id: Date.now(),
+            zone: 'lake',
+            x: -78.2,
+            baseY: -0.11,
+            z: -29.6 + (Math.random() - 0.5) * 1.6,
+            vx: -0.45 - Math.random() * 0.22,
+            vz: (Math.random() - 0.5) * 0.28,
+            rotY: Math.random() * Math.PI * 2,
+            bornAt: Date.now(),
+          });
+          if (!store.flags.includes('released_water_lantern')) {
+            store.applyEffect({
+              kehadiranKeluarga: 1,
+              kejujuranDiri: 1,
+              setFlags: ['released_water_lantern'],
+              journalEntry: {
+                id: 'je_water_lantern',
+                title: 'Cahaya Kecil yang Mengapung Tenang di Air',
+                body: 'Menyalakan lentera teratai kertas dan membiarkannya hanyut perlahan di atas air mengajarkanku cara melepaskan beban: cahaya kecil tidak perlu melawan arus untuk tetap menyala.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_water_lantern, 'fw_water_lantern');
+          }
+          store.showToast('Lentera air teratai berpendar keemasan mengapung di riak Danau Senja!');
+        },
+      },
+      2.4,
+    );
+
     if (store.sideQuests.sq_pak_darman?.status === 'active' && store.sideQuests.sq_pak_darman.stage === 1) {
       consider(
         {
@@ -5303,6 +5394,14 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[83.2, 1.12, -11.5]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#fcd34d" />
+      </mesh>
+      <mesh position={[-39.25, 0.78, 9.2]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#fda4af" />
+      </mesh>
+      <mesh position={[-74.6, 0.72, -29.85]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#fda4af" />
       </mesh>
       <mesh position={[-23.6, 1.35, 11.4]}>
         <sphereGeometry args={[0.065, 8, 8]} />

@@ -132,6 +132,8 @@ interface GameStoreState {
   titlePreviewTime: TimeOfDay;
   customWaypoint: CustomWaypoint | null;
   isPhotoMode: boolean;
+  isZenMode: boolean;
+  autoTimeCycle: boolean;
   photoFilter: PhotoFilterId;
   photoFrame: PhotoFrameId;
   isSitting: boolean;
@@ -203,6 +205,9 @@ interface GameStoreState {
   applyGraphicsPreset: (quality: GraphicsQuality) => void;
   setCustomWaypoint: (wp: CustomWaypoint | null) => void;
   setPhotoMode: (active: boolean) => void;
+  setZenMode: (active: boolean) => void;
+  toggleAutoTimeCycle: () => void;
+  quickCycleTimeOfDay: () => void;
   setPhotoFilter: (filter: PhotoFilterId) => void;
   setPhotoFrame: (frame: PhotoFrameId) => void;
   setSitting: (sitting: boolean) => void;
@@ -383,6 +388,8 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     titlePreviewTime: 'sunset',
     customWaypoint: null,
     isPhotoMode: false,
+    isZenMode: false,
+    autoTimeCycle: false,
     photoFilter: 'natural',
     photoFrame: 'none',
     isSitting: false,
@@ -516,7 +523,36 @@ export const useGameStore = create<GameStoreState>((set, get) => {
 
     setPhotoMode: (active) => {
       if (active && document.pointerLockElement) document.exitPointerLock();
-      set({ isPhotoMode: active, isMapJournalOpen: false, isPauseOpen: false, isQuickGraphicsOpen: false });
+      set({ isPhotoMode: active, isZenMode: false, isMapJournalOpen: false, isPauseOpen: false, isQuickGraphicsOpen: false });
+    },
+
+    setZenMode: (active) => {
+      sfxEngine.play('switch');
+      set({
+        isZenMode: active,
+        isPhotoMode: false,
+        isMapJournalOpen: false,
+        isPauseOpen: false,
+        isQuickGraphicsOpen: false,
+      });
+    },
+
+    toggleAutoTimeCycle: () => {
+      const next = !get().autoTimeCycle;
+      sfxEngine.play('switch');
+      set({ autoTimeCycle: next });
+      get().showToast(
+        next
+          ? 'Siklus Langit Otomatis AKTIF — waktu kota berganti alami (Pagi → Hujan → Senja Pelangi → Malam).'
+          : 'Siklus Langit Otomatis dimatikan (waktu tetap).',
+      );
+    },
+
+    quickCycleTimeOfDay: () => {
+      const order: TimeOfDay[] = ['morning', 'sunset', 'rain_dusk', 'night'];
+      const cur = get().timeOfDay;
+      const next = order[(order.indexOf(cur) + 1) % order.length];
+      get().setFreeTimeOfDay(next);
     },
 
     setPhotoFilter: (filter) => {

@@ -184,6 +184,8 @@ export const PlayerController: React.FC = () => {
           state.closePhone();
         } else if (state.isPhotoMode) {
           state.setPhotoMode(false);
+        } else if (state.isZenMode) {
+          state.setZenMode(false);
         } else if (state.isQuickGraphicsOpen) {
           state.setQuickGraphicsOpen(false);
         } else if (state.isMapJournalOpen) {
@@ -267,6 +269,9 @@ export const PlayerController: React.FC = () => {
         } else if (code === 'KeyP') {
           e.preventDefault();
           state.setPhotoMode(!state.isPhotoMode);
+        } else if (code === 'KeyZ') {
+          e.preventDefault();
+          state.setZenMode(!state.isZenMode);
         }
         return;
       }
@@ -285,6 +290,9 @@ export const PlayerController: React.FC = () => {
         } else if (code === 'KeyP') {
           e.preventDefault();
           state.setPhotoMode(!state.isPhotoMode);
+        } else if (code === 'KeyZ') {
+          e.preventDefault();
+          state.setZenMode(!state.isZenMode);
         }
         return;
       }
@@ -304,6 +312,21 @@ export const PlayerController: React.FC = () => {
         } else {
           state.openPhone('home');
         }
+        return;
+      }
+
+      // Mode Renungan Sinematik [Z]
+      if (
+        code === 'KeyZ' &&
+        !state.activeDialogue &&
+        !state.isMapJournalOpen &&
+        !state.isPauseOpen &&
+        !state.isQuickGraphicsOpen &&
+        !state.isPhoneOpen &&
+        !state.isPhotoMode
+      ) {
+        e.preventDefault();
+        state.setZenMode(!state.isZenMode);
         return;
       }
 

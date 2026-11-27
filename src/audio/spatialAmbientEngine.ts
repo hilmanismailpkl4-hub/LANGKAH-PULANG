@@ -126,6 +126,22 @@ class SpatialAmbientEngine {
       osc.connect(g).connect(this.masterGain);
       osc.start(now);
       osc.stop(now + 0.26);
+    } else if (this.lastTimeOfDay === 'rain_dusk' && Math.random() < 0.34) {
+      // Gemuruh guntur sangat jauh & lembut saat sore berhujan (menambah kedalaman atmosfer hujan)
+      const osc = ctx.createOscillator();
+      const filter = ctx.createBiquadFilter();
+      const g = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(68, now);
+      osc.frequency.exponentialRampToValueAtTime(38, now + 1.9);
+      filter.type = 'lowpass';
+      filter.frequency.value = 115;
+      g.gain.setValueAtTime(0.0004, now);
+      g.gain.linearRampToValueAtTime(0.032 * this.masterVolume, now + 0.45);
+      g.gain.exponentialRampToValueAtTime(0.0004, now + 2.0);
+      osc.connect(filter).connect(g).connect(this.masterGain);
+      osc.start(now);
+      osc.stop(now + 2.05);
     }
   }
 

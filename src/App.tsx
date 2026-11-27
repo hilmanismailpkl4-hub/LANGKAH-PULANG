@@ -28,6 +28,7 @@ import { SmartphoneModal } from './components/ui/SmartphoneModal';
 import { TelescopeOverlay } from './components/ui/TelescopeOverlay';
 import { TitleScreen } from './components/ui/TitleScreen';
 import { WardrobeModal } from './components/ui/WardrobeModal';
+import { ZenCinemaOverlay } from './components/ui/ZenCinemaOverlay';
 import { GameCanvas } from './components/world/GameCanvas';
 import { useGameStore } from './store/useGameStore';
 
@@ -70,6 +71,7 @@ export function App() {
       <FpsOverlay />
       <MobileTouchControls />
       <MobileLandscapeOverlay />
+      <ZenCinemaOverlay />
       <PhotoModeOverlay />
       <SmartphoneModal />
       <GuitarMinigameModal />

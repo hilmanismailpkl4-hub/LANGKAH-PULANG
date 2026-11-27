@@ -606,4 +606,8 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'Ayah!! Kita duduk di bangku peron sambil nunggu kereta KRL-nya bunyi TING-TING-TING lewat depan kita ya!!' },
     { speaker: 'nadia', text: 'Jam besar kolonial Stasiun Senja di belakang kita klasik banget ya, Mas... serasa di film-film lama.' },
   ],
+  activity_water_lantern: [
+    { speaker: 'kira', text: 'WAAAH!! Bunga teratai lampunya nyala mengapung di atas air, Bunda!! Semoga doa kita bertiga sampai jauh ya!' },
+    { speaker: 'nadia', text: 'Cantik sekali pantulan lilin kecilnya di air, Mas... terima kasih sudah meluangkan malam setenang ini untuk kita.' },
+  ],
 };

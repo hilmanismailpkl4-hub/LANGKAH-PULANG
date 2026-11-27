@@ -1739,6 +1739,23 @@ class SfxEngine {
     });
   }
 
+  /**
+   * Denting kristal lembut penuh harap saat menghanyutkan Lentera Air Teratai di Sungai / Danau.
+   */
+  public playWaterLanternChime() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    const chord = [523.25, 659.25, 783.99, 987.77, 1318.5];
+    chord.forEach((freq, idx) => {
+      this.softTone(ctx, freq, now + idx * 0.13, 0.85, 0.052 * v, 'sine');
+      this.softTone(ctx, freq * 2, now + idx * 0.13 + 0.02, 0.45, 0.018 * v, 'triangle');
+    });
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

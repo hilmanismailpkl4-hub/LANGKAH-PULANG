@@ -11,8 +11,10 @@ import {
   MessageSquareHeart,
   Minimize2,
   Navigation,
+  RefreshCw,
   Sliders,
   Smartphone,
+  Sparkles,
   Sunrise,
   Umbrella,
 } from 'lucide-react';
@@ -58,6 +60,11 @@ export const GameHUD: React.FC = () => {
   const isPauseOpen = useGameStore((s) => s.isPauseOpen);
   const isQuickGraphicsOpen = useGameStore((s) => s.isQuickGraphicsOpen);
   const isPhotoMode = useGameStore((s) => s.isPhotoMode);
+  const isZenMode = useGameStore((s) => s.isZenMode);
+  const setZenMode = useGameStore((s) => s.setZenMode);
+  const autoTimeCycle = useGameStore((s) => s.autoTimeCycle);
+  const toggleAutoTimeCycle = useGameStore((s) => s.toggleAutoTimeCycle);
+  const quickCycleTimeOfDay = useGameStore((s) => s.quickCycleTimeOfDay);
   const isPhoneOpen = useGameStore((s) => s.isPhoneOpen);
   const isGuitarOpen = useGameStore((s) => s.isGuitarOpen);
   const isNadiaLetterOpen = useGameStore((s) => s.isNadiaLetterOpen);
@@ -190,6 +197,7 @@ export const GameHUD: React.FC = () => {
     isPauseOpen ||
     isQuickGraphicsOpen ||
     isPhotoMode ||
+    isZenMode ||
     isPhoneOpen ||
     isGuitarOpen ||
     isNadiaLetterOpen ||
@@ -232,6 +240,25 @@ export const GameHUD: React.FC = () => {
       className={`pointer-events-auto relative shrink-0 overflow-hidden rounded-full border-2 border-warm-200/30 bg-[#0e1522]/90 shadow-2xl backdrop-blur-md transition hover:border-warm-300/65 ${sizeClass}`}
     >
       <svg viewBox="0 0 120 120" className="h-full w-full">
+        {/* Danau Senja & Lembah Sawah Hijau di Radar Mini */}
+        <rect
+          x={toRadar(-98, 0).rx}
+          y={toRadar(0, -43).ry}
+          width={28 * radarScale}
+          height={30 * radarScale}
+          rx="4"
+          fill="#1b4d6e"
+          opacity="0.88"
+        />
+        <rect
+          x={toRadar(-91, 0).rx}
+          y={toRadar(0, 50).ry}
+          width={28 * radarScale}
+          height={26 * radarScale}
+          rx="3"
+          fill="#2d5a3b"
+          opacity="0.82"
+        />
         <rect
           x={toRadar(-56, 0).rx}
           y={-20}
@@ -242,6 +269,7 @@ export const GameHUD: React.FC = () => {
         />
         <rect x={-20} y={toRadar(0, -5.6).ry} width={160} height={11.2 * radarScale} fill="#2d3748" />
         <rect x={toRadar(-5.6, 0).rx} y={-20} width={11.2 * radarScale} height={160} fill="#2d3748" />
+        <rect x={toRadar(59.3, 0).rx} y={-20} width={9.4 * radarScale} height={160} fill="#2d3748" />
         <rect x={-20} y={toRadar(0, 44.2).ry} width={160} height={7.6 * radarScale} fill="#333e52" />
 
         {miniMap.cars.map((c, idx) => {
@@ -364,10 +392,30 @@ export const GameHUD: React.FC = () => {
                   compact ? 'max-w-[195px] px-3 py-1.5' : 'max-w-xs px-4 py-3'
                 }`}
               >
-                <div className="flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-warm-300/90">
+                <div className="pointer-events-auto flex flex-wrap items-center gap-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-warm-300/90">
                   <span>Bab {chapter}</span>
                   <span className="text-warm-200/40">•</span>
-                  <span>{TIME_LABELS[timeOfDay]}</span>
+                  <button
+                    type="button"
+                    onClick={quickCycleTimeOfDay}
+                    title="Klik untuk mengganti suasana waktu/cuaca kota"
+                    className="rounded-full border border-warm-200/20 bg-warm-400/10 px-1.5 py-0.5 text-warm-200 transition hover:border-warm-300/50 hover:bg-warm-400/25"
+                  >
+                    {TIME_LABELS[timeOfDay]}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={toggleAutoTimeCycle}
+                    title="Aktifkan/Matikan Siklus Waktu & Pelangi Otomatis"
+                    className={`inline-flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 transition ${
+                      autoTimeCycle
+                        ? 'border-emerald-300/60 bg-emerald-500/20 text-emerald-200'
+                        : 'border-warm-200/15 bg-dusk-900/60 text-warm-200/60 hover:text-warm-100'
+                    }`}
+                  >
+                    <RefreshCw className={`h-2.5 w-2.5 ${autoTimeCycle ? 'animate-spin' : ''}`} />
+                    {!compact && <span>Auto</span>}
+                  </button>
                 </div>
                 {step && (
                   <>
@@ -533,6 +581,17 @@ export const GameHUD: React.FC = () => {
                   <span>Catatan [Tab]</span>
                 </button>
               )}
+              <button
+                type="button"
+                onClick={() => setZenMode(true)}
+                className={`flex items-center gap-1 rounded-xl border border-warm-100/15 bg-dusk-950/70 text-warm-100 backdrop-blur-md transition hover:border-warm-300/45 ${
+                  compact ? 'p-1.5' : 'px-3 py-1.5 text-[11px]'
+                }`}
+                title="Mode Renungan Sinematik [Z] (Sembunyikan HUD)"
+              >
+                <Sparkles className="h-3.5 w-3.5 text-amber-300" />
+                {!compact && <span>[Z]</span>}
+              </button>
               <button
                 type="button"
                 onClick={() => setPhotoMode(true)}
