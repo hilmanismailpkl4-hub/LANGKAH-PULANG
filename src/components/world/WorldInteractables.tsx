@@ -712,6 +712,9 @@ export const WorldInteractables: React.FC = () => {
         if (sq.status === 'active' && sq.stage === 2) {
           return { dialogueId: 'sq_mbak_lilis_complete', highlight: 'side', sublabel: 'Selesaikan Misi' };
         }
+        if (sq.status === 'completed' && !store.flags.includes('heard_mbak_lilis_receipt_story')) {
+          return { dialogueId: 'story_mbak_lilis_receipt_sketches', highlight: 'side', sublabel: 'Komik Struk Fajar' };
+        }
         return { dialogueId: 'ambient_lilis', highlight: null, sublabel: 'Berbincang' };
       }
 
@@ -2469,6 +2472,26 @@ export const WorldInteractables: React.FC = () => {
         },
       },
       2.4,
+    );
+
+    consider(
+      {
+        id: 'story_mbak_lilis_receipt_desk',
+        kind: 'story_object',
+        label: store.flags.includes('heard_mbak_lilis_receipt_story')
+          ? 'Lihat Kembali Komik Struk Pukul 03.00 Adik Mbak Lilis'
+          : 'Periksa Klip Kertas Struk Bergambar Komik di Kasir Harmoni',
+        sublabel: store.flags.includes('heard_mbak_lilis_receipt_story')
+          ? 'Kenangan Tersimpan · Jubah Pahlawan di Balik Kertas Termal'
+          : 'Interior Kios 24 Jam Harmoni · Gambar Pensil Fajar',
+        position: [26.25, 0.08, 21.85],
+        onInteract: () => {
+          playerRuntime.activeSpeakerPos = [26.25, 1.05, 22.15];
+          playerRuntime.activeSpeakerId = 'mbak_lilis';
+          store.startDialogue('story_mbak_lilis_receipt_sketches');
+        },
+      },
+      2.1,
     );
 
     // === HADIAH KEJUTAN UNTUK KELUARGA (MASUK KE TAS SELEMPANG [I]) ===
@@ -5636,6 +5659,28 @@ export const WorldInteractables: React.FC = () => {
         <mesh position={[0, 0.54, 0]}>
           <sphereGeometry args={[0.068, 10, 10]} />
           <meshBasicMaterial color={flags.includes('heard_bang_ari_2018_story') ? '#86efac' : '#fbbf24'} />
+        </mesh>
+      </group>
+
+      {/* Papan Klip Kertas Struk Kasir Bergambar Komik Fajar di Meja Kasir Kios Harmoni */}
+      <group position={[26.25, 0.96, 22.2]} rotation={[0, 0.22, 0]}>
+        <mesh castShadow>
+          <boxGeometry args={[0.14, 0.014, 0.28]} />
+          <meshStandardMaterial
+            color="#f8fafc"
+            emissive="#2dd4bf"
+            emissiveIntensity={flags.includes('heard_mbak_lilis_receipt_story') ? 0.14 : 0.48}
+            roughness={0.55}
+          />
+        </mesh>
+        {/* Penjepit besi hitam atas struk */}
+        <mesh position={[0, 0.014, -0.12]}>
+          <boxGeometry args={[0.08, 0.022, 0.03]} />
+          <meshStandardMaterial color="#1e293b" metalness={0.6} roughness={0.35} />
+        </mesh>
+        <mesh position={[0, 0.26, 0]}>
+          <sphereGeometry args={[0.062, 10, 10]} />
+          <meshBasicMaterial color={flags.includes('heard_mbak_lilis_receipt_story') ? '#86efac' : '#5eead4'} />
         </mesh>
       </group>
 

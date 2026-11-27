@@ -499,6 +499,14 @@ export function buildStoryTimeline(params: {
       tone: 'gold',
     });
   }
+  if (flags.includes('heard_mbak_lilis_receipt_story')) {
+    echoBadges.push({
+      id: 'eb_mbak_lilis_receipt',
+      title: 'Komik Struk Kasir Pukul 03.00 · Mbak Lilis',
+      detail: 'Gambar jubah pahlawan buatan Fajar menyadarkan Mbak Lilis untuk kembali makan malam di rumah pada Epilog.',
+      tone: 'rose',
+    });
+  }
   if (flags.includes('heard_bang_ari_2018_story')) {
     echoBadges.push({
       id: 'eb_bang_ari_2018',

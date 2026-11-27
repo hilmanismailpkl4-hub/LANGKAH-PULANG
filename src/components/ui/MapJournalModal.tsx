@@ -2067,6 +2067,63 @@ export const MapJournalModal: React.FC = () => {
                       </div>
                     </div>
 
+                    {/* Kartu Cerita Mendalam Mbak Lilis: Struk Kasir Pukul 03.00 & Jubah Pahlawan */}
+                    <div className="rounded-2xl border border-teal-300/30 bg-gradient-to-r from-[#132629]/95 via-[#111a1e]/95 to-dusk-950 p-4 shadow-lg">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="max-w-xl">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-teal-300">
+                              KAKAK-BERADIK KIOS HARMONI · MBAK LILIS &amp; FAJAR
+                            </span>
+                            {flags.includes('heard_mbak_lilis_receipt_story') && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                                <CheckCircle2 className="h-3 w-3" /> Terkenang
+                              </span>
+                            )}
+                          </div>
+                          <h4 className="mt-1 font-serif text-base text-teal-50 md:text-lg">
+                            Struk Kasir Pukul 03.00 &amp; Jubah Pahlawan di Kertas Termal (Mbak Lilis)
+                          </h4>
+                          <p className="mt-1 text-xs leading-relaxed text-warm-200/80">
+                            {flags.includes('heard_mbak_lilis_receipt_story')
+                              ? 'Lima lembar struk gagal cetak berisi komik pensil buatan Fajar yang mengkhawatirkan kakaknya jaga malam sendirian di bawah lampu neon.'
+                              : 'Periksa klip potongan kertas struk di pojok meja kasir bagian dalam Kios 24 Jam Harmoni.'}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2">
+                          {flags.includes('heard_mbak_lilis_receipt_story') ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                closeMapJournal();
+                                startDialogue('story_mbak_lilis_receipt_sketches');
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-xl bg-teal-400/95 px-3.5 py-2 text-xs font-semibold text-dusk-950 shadow transition hover:bg-teal-300"
+                            >
+                              <Play className="h-3.5 w-3.5 fill-current" />
+                              <span>Kenang Ulang Kisah</span>
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setCustomWaypoint({
+                                  label: 'Meja Kasir Mbak Lilis (Kios 24 Jam Harmoni)',
+                                  position: [26.25, 0.08, 21.85],
+                                });
+                                closeMapJournal();
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-xl border border-teal-300/40 bg-teal-400/15 px-3.5 py-2 text-xs font-semibold text-teal-100 transition hover:bg-teal-400/25"
+                            >
+                              <Navigation className="h-3.5 w-3.5" />
+                              <span>GPS ke Kasir Harmoni</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div>
                         <h3 className="font-serif text-lg text-warm-50">

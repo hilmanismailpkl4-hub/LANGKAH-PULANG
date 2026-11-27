@@ -507,6 +507,16 @@ export function buildEndingJourneyRecap(params: {
 
   const echoCards: JourneyEchoCard[] = [];
 
+  if (flags.includes('heard_mbak_lilis_receipt_story')) {
+    echoCards.push({
+      id: 'ec_mbak_lilis_receipt',
+      label: 'Komik Struk Pukul 03.00 (Mbak Lilis & Fajar)',
+      summary: flags.includes('preserved_fajar_receipt_art')
+        ? 'Kamu membantu Mbak Lilis melapisi gambar pahlawan super buatan adiknya di balik kertas struk kasir dan menyemangatinya pindah ke shift pagi.'
+        : 'Lewat gambar pensil Fajar di balik kertas struk Kios Harmoni, kamu melihat bahwa keluarga lebih merindukan keselamatan kita daripada barang baru.',
+      tone: 'rose',
+    });
+  }
   if (flags.includes('heard_bang_ari_2018_story')) {
     echoCards.push({
       id: 'ec_bang_ari_2018',

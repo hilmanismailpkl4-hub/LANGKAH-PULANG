@@ -907,6 +907,54 @@ export const EPILOGUE_DIALOGUES: Record<string, DialogueScript> = {
     },
   },
 
+  epilogue_lilis_warm: {
+    id: 'epilogue_lilis_warm',
+    startNodeId: 'ep_ll_w1',
+    nodes: {
+      ep_ll_w1: {
+        id: 'ep_ll_w1',
+        speaker: 'mbak_lilis',
+        emotion: 'ceria',
+        text: 'Selamat pagi, Mas Damar! Lihat nih—mulai hari ini saya sudah resmi pindah ke shift pagi supaya malam bisa makan malam dan bantu PR Fajar di rumah!',
+        onEnter: { playSfx: 'chime' },
+        conditionalNext: [
+          {
+            requiredFlag: 'preserved_fajar_receipt_art',
+            nextNodeId: 'ep_ll_w1_sleeve',
+          },
+        ],
+        nextNodeId: 'ep_ll_w2',
+      },
+      ep_ll_w1_sleeve: {
+        id: 'ep_ll_w1_sleeve',
+        speaker: 'mbak_lilis',
+        emotion: 'haru',
+        echoTag: 'Ingatan Mbak Lilis · Komik Struk Fajar dalam Mika',
+        text: 'Mbak Lilis menunjuk map mika bening yang kini dipajang rapi di dekat kasir. "Semalam Fajar seneng banget lihat gambar struk pahlawannya Mas Damar kasih pelindung mika! Makasih sudah mengingatkan saya pulang tepat waktu ya, Mas!"',
+        nextNodeId: 'ep_ll_w2',
+      },
+      ep_ll_w2: {
+        id: 'ep_ll_w2',
+        speaker: 'mbak_lilis',
+        emotion: 'hangat',
+        text: 'Selamat menikmati pagi cerahnya bersama keluarga ya, Mas Damar!',
+      },
+    },
+  },
+
+  epilogue_lilis_bad: {
+    id: 'epilogue_lilis_bad',
+    startNodeId: 'ep_ll_b1',
+    nodes: {
+      ep_ll_b1: {
+        id: 'ep_ll_b1',
+        speaker: 'mbak_lilis',
+        emotion: 'sedih',
+        text: 'Pagi, Mas Damar... baru turun shift malam saya lihat Mas sudah buru-buru pakai jas di tengah hujan. Jangan sampai lupa istirahat ya, Mas—orang di rumah pasti khawatir.',
+      },
+    },
+  },
+
   epilogue_wati_warm: {
     id: 'epilogue_wati_warm',
     startNodeId: 'ep_wt_w1',
@@ -1054,6 +1102,11 @@ export function resolveEpilogueNpcDialogue(
     return endingId === 'bad'
       ? { dialogueId: 'epilogue_ari_bad', sublabel: 'Epilog · Peron Berhujan' }
       : { dialogueId: 'epilogue_ari_warm', sublabel: 'Epilog · Senar Keenam yang Kembali' };
+  }
+  if (npcId === 'mbak_lilis') {
+    return endingId === 'bad'
+      ? { dialogueId: 'epilogue_lilis_bad', sublabel: 'Epilog · Lampu Neon Pagi' }
+      : { dialogueId: 'epilogue_lilis_warm', sublabel: 'Epilog · Shift Pagi Baru' };
   }
   if (epilogueCompleted && npcId === 'nadia') {
     return endingId === 'bad'
