@@ -37,6 +37,7 @@ import { NeighborhoodIceCreamFruitAndPortal } from './NeighborhoodIceCreamFruitA
 import { NeighborhoodMorningAndFridge } from './NeighborhoodMorningAndFridge';
 import { NightDiningAtmAndOpang } from './NightDiningAtmAndOpang';
 import { NightNeighborhoodAndClock } from './NightNeighborhoodAndClock';
+import { NorthwestRiverPocketPark } from './NorthwestRiverPocketPark';
 import { OfficeLobbyLife } from './OfficeLobbyLife';
 import { ParkFountainPicnicAndJoggers } from './ParkFountainPicnicAndJoggers';
 import { ParkJasukeWaterAndWayfinder } from './ParkJasukeWaterAndWayfinder';
@@ -162,6 +163,7 @@ export const GameCanvas: React.FC = () => {
               <LivingValleyAndStreetscape timeOfDay={effectiveTime} settings={settings} />
               <TabebuyaAndBambooSanctuary timeOfDay={effectiveTime} settings={settings} />
               <InteriorArchitecturalLife timeOfDay={effectiveTime} settings={settings} />
+              <NorthwestRiverPocketPark timeOfDay={effectiveTime} settings={settings} />
             </group>
 
             <CityLife timeOfDay={effectiveTime} settings={settings} />

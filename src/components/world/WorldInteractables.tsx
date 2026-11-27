@@ -5357,6 +5357,93 @@ export const WorldInteractables: React.FC = () => {
       2.3,
     );
 
+    // === MURAL MUSIK BELAKANG NADA LAMA, TAMAN SAKU SUNGAI UTARA & SARON PERUNGGU ===
+    consider(
+      {
+        id: 'activity_nada_back_mural',
+        kind: 'story_object',
+        label: 'Pandangi Mural "Senandung Kota Senja"',
+        sublabel: 'Dinding Bata Belakang Toko Musik Nada Lama',
+        position: [-22.0, 0, -33.0],
+        onInteract: () => {
+          sfxEngine.play('chime');
+          if (!store.flags.includes('seen_nada_back_mural')) {
+            store.applyEffect({
+              kejujuranDiri: 1,
+              setFlags: ['seen_nada_back_mural'],
+              journalEntry: {
+                id: 'je_nada_back_mural',
+                title: 'Mural Gitar di Dinding Belakang Nada Lama',
+                body: 'Di balik dinding bata Toko Musik Nada Lama, para musisi lokal melukis sebaris kalimat yang terasa ditujukan langsung padaku: "Setiap lagu yang jujur selalu tahu jalan pulangnya."',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_nada_mural, 'fw_nada_mural');
+          }
+          store.showToast('Mural Komunitas Musisi Kota Senja: "Setiap lagu yang jujur selalu tahu jalan pulangnya."');
+        },
+      },
+      2.8,
+    );
+
+    consider(
+      {
+        id: 'sit_nw_river_pocket_park',
+        kind: 'story_object',
+        label: 'Duduk di Pergola Taman Saku Sungai Utara',
+        sublabel: 'Tepian Utara Sungai Kota · Teduh & Tenang',
+        position: [-35.6, 0, -39.5],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Pergola Taman Saku Sungai Utara',
+            seatPos: [-36.5, 0.14, -39.5],
+            lookAt: [-48.0, 0.8, -39.5],
+            standPos: [-35.3, 0, -39.5],
+            seatYaw: -Math.PI / 2,
+          };
+          store.setSitting(true);
+          store.showToast('Duduk tenang menghadap aliran Sungai Kota bagian utara... (WASD/E berdiri)');
+        },
+      },
+      2.4,
+    );
+
+    consider(
+      {
+        id: 'activity_park_saron_chime',
+        kind: 'story_object',
+        label: 'Tabuh Nada Pentatonis "Saron Perunggu Senja"',
+        sublabel: 'Taman Saku Sungai Utara · Instrumen Publik Nusantara',
+        position: [-32.5, 0, -36.2],
+        onInteract: () => {
+          playerRuntime.saronRippleTimer = 4.2;
+          sfxEngine.playGardenSaronMelody();
+          if (!store.flags.includes('played_garden_saron')) {
+            store.applyEffect({
+              kejujuranDiri: 1,
+              kehadiranKeluarga: 1,
+              setFlags: ['played_garden_saron'],
+              journalEntry: {
+                id: 'je_garden_saron',
+                title: 'Denting Saron Perunggu di Tepi Sungai Utara',
+                body: 'Menabuh tujuh bilah perunggu Saron taman di tepi aliran sungai utara memunculkan gema Slendro yang bening di udara sore—sederhana, hangat, dan menenteramkan.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_garden_saron, 'fw_garden_saron');
+          }
+          store.showToast('Ting-tong-ting... alunan pentatonis perunggu Saron Senja bergema lembut di tepi Sungai Utara!');
+        },
+      },
+      2.3,
+    );
+
     // === CERITA SASTRA LEMBAH SAWAH & TERAS RUMAH: BESEK GABAH PANDANWANGI IBU (2015) ===
     consider(
       {
@@ -5788,6 +5875,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-21.55, 0.34, 68.55]}>
         <sphereGeometry args={[0.064, 8, 8]} />
         <meshBasicMaterial color="#fde047" />
+      </mesh>
+      <mesh position={[-22.0, 1.35, -31.8]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#fbbf24" />
+      </mesh>
+      <mesh position={[-36.5, 1.05, -39.5]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#a7f3d0" />
+      </mesh>
+      <mesh position={[-32.5, 1.08, -37.2]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#facc15" />
       </mesh>
 
       {/* Buku Tamu Kulit Cokelat & Sepasang Kelopak Tabebuya Kering di Meja Teh Paviliun Bambu Utara */}

@@ -222,6 +222,7 @@ export const playerRuntime = {
   scarecrowRattleTimer: 0,
   roasterSpinTimer: 0,
   listeningBoothTimer: 0,
+  saronRippleTimer: 0,
   gardenSwingTimer: 0,
   swingBoostTimer: 0,
   kiteHeight: 0,
@@ -371,6 +372,7 @@ export function resetScooterToHome() {
   playerRuntime.scarecrowRattleTimer = 0;
   playerRuntime.roasterSpinTimer = 0;
   playerRuntime.listeningBoothTimer = 0;
+  playerRuntime.saronRippleTimer = 0;
   playerRuntime.gardenSwingTimer = 0;
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;

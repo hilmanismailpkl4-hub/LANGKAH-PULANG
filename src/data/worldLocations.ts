@@ -262,6 +262,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= -70.7 && x <= -66.3 && z >= 54.7 && z <= 58.3) return true;
   // Atap Sirap Paviliun Teh Lesehan "Teduh Utara" di Rimba Bambu Danau Senja
   if (x >= -79.9 && x <= -75.1 && z >= -53.5 && z <= -49.5) return true;
+  // Pergola Taman Saku Tepi Sungai Utara
+  if (x >= -37.8 && x <= -35.2 && z >= -41.2 && z <= -37.8) return true;
   return false;
 }
 
@@ -638,6 +640,9 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'music_listening_booth', minX: -28.55, maxX: -27.35, minZ: -22.25, maxZ: -20.55 },
   { id: 'kios_hot_snack_counter', minX: 18.02, maxX: 19.02, minZ: 21.45, maxZ: 24.15 },
   { id: 'office_city_scale_model', minX: 22.65, maxX: 24.35, minZ: -23.3, maxZ: -21.9 },
+  // === 50. Taman Saku Tepi Sungai Utara & Saron Taman Publik ===
+  { id: 'nw_pocket_park_bench', minX: -37.0, maxX: -36.0, minZ: -40.6, maxZ: -38.4 },
+  { id: 'nw_garden_saron', minX: -33.18, maxX: -31.82, minZ: -37.58, maxZ: -36.82 },
 ];
 
 /**

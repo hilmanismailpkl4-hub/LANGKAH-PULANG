@@ -175,6 +175,42 @@ const PEDESTRIAN_CONFIGS: PedestrianConfig[] = [
       appearance: { height: 1.6, shirtColor: '#7b949c', pantsColor: '#36333d', skinColor: '#dcb08f', hairColor: '#211917', accentProp: 'backpack' },
     },
   },
+  {
+    id: 'w_7',
+    x0: 58.3,
+    z0: -34,
+    x1: 58.3,
+    z1: 22,
+    speed: 1.38,
+    initialProgress: 0.34,
+    isFemale: true,
+    profile: {
+      id: 'nadia',
+      name: 'Warga',
+      role: '',
+      accentColor: '#fff',
+      voice: { pitch: 1, rate: 1, preferGender: 'female', volumeScale: 1 },
+      appearance: { height: 1.63, shirtColor: '#d9778c', pantsColor: '#293241', skinColor: '#e0b394', hairColor: '#1e1815', accentProp: 'scarf' },
+    },
+  },
+  {
+    id: 'w_8',
+    x0: -63,
+    z0: 46.8,
+    x1: -33,
+    z1: 46.8,
+    speed: 1.32,
+    initialProgress: 0.55,
+    isFemale: false,
+    profile: {
+      id: 'pak_darman',
+      name: 'Warga',
+      role: '',
+      accentColor: '#fff',
+      voice: { pitch: 1, rate: 1, preferGender: 'male', volumeScale: 1 },
+      appearance: { height: 1.69, shirtColor: '#6d8a63', pantsColor: '#332e2a', skinColor: '#cca07a', hairColor: '#3a3532', accentProp: 'vest' },
+    },
+  },
 ];
 
 /**
@@ -365,6 +401,53 @@ const CityBirds: React.FC<{ visible: boolean }> = ({ visible }) => {
   );
 };
 
+const HeronVFlock: React.FC<{ visible: boolean }> = ({ visible }) => {
+  const flockRef = useRef<THREE.Group>(null);
+  const offsets: [number, number, number][] = [
+    [0, 0, 0],
+    [-1.8, 0.15, -1.9],
+    [1.8, 0.15, -1.9],
+    [-3.6, 0.3, -3.8],
+    [3.6, 0.3, -3.8],
+  ];
+
+  useFrame(({ clock }) => {
+    if (!visible || !flockRef.current) return;
+    const t = clock.getElapsedTime();
+    const cycle = (t * 0.042) % 1;
+    const fx = THREE.MathUtils.lerp(-92, -62, cycle);
+    const fz = THREE.MathUtils.lerp(-58, 78, cycle);
+    const fy = 28.5 + Math.sin(t * 0.8) * 1.1;
+    flockRef.current.position.set(fx, fy, fz);
+    flockRef.current.rotation.y = Math.atan2(30, 136);
+
+    flockRef.current.children.forEach((bird, idx) => {
+      const flap = Math.sin(t * 5.2 - idx * 0.55) * 0.52;
+      if (bird.children[0]) bird.children[0].rotation.z = flap;
+      if (bird.children[1]) bird.children[1].rotation.z = -flap;
+    });
+  });
+
+  if (!visible) return null;
+
+  return (
+    <group ref={flockRef}>
+      {offsets.map(([ox, oy, oz], idx) => (
+        <group key={`heron-${idx}`} position={[ox, oy, oz]}>
+          <mesh position={[-0.32, 0, 0]}>
+            <boxGeometry args={[0.64, 0.04, 0.2]} />
+            <meshBasicMaterial color="#f8fafc" />
+          </mesh>
+          <mesh position={[0.32, 0, 0]}>
+            <boxGeometry args={[0.64, 0.04, 0.2]} />
+            <meshBasicMaterial color="#f8fafc" />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+};
+
 const RainGroundSplashes: React.FC<{ active: boolean }> = ({ active }) => {
   const groupRef = useRef<THREE.Group>(null);
   const splashes = useMemo(
@@ -445,6 +528,8 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
       { id: 4, type: 'sedan', axis: 'z', lane: -2.7, dir: -1, pos: 28, min: -58, max: 42, maxSpeed: 8.2, currentSpeed: 8.2, wheelAngle: 0, lastHornAt: -10, color: '#baa07b' },
       // Mobil Box Logistik Stasiun di Jl. Stasiun Timur
       { id: 5, type: 'box_truck', axis: 'z', lane: 64 + 2.2, dir: 1, pos: -48, min: -58, max: 54, maxSpeed: 7.6, currentSpeed: 7.6, wheelAngle: 0, lastHornAt: -10, color: '#355c7d', accentColor: '#f4f6f9' },
+      // Angkot Hijau-Kuning Trayek Stasiun Timur menuju Utara
+      { id: 8, type: 'angkot', axis: 'z', lane: 64 - 2.2, dir: -1, pos: 38, min: -58, max: 54, maxSpeed: 7.5, currentSpeed: 7.5, wheelAngle: 0, lastHornAt: -10, color: '#2b7a5b', accentColor: '#f5c242' },
       // Angkot Biru-Kuning arah Barat menuju Jembatan & Taman Kota
       { id: 6, type: 'angkot', axis: 'x', lane: -2.7, dir: -1, pos: -22, min: -92, max: 56, maxSpeed: 8.0, currentSpeed: 8.0, wheelAngle: 0, lastHornAt: -10, color: '#2980b9', accentColor: '#f5c242' },
       // Bus Kota Modern "Trans Senja" melintas Jl. Kenangan & berhenti sejenak di Halte Jl. Kenangan!
@@ -1150,8 +1235,9 @@ export const CityLife: React.FC<CityLifeProps> = ({ timeOfDay, settings }) => {
         </mesh>
       </group>
 
-      {/* Bonus Suasana Hidup: Burung Kota & Percikan Hujan */}
+      {/* Bonus Suasana Hidup: Burung Kota, Kawanan Bangau Formasi-V & Percikan Hujan */}
       <CityBirds visible={settings.graphicsQuality !== 'potato' && (timeOfDay === 'morning' || timeOfDay === 'sunset')} />
+      <HeronVFlock visible={settings.graphicsQuality !== 'potato' && (timeOfDay === 'morning' || timeOfDay === 'sunset')} />
       <RainGroundSplashes active={settings.graphicsQuality !== 'potato' && timeOfDay === 'rain_dusk' && settings.particleDensity !== 'low'} />
     </group>
   );

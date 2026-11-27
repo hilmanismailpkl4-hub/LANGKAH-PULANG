@@ -638,4 +638,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'AYAAAH!! Lihat di dalam kotak kaca ini ada Kota Senja versi mainan kecil!! Itu jembatan sama rumah kita kelihatan!!' },
     { speaker: 'nadia', text: 'Detail banget ya maket tata kotanya, Mas... dari sini kelihatan betapa dekatnya kantor dan rumah kita sebenarnya.' },
   ],
+  activity_nada_mural: [
+    { speaker: 'nadia', text: '"Setiap lagu yang jujur selalu tahu jalan pulangnya"... indah banget ya mural di dinding belakang Nada Lama ini, Mas.' },
+    { speaker: 'kira', text: 'WAAAH!! Gambar gitarnya gede banget di tembok bata, Ayah!! Ada burung putih terbang di atas sungainya juga!' },
+  ],
+  activity_garden_saron: [
+    { speaker: 'kira', text: 'TING-TONG-TING!! Suara perunggu emasnya nyaring dan adem banget kayak gamelan, Ayah!! Kira mau ketuk sekali lagi!' },
+    { speaker: 'nadia', text: 'Senang banget ya Mas sekarang taman saku tepi sungai utara punya alat musik publik—anak-anak bisa kenal nada Nusantara.' },
+  ],
 };

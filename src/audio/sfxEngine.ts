@@ -1858,6 +1858,24 @@ class SfxEngine {
     this.softTone(ctx, base * 2.3, now + 0.008, 0.035, 0.032 * v, 'sine');
   }
 
+  /**
+   * Denting hangat 7 bilah perunggu Saron / Gamelan Taman Publik bernada Slendro–Pelog lembut.
+   */
+  public playGardenSaronMelody() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    const slendro = [523.25, 599.0, 686.0, 792.0, 908.0, 1046.5];
+    slendro.forEach((freq, idx) => {
+      const t = now + idx * 0.14;
+      this.softTone(ctx, freq, t, 0.72, 0.062 * v, 'sine');
+      this.softTone(ctx, freq * 2.76, t + 0.006, 0.24, 0.024 * v, 'triangle');
+    });
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,
