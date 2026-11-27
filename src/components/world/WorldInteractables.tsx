@@ -5050,6 +5050,111 @@ export const WorldInteractables: React.FC = () => {
       2.4,
     );
 
+    // === KORIDOR TABEBUYA JL. STASIUN TIMUR & PAVILIUN TEH BAMBU UTARA DANAU ===
+    consider(
+      {
+        id: 'sit_tabebuya_boulevard_bench',
+        kind: 'story_object',
+        label: 'Duduk di Bawah Guguran Bunga Tabebuya',
+        sublabel: 'Koridor Jl. Stasiun Timur · Menghadap Jalur KRL',
+        position: [58.4, 0, 28.2],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Bangku Taman Koridor Pohon Tabebuya',
+            seatPos: [57.6, 0.14, 28.2],
+            lookAt: [84.0, 1.4, 28.2],
+            standPos: [58.7, 0, 28.2],
+            seatYaw: Math.PI / 2,
+          };
+          store.setSitting(true);
+          if (!store.flags.includes('sat_tabebuya_bench')) {
+            store.applyEffect({
+              kejujuranDiri: 1,
+              setFlags: ['sat_tabebuya_bench'],
+              journalEntry: {
+                id: 'je_tabebuya_boulevard',
+                title: 'Hujan Kelopak Tabebuya di Jalan Stasiun Timur',
+                body: 'Duduk di bawah pohon Tabebuya merah muda dan kuning keemasan yang berguguran pelan di pinggir Jl. Stasiun Timur menyadarkanku bahwa jalan menuju stasiun tidak harus selalu identik dengan langkah tergesa.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_tabebuya_bench, 'fw_tabebuya_bench');
+          }
+          store.showToast('Duduk teduh di bawah guguran kelopak Tabebuya Jl. Stasiun Timur... (WASD/E berdiri)');
+        },
+      },
+      2.45,
+    );
+
+    consider(
+      {
+        id: 'sit_north_bamboo_pavilion',
+        kind: 'story_object',
+        label: 'Duduk Lesehan di Paviliun Bambu Teduh Utara',
+        sublabel: 'Rimba Bambu Danau Senja · Panorama Seluruh Danau',
+        position: [-77.5, 0.16, -49.6],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Paviliun Bambu Teduh Utara Danau Senja',
+            seatPos: [-77.5, 0.18, -50.35],
+            lookAt: [-82.0, 0.9, -28.0],
+            standPos: [-77.5, 0, -48.7],
+            seatYaw: Math.PI,
+          };
+          store.setSitting(true);
+          if (!store.flags.includes('sat_north_bamboo_pavilion')) {
+            store.applyEffect({
+              kejujuranDiri: 1,
+              kehadiranKeluarga: 1,
+              setFlags: ['sat_north_bamboo_pavilion'],
+              journalEntry: {
+                id: 'je_north_bamboo_pavilion',
+                title: 'Desir Rumpun Bambu di Pesisir Utara Danau',
+                body: 'Di atas tikar pandan Paviliun Teduh Utara, suara puluhan batang bambu yang saling bersentuhan ditiup angin berpadu dengan riak Danau Senja—menghadirkan hening yang menenangkan batin.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_bamboo_pavilion, 'fw_bamboo_pavilion');
+          }
+          store.showToast('Duduk lesehan menghadap Danau Senja di Paviliun Bambu Utara... (WASD/E berdiri)');
+        },
+      },
+      2.35,
+    );
+
+    consider(
+      {
+        id: 'activity_bamboo_tea_pour',
+        kind: 'story_object',
+        label: 'Tuang Secangkir Teh Melati Poci Tanah Liat',
+        sublabel: 'Paviliun Teduh Utara · Seduhan Hangat Gratis',
+        position: [-77.5, 0.16, -50.85],
+        onInteract: () => {
+          sfxEngine.playTeaPourCeramic();
+          store.grantWarmDrink('tea', 'Teh Melati Poci Tanah Liat', true);
+          if (!store.flags.includes('poured_bamboo_pavilion_tea')) {
+            store.applyEffect({
+              kejujuranDiri: 1,
+              setFlags: ['poured_bamboo_pavilion_tea'],
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_bamboo_pavilion, 'fw_bamboo_tea');
+          }
+          store.showToast('Menuang secangkir Teh Melati hangat dari teko tanah liat Paviliun Teduh Utara (klik ikon cangkir di HUD untuk meletakkan).');
+        },
+      },
+      2.15,
+    );
+
     // === CERITA SASTRA LEMBAH SAWAH & TERAS RUMAH: BESEK GABAH PANDANWANGI IBU (2015) ===
     consider(
       {
@@ -5449,6 +5554,14 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-74.6, 0.72, -29.85]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#fda4af" />
+      </mesh>
+      <mesh position={[57.6, 1.08, 28.2]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#f472b6" />
+      </mesh>
+      <mesh position={[-77.5, 0.85, -51.5]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#bbf7d0" />
       </mesh>
 
       {/* Besek Anyaman Bambu Berpita Kain Biru Titipan Ibu (2015) di Saung Sawah */}

@@ -1756,6 +1756,35 @@ class SfxEngine {
     });
   }
 
+  /**
+   * Suara kucuran hangat teh melati dari teko poci tanah liat ke cangkir keramik + denting porselen halus.
+   */
+  public playTeaPourCeramic() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    const src = ctx.createBufferSource();
+    src.buffer = this.getNoiseBuffer(ctx);
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.setValueAtTime(980, now);
+    bp.frequency.exponentialRampToValueAtTime(1680, now + 0.58);
+    bp.Q.value = 2.4;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.001, now);
+    g.gain.linearRampToValueAtTime(0.068 * v, now + 0.08);
+    g.gain.exponentialRampToValueAtTime(0.0008, now + 0.64);
+    src.connect(bp).connect(g).connect(ctx.destination);
+    src.start(now, 0.2, 0.68);
+
+    // Denting halus tutup teko keramik & cangkir hangat
+    this.softTone(ctx, 1480, now + 0.62, 0.16, 0.048 * v, 'sine');
+    this.softTone(ctx, 1975, now + 0.72, 0.22, 0.042 * v, 'triangle');
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

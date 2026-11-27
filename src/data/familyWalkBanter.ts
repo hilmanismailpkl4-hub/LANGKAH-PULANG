@@ -610,4 +610,12 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'WAAAH!! Bunga teratai lampunya nyala mengapung di atas air, Bunda!! Semoga doa kita bertiga sampai jauh ya!' },
     { speaker: 'nadia', text: 'Cantik sekali pantulan lilin kecilnya di air, Mas... terima kasih sudah meluangkan malam setenang ini untuk kita.' },
   ],
+  activity_tabebuya_bench: [
+    { speaker: 'kira', text: 'AYAAAH!! Bunga warna pink sama kuningnya turun kayak salju sore di pinggir jalan stasiun!! Kira tangkap satu ya!' },
+    { speaker: 'nadia', text: 'Cantik banget ya Mas koridor pohon Tabebuya di Jl. Stasiun Timur ini... rasanya teduh sekali duduk melihat kereta lewat.' },
+  ],
+  activity_bamboo_pavilion: [
+    { speaker: 'nadia', text: 'Ya ampun Mas, duduk lesehan di paviliun bambu utara sambil minum teh melati hangat menghadap Danau Senja ini damai sekali...' },
+    { speaker: 'kira', text: 'Suara batang bambunya bergesekan tertiup angin kayak bisik-bisik lembut ya, Bunda! Tehnya wangi bunga melati!' },
+  ],
 };

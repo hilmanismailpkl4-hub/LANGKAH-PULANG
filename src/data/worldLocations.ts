@@ -260,6 +260,8 @@ export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (x >= 9.7 && x <= 13.0 && z >= -35.8 && z <= -32.6) return true;
   // Atap Ijuk Saung Bambu Tepian Sawah Senja (Seberang Barat Jembatan Perumahan Selatan)
   if (x >= -70.7 && x <= -66.3 && z >= 54.7 && z <= 58.3) return true;
+  // Atap Sirap Paviliun Teh Lesehan "Teduh Utara" di Rimba Bambu Danau Senja
+  if (x >= -79.9 && x <= -75.1 && z >= -53.5 && z <= -49.5) return true;
   return false;
 }
 
@@ -272,6 +274,7 @@ export function getSurfaceAtPosition(x: number, y: number, z: number): SurfaceTy
   if (x >= -28 && x <= -12 && z >= 13 && z <= 27) return 'wood';
   if (x >= -29.4 && x <= -14.6 && z >= -31.4 && z <= -19.6) return 'wood';
   if (x >= -77 && x <= -68 && z >= -31 && z <= -25) return 'wood';
+  if (x >= -79.7 && x <= -75.3 && z >= -53.3 && z <= -49.7) return 'wood';
   if (x < -58 && !(z > -7 && z < 7)) return 'grass';
   if (z > 53 && x > -34 && x < 48 && !(x >= -27 && x <= -13 && z >= 62 && z <= 74)) {
     if (Math.abs(x - -20) > 2.2) return 'grass';
@@ -625,6 +628,10 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'paddy_saung_platform', minX: -70.25, maxX: -66.75, minZ: 55.35, maxZ: 57.85 },
   { id: 'bamboo_waterwheel_basin', minX: -63.45, maxX: -61.35, minZ: 53.25, maxZ: 55.15 },
   { id: 'station_platform_bench', minX: 82.75, maxX: 83.65, minZ: -12.7, maxZ: -10.3 },
+  // === 48. Koridor Tabebuya Jl. Stasiun Timur & Paviliun Bambu Utara Danau Senja ===
+  { id: 'tabebuya_boulevard_bench', minX: 57.2, maxX: 58.0, minZ: 27.1, maxZ: 29.3 },
+  { id: 'north_bamboo_tea_table', minX: -78.35, maxX: -76.65, minZ: -52.05, maxZ: -50.95 },
+  { id: 'north_bamboo_back_screen', minX: -79.45, maxX: -75.55, minZ: -53.35, maxZ: -52.95 },
 ];
 
 /**
@@ -840,6 +847,17 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   // Tiang Papan Lembah Sawah Senja & Orang-Orangan Sawah Caping Bambu
   { x: -59.2, z: 45.2, r: 0.24 },
   { x: -83.0, z: 62.5, r: 0.38 },
+  // 8 Bak Pohon Tabebuya Koridor Jl. Stasiun Timur + 2 Lentera Batu Paviliun Bambu Utara
+  ...([
+    [57.8, -37.5], [57.8, -29.0], [70.2, -37.5], [70.2, -26.5],
+    [57.8, 23.0], [57.8, 33.5], [70.2, 28.5], [70.2, 38.0],
+  ] as [number, number][]).map(([x, z]) => ({ x, z, r: 0.72 })),
+  { x: -79.8, z: -48.8, r: 0.24 },
+  { x: -75.2, z: -48.8, r: 0.24 },
+  { x: -79.45, z: -53.05, r: 0.16 },
+  { x: -75.55, z: -53.05, r: 0.16 },
+  { x: -79.45, z: -49.95, r: 0.16 },
+  { x: -75.55, z: -49.95, r: 0.16 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
     [-39.75, -9.5], [-39.75, -19.5], [-39.75, -29.5],
@@ -1040,6 +1058,8 @@ export function resolvePlayerMovement(
     ry = 0.12;
   } else if (rx >= -70.5 && rx <= -65.5 && rz >= 17.0 && rz <= 22.0) {
     ry = 0.22;
+  } else if (rx >= -79.7 && rx <= -75.3 && rz >= -53.3 && rz <= -49.7) {
+    ry = 0.16;
   }
 
   return [rx, ry, rz];
@@ -1129,6 +1149,8 @@ export function resolveCompanionMovement(
     ry = 0.12;
   } else if (rx >= -70.5 && rx <= -65.5 && rz >= 17.0 && rz <= 22.0) {
     ry = 0.22;
+  } else if (rx >= -79.7 && rx <= -75.3 && rz >= -53.3 && rz <= -49.7) {
+    ry = 0.16;
   }
 
   return [rx, ry, rz];

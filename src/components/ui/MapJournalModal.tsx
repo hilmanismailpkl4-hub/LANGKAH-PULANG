@@ -400,6 +400,132 @@ export const MapJournalModal: React.FC = () => {
 
                       {/* Zona Hijau Taman Kota & Perumahan */}
                       <rect x="20" y="32" width="185" height="390" rx="22" fill="#182b24" opacity="0.88" />
+                      {/* Zona Rimba Bambu & Paviliun Teh Utara Danau (Klik untuk Pasang GPS!) */}
+                      {(() => {
+                        const nb1 = toSvg(-92, -57);
+                        const nb2 = toSvg(-70, -45);
+                        const pav = toSvg(-77.5, -51.5);
+                        return (
+                          <g
+                            className="cursor-pointer"
+                            onClick={() => {
+                              sfxEngine.play('interact');
+                              setCustomWaypoint({
+                                label: 'Paviliun Bambu Teduh Utara',
+                                position: [-77.5, 0.16, -49.5],
+                              });
+                            }}
+                          >
+                            <rect
+                              x={nb1.sx}
+                              y={nb1.sy}
+                              width={nb2.sx - nb1.sx}
+                              height={nb2.sy - nb1.sy}
+                              rx="8"
+                              fill="#1d3b2a"
+                              stroke="#6ee7b7"
+                              strokeOpacity="0.45"
+                              strokeWidth="1"
+                            />
+                            <rect
+                              x={pav.sx - 8}
+                              y={pav.sy - 5}
+                              width="16"
+                              height="10"
+                              rx="2"
+                              fill="#92400e"
+                              stroke="#fde68a"
+                              strokeWidth="1"
+                            />
+                            <text
+                              x={pav.sx}
+                              y={pav.sy - 8}
+                              fill="rgba(187,247,208,0.88)"
+                              fontSize="6.8"
+                              fontWeight="600"
+                              textAnchor="middle"
+                            >
+                              PAVILIUN BAMBU UTARA
+                            </text>
+                          </g>
+                        );
+                      })()}
+
+                      {/* Zona Lembah Sawah Senja & Saung Bambu Barat Daya (Klik untuk Pasang GPS!) */}
+                      {(() => {
+                        const sw1 = toSvg(-93, 49);
+                        const sw2 = toSvg(-60, 77);
+                        const pNW1 = toSvg(-91, 50.5);
+                        const pNW2 = toSvg(-75, 60.5);
+                        const pSW1 = toSvg(-91, 64.5);
+                        const pSW2 = toSvg(-75, 75.5);
+                        const pSE1 = toSvg(-72, 64.5);
+                        const pSE2 = toSvg(-63, 75.5);
+                        const saung = toSvg(-68.5, 56.6);
+                        return (
+                          <g
+                            className="cursor-pointer"
+                            onClick={() => {
+                              sfxEngine.play('interact');
+                              setCustomWaypoint({
+                                label: 'Saung Bambu Lembah Sawah Senja',
+                                position: [-68.5, 0, 54.4],
+                              });
+                            }}
+                          >
+                            <rect
+                              x={sw1.sx}
+                              y={sw1.sy}
+                              width={sw2.sx - sw1.sx}
+                              height={sw2.sy - sw1.sy}
+                              rx="12"
+                              fill="#1c3323"
+                              stroke="#84cc16"
+                              strokeOpacity="0.4"
+                              strokeWidth="1.2"
+                            />
+                            {[
+                              [pNW1, pNW2],
+                              [pSW1, pSW2],
+                              [pSE1, pSE2],
+                            ].map(([a, b], idx) => (
+                              <rect
+                                key={`mpad-${idx}`}
+                                x={a.sx}
+                                y={a.sy}
+                                width={b.sx - a.sx}
+                                height={b.sy - a.sy}
+                                rx="3"
+                                fill="#365314"
+                                fillOpacity="0.82"
+                                stroke="#a3e635"
+                                strokeOpacity="0.45"
+                                strokeWidth="0.9"
+                              />
+                            ))}
+                            <rect
+                              x={saung.sx - 7}
+                              y={saung.sy - 5}
+                              width="14"
+                              height="10"
+                              rx="2"
+                              fill="#b45309"
+                              stroke="#fef08a"
+                              strokeWidth="1"
+                            />
+                            <text
+                              x={(sw1.sx + sw2.sx) * 0.5}
+                              y={sw2.sy + 10}
+                              fill="rgba(217,249,157,0.9)"
+                              fontSize="7.5"
+                              fontWeight="600"
+                              textAnchor="middle"
+                            >
+                              LEMBAH SAWAH SENJA & SAUNG
+                            </text>
+                          </g>
+                        );
+                      })()}
                       {/* Area Taman Bermain & Lapangan Layangan */}
                       <rect
                         x={toSvg(-89, 17).sx}
@@ -558,7 +684,7 @@ export const MapJournalModal: React.FC = () => {
                         height="26"
                         fill="#2a3345"
                       />
-                      {/* Jl. Stasiun Timur */}
+                      {/* Jl. Stasiun Timur + Koridor Bunga Tabebuya Mekar */}
                       <rect
                         x={toSvg(59.3, -60).sx}
                         y={toSvg(59.3, -60).sy}
@@ -566,6 +692,50 @@ export const MapJournalModal: React.FC = () => {
                         height={toSvg(64, 64).sy - toSvg(64, -60).sy}
                         fill="#262f3f"
                       />
+                      {[
+                        [57.8, -37.5, '#f472b6'],
+                        [57.8, -29.0, '#facc15'],
+                        [70.2, -37.5, '#facc15'],
+                        [70.2, -26.5, '#f472b6'],
+                        [57.8, 23.0, '#f472b6'],
+                        [57.8, 33.5, '#facc15'],
+                        [70.2, 28.5, '#f472b6'],
+                        [70.2, 38.0, '#facc15'],
+                      ].map(([tx, tz, col], ti) => {
+                        const tp = toSvg(tx as number, tz as number);
+                        return (
+                          <circle
+                            key={`mtab-${ti}`}
+                            cx={tp.sx}
+                            cy={tp.sy}
+                            r="3.8"
+                            fill={col as string}
+                            fillOpacity="0.85"
+                            stroke="#ffffff"
+                            strokeOpacity="0.45"
+                            strokeWidth="0.7"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              sfxEngine.play('interact');
+                              setCustomWaypoint({
+                                label: 'Koridor Tabebuya Jl. Stasiun Timur',
+                                position: [58.5, 0, 28.2],
+                              });
+                            }}
+                          />
+                        );
+                      })}
+                      <text
+                        x={toSvg(64, -22).sx}
+                        y={toSvg(64, -22).sy}
+                        fill="rgba(249,168,212,0.68)"
+                        fontSize="7.5"
+                        letterSpacing="1.4"
+                        textAnchor="middle"
+                        transform={`rotate(-90 ${toSvg(64, -22).sx} ${toSvg(64, -22).sy})`}
+                      >
+                        JL. STASIUN TIMUR · TABEBUYA
+                      </text>
 
                       {/* Sorotan Jembatan Gantung & Jembatan Selatan */}
                       <rect

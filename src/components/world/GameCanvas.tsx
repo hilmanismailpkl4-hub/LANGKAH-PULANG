@@ -55,6 +55,7 @@ import { SerabiHistoryAndButterflyGarden } from './SerabiHistoryAndButterflyGard
 import { StationAndBuskerLife } from './StationAndBuskerLife';
 import { StationWarkopBirdsAndMusicBench } from './StationWarkopBirdsAndMusicBench';
 import { StreetRealismAndSate } from './StreetRealismAndSate';
+import { TabebuyaAndBambooSanctuary } from './TabebuyaAndBambooSanctuary';
 import { TropicalLandmarkAndDawet } from './TropicalLandmarkAndDawet';
 import { VeggieTailorAndRailCrossing } from './VeggieTailorAndRailCrossing';
 import { WaypointBeacon } from './WaypointBeacon';
@@ -158,6 +159,7 @@ export const GameCanvas: React.FC = () => {
               <SerabiHistoryAndButterflyGarden timeOfDay={effectiveTime} settings={settings} />
               <FishingAndFlowerLibrary timeOfDay={effectiveTime} settings={settings} />
               <LivingValleyAndStreetscape timeOfDay={effectiveTime} settings={settings} />
+              <TabebuyaAndBambooSanctuary timeOfDay={effectiveTime} settings={settings} />
             </group>
 
             <CityLife timeOfDay={effectiveTime} settings={settings} />
