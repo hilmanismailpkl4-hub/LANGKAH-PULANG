@@ -474,6 +474,16 @@ export function buildStoryTimeline(params: {
       tone: 'gold',
     });
   }
+  if (flags.includes('read_nadia_diary_2020')) {
+    echoBadges.push({
+      id: 'eb_nadia_diary_2020',
+      title: 'Buku Harian Kehamilan Nadia (2020)',
+      detail: flags.includes('wrote_reply_in_nadia_diary')
+        ? 'Balasan tulisan tanganmu di bawah doa subuh RS Harapan 2020 dikenang Nadia di Meja Makan Bab 3 & Epilog Pagi.'
+        : 'Membuka sudut pandang batin Nadia selama sembilan bulan mengandung Kira hingga malam hujan Agustus 2020.',
+      tone: 'rose',
+    });
+  }
   if (flags.includes('played_father_cassette_1997')) {
     echoBadges.push({
       id: 'eb_father_tape_1997',

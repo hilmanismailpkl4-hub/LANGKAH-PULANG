@@ -1554,6 +1554,63 @@ export const MapJournalModal: React.FC = () => {
                       </div>
                     </div>
 
+                    {/* Kartu Buku Harian Kehamilan Nadia Tahun 2020 */}
+                    <div className="rounded-2xl border border-rose-300/35 bg-gradient-to-r from-[#2b1822]/95 via-[#1c131a]/95 to-dusk-950 p-4 shadow-lg">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="max-w-xl">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-rose-300">
+                              SUDUT PANDANG NADIA · JANUARI – AGUSTUS 2020
+                            </span>
+                            {flags.includes('read_nadia_diary_2020') && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                                <CheckCircle2 className="h-3 w-3" /> Terkenang
+                              </span>
+                            )}
+                          </div>
+                          <h4 className="mt-1 font-serif text-base text-rose-50 md:text-lg">
+                            Sembilan Bulan Menunggu Kira (Buku Harian Kain Bunga Nadia)
+                          </h4>
+                          <p className="mt-1 text-xs leading-relaxed text-warm-200/80">
+                            {flags.includes('read_nadia_diary_2020')
+                              ? 'Empat lembar catatan tulisan tangan Nadia dari garis dua merah bulan Januari hingga doa pukul 04.15 subuh di ruang bersalin RS Harapan.'
+                              : 'Periksa meja kecil di dekat lemari pakaian Rumah Jl. Melati No. 14 untuk membaca catatan sembilan bulan yang ditulis tangan oleh Nadia tahun 2020.'}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2">
+                          {flags.includes('read_nadia_diary_2020') ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                closeMapJournal();
+                                startDialogue('story_nadia_pregnancy_diary_2020');
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-xl bg-rose-400/95 px-3.5 py-2 text-xs font-semibold text-dusk-950 shadow transition hover:bg-rose-300"
+                            >
+                              <Play className="h-3.5 w-3.5 fill-current" />
+                              <span>Baca Ulang Buku 2020</span>
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setCustomWaypoint({
+                                  label: 'Buku Harian Nadia 2020 (Kamar Rumah)',
+                                  position: [-24.85, 0.08, 66.95],
+                                });
+                                closeMapJournal();
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-xl border border-rose-300/40 bg-rose-400/15 px-3.5 py-2 text-xs font-semibold text-rose-100 transition hover:bg-rose-400/25"
+                            >
+                              <Navigation className="h-3.5 w-3.5" />
+                              <span>GPS ke Kamar Rumah</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div>
                         <h3 className="font-serif text-lg text-warm-50">

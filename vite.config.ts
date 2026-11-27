@@ -82,7 +82,7 @@ export default defineConfig({
   plugins: [react(), langkahPulangBuildMetaPlugin()],
   build: {
     target: 'es2020',
-    chunkSizeWarningLimit: 1850,
+    chunkSizeWarningLimit: 2400,
     rollupOptions: {
       output: {
         manualChunks: {

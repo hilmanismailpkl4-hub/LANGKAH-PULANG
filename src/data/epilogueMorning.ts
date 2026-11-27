@@ -199,6 +199,20 @@ export const EPILOGUE_DIALOGUES: Record<string, DialogueScript> = {
         speaker: 'kira',
         emotion: 'ceria',
         text: 'Pagi Ayah!! Kira udah pakai sepatu kets nih! Ayah masih ingat janji semalam kan—hari ini Ayah ajarin Kira naik sepeda tanpa roda bantu di ujung gang!!',
+        conditionalNext: [
+          {
+            requiredFlag: 'wrote_reply_in_nadia_diary',
+            nextNodeId: 'ep_tr_f1_diary',
+          },
+        ],
+        nextNodeId: 'ep_tr_f2',
+      },
+      ep_tr_f1_diary: {
+        id: 'ep_tr_f1_diary',
+        speaker: 'nadia',
+        emotion: 'haru',
+        echoTag: 'Ingatan Buku Harian 2020 · Doa yang Terkabul',
+        text: 'Nadia mengusap punggung tangan Damar sambil tersenyum lembut. "Tadi pagi waktu merapikan kamar, kubaca sekali lagi kalimatmu di bawah buku kain bungaku tahun 2020 itu, Mas. Rasanya doa subuhku di RS Harapan enam tahun lalu benar-benar terkabul pagi ini."',
         nextNodeId: 'ep_tr_f2',
       },
       ep_tr_f2: {

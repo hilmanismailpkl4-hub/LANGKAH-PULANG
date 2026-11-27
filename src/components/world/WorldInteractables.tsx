@@ -1867,6 +1867,25 @@ export const WorldInteractables: React.FC = () => {
 
     consider(
       {
+        id: 'interior_nadia_diary_2020',
+        kind: 'story_object',
+        label: store.flags.includes('read_nadia_diary_2020')
+          ? 'Baca Ulang Buku Harian Kehamilan Nadia (2020)'
+          : 'Buka Buku Catatan Bersampul Kain Bunga Milik Nadia',
+        sublabel: store.flags.includes('read_nadia_diary_2020')
+          ? 'Kenangan Tersimpan · Sembilan Bulan Menunggu Kira'
+          : 'Sudut Kamar Jl. Melati No. 14 · Catatan Januari–Agustus 2020',
+        position: [-24.85, 0.08, 66.95],
+        onInteract: () => {
+          playerRuntime.activeSpeakerPos = [-25.1, 0.72, 66.95];
+          store.startDialogue('story_nadia_pregnancy_diary_2020');
+        },
+      },
+      1.85,
+    );
+
+    consider(
+      {
         id: 'interior_living_tv',
         kind: 'story_object',
         label:
@@ -5134,6 +5153,34 @@ export const WorldInteractables: React.FC = () => {
           )}
         </group>
       )}
+
+      {/* Meja Samping & Buku Harian Kehamilan Nadia (2020) Bersampul Kain Bunga di Kamar Jl. Melati */}
+      <group position={[-25.15, 0.08, 66.95]} rotation={[0, 0.16, 0]}>
+        {/* Meja nakas kayu jati kecil */}
+        <mesh position={[0, 0.27, 0]} castShadow receiveShadow>
+          <boxGeometry args={[0.48, 0.54, 0.42]} />
+          <meshStandardMaterial color="#785032" roughness={0.82} />
+        </mesh>
+        {/* Buku harian kain bunga krem-merah muda */}
+        <mesh position={[0.02, 0.56, 0]} rotation={[0, -0.28, 0]} castShadow>
+          <boxGeometry args={[0.22, 0.032, 0.16]} />
+          <meshStandardMaterial
+            color="#f7e8e8"
+            emissive="#fb7185"
+            emissiveIntensity={flags.includes('read_nadia_diary_2020') ? 0.18 : 0.52}
+            roughness={0.68}
+          />
+        </mesh>
+        {/* Pita pembatas merah muda */}
+        <mesh position={[0.11, 0.565, 0.05]} rotation={[0, -0.1, 0]}>
+          <boxGeometry args={[0.08, 0.008, 0.022]} />
+          <meshStandardMaterial color="#e11d48" roughness={0.5} />
+        </mesh>
+        <mesh position={[0.02, 0.86, 0]}>
+          <sphereGeometry args={[0.068, 10, 10]} />
+          <meshBasicMaterial color={flags.includes('read_nadia_diary_2020') ? '#86efac' : '#fda4af'} />
+        </mesh>
+      </group>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (
         <mesh position={[-48, 0.32, 0.5]} rotation={[-Math.PI / 2, 0, 0]}>

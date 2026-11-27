@@ -8,6 +8,7 @@ import { FATHER_CASSETTE_DIALOGUES } from './fatherCassetteStory';
 import { FLASHBACK_DIALOGUES } from './flashbacks';
 import { HENDRA_NIGHT_DIALOGUES } from './hendraNightStory';
 import { KIRA_BEDTIME_DIALOGUES } from './kiraBedtimeStory';
+import { NADIA_DIARY_DIALOGUES } from './nadiaPregnancyDiary';
 import { PROLOGUE_DIALOGUES } from './prologueAndChapters';
 import { SIDE_QUEST_DIALOGUES } from './sideQuests';
 import { CHAPTER_1_DIALOGUES, CHAPTER_1_STEPS } from './storyChapter1';
@@ -590,6 +591,7 @@ export const ALL_DIALOGUES: Record<string, DialogueScript> = {
   ...FATHER_CASSETTE_DIALOGUES,
   ...FLASHBACK_DIALOGUES,
   ...HENDRA_NIGHT_DIALOGUES,
+  ...NADIA_DIARY_DIALOGUES,
   ...EPILOGUE_DIALOGUES,
   ...CHARACTER_ECHO_DIALOGUES,
   ...GIFT_DIALOGUES,

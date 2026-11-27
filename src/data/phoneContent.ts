@@ -160,6 +160,14 @@ export const PHONE_THREADS: PhoneContactThread[] = [
         requiredFlag: 'played_father_cassette_1997',
       },
       {
+        id: 'nd_diary_2020',
+        from: 'them',
+        text: 'Mas... aku baru lihat buku catatan kain bungaku di meja kamar terbuka di halaman RS Harapan tahun 2020. Malu banget sebenernya dibaca kamu, tapi aku lega akhirnya kamu tahu isi hatiku waktu itu 🥺❤️',
+        time: 'Baru saja',
+        chapterMin: 1,
+        requiredFlag: 'read_nadia_diary_2020',
+      },
+      {
         id: 'nd_3',
         from: 'them',
         text: 'Langit udah mulai mendung banget di rumah, Mas. Kalau hujan nanti jangan ngebut ya... aku tunggu kabar kamu.',
@@ -354,6 +362,38 @@ export const PHONE_THREADS: PhoneContactThread[] = [
               kehadiranKeluarga: 2,
               kejujuranDiri: 2,
               setFlags: ['replied_nadia_father_tape_chat'],
+            },
+          },
+        ],
+      },
+      {
+        id: 'prompt_nadia_diary_2020',
+        chapterMin: 1,
+        requiredFlag: 'read_nadia_diary_2020',
+        contextHint: 'Menanggapi Buku Harian Kehamilan Nadia (Januari–Agustus 2020)',
+        options: [
+          {
+            id: 'rep_nd_d20_tears',
+            toneLabel: 'Jujur',
+            text: 'Aku nangis baca halaman terakhirnya, Nad. Enam tahun aku pikir aku berhasil nyembunyiin takutku—ternyata kamu tahu semuanya dan milih doain aku diam-diam.',
+            replyFromThem: 'Karena aku istri kamu, Mas... mana mungkin aku nggak kenal mata suamiku sendiri. Mulai sekarang jangan tanggung takutnya sendirian lagi ya ❤️',
+            replyTime: 'Baru saja',
+            effects: {
+              kejujuranDiri: 3,
+              kehadiranKeluarga: 3,
+              setFlags: ['replied_nadia_diary_chat'],
+            },
+          },
+          {
+            id: 'rep_nd_d20_song',
+            toneLabel: 'Hangat',
+            text: 'Aku baru ingat janjiku waktu tempelin telinga ke perutmu bulan Januari 2020 itu, Nad. Lagu buat Kira sama kamu pasti kuselesaikan malam ini.',
+            replyFromThem: 'Ya ampun Mas... Kira pasti loncat-loncat kegirangan kalau tahu lagu itu udah kamu janjikan sejak dia masih seukuran kacang!',
+            replyTime: 'Baru saja',
+            effects: {
+              kehadiranKeluarga: 3,
+              kejujuranDiri: 2,
+              setFlags: ['replied_nadia_diary_chat'],
             },
           },
         ],
@@ -968,6 +1008,17 @@ export const PHONE_THREADS: PhoneContactThread[] = [
 ];
 
 export const VOICE_NOTES: VoiceNoteItem[] = [
+  {
+    id: 'vn_nadia_diary_2020',
+    speakerId: 'nadia',
+    senderName: 'Nadia (Buku Harian 2020)',
+    title: 'Doa Subuh Ruang Bersalin (09 Agustus 2020)',
+    duration: '0:21',
+    chapterMin: 1,
+    requiredFlag: 'read_nadia_diary_2020',
+    transcript:
+      'Entah apa yang semalam Ayahmu lepaskan di luar sana demi membayar ruang operasi kita, Bunda tidak tega bertanya sebelum dia siap bercerita sendiri. Tuhan, jangan biarkan kerasnya kota membuat dia lupa betapa kami mencintainya.',
+  },
   {
     id: 'vn_bapak_1997',
     speakerId: 'pak_darman',

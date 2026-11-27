@@ -12,6 +12,19 @@ import {
  */
 export const CHARACTER_ECHO_DIALOGUES: Record<string, DialogueScript> = {
   // === NADIA ===
+  echo_nadia_diary_2020: {
+    id: 'echo_nadia_diary_2020',
+    startNodeId: 'en_d20_1',
+    nodes: {
+      en_d20_1: {
+        id: 'en_d20_1',
+        speaker: 'nadia',
+        emotion: 'haru',
+        echoTag: 'Ingatan Nadia · Buku Harian Kehamilan 2020',
+        text: 'Mas... aku seneng akhirnya kamu baca buku kain bunga tahun 2020 itu. Dari dulu waktu kamu belum punya jabatan apa-apa pun, hatiku sudah penuh cuma dengan duduk di sebelahmu.',
+      },
+    },
+  },
   echo_nadia_dinner_apology: {
     id: 'echo_nadia_dinner_apology',
     startNodeId: 'en_da_1',
@@ -320,6 +333,9 @@ export function resolveDynamicNpcAmbient(
   repliedPhonePrompts: Record<string, string>,
 ): { dialogueId: string; sublabel: string } | null {
   if (npcId === 'nadia') {
+    if (flags.includes('read_nadia_diary_2020')) {
+      return { dialogueId: 'echo_nadia_diary_2020', sublabel: 'Ingatan Nadia · Buku 2020' };
+    }
     if (flags.includes('played_father_cassette_1997')) {
       return { dialogueId: 'echo_nadia_father_tape_1997', sublabel: 'Ingatan Nadia · Kaset 1997' };
     }
@@ -458,6 +474,16 @@ export function buildEndingJourneyRecap(params: {
 
   const echoCards: JourneyEchoCard[] = [];
 
+  if (flags.includes('read_nadia_diary_2020')) {
+    echoCards.push({
+      id: 'ec_nadia_diary_2020',
+      label: 'Buku Harian Kehamilan Nadia (2020)',
+      summary: flags.includes('wrote_reply_in_nadia_diary')
+        ? 'Kamu membaca catatan sembilan bulan Nadia menunggu kelahiran Kira dan menuliskan janji pulang di bawah doa subuhnya di RS Harapan.'
+        : 'Lewat buku bersampul kain bunga tahun 2020, kamu melihat pernikahanmu dari mata Nadia yang mencintaimu dalam doa paling sunyi.',
+      tone: 'rose',
+    });
+  }
   if (flags.includes('played_father_cassette_1997')) {
     echoCards.push({
       id: 'ec_father_tape_1997',

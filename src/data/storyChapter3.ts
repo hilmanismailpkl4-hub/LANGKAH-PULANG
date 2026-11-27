@@ -233,6 +233,7 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
         echoTag: 'Gema Dongeng · Nakhoda Perahu Kertas',
         text: 'Kira langsung pulas sambil memeluk perahu kertasnya, Mas... Aku tadi berdiri di dekat kusen pintu dan dengar seluruh dongeng Nakhoda Perahu Kertasmu. Sekarang... giliran Nakhodanya duduk di sini dan bicara jujur sama Ratu Pelabuhannya, ya.',
         conditionalNext: [
+          { requiredFlag: 'wrote_reply_in_nadia_diary', nextNodeId: 'ch3_fin_nadia_echo_diary_2020' },
           { requiredFlag: 'played_father_cassette_1997', nextNodeId: 'ch3_fin_nadia_echo_father_tape' },
           { requiredFlag: 'reconciled_dinner_memory_chat', nextNodeId: 'ch3_fin_nadia_echo_chat' },
           { requiredFlag: 'flashback_dinner_done', nextNodeId: 'ch3_fin_nadia_echo_fb' },
@@ -317,11 +318,20 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
         emotion: 'haru',
         text: 'Kira sudah masuk kamar... Mas, lihat mataku. Tolong jangan pakai topeng "aku baik-baik saja" lagi malam ini. Sebenarnya apa yang sedang kamu lawan di dalam kepalamu?',
         conditionalNext: [
+          { requiredFlag: 'wrote_reply_in_nadia_diary', nextNodeId: 'ch3_fin_nadia_echo_diary_2020' },
           { requiredFlag: 'played_father_cassette_1997', nextNodeId: 'ch3_fin_nadia_echo_father_tape' },
           { requiredFlag: 'reconciled_dinner_memory_chat', nextNodeId: 'ch3_fin_nadia_echo_chat' },
           { requiredFlag: 'flashback_dinner_done', nextNodeId: 'ch3_fin_nadia_echo_fb' },
           { requiredFlag: 'gave_gift_nadia', nextNodeId: 'ch3_fin_nadia_echo_flower' },
         ],
+        nextNodeId: 'ch3_fin_9',
+      },
+      ch3_fin_nadia_echo_diary_2020: {
+        id: 'ch3_fin_nadia_echo_diary_2020',
+        speaker: 'nadia',
+        emotion: 'haru',
+        echoTag: 'Ingatan Nadia · Balasan Tinta di Buku Harian 2020',
+        text: 'Mas... aku sudah membaca sebaris tulisan tanganmu di halaman terakhir buku harian kehamilanku tadi. Enam tahun aku menyimpan doa subuh di RS Harapan itu sendirian... dan hari ini kamu menjawabnya.',
         nextNodeId: 'ch3_fin_9',
       },
       ch3_fin_nadia_echo_father_tape: {
