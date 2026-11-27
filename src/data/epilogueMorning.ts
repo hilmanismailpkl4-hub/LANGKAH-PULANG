@@ -639,6 +639,20 @@ export const EPILOGUE_DIALOGUES: Record<string, DialogueScript> = {
         speaker: 'pak_hendra',
         emotion: 'hangat',
         text: 'Selamat pagi, Damar. Senang melihatmu pagi ini dengan langkah yang tidak terburu-buru. Sebenarnya... semalam saya banyak merenung setelah pembicaraan jujur kita.',
+        conditionalNext: [
+          {
+            requiredFlag: 'hendra_encouraged_call_naya',
+            nextNodeId: 'ep_ph_w1_naya',
+          },
+        ],
+        nextNodeId: 'ep_ph_w2',
+      },
+      ep_ph_w1_naya: {
+        id: 'ep_ph_w1_naya',
+        speaker: 'pak_hendra',
+        emotion: 'haru',
+        echoTag: 'Buah Kejujuranmu · Telepon Malam ke Melbourne',
+        text: 'Damar! Semalam begitu kamu keluar dari lobi, saya benar-benar memberanikan diri menelepon Naya dan cerita soal gambar krayon perahu di tas kerja saya dulu. Kamu tahu? Untuk pertama kalinya dalam lima tahun, kami ngobrol dan tertawa dua puluh menit penuh—dan bulan depan waktu libur kuliah dia mau pulang ke rumah!',
         nextNodeId: 'ep_ph_w2',
       },
       ep_ph_w2: {

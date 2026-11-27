@@ -612,6 +612,13 @@ export const WorldInteractables: React.FC = () => {
         if (store.mainStepId === 'ch2_1_persimpangan') {
           return { dialogueId: 'ch2_hendra_persimpangan', highlight: 'main', sublabel: 'Persimpangan' };
         }
+        if (store.chapter === 3 && !store.flags.includes('ch3_hendra_night_talk_done')) {
+          return {
+            dialogueId: 'ch3_hendra_ayah_terlambat',
+            highlight: 'side',
+            sublabel: 'Empat Mata Malam · Ayah yang Terlambat Pulang',
+          };
+        }
       }
       if (npcId === 'mas_bagas') {
         if (store.mainStepId === 'ch1_4_benda_lama') {
@@ -4232,6 +4239,26 @@ export const WorldInteractables: React.FC = () => {
       2.3,
     );
 
+    if (store.chapter >= 3 || store.flags.includes('ch3_hendra_night_talk_done')) {
+      consider(
+        {
+          id: 'story_hendra_night_window',
+          kind: 'story_object',
+          label: store.flags.includes('ch3_hendra_night_talk_done')
+            ? 'Putar Ulang Adegan: Ayah yang Terlambat Pulang (Pak Hendra)'
+            : 'Bicara Empat Mata dengan Pak Hendra di Jendela Malam',
+          sublabel: 'Lobi Menara Nusantara · Kopi Dingin & Foto Wisuda Naya',
+          position: [29.15, 0.08, -21.75],
+          onInteract: () => {
+            playerRuntime.activeSpeakerPos = [27.0, 0.08, -22.5];
+            playerRuntime.activeSpeakerId = 'pak_hendra';
+            store.startDialogue('ch3_hendra_ayah_terlambat');
+          },
+        },
+        2.35,
+      );
+    }
+
     consider(
       {
         id: 'portal_down',
@@ -5008,6 +5035,46 @@ export const WorldInteractables: React.FC = () => {
             }
           />
         </mesh>
+      </group>
+
+      {/* Meja Kopi Malam, Map Proyek Kartika & Ponsel Foto Naya di Jendela Lobi Menara Nusantara */}
+      <group position={[29.15, 0.08, -21.75]} rotation={[0, -0.18, 0]}>
+        {/* Kaki meja samping */}
+        <mesh position={[0, 0.26, 0]} castShadow>
+          <cylinderGeometry args={[0.04, 0.16, 0.52, 12]} />
+          <meshStandardMaterial color="#334155" metalness={0.6} roughness={0.35} />
+        </mesh>
+        {/* Daun meja kayu gelap & kaca */}
+        <mesh position={[0, 0.53, 0]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.38, 0.38, 0.035, 18]} />
+          <meshStandardMaterial color="#1e293b" metalness={0.35} roughness={0.28} />
+        </mesh>
+        {/* Map biru tua Proyek Kartika yang disingkirkan */}
+        <mesh position={[-0.1, 0.56, -0.04]} rotation={[0, 0.32, 0]} castShadow>
+          <boxGeometry args={[0.24, 0.018, 0.18]} />
+          <meshStandardMaterial color="#1e3a5f" roughness={0.65} />
+        </mesh>
+        {/* Cangkir kopi kertas dingin */}
+        <mesh position={[0.13, 0.61, -0.06]} castShadow>
+          <cylinderGeometry args={[0.042, 0.033, 0.12, 12]} />
+          <meshStandardMaterial color="#e2e8f0" roughness={0.7} />
+        </mesh>
+        {/* Ponsel menyala redup menampilkan foto Naya */}
+        <mesh position={[0.05, 0.556, 0.11]} rotation={[0, -0.4, 0]}>
+          <boxGeometry args={[0.075, 0.009, 0.14]} />
+          <meshStandardMaterial
+            color="#0f172a"
+            emissive="#7dd3fc"
+            emissiveIntensity={timeOfDay === 'night' ? 0.85 : 0.25}
+            roughness={0.25}
+          />
+        </mesh>
+        {!flags.includes('ch3_hendra_night_talk_done') && timeOfDay === 'night' && (
+          <mesh position={[0, 0.92, 0]}>
+            <sphereGeometry args={[0.075, 10, 10]} />
+            <meshBasicMaterial color="#7dd3fc" />
+          </mesh>
+        )}
       </group>
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (

@@ -497,6 +497,16 @@ export function buildStoryTimeline(params: {
       tone: 'gold',
     });
   }
+  if (flags.includes('ch3_hendra_night_talk_done')) {
+    echoBadges.push({
+      id: 'eb_hendra_night_talk',
+      title: 'Empat Mata Malam · Ayah yang Terlambat Pulang',
+      detail: flags.includes('hendra_encouraged_call_naya')
+        ? 'Kamu mendorong Pak Hendra menelepon Naya di Melbourne dan menerima restunya merombak lembur Proyek Kartika.'
+        : 'Pengakuan Pak Hendra tentang kesepian ruangan lantai 18 menemani langkahmu menuju meja makan Bab 3.',
+      tone: 'sky',
+    });
+  }
   if (flags.includes('ch3_told_kira_bedtime_story')) {
     echoBadges.push({
       id: 'eb_kira_bedtime',

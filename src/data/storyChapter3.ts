@@ -17,7 +17,7 @@ export const CHAPTER_3_STEPS: MainObjectiveStep[] = [
     description: 'Saatnya turun dan berjalan pulang ke rumah di Jl. Melati No. 14. Lampu ruang makan masih menyala menunggumu.',
     targetLocation: 'rumah_damar',
     waypoint: [-17.5, 1.5, 65.8],
-    hint: 'Turun menggunakan Lift Rooftop, lalu pulang ke Rumah Keluarga Damar. Hampiri Kira untuk membacakan dongeng sebelum tidur, lalu temui Nadia di meja makan.',
+    hint: 'Turun menggunakan Lift Rooftop ke Lobi (kamu bisa menyapa Pak Hendra di dekat jendela malam terlebih dahulu), lalu pulang ke Rumah Keluarga Damar untuk menemui Kira & Nadia.',
   },
 ];
 
@@ -45,6 +45,10 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
             nextNodeId: 'ch3_rt_echo_father_tape',
           },
           {
+            requiredFlag: 'ch3_hendra_night_talk_done',
+            nextNodeId: 'ch3_rt_echo_hendra_night',
+          },
+          {
             requiredFlag: 'flashback_2020_done',
             nextNodeId: 'ch3_rt_echo_guitar',
           },
@@ -65,6 +69,14 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
         emotion: 'haru',
         echoTag: 'Gema Memori · Pita Kaset Almarhum Bapak (1997)',
         text: 'Di sela desir angin rooftop, bisikan serak almarhum Bapak dari ujung kaset tahun 1997 itu kembali memeluk telingaku: "Rumah itu bukan tempat orang pamer kuat—rumah itu tempat kamu boleh meletakkan tasmu." Empat belas tahun beliau tiada, tapi suaranya yang membukakan jalan pulangku malam ini.',
+        nextNodeId: 'ch3_rt_3',
+      },
+      ch3_rt_echo_hendra_night: {
+        id: 'ch3_rt_echo_hendra_night',
+        speaker: 'damar_batin',
+        emotion: 'haru',
+        echoTag: 'Gema Lobi Malam · Pengakuan Pak Hendra',
+        text: 'Di bawah kakiku tepat ada lantai delapan belas yang selama ini kuincar—ruangan sudut tempat Pak Hendra tadi mengaku kesepian sambil menatap foto wisuda putrinya di Melbourne. Aku tidak mau menukar tawa Kira dengan ruangan sedingin itu.',
         nextNodeId: 'ch3_rt_3',
       },
       ch3_rt_echo_guitar: {
@@ -456,6 +468,20 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
         speaker: 'damar',
         emotion: 'hangat',
         text: 'Maafin aku, Nad. Aku memang capek dan sempat kehilangan arah. Besok aku bicara sama Pak Hendra supaya jam kerjaku nggak lagi memakan seluruh waktu kita. Mulai minggu ini, meja makan ini nggak boleh dingin lagi.',
+        conditionalNext: [
+          {
+            requiredFlag: 'hendra_blessed_homecoming',
+            nextNodeId: 'ch3_fin_balance_hendra_echo',
+          },
+        ],
+        nextNodeId: 'ch3_fin_balance_2',
+      },
+      ch3_fin_balance_hendra_echo: {
+        id: 'ch3_fin_balance_hendra_echo',
+        speaker: 'damar',
+        emotion: 'haru',
+        echoTag: 'Gema Lobi Malam · Restu Pak Hendra',
+        text: 'Bahkan tadi sebelum pulang, Pak Hendra sendiri yang cerita soal penyesalannya kehilangan masa kecil putrinya, Nad. Mulai besok Proyek Kartika sudah dipecah jadi dua tim tanpa lembur malam lagi.',
         nextNodeId: 'ch3_fin_balance_2',
       },
       ch3_fin_balance_2: {

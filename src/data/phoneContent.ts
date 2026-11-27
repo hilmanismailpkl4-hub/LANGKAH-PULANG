@@ -793,6 +793,14 @@ export const PHONE_THREADS: PhoneContactThread[] = [
         time: '20:10',
         chapterMin: 3,
       },
+      {
+        id: 'ph_night_naya',
+        from: 'them',
+        text: 'Damar, terima kasih sudah mau berhenti sebentar di dekat jendela lobi malam ini. Jarang sekali ada orang di gedung ini yang mau mendengar cerita di luar target proyek.',
+        time: 'Baru saja',
+        chapterMin: 3,
+        requiredFlag: 'ch3_hendra_night_talk_done',
+      },
     ],
     prompts: [
       {
@@ -877,6 +885,37 @@ export const PHONE_THREADS: PhoneContactThread[] = [
             replyFromThem: 'Jangan, Damar. Email saya tutup sampai besok jam 9. Belajarlah membiarkan malam menjadi milikmu sendiri.',
             replyTime: '20:14',
             effects: { ambisiPelarian: 1 },
+          },
+        ],
+      },
+      {
+        id: 'prompt_hendra_night_naya',
+        chapterMin: 3,
+        requiredFlag: 'ch3_hendra_night_talk_done',
+        contextHint: 'Menanggapi curahan hati Pak Hendra tentang putrinya, Naya',
+        options: [
+          {
+            id: 'rep_ph_naya_warm',
+            toneLabel: 'Hangat',
+            text: 'Sama-sama, Pak Hendra. Semoga obrolan telepon Bapak dengan Naya di Melbourne malam ini berjalan hangat ya.',
+            replyFromThem: 'Baru saja kami tutup teleponnya, Damar—dua belas menit pertama setelah bertahun-tahun tanpa canggung. Rasanya plong sekali. Selamat malam bersama keluargamu.',
+            replyTime: 'Baru saja',
+            effects: {
+              kehadiranKeluarga: 2,
+              kejujuranDiri: 2,
+              setFlags: ['hendra_encouraged_call_naya'],
+            },
+          },
+          {
+            id: 'rep_ph_naya_honest',
+            toneLabel: 'Jujur',
+            text: 'Cerita Bapak tadi benar-benar menyelamatkan langkah saya malam ini, Pak. Saya janji tidak akan membiarkan Kira kehilangan ayahnya demi kesibukan.',
+            replyFromThem: 'Pegang janji itu erat-erat, Damar. Kalau suatu hari kamu mulai goyah karena urusan kantor lagi, biar saya sendiri yang menyuruhmu pulang jam lima sore.',
+            replyTime: 'Baru saja',
+            effects: {
+              kejujuranDiri: 2,
+              kehadiranKeluarga: 2,
+            },
           },
         ],
       },

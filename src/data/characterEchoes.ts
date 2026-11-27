@@ -214,6 +214,19 @@ export const CHARACTER_ECHO_DIALOGUES: Record<string, DialogueScript> = {
   },
 
   // === PAK HENDRA ===
+  echo_hendra_after_night_talk: {
+    id: 'echo_hendra_after_night_talk',
+    startNodeId: 'eh_nt_1',
+    nodes: {
+      eh_nt_1: {
+        id: 'eh_nt_1',
+        speaker: 'pak_hendra',
+        emotion: 'hangat',
+        echoTag: 'Ingatan Pak Hendra · Empat Mata di Jendela Malam',
+        text: 'Pulanglah sekarang, Damar. Terima kasih sudah menemani orang tua ini mengobrol jujur di dekat jendela tadi—jangan biarkan lampu ruang makan di rumahmu menunggu lebih lama lagi.',
+      },
+    },
+  },
   echo_hendra_honest: {
     id: 'echo_hendra_honest',
     startNodeId: 'eh_ho_1',
@@ -348,6 +361,9 @@ export function resolveDynamicNpcAmbient(
   }
 
   if (npcId === 'pak_hendra') {
+    if (flags.includes('ch3_hendra_night_talk_done')) {
+      return { dialogueId: 'echo_hendra_after_night_talk', sublabel: 'Ingatan Pak Hendra · Naya' };
+    }
     if (flags.includes('ch2_honest_with_hendra') || repliedPhonePrompts.prompt_hendra_ch2 === 'rep_ph2_firm') {
       return { dialogueId: 'echo_hendra_honest', sublabel: 'Ingatan Pak Hendra' };
     }
@@ -481,7 +497,16 @@ export function buildEndingJourneyRecap(params: {
       tone: 'rose',
     });
   }
-  if (flags.includes('ch2_honest_with_hendra') || flags.includes('ch2_stood_up_for_family')) {
+  if (flags.includes('ch3_hendra_night_talk_done')) {
+    echoCards.push({
+      id: 'ec_hendra_night_mirror',
+      label: 'Ayah yang Terlambat Pulang (Pak Hendra)',
+      summary: flags.includes('hendra_encouraged_call_naya')
+        ? 'Di lobi malam Menara Nusantara, kamu mendengar penyesalan terdalam Pak Hendra soal putrinya, Naya—dan menyemangatinya menelepon putrinya kembali.'
+        : 'Di dekat jendela malam Menara Nusantara, pengakuan jujur Pak Hendra tentang kesepian lantai 18 menjadi cermin tajam sebelum kamu pulang.',
+      tone: 'sky',
+    });
+  } else if (flags.includes('ch2_honest_with_hendra') || flags.includes('ch2_stood_up_for_family')) {
     echoCards.push({
       id: 'ec_hendra_bound',
       label: 'Keberanian di Menara Nusantara',
