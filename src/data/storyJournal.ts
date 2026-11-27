@@ -499,6 +499,22 @@ export function buildStoryTimeline(params: {
       tone: 'gold',
     });
   }
+  if (flags.includes('heard_pak_slamet_ledger_story')) {
+    echoBadges.push({
+      id: 'eb_pak_slamet_ledger',
+      title: 'Buku Kas "Dibayar Doa" · Warisan Bapak 1998',
+      detail: 'Jejak kebaikan almarhum Bapakmu hidup di angkringan Pak Slamet yang menjaga mulut Jl. Melati.',
+      tone: 'gold',
+    });
+  }
+  if (flags.includes('heard_pak_budi_seasons_story')) {
+    echoBadges.push({
+      id: 'eb_pak_budi_seasons',
+      title: 'Dua Puluh Musim Pak Budi · Danau Senja',
+      detail: 'Pesan pensiun Pak Budi agar tidak menunda berjalan bersama keluarga sampai rambut memutih.',
+      tone: 'sky',
+    });
+  }
   if (flags.includes('heard_mbak_lilis_receipt_story')) {
     echoBadges.push({
       id: 'eb_mbak_lilis_receipt',

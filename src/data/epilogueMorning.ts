@@ -955,6 +955,87 @@ export const EPILOGUE_DIALOGUES: Record<string, DialogueScript> = {
     },
   },
 
+  epilogue_darman_warm: {
+    id: 'epilogue_darman_warm',
+    startNodeId: 'ep_dm_w1',
+    nodes: {
+      ep_dm_w1: {
+        id: 'ep_dm_w1',
+        speaker: 'pak_darman',
+        emotion: 'hangat',
+        text: 'Selamat pagi, Nak Damar! Langkah kakimu pagi ini terdengar tenang sekali—persis langkah almarhum Pak Wiryo kalau hari Minggu pagi mau ngajak kamu jalan-jalan. Semoga rumahmu di Jl. Melati selalu penuh cerita hangat ya!',
+        onEnter: { playSfx: 'page' },
+      },
+    },
+  },
+
+  epilogue_darman_bad: {
+    id: 'epilogue_darman_bad',
+    startNodeId: 'ep_dm_b1',
+    nodes: {
+      ep_dm_b1: {
+        id: 'ep_dm_b1',
+        speaker: 'pak_darman',
+        emotion: 'sedih',
+        text: 'Nak Damar... pagi hujan begini sudah mengejar jadwal luar kota lagi ya? Ingat pesan Bapak, Nak: kalimat "nanti saja" itu pencuri waktu paling halus dalam hidup kita.',
+      },
+    },
+  },
+
+  epilogue_slamet_warm: {
+    id: 'epilogue_slamet_warm',
+    startNodeId: 'ep_sl_w1',
+    nodes: {
+      ep_sl_w1: {
+        id: 'ep_sl_w1',
+        speaker: 'pak_slamet',
+        emotion: 'ceria',
+        text: 'Pagi seger, Mas Damar! Semalam sepuluh bungkus sego kucing titipan kebaikanmu habis dinikmati adik-adik perantau yang pulang kemalaman—mereka semua nitip doa kesehatan buat keluarga Mas Damar di No. 14!',
+        onEnter: { playSfx: 'coffee' },
+      },
+    },
+  },
+
+  epilogue_slamet_bad: {
+    id: 'epilogue_slamet_bad',
+    startNodeId: 'ep_sl_b1',
+    nodes: {
+      ep_sl_b1: {
+        id: 'ep_sl_b1',
+        speaker: 'pak_slamet',
+        emotion: 'sedih',
+        text: 'Lho Mas Damar, gerimis subuh begini sudah rapi mau berangkat jauh? Nanti malam kalau pulang kemalaman lagi, mampir minum jahe hangat dulu di gerobak Bapak biar nggak masuk angin ya.',
+      },
+    },
+  },
+
+  epilogue_budi_warm: {
+    id: 'epilogue_budi_warm',
+    startNodeId: 'ep_bd_w1',
+    nodes: {
+      ep_bd_w1: {
+        id: 'ep_bd_w1',
+        speaker: 'pak_budi',
+        emotion: 'hangat',
+        text: 'Pagi yang indah di Danau Senja, Mas Damar! Senang sekali melihat Mas menepati janji menikmati pagi tanpa terburu-buru mengejar ponsel—pemandangan keluarga yang rukun di taman ini adalah hadiah pensiun terbaik buat saya.',
+        onEnter: { playSfx: 'chime' },
+      },
+    },
+  },
+
+  epilogue_budi_bad: {
+    id: 'epilogue_budi_bad',
+    startNodeId: 'ep_bd_b1',
+    nodes: {
+      ep_bd_b1: {
+        id: 'ep_bd_b1',
+        speaker: 'pak_budi',
+        emotion: 'sedih',
+        text: 'Hujan pagi turun tipis di atas dermaga, Mas Damar... kalau urusan proyek besarnya sudah selesai nanti, jangan lupa mampir ke danau selagi putri kecil Mas masih suka mengejar merpati taman ya.',
+      },
+    },
+  },
+
   epilogue_wati_warm: {
     id: 'epilogue_wati_warm',
     startNodeId: 'ep_wt_w1',
@@ -1107,6 +1188,21 @@ export function resolveEpilogueNpcDialogue(
     return endingId === 'bad'
       ? { dialogueId: 'epilogue_lilis_bad', sublabel: 'Epilog · Lampu Neon Pagi' }
       : { dialogueId: 'epilogue_lilis_warm', sublabel: 'Epilog · Shift Pagi Baru' };
+  }
+  if (npcId === 'pak_darman') {
+    return endingId === 'bad'
+      ? { dialogueId: 'epilogue_darman_bad', sublabel: 'Epilog · Lapak Buku Hujan' }
+      : { dialogueId: 'epilogue_darman_warm', sublabel: 'Epilog · Langkah yang Teduh' };
+  }
+  if (npcId === 'pak_slamet') {
+    return endingId === 'bad'
+      ? { dialogueId: 'epilogue_slamet_bad', sublabel: 'Epilog · Bara Arang Subuh' }
+      : { dialogueId: 'epilogue_slamet_warm', sublabel: 'Epilog · Doa Sepuluh Perantau' };
+  }
+  if (npcId === 'pak_budi') {
+    return endingId === 'bad'
+      ? { dialogueId: 'epilogue_budi_bad', sublabel: 'Epilog · Dermaga Berkabut' }
+      : { dialogueId: 'epilogue_budi_warm', sublabel: 'Epilog · Hadiah Pensiun Taman' };
   }
   if (epilogueCompleted && npcId === 'nadia') {
     return endingId === 'bad'

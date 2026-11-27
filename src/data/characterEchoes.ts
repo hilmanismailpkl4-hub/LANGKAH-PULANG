@@ -507,6 +507,24 @@ export function buildEndingJourneyRecap(params: {
 
   const echoCards: JourneyEchoCard[] = [];
 
+  if (flags.includes('heard_pak_slamet_ledger_story')) {
+    echoCards.push({
+      id: 'ec_pak_slamet_ledger',
+      label: 'Buku Kas "Dibayar Doa" (Pak Slamet)',
+      summary:
+        'Kamu menemukan bahwa kebaikan almarhum Bapakmu tahun 1998 tumbuh menjadi gerobak angkringan Pak Slamet yang mengenyangkan para perantau.',
+      tone: 'gold',
+    });
+  }
+  if (flags.includes('heard_pak_budi_seasons_story')) {
+    echoCards.push({
+      id: 'ec_pak_budi_seasons',
+      label: 'Dua Puluh Musim Danau Senja (Pak Budi)',
+      summary:
+        'Dari penjaga taman yang akan pensiun bulan depan, kamu belajar untuk menggenggam tangan kecil Kira hari ini sebelum waktu berlalu.',
+      tone: 'sky',
+    });
+  }
   if (flags.includes('heard_mbak_lilis_receipt_story')) {
     echoCards.push({
       id: 'ec_mbak_lilis_receipt',

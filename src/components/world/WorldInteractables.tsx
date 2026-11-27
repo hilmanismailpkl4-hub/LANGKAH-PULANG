@@ -736,6 +736,9 @@ export const WorldInteractables: React.FC = () => {
         if (sq.status === 'active' && sq.stage === 2) {
           return { dialogueId: 'sq_pak_slamet_complete', highlight: 'side', sublabel: 'Selesaikan Misi' };
         }
+        if (sq.status === 'completed' && !store.flags.includes('heard_pak_slamet_ledger_story')) {
+          return { dialogueId: 'story_pak_slamet_buku_lunas', highlight: 'side', sublabel: 'Buku Kas Dibayar Doa' };
+        }
         return { dialogueId: 'ambient_slamet', highlight: null, sublabel: 'Berbincang' };
       }
 
@@ -756,6 +759,9 @@ export const WorldInteractables: React.FC = () => {
         if (!sq) return { dialogueId: 'sq_pak_budi_start', highlight: 'side', sublabel: 'Misi Warga' };
         if (sq.status === 'active' && sq.stage === 2) {
           return { dialogueId: 'sq_pak_budi_complete', highlight: 'side', sublabel: 'Selesaikan Misi' };
+        }
+        if (sq.status === 'completed' && !store.flags.includes('heard_pak_budi_seasons_story')) {
+          return { dialogueId: 'story_pak_budi_dua_puluh_musim', highlight: 'side', sublabel: 'Catatan Dua Puluh Musim' };
         }
         return { dialogueId: 'ambient_budi', highlight: null, sublabel: 'Berbincang' };
       }
@@ -1316,6 +1322,46 @@ export const WorldInteractables: React.FC = () => {
         },
       },
       2.8,
+    );
+
+    consider(
+      {
+        id: 'story_pak_slamet_ledger_spot',
+        kind: 'story_object',
+        label: store.flags.includes('heard_pak_slamet_ledger_story')
+          ? 'Kenang Kembali Buku Kas "Dibayar Doa" Pak Slamet'
+          : 'Periksa Buku Tulis Batik di Samping Gerobak Pak Slamet',
+        sublabel: store.flags.includes('heard_pak_slamet_ledger_story')
+          ? 'Kenangan Tersimpan · Jejak Kebaikan Bapak 1998'
+          : 'Angkringan Jl. Melati · Catatan Lunas Para Perantau',
+        position: [-11.85, 0, 41.35],
+        onInteract: () => {
+          playerRuntime.activeSpeakerPos = [-12.8, 0, 40.2];
+          playerRuntime.activeSpeakerId = 'pak_slamet';
+          store.startDialogue('story_pak_slamet_buku_lunas');
+        },
+      },
+      2.2,
+    );
+
+    consider(
+      {
+        id: 'story_pak_budi_seasons_spot',
+        kind: 'story_object',
+        label: store.flags.includes('heard_pak_budi_seasons_story')
+          ? 'Kenang Kembali Catatan Dua Puluh Musim Pak Budi'
+          : 'Periksa Topi Rimba & Buku Musim Penjaga Taman Pak Budi',
+        sublabel: store.flags.includes('heard_pak_budi_seasons_story')
+          ? 'Kenangan Tersimpan · Pesan Pensiun Tepi Danau'
+          : 'Selatan Danau Senja · Pengabdian Dua Dekade',
+        position: [-66.45, 0, -37.85],
+        onInteract: () => {
+          playerRuntime.activeSpeakerPos = [-67.5, 0, -37.0];
+          playerRuntime.activeSpeakerId = 'pak_budi';
+          store.startDialogue('story_pak_budi_dua_puluh_musim');
+        },
+      },
+      2.25,
     );
 
     // === 3C. KULINER & NONGKRONG 3: MEJA TERAS KIOS 24 JAM HARMONI ===
@@ -5681,6 +5727,54 @@ export const WorldInteractables: React.FC = () => {
         <mesh position={[0, 0.26, 0]}>
           <sphereGeometry args={[0.062, 10, 10]} />
           <meshBasicMaterial color={flags.includes('heard_mbak_lilis_receipt_story') ? '#86efac' : '#5eead4'} />
+        </mesh>
+      </group>
+
+      {/* Bangku Kecil & Buku Kas Batik "Dibayar Doa" di Samping Angkringan Pak Slamet */}
+      <group position={[-11.85, 0, 41.35]} rotation={[0, 0.45, 0]}>
+        <mesh position={[0, 0.22, 0]} castShadow receiveShadow>
+          <boxGeometry args={[0.38, 0.44, 0.34]} />
+          <meshStandardMaterial color="#6e472b" roughness={0.85} />
+        </mesh>
+        <mesh position={[0, 0.455, 0]} rotation={[0, -0.25, 0]} castShadow>
+          <boxGeometry args={[0.2, 0.022, 0.15]} />
+          <meshStandardMaterial
+            color="#92400e"
+            emissive="#f59e0b"
+            emissiveIntensity={flags.includes('heard_pak_slamet_ledger_story') ? 0.12 : 0.45}
+            roughness={0.68}
+          />
+        </mesh>
+        <mesh position={[0, 0.78, 0]}>
+          <sphereGeometry args={[0.066, 10, 10]} />
+          <meshBasicMaterial color={flags.includes('heard_pak_slamet_ledger_story') ? '#86efac' : '#fbbf24'} />
+        </mesh>
+      </group>
+
+      {/* Bangku Pos & Buku Catatan Dua Puluh Musim + Topi Rimba Pak Budi di Selatan Danau */}
+      <group position={[-66.45, 0, -37.85]} rotation={[0, -0.35, 0]}>
+        <mesh position={[0, 0.23, 0]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.26, 0.28, 0.46, 14]} />
+          <meshStandardMaterial color="#57534e" roughness={0.85} />
+        </mesh>
+        {/* Buku catatan musim kulit cokelat */}
+        <mesh position={[-0.05, 0.475, 0.04]} rotation={[0, 0.2, 0]} castShadow>
+          <boxGeometry args={[0.18, 0.028, 0.14]} />
+          <meshStandardMaterial color="#451a03" roughness={0.7} />
+        </mesh>
+        {/* Topi rimba hijau penjaga taman */}
+        <mesh position={[0.06, 0.5, -0.05]} castShadow>
+          <cylinderGeometry args={[0.09, 0.13, 0.065, 16]} />
+          <meshStandardMaterial
+            color="#365314"
+            emissive="#4ade80"
+            emissiveIntensity={flags.includes('heard_pak_budi_seasons_story') ? 0.1 : 0.35}
+            roughness={0.75}
+          />
+        </mesh>
+        <mesh position={[0, 0.82, 0]}>
+          <sphereGeometry args={[0.068, 10, 10]} />
+          <meshBasicMaterial color={flags.includes('heard_pak_budi_seasons_story') ? '#86efac' : '#7dd3fc'} />
         </mesh>
       </group>
 

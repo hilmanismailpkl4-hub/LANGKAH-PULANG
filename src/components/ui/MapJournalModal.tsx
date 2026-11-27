@@ -2124,6 +2124,115 @@ export const MapJournalModal: React.FC = () => {
                       </div>
                     </div>
 
+                    {/* Kartu Cerita Mendalam Pak Slamet & Pak Budi (Penutup Lingkaran 13 Karakter Kota Senja) */}
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                      <div className="flex flex-col justify-between rounded-2xl border border-amber-300/30 bg-gradient-to-b from-[#261d14]/95 to-dusk-950 p-4 shadow-lg">
+                        <div>
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-amber-300">
+                              ANGKRINGAN JL. MELATI · PAK SLAMET
+                            </span>
+                            {flags.includes('heard_pak_slamet_ledger_story') && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                                <CheckCircle2 className="h-3 w-3" /> Terkenang
+                              </span>
+                            )}
+                          </div>
+                          <h4 className="mt-1.5 font-serif text-base text-amber-50">
+                            Buku Kas Kecil yang Dicoret &ldquo;Dibayar Doa&rdquo;
+                          </h4>
+                          <p className="mt-1 text-xs leading-relaxed text-warm-200/80">
+                            {flags.includes('heard_pak_slamet_ledger_story')
+                              ? 'Jejak dua bungkus nasi almarhum Bapak tahun 1998 yang tumbuh menjadi angkringan hangat bagi perantau.'
+                              : 'Periksa buku tulis bersampul batik di dekat Gerobak Angkringan Pak Slamet di mulut Jl. Melati.'}
+                          </p>
+                        </div>
+                        <div className="mt-3">
+                          {flags.includes('heard_pak_slamet_ledger_story') ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                closeMapJournal();
+                                startDialogue('story_pak_slamet_buku_lunas');
+                              }}
+                              className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-amber-400/95 px-3.5 py-2 text-xs font-semibold text-dusk-950 shadow transition hover:bg-amber-300"
+                            >
+                              <Play className="h-3.5 w-3.5 fill-current" />
+                              <span>Kenang Ulang Kisah</span>
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setCustomWaypoint({
+                                  label: 'Buku Batik Pak Slamet (Angkringan Jl. Melati)',
+                                  position: [-11.85, 0, 41.35],
+                                });
+                                closeMapJournal();
+                              }}
+                              className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-amber-300/40 bg-amber-400/15 px-3.5 py-2 text-xs font-semibold text-amber-100 transition hover:bg-amber-400/25"
+                            >
+                              <Navigation className="h-3.5 w-3.5" />
+                              <span>GPS ke Angkringan Pak Slamet</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col justify-between rounded-2xl border border-sky-300/30 bg-gradient-to-b from-[#152430]/95 to-dusk-950 p-4 shadow-lg">
+                        <div>
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-sky-300">
+                              PENJAGA DANAU SENJA · PAK BUDI
+                            </span>
+                            {flags.includes('heard_pak_budi_seasons_story') && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                                <CheckCircle2 className="h-3 w-3" /> Terkenang
+                              </span>
+                            )}
+                          </div>
+                          <h4 className="mt-1.5 font-serif text-base text-sky-50">
+                            Dua Puluh Musim Menjaga Danau Senja
+                          </h4>
+                          <p className="mt-1 text-xs leading-relaxed text-warm-200/80">
+                            {flags.includes('heard_pak_budi_seasons_story')
+                              ? 'Catatan lapangan dua puluh tahun Pak Budi menjelang pensiun tentang keluarga yang tumbuh di tepi air.'
+                              : 'Periksa topi rimba hijau & buku catatan musim di dekat tempat Pak Budi berdiri di selatan Danau Senja.'}
+                          </p>
+                        </div>
+                        <div className="mt-3">
+                          {flags.includes('heard_pak_budi_seasons_story') ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                closeMapJournal();
+                                startDialogue('story_pak_budi_dua_puluh_musim');
+                              }}
+                              className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-sky-400/95 px-3.5 py-2 text-xs font-semibold text-dusk-950 shadow transition hover:bg-sky-300"
+                            >
+                              <Play className="h-3.5 w-3.5 fill-current" />
+                              <span>Kenang Ulang Kisah</span>
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setCustomWaypoint({
+                                  label: 'Buku Musim Pak Budi (Selatan Danau Senja)',
+                                  position: [-66.45, 0, -37.85],
+                                });
+                                closeMapJournal();
+                              }}
+                              className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-sky-300/40 bg-sky-400/15 px-3.5 py-2 text-xs font-semibold text-sky-100 transition hover:bg-sky-400/25"
+                            >
+                              <Navigation className="h-3.5 w-3.5" />
+                              <span>GPS ke Pos Pak Budi</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div>
                         <h3 className="font-serif text-lg text-warm-50">
