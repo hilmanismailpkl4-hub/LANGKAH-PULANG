@@ -579,6 +579,14 @@ export const PHONE_THREADS: PhoneContactThread[] = [
         time: '20:15',
         chapterMin: 3,
       },
+      {
+        id: 'bm_night_25',
+        from: 'them',
+        text: 'Mar, barusan gue tulis ulang akor bridge "Umur Dua Puluh Lima" di kertas tisu kasir biar nggak lupa lagi hahaha. Lega banget akhirnya nggak ada rahasia lagi di antara kita.',
+        time: 'Baru saja',
+        chapterMin: 3,
+        requiredFlag: 'ch3_bima_night_talk_done',
+      },
     ],
     prompts: [
       {
@@ -656,6 +664,37 @@ export const PHONE_THREADS: PhoneContactThread[] = [
             replyFromThem: 'Pintu Kopi Sudut selalu terbuka buat lo, bro. Hati-hati di jalan.',
             replyTime: '17:49',
             effects: { kejujuranDiri: 1 },
+          },
+        ],
+      },
+      {
+        id: 'prompt_bima_night_25',
+        chapterMin: 3,
+        requiredFlag: 'ch3_bima_night_talk_done',
+        contextHint: 'Menanggapi rahasia enam tahun Bima & lagu "Umur Dua Puluh Lima"',
+        options: [
+          {
+            id: 'rep_bm_n25_pact',
+            toneLabel: 'Hangat',
+            text: 'Simpan kertas tisunya baik-baik, Bim! Sabtu sore gue bawa Nadia sama Kira duduk di barisan depan kedai lo.',
+            replyFromThem: 'Siap!! Gue pasangin lampu senar tambahan di pojok panggung buat kalian bertiga!',
+            replyTime: 'Baru saja',
+            effects: {
+              kehadiranKeluarga: 2,
+              kejujuranDiri: 2,
+              setFlags: ['bima_saturday_acoustic_pact'],
+            },
+          },
+          {
+            id: 'rep_bm_n25_grateful',
+            toneLabel: 'Jujur',
+            text: 'Makasih udah nggak ninggalin panggung kita selama enam tahun ini, Bim. Lo beneran sahabat terbaik yang gue punya.',
+            replyFromThem: 'Ah elah jangan bikin gue mewek sambil nyapu kedai nih! Udah sana masuk rumah, ditungguin Nadia tuh!',
+            replyTime: 'Baru saja',
+            effects: {
+              kejujuranDiri: 2,
+              kehadiranKeluarga: 1,
+            },
           },
         ],
       },

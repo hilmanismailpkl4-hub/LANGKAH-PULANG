@@ -497,6 +497,16 @@ export function buildStoryTimeline(params: {
       tone: 'gold',
     });
   }
+  if (flags.includes('ch3_bima_night_talk_done')) {
+    echoBadges.push({
+      id: 'eb_bima_night_25',
+      title: 'Kursi Terbalik Kopi Sudut · Umur Dua Puluh Lima',
+      detail: flags.includes('bima_sang_bridge_together')
+        ? 'Menyanyikan kembali harmoni suara dua bersama Bima setelah tahu ia menolak kontrak solo 2021 demi menjaga tempatmu.'
+        : 'Bima membuka rahasia enam tahun tentang gitar yang ia gantung di sudut kedai untuk menunggumu kembali bernapas.',
+      tone: 'gold',
+    });
+  }
   if (flags.includes('ch3_hendra_night_talk_done')) {
     echoBadges.push({
       id: 'eb_hendra_night_talk',

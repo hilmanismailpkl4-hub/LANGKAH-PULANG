@@ -173,6 +173,19 @@ export const CHARACTER_ECHO_DIALOGUES: Record<string, DialogueScript> = {
   },
 
   // === BIMA ===
+  echo_bima_after_night_talk: {
+    id: 'echo_bima_after_night_talk',
+    startNodeId: 'eb_nt_1',
+    nodes: {
+      eb_nt_1: {
+        id: 'eb_nt_1',
+        speaker: 'bima',
+        emotion: 'hangat',
+        echoTag: 'Ingatan Bima · Lagu Umur Dua Puluh Lima',
+        text: 'Udah malem, Mar—sana pulang ke Nadia sama Kira dulu! Kursi panggung pojok di Kopi Sudut ini udah gue jagain enam tahun, nggak bakal lari sampai Sabtu sore.',
+      },
+    },
+  },
   echo_bima_flashback_2018: {
     id: 'echo_bima_flashback_2018',
     startNodeId: 'eb_18_1',
@@ -349,6 +362,9 @@ export function resolveDynamicNpcAmbient(
   }
 
   if (npcId === 'bima') {
+    if (flags.includes('ch3_bima_night_talk_done')) {
+      return { dialogueId: 'echo_bima_after_night_talk', sublabel: 'Ingatan Bima · Umur 25' };
+    }
     if (flags.includes('flashback_2018_done')) {
       return { dialogueId: 'echo_bima_flashback_2018', sublabel: 'Ingatan Bima · 2018' };
     }
@@ -495,6 +511,16 @@ export function buildEndingJourneyRecap(params: {
         ? 'Kamu dan Nadia mengenang kembali malam nasi goreng satu sendok plastik di bawah bohlam 5 watt—dan berjanji mengisi meja makan dengan kehadiran nyata.'
         : 'Kamu mengenang malam pertama pindah ke rumah kosong Jl. Melati No. 14 saat meja makan empat kursi masih berupa impian.',
       tone: 'rose',
+    });
+  }
+  if (flags.includes('ch3_bima_night_talk_done')) {
+    echoCards.push({
+      id: 'ec_bima_night_25',
+      label: 'Lagu Umur Dua Puluh Lima (Bima)',
+      summary: flags.includes('bima_sang_bridge_together')
+        ? 'Di antara kursi terbalik Kedai Kopi Sudut malam hari, kamu mendengar rahasia pengorbanan Bima dan menyanyikan kembali harmoni yang terputus enam tahun lalu.'
+        : 'Di Kedai Kopi Sudut yang telah tutup, kamu mengetahui bahwa Bima menjaga gitar di sudut dinding selama enam tahun demi menunggumu pulang.',
+      tone: 'gold',
     });
   }
   if (flags.includes('ch3_hendra_night_talk_done')) {

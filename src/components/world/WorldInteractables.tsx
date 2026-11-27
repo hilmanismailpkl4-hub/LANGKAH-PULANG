@@ -604,6 +604,13 @@ export const WorldInteractables: React.FC = () => {
         if (store.sideQuests.sq_mas_bagas?.status === 'active' && store.sideQuests.sq_mas_bagas.stage === 1) {
           return { dialogueId: 'sq_helper_bima_key', highlight: 'side', sublabel: 'Misi Sampingan' };
         }
+        if (store.chapter === 3 && !store.flags.includes('ch3_bima_night_talk_done')) {
+          return {
+            dialogueId: 'ch3_bima_kursi_terbalik',
+            highlight: 'side',
+            sublabel: 'Kedai Tutup · Lagu Umur Dua Puluh Lima',
+          };
+        }
       }
       if (npcId === 'pak_hendra') {
         if (store.mainStepId === 'ch1_3_kantor_hendra') {
@@ -980,6 +987,26 @@ export const WorldInteractables: React.FC = () => {
       },
       1.95,
     );
+
+    if (store.chapter >= 3 || store.flags.includes('ch3_bima_night_talk_done')) {
+      consider(
+        {
+          id: 'story_bima_night_bar',
+          kind: 'story_object',
+          label: store.flags.includes('ch3_bima_night_talk_done')
+            ? 'Putar Ulang Adegan: Lagu Umur Dua Puluh Lima (Bima)'
+            : 'Duduk Bersama Bima di Kedai yang Sudah Tutup',
+          sublabel: 'Kedai Kopi Sudut Malam · Teko V60 Terakhir & Kertas Akor',
+          position: [-22.15, 0.08, 20.65],
+          onInteract: () => {
+            playerRuntime.activeSpeakerPos = [-20.0, 0.08, 21.0];
+            playerRuntime.activeSpeakerId = 'bima';
+            store.startDialogue('ch3_bima_kursi_terbalik');
+          },
+        },
+        2.25,
+      );
+    }
 
     consider(
       {
@@ -5076,6 +5103,37 @@ export const WorldInteractables: React.FC = () => {
           </mesh>
         )}
       </group>
+
+      {/* Meja Samping Bar Malam Kedai Kopi Bima (Bab 3): Teko V60 Terakhir, 2 Cangkir & Kertas Akor "Umur 25" */}
+      {(timeOfDay === 'night' || flags.includes('ch3_bima_night_talk_done')) && (
+        <group position={[-22.15, 0.08, 20.65]} rotation={[0, 0.25, 0]}>
+          {/* Bangku kayu bulat penyangga teko & cangkir malam */}
+          <mesh position={[0, 0.28, 0]} castShadow receiveShadow>
+            <cylinderGeometry args={[0.3, 0.34, 0.56, 16]} />
+            <meshStandardMaterial color="#5c3d28" roughness={0.8} />
+          </mesh>
+          {/* Kertas tisu bertuliskan progresi akor bridge */}
+          <mesh position={[-0.06, 0.57, 0.05]} rotation={[0, -0.3, 0]}>
+            <boxGeometry args={[0.16, 0.008, 0.12]} />
+            <meshStandardMaterial color="#f8f1e1" emissive="#fbbf24" emissiveIntensity={0.28} roughness={0.75} />
+          </mesh>
+          {/* Dua cangkir keramik kopi Gayo malam */}
+          <mesh position={[0.1, 0.61, -0.04]} castShadow>
+            <cylinderGeometry args={[0.038, 0.032, 0.08, 12]} />
+            <meshStandardMaterial color="#d97706" roughness={0.45} />
+          </mesh>
+          <mesh position={[0.04, 0.61, -0.12]} castShadow>
+            <cylinderGeometry args={[0.038, 0.032, 0.08, 12]} />
+            <meshStandardMaterial color="#f3e8d2" roughness={0.45} />
+          </mesh>
+          {!flags.includes('ch3_bima_night_talk_done') && timeOfDay === 'night' && (
+            <mesh position={[0, 0.94, 0]}>
+              <sphereGeometry args={[0.075, 10, 10]} />
+              <meshBasicMaterial color="#fb923c" />
+            </mesh>
+          )}
+        </group>
+      )}
 
       {mainStepId === 'ch2_2_hujan_jembatan' && (
         <mesh position={[-48, 0.32, 0.5]} rotation={[-Math.PI / 2, 0, 0]}>

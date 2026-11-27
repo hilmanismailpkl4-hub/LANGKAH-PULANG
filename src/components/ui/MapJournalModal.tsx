@@ -1491,6 +1491,69 @@ export const MapJournalModal: React.FC = () => {
                       </div>
                     </div>
 
+                    {/* Kartu Persahabatan Malam Bab 3: Lagu yang Kita Tinggal di Umur Dua Puluh Lima (Bima) */}
+                    <div className="rounded-2xl border border-orange-300/30 bg-gradient-to-r from-[#291a14]/95 via-[#1c1412]/95 to-dusk-950 p-4 shadow-lg">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="max-w-xl">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-orange-300">
+                              PERSAHABATAN BAB III · KEDAI KOPI TUTUP
+                            </span>
+                            {flags.includes('ch3_bima_night_talk_done') && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                                <CheckCircle2 className="h-3 w-3" /> Terkenang
+                              </span>
+                            )}
+                          </div>
+                          <h4 className="mt-1 font-serif text-base text-orange-50 md:text-lg">
+                            Lagu yang Kita Tinggal di Umur Dua Puluh Lima (Bima)
+                          </h4>
+                          <p className="mt-1 text-xs leading-relaxed text-warm-200/80">
+                            {flags.includes('ch3_bima_night_talk_done')
+                              ? 'Di antara kursi-kursi kayu yang dinaikkan ke atas meja saat Kopi Sudut tutup, Bima menceritakan rahasia mengapa ia tak pernah tampil solo sejak enam tahun silam.'
+                              : chapter >= 3
+                                ? 'Mampirlah ke Kedai Kopi Sudut milik Bima pada malam Bab 3 saat kursi-kursi sudah dinaikkan untuk mendengar cerita yang ia simpan enam tahun.'
+                                : 'Terbuka pada Bab 3 (Malam Tenang) di Kedai Kopi Sudut milik Bima.'}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2">
+                          {flags.includes('ch3_bima_night_talk_done') ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                closeMapJournal();
+                                startDialogue('ch3_bima_kursi_terbalik');
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-xl bg-orange-400/95 px-3.5 py-2 text-xs font-semibold text-dusk-950 shadow transition hover:bg-orange-300"
+                            >
+                              <Play className="h-3.5 w-3.5 fill-current" />
+                              <span>Putar Ulang Adegan</span>
+                            </button>
+                          ) : chapter >= 3 ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setCustomWaypoint({
+                                  label: 'Bima · Kedai Kopi Sudut Malam',
+                                  position: [-20.0, 0.08, 21.0],
+                                });
+                                closeMapJournal();
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-xl bg-cyan-400 px-3.5 py-2 text-xs font-semibold text-dusk-950 shadow transition hover:bg-cyan-300"
+                            >
+                              <Navigation className="h-3.5 w-3.5" />
+                              <span>GPS ke Kedai Bima</span>
+                            </button>
+                          ) : (
+                            <span className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[11px] text-warm-300/50">
+                              Menunggu Bab III
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div>
                         <h3 className="font-serif text-lg text-warm-50">

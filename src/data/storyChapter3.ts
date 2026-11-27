@@ -49,6 +49,10 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
             nextNodeId: 'ch3_rt_echo_hendra_night',
           },
           {
+            requiredFlag: 'ch3_bima_night_talk_done',
+            nextNodeId: 'ch3_rt_echo_bima_night',
+          },
+          {
             requiredFlag: 'flashback_2020_done',
             nextNodeId: 'ch3_rt_echo_guitar',
           },
@@ -77,6 +81,14 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
         emotion: 'haru',
         echoTag: 'Gema Lobi Malam · Pengakuan Pak Hendra',
         text: 'Di bawah kakiku tepat ada lantai delapan belas yang selama ini kuincar—ruangan sudut tempat Pak Hendra tadi mengaku kesepian sambil menatap foto wisuda putrinya di Melbourne. Aku tidak mau menukar tawa Kira dengan ruangan sedingin itu.',
+        nextNodeId: 'ch3_rt_3',
+      },
+      ch3_rt_echo_bima_night: {
+        id: 'ch3_rt_echo_bima_night',
+        speaker: 'damar_batin',
+        emotion: 'hangat',
+        echoTag: 'Gema Kopi Sudut · Kursi yang Dijaga Bima',
+        text: 'Dari atas sini kulihat atap kecil Kedai Kopi Sudut—tempat Bima selama enam tahun menjaga satu gitar tergantung di dinding hanya agar aku selalu punya tempat kembali bernyanyi.',
         nextNodeId: 'ch3_rt_3',
       },
       ch3_rt_echo_guitar: {
@@ -451,6 +463,20 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
         speaker: 'damar',
         emotion: 'haru',
         text: 'Nad... aku takut banget nggak cukup buat kamu dan Kira. Saking takutnya, aku sampai lupa siapa aku, lupa gitar yang dulu bikin aku bernapas, dan malah bikin rumah kita terasa sepi. Aku nggak mau lagi pura-pura kuat sendirian. Ajak aku pulang lagi, ya?',
+        conditionalNext: [
+          {
+            requiredFlag: 'bima_saturday_acoustic_pact',
+            nextNodeId: 'ch3_fin_open_bima_echo',
+          },
+        ],
+        nextNodeId: 'ch3_fin_open_2',
+      },
+      ch3_fin_open_bima_echo: {
+        id: 'ch3_fin_open_bima_echo',
+        speaker: 'damar',
+        emotion: 'hangat',
+        echoTag: 'Gema Persahabatan · Janji Panggung Pojok Bima',
+        text: 'Tadi malam aku juga sempat mampir ke kedai Bima waktu sudah tutup, Nad. Ternyata selama enam tahun dia sengaja menggantung gitar di pojok kedainya nungguin aku kembali bernapas... Sabtu sore nanti, mau kan duduk di barisan depan sama Kira lagi?',
         nextNodeId: 'ch3_fin_open_2',
       },
       ch3_fin_open_2: {

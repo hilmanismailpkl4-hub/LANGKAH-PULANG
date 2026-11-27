@@ -483,6 +483,20 @@ export const EPILOGUE_DIALOGUES: Record<string, DialogueScript> = {
         emotion: 'ceria',
         text: 'Woi, Damar! Tumben banget jam segini lewat depan Kopi Sudut jalannya pelan, bahu nggak ngangkat, mata nggak nempel ke layar HP! Ada angin segar apa nih dari Jl. Melati?',
         onEnter: { playSfx: 'coffee' },
+        conditionalNext: [
+          {
+            requiredFlag: 'bima_sang_bridge_together',
+            nextNodeId: 'ep_bm_w1_duet',
+          },
+        ],
+        nextNodeId: 'ep_bm_w2',
+      },
+      ep_bm_w1_duet: {
+        id: 'ep_bm_w1_duet',
+        speaker: 'bima',
+        emotion: 'ceria',
+        echoTag: 'Ingatan Semalam · Harmoni di Antara Kursi Terbalik',
+        text: 'Bima melambaikan selembar tisu kasir bertuliskan akor spidol hitam dari balik meja seduh. "Gue udah pindahin akor bridge \'Umur Dua Puluh Lima\' yang kita nyanyiin semalam ke buku lagu bersih, Mar! Suara dua lo semalam beneran bikin kedai ini hidup lagi!"',
         nextNodeId: 'ep_bm_w2',
       },
       ep_bm_w2: {
