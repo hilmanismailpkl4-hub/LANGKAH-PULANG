@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BookStallModal } from './components/ui/BookStallModal';
 import { ChapterTransition } from './components/ui/ChapterTransition';
+import { CongklakMinigameModal } from './components/ui/CongklakMinigameModal';
 import { CulinaryModal } from './components/ui/CulinaryModal';
 import { DialogueOverlay } from './components/ui/DialogueOverlay';
 import { EndingScreen } from './components/ui/EndingScreen';
@@ -75,6 +76,7 @@ export function App() {
       <PhotoModeOverlay />
       <SmartphoneModal />
       <GuitarMinigameModal />
+      <CongklakMinigameModal />
       <NadiaLetterModal />
       <CulinaryModal />
       <HomeKitchenModal />

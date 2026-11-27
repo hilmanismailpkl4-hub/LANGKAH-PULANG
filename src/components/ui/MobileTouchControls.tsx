@@ -40,6 +40,8 @@ export const MobileTouchControls: React.FC = () => {
   const isPauseOpen = useGameStore((s) => s.isPauseOpen);
   const isQuickGraphicsOpen = useGameStore((s) => s.isQuickGraphicsOpen);
   const isPhotoMode = useGameStore((s) => s.isPhotoMode);
+  const isZenMode = useGameStore((s) => s.isZenMode);
+  const isCongklakOpen = useGameStore((s) => s.isCongklakOpen);
   const isPhoneOpen = useGameStore((s) => s.isPhoneOpen);
   const isGuitarOpen = useGameStore((s) => s.isGuitarOpen);
   const isNadiaLetterOpen = useGameStore((s) => s.isNadiaLetterOpen);
@@ -84,6 +86,8 @@ export const MobileTouchControls: React.FC = () => {
     isPauseOpen ||
     isQuickGraphicsOpen ||
     isPhotoMode ||
+    isZenMode ||
+    isCongklakOpen ||
     isPhoneOpen ||
     isGuitarOpen ||
     isNadiaLetterOpen ||

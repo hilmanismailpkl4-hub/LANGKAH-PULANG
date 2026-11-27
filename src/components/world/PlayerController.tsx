@@ -152,7 +152,9 @@ export const PlayerController: React.FC = () => {
 
       // Tutup overlay dengan Escape
       if (code === 'Escape') {
-        if (state.isTelescopeOpen) {
+        if (state.isCongklakOpen) {
+          state.setCongklakOpen(false);
+        } else if (state.isTelescopeOpen) {
           state.setTelescopeOpen(false);
         } else if (state.isRtBoardOpen) {
           state.setRtBoardOpen(false);
@@ -221,6 +223,7 @@ export const PlayerController: React.FC = () => {
       }
 
       if (
+        state.isCongklakOpen ||
         state.isGuitarOpen ||
         state.isNadiaLetterOpen ||
         state.activeCulinarySpot ||
@@ -484,15 +487,18 @@ export const PlayerController: React.FC = () => {
       keysRef.current[e.code] = false;
     };
 
-    const onMouseDown = (e: MouseEvent) => {
+    const isCameraBlockedByModal = () => {
       const state = useGameStore.getState();
-      if (
+      return (
         state.screen !== 'playing' ||
-        state.activeDialogue ||
+        Boolean(state.activeDialogue) ||
         state.isMapJournalOpen ||
         state.isPauseOpen ||
         state.isQuickGraphicsOpen ||
         state.isPhoneOpen ||
+        state.isBagOpen ||
+        state.isNadiaLetterOpen ||
+        state.isCongklakOpen ||
         state.isGuitarOpen ||
         Boolean(state.activeCulinarySpot) ||
         state.isWardrobeOpen ||
@@ -505,8 +511,11 @@ export const PlayerController: React.FC = () => {
         state.isMailboxOpen ||
         state.isRtBoardOpen ||
         state.isTelescopeOpen
-      )
-        return;
+      );
+    };
+
+    const onMouseDown = (e: MouseEvent) => {
+      if (isCameraBlockedByModal()) return;
       isDraggingRef.current = true;
       lastMouseRef.current = { x: e.clientX, y: e.clientY };
     };
@@ -516,28 +525,8 @@ export const PlayerController: React.FC = () => {
     };
 
     const onMouseMove = (e: MouseEvent) => {
+      if (isCameraBlockedByModal()) return;
       const state = useGameStore.getState();
-      if (
-        state.screen !== 'playing' ||
-        state.activeDialogue ||
-        state.isMapJournalOpen ||
-        state.isPauseOpen ||
-        state.isQuickGraphicsOpen ||
-        state.isPhoneOpen ||
-        state.isGuitarOpen ||
-        Boolean(state.activeCulinarySpot) ||
-        state.isWardrobeOpen ||
-        state.isLittleLibraryOpen ||
-        state.isBookStallOpen ||
-        state.isKitchenOpen ||
-        state.isPhotoAlbumOpen ||
-        state.isFridgeNotesOpen ||
-        state.isNewsstandOpen ||
-        state.isMailboxOpen ||
-        state.isRtBoardOpen ||
-        state.isTelescopeOpen
-      )
-        return;
 
       const sens = 0.0042 * state.settings.mouseSensitivity;
       if (document.pointerLockElement === dom) {
@@ -562,56 +551,14 @@ export const PlayerController: React.FC = () => {
 
     const onDoubleClick = () => {
       const state = useGameStore.getState();
-      if (
-        state.screen !== 'playing' ||
-        state.activeDialogue ||
-        state.isMapJournalOpen ||
-        state.isPauseOpen ||
-        state.isQuickGraphicsOpen ||
-        state.isPhotoMode ||
-        state.isPhoneOpen ||
-        state.isGuitarOpen ||
-        Boolean(state.activeCulinarySpot) ||
-        state.isWardrobeOpen ||
-        state.isLittleLibraryOpen ||
-        state.isBookStallOpen ||
-        state.isKitchenOpen ||
-        state.isPhotoAlbumOpen ||
-        state.isFridgeNotesOpen ||
-        state.isNewsstandOpen ||
-        state.isMailboxOpen ||
-        state.isRtBoardOpen ||
-        state.isTelescopeOpen
-      )
-        return;
+      if (isCameraBlockedByModal() || state.isPhotoMode) return;
       if (!document.pointerLockElement && dom.requestPointerLock) {
         dom.requestPointerLock();
       }
     };
 
     const onWheel = (e: WheelEvent) => {
-      const state = useGameStore.getState();
-      if (
-        state.screen !== 'playing' ||
-        state.activeDialogue ||
-        state.isMapJournalOpen ||
-        state.isPauseOpen ||
-        state.isQuickGraphicsOpen ||
-        state.isPhoneOpen ||
-        state.isGuitarOpen ||
-        Boolean(state.activeCulinarySpot) ||
-        state.isWardrobeOpen ||
-        state.isLittleLibraryOpen ||
-        state.isBookStallOpen ||
-        state.isKitchenOpen ||
-        state.isPhotoAlbumOpen ||
-        state.isFridgeNotesOpen ||
-        state.isNewsstandOpen ||
-        state.isMailboxOpen ||
-        state.isRtBoardOpen ||
-        state.isTelescopeOpen
-      )
-        return;
+      if (isCameraBlockedByModal()) return;
       zoomRef.current = THREE.MathUtils.clamp(zoomRef.current + e.deltaY * 0.0038, 2.8, 12.0);
     };
 
@@ -624,29 +571,7 @@ export const PlayerController: React.FC = () => {
       playerRuntime.touchInput.moveZ = 0;
     };
 
-    const isCameraBlockedForTouch = () => {
-      const state = useGameStore.getState();
-      return (
-        state.screen !== 'playing' ||
-        Boolean(state.activeDialogue) ||
-        state.isMapJournalOpen ||
-        state.isPauseOpen ||
-        state.isQuickGraphicsOpen ||
-        state.isPhoneOpen ||
-        state.isGuitarOpen ||
-        Boolean(state.activeCulinarySpot) ||
-        state.isWardrobeOpen ||
-        state.isLittleLibraryOpen ||
-        state.isBookStallOpen ||
-        state.isKitchenOpen ||
-        state.isPhotoAlbumOpen ||
-        state.isFridgeNotesOpen ||
-        state.isNewsstandOpen ||
-        state.isMailboxOpen ||
-        state.isRtBoardOpen ||
-        state.isTelescopeOpen
-      );
-    };
+    const isCameraBlockedForTouch = isCameraBlockedByModal;
 
     const onTouchStart = (e: TouchEvent) => {
       if (isCameraBlockedForTouch()) return;
@@ -816,6 +741,10 @@ export const PlayerController: React.FC = () => {
       const keys = keysRef.current;
       const canDrive =
         store.screen === 'playing' &&
+        !store.activeDialogue &&
+        !store.isPhoneOpen &&
+        !store.isBagOpen &&
+        !store.isCongklakOpen &&
         !store.isMapJournalOpen &&
         !store.isPauseOpen &&
         !store.isQuickGraphicsOpen &&
@@ -961,6 +890,10 @@ export const PlayerController: React.FC = () => {
       const keys = keysRef.current;
       const canRide =
         store.screen === 'playing' &&
+        !store.activeDialogue &&
+        !store.isPhoneOpen &&
+        !store.isBagOpen &&
+        !store.isCongklakOpen &&
         !store.isMapJournalOpen &&
         !store.isPauseOpen &&
         !store.isQuickGraphicsOpen &&

@@ -151,6 +151,7 @@ interface GameStoreState {
   isTelescopeOpen: boolean;
   telescopeTargetIdx: number;
   isRtBoardOpen: boolean;
+  isCongklakOpen: boolean;
   readMailIds: string[];
   gardenWatered: boolean;
   vinylPlaying: boolean;
@@ -225,6 +226,7 @@ interface GameStoreState {
   setTelescopeOpen: (open: boolean) => void;
   setTelescopeTargetIdx: (idx: number) => void;
   setRtBoardOpen: (open: boolean) => void;
+  setCongklakOpen: (open: boolean) => void;
   markMailRead: (mailId: string) => void;
   waterHomeGarden: () => void;
   cycleNadaLamaVinyl: () => void;
@@ -407,6 +409,7 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     isTelescopeOpen: false,
     telescopeTargetIdx: 0,
     isRtBoardOpen: false,
+    isCongklakOpen: false,
     readMailIds: [],
     gardenWatered: false,
     vinylPlaying: false,
@@ -878,6 +881,33 @@ export const useGameStore = create<GameStoreState>((set, get) => {
     setTelescopeTargetIdx: (idx) => {
       sfxEngine.play('switch');
       set({ telescopeTargetIdx: idx });
+    },
+
+    setCongklakOpen: (open) => {
+      const s = get();
+      if (open && (s.screen !== 'playing' || s.activeDialogue)) return;
+      if (open && document.pointerLockElement) document.exitPointerLock();
+      sfxEngine.play('interact');
+      set({
+        isCongklakOpen: open,
+        isRtBoardOpen: false,
+        isTelescopeOpen: false,
+        isMailboxOpen: false,
+        isNewsstandOpen: false,
+        isFridgeNotesOpen: false,
+        isPhotoAlbumOpen: false,
+        isKitchenOpen: false,
+        isBookStallOpen: false,
+        isLittleLibraryOpen: false,
+        isWardrobeOpen: false,
+        activeCulinarySpot: null,
+        isMapJournalOpen: false,
+        isPauseOpen: false,
+        isPhoneOpen: false,
+        isBagOpen: false,
+        isGuitarOpen: false,
+        isQuickGraphicsOpen: false,
+      });
     },
 
     setRtBoardOpen: (open) => {

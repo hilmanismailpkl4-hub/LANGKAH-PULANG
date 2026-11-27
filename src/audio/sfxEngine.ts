@@ -1843,6 +1843,21 @@ class SfxEngine {
     this.softTone(ctx, 4186.0, now + 0.01, 0.24, 0.025 * v, 'sine');
   }
 
+  /**
+   * Suara "klotak!" biji kerang kuuck jatuh ke cekungan papan kayu jati Congklak.
+   */
+  public playCongklakShellDrop(stepIdx = 0) {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+    const scale = [523.25, 587.33, 659.25, 783.99, 880.0, 1046.5];
+    const base = scale[stepIdx % scale.length];
+    this.softTone(ctx, base, now, 0.055, 0.068 * v, 'triangle');
+    this.softTone(ctx, base * 2.3, now + 0.008, 0.035, 0.032 * v, 'sine');
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

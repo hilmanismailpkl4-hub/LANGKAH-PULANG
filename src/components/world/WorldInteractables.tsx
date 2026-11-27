@@ -5188,6 +5188,20 @@ export const WorldInteractables: React.FC = () => {
 
     consider(
       {
+        id: 'activity_home_congklak_game',
+        kind: 'story_object',
+        label: 'Main Congklak Kayu Jati bersama Kira',
+        sublabel: 'Tikar Ruang Tengah Rumah Jl. Melati · Mini-Game Nusantara',
+        position: [-21.55, 0.08, 68.55],
+        onInteract: () => {
+          store.setCongklakOpen(true);
+        },
+      },
+      2.1,
+    );
+
+    consider(
+      {
         id: 'activity_bima_coffee_roaster',
         kind: 'story_object',
         label: 'Aduk Biji Kopi Sangrai di Mesin Tembaga Bima',
@@ -5729,6 +5743,10 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[23.5, 1.38, -22.6]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#38bdf8" />
+      </mesh>
+      <mesh position={[-21.55, 0.34, 68.55]}>
+        <sphereGeometry args={[0.064, 8, 8]} />
+        <meshBasicMaterial color="#fde047" />
       </mesh>
 
       {/* Besek Anyaman Bambu Berpita Kain Biru Titipan Ibu (2015) di Saung Sawah */}

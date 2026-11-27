@@ -205,6 +205,32 @@ export const InteriorArchitecturalLife: React.FC<InteriorArchitecturalLifeProps>
             </mesh>
           ))}
         </group>
+
+        {/* Papan Congklak Kayu Jati Ukiran & Tikar Lesehan Bersama Kira di Ruang Tengah ([-21.55, 0.08, 68.55]) */}
+        <group position={[-21.55, 0.08, 68.55]} rotation={[0, 0.18, 0]}>
+          <mesh position={[0, 0.006, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+            <planeGeometry args={[1.15, 0.72]} />
+            <meshStandardMaterial color="#c4a46d" roughness={0.92} />
+          </mesh>
+          <mesh position={[0, 0.042, 0]} castShadow>
+            <boxGeometry args={[0.74, 0.065, 0.2]} />
+            <meshStandardMaterial color="#5c3317" roughness={0.62} />
+          </mesh>
+          {[-0.3, 0.3].map((lx, li) => (
+            <mesh key={`cgk-s-${li}`} position={[lx, 0.078, 0]}>
+              <cylinderGeometry args={[0.048, 0.048, 0.012, 10]} />
+              <meshStandardMaterial color="#fef3c7" roughness={0.5} />
+            </mesh>
+          ))}
+          {[-0.18, -0.09, 0, 0.09, 0.18].map((px, pi) =>
+            [-0.045, 0.045].map((pz, pzi) => (
+              <mesh key={`cgk-p-${pi}-${pzi}`} position={[px, 0.078, pz]}>
+                <cylinderGeometry args={[0.024, 0.024, 0.01, 8]} />
+                <meshStandardMaterial color="#fde68a" roughness={0.55} />
+              </mesh>
+            )),
+          )}
+        </group>
       </group>
 
       {/* ==================================================================== */}

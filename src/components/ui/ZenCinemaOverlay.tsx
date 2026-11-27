@@ -31,6 +31,10 @@ const ZEN_MONOLOGUES: Record<LocationId, string> = {
 
 const SAWAH_ZEN_LINE =
   'Hamparan padi bergelombang pelan mengikuti angin lembah; yang tumbuh paling bernas selalu merunduk tenang.';
+const BAMBOO_NORTH_ZEN_LINE =
+  'Desir batang-batang bambu utara dan hangat teh tanah liat menyisakan ruang hening tempat hati kembali utuh.';
+const TABEBUYA_ZEN_LINE =
+  'Kelopak Tabebuya luruh tanpa suara di tepi jalan stasiun—mengingatkan bahwa yang indah pun tahu kapan harus melepaskan.';
 
 const NEXT_AUTO_TIME: Record<TimeOfDay, TimeOfDay> = {
   morning: 'rain_dusk',
@@ -85,8 +89,22 @@ export const ZenCinemaOverlay: React.FC = () => {
 
   const [px, , pz] = playerRuntime.position;
   const inPaddyValley = px < -58 && pz > 45;
-  const locTitle = inPaddyValley ? 'Lembah Sawah Senja' : LOCATION_BY_ID[currentLocation].name;
-  const poeticLine = inPaddyValley ? SAWAH_ZEN_LINE : ZEN_MONOLOGUES[currentLocation];
+  const inNorthBamboo = px < -68 && pz < -46;
+  const inTabebuyaCorridor = px > 56 && px < 72 && Math.abs(pz) > 18;
+  const locTitle = inPaddyValley
+    ? 'Lembah Sawah Senja'
+    : inNorthBamboo
+      ? 'Paviliun Bambu Teduh Utara'
+      : inTabebuyaCorridor
+        ? 'Koridor Tabebuya Jl. Stasiun Timur'
+        : LOCATION_BY_ID[currentLocation].name;
+  const poeticLine = inPaddyValley
+    ? SAWAH_ZEN_LINE
+    : inNorthBamboo
+      ? BAMBOO_NORTH_ZEN_LINE
+      : inTabebuyaCorridor
+        ? TABEBUYA_ZEN_LINE
+        : ZEN_MONOLOGUES[currentLocation];
 
   return (
     <Portal>

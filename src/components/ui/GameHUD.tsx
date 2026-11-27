@@ -84,6 +84,7 @@ export const GameHUD: React.FC = () => {
   const isMailboxOpen = useGameStore((s) => s.isMailboxOpen);
   const isRtBoardOpen = useGameStore((s) => s.isRtBoardOpen);
   const isTelescopeOpen = useGameStore((s) => s.isTelescopeOpen);
+  const isCongklakOpen = useGameStore((s) => s.isCongklakOpen);
   const { isMobile, isCompactLandscape, isFullscreen } = useMobileViewport();
   const heldDrink = useGameStore((s) => s.heldDrink);
   const isRidingScooter = useGameStore((s) => s.isRidingScooter);
@@ -212,7 +213,8 @@ export const GameHUD: React.FC = () => {
     isNewsstandOpen ||
     isMailboxOpen ||
     isRtBoardOpen ||
-    isTelescopeOpen
+    isTelescopeOpen ||
+    isCongklakOpen
   ) {
     return null;
   }
