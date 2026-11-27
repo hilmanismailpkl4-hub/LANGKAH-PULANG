@@ -594,4 +594,16 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'kira', text: 'Hihihi!! Orang-orangan sawahnya pakai topi caping kayak petani beneran, Bunda!! Tangannya goyang-goyang!' },
     { speaker: 'nadia', text: 'Lucu ya Mas, jalan bertiga menyusuri pematang sawah sore-sore begini rasanya damai luar biasa.' },
   ],
+  activity_rooftop_pergola: [
+    { speaker: 'nadia', text: 'Hangat banget duduk di sofa Sky Garden depan api hias ini, Mas... lampu seluruh Kota Senja berkilau dari atas sini.' },
+    { speaker: 'kira', text: 'WAAAH!! Dari sofa atas gedung ini kelihatan helipad sama bintang-bintang dekat banget, Ayah!!' },
+  ],
+  activity_rooftop_vending: [
+    { speaker: 'kira', text: 'Klung!! Cokelat hangat dari mesin di atas atap gedung rasanya makin enak kena angin malam, Bunda!!' },
+    { speaker: 'nadia', text: 'Pas banget Mas, angin puncak gedung agak dingin—pegang cangkir hangat sambil lihat cakrawala yuk.' },
+  ],
+  activity_station_bench: [
+    { speaker: 'kira', text: 'Ayah!! Kita duduk di bangku peron sambil nunggu kereta KRL-nya bunyi TING-TING-TING lewat depan kita ya!!' },
+    { speaker: 'nadia', text: 'Jam besar kolonial Stasiun Senja di belakang kita klasik banget ya, Mas... serasa di film-film lama.' },
+  ],
 };

@@ -180,7 +180,11 @@ export function isPositionIndoors(x: number, y: number, z: number): boolean {
  */
 export function isPositionSheltered(x: number, y: number, z: number): boolean {
   if (isPositionIndoors(x, y, z)) return true;
-  if (y > 14) return false;
+  if (y > 14) {
+    // Atap Pergola Sky Garden di Rooftop Menara Nusantara
+    if (x >= 31.6 && x <= 37.4 && z >= -38.5 && z <= -33.0) return true;
+    return false;
+  }
   // Atap Halte Bus Kota Jl. Kenangan
   if (x >= 18.5 && x <= 24.5 && z >= 9.6 && z <= 12.1) return true;
   // Kanopi Peron Stasiun Kereta Tua Senja
@@ -620,6 +624,7 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   { id: 'paddy_field_se', minX: -72.1, maxX: -62.9, minZ: 64.4, maxZ: 75.6 },
   { id: 'paddy_saung_platform', minX: -70.25, maxX: -66.75, minZ: 55.35, maxZ: 57.85 },
   { id: 'bamboo_waterwheel_basin', minX: -63.45, maxX: -61.35, minZ: 53.25, maxZ: 55.15 },
+  { id: 'station_platform_bench', minX: 82.75, maxX: 83.65, minZ: -12.7, maxZ: -10.3 },
 ];
 
 /**
@@ -856,6 +861,10 @@ export const ROOFTOP_COLLIDERS: ColliderBox[] = [
   { id: 'rooftop_elevator_cabin', minX: 17.95, maxX: 21.65, minZ: -27.25, maxZ: -23.75 },
   { id: 'rooftop_bench', minX: 26.7, maxX: 30.3, minZ: -23.5, maxZ: -22.5 },
   { id: 'rooftop_telescope', minX: 33.95, maxX: 34.85, minZ: -21.9, maxZ: -21.0 },
+  { id: 'rooftop_sky_sofa', minX: 32.8, maxX: 36.2, minZ: -38.1, maxZ: -36.8 },
+  { id: 'rooftop_fire_table', minX: 33.4, maxX: 35.6, minZ: -35.8, maxZ: -34.7 },
+  { id: 'rooftop_vending_machine', minX: 37.9, maxX: 39.05, minZ: -27.85, maxZ: -26.55 },
+  { id: 'rooftop_hvac_unit', minX: 19.2, maxX: 23.2, minZ: -40.1, maxZ: -36.9 },
 ];
 
 export const ELEVATOR_PORTALS = {

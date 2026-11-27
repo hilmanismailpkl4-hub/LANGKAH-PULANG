@@ -244,6 +244,7 @@ interface GameStoreState {
   clearFamilyBanter: () => void;
   openCulinarySpot: (spot: CulinarySpotId | null) => void;
   orderCulinaryItem: (itemId: string) => void;
+  grantWarmDrink: (type: HeldDrinkVisual, label: string, isHot?: boolean) => void;
   clearHeldDrink: () => void;
   setWardrobeOpen: (open: boolean) => void;
   setDamarOutfit: (outfitId: DamarOutfitId) => void;
@@ -1445,6 +1446,14 @@ export const useGameStore = create<GameStoreState>((set, get) => {
         drinkTimer = null;
       }
       set({ heldDrink: null });
+    },
+
+    grantWarmDrink: (type, label, isHot = true) => {
+      if (drinkTimer) window.clearTimeout(drinkTimer);
+      drinkTimer = window.setTimeout(() => {
+        set({ heldDrink: null });
+      }, 30000);
+      set({ heldDrink: { type, isHot, label } });
     },
 
     orderCulinaryItem: (itemId) => {

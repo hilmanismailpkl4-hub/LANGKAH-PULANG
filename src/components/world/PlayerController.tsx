@@ -1505,7 +1505,9 @@ export const PlayerController: React.FC = () => {
           const tz = pz + dirZ * step;
           const hitsCabin = ROOFTOP_COLLIDERS.some(
             (b) =>
-              b.id === 'rooftop_elevator_cabin' &&
+              (b.id === 'rooftop_elevator_cabin' ||
+                b.id === 'rooftop_hvac_unit' ||
+                b.id === 'rooftop_vending_machine') &&
               tx > b.minX - 0.2 &&
               tx < b.maxX + 0.2 &&
               tz > b.minZ - 0.2 &&

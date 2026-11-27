@@ -5,6 +5,7 @@ import { PHOTO_FILTER_BY_ID } from '../../data/photoFilters';
 import { useGameStore } from '../../store/useGameStore';
 import { detectIsMobileDevice } from '../../utils/mobileUtils';
 import { AfternoonAndCreativeLife } from './AfternoonAndCreativeLife';
+import { ArchitecturalAndRooftopUpgrade } from './ArchitecturalAndRooftopUpgrade';
 import { ArtisticAndStationDetails } from './ArtisticAndStationDetails';
 import { Atmosphere } from './Atmosphere';
 import { BarberNurseryAndGallonDepot } from './BarberNurseryAndGallonDepot';
@@ -111,6 +112,7 @@ export const GameCanvas: React.FC = () => {
               settings={settings}
             />
             <CityDetails timeOfDay={effectiveTime} settings={settings} pierLampFixed={pierLampFixed} />
+            <ArchitecturalAndRooftopUpgrade timeOfDay={effectiveTime} settings={settings} />
 
             {/* Grup Detail Distrik yang dikelola otomatis oleh Distance Culler pada mode Hemat HP / HP Kentang */}
             <group name="__district_detail_root__">

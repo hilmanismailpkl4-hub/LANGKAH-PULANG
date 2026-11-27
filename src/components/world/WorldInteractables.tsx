@@ -4843,6 +4843,122 @@ export const WorldInteractables: React.FC = () => {
       2.6,
     );
 
+    // === ROOFTOP SKY GARDEN PERGOLA, MESIN KOPI ATAP & BANGKU TUNGGU PERON STASIUN ===
+    consider(
+      {
+        id: 'sit_rooftop_sky_pergola',
+        kind: 'story_object',
+        label: 'Duduk Hangat di Sofa Sky Garden Depan Api Hias',
+        sublabel: 'Rooftop Menara Nusantara · Panorama 360° & Api Bio-Ethanol',
+        position: [34.5, 22.02, -34.2],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Sky Garden Lounge · Rooftop Menara Nusantara',
+            seatPos: [34.5, 22.18, -37.25],
+            lookAt: [28.5, 23.1, -21.0],
+            standPos: [34.5, 22.02, -33.65],
+            seatYaw: 0,
+            holdingCoffee: Boolean(store.heldDrink),
+            drinkVisual: store.heldDrink?.type ?? 'coffee',
+          };
+          store.setSitting(true);
+          if (!store.flags.includes('sat_rooftop_sky_pergola')) {
+            store.applyEffect({
+              kejujuranDiri: 1,
+              kehadiranKeluarga: 1,
+              setFlags: ['sat_rooftop_sky_pergola'],
+              journalEntry: {
+                id: 'je_rooftop_sky_pergola',
+                title: 'Api Hangat di Taman Langit Menara Nusantara',
+                body: 'Di sudut belakang Rooftop lantai 18, sebuah pergola taman langit berdiri tenang dengan nyala api hias di tengah meja. Dari ketinggian ini, seluruh hiruk-pikuk Kota Senja tampak seperti hamparan bintang kecil yang tak lagi menakutkan.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_rooftop_pergola, 'fw_rooftop_pergola');
+          }
+          store.showToast('Duduk nyaman di Sofa Sky Garden menghadap api hangat & cakrawala kota... (Geser putar 360°, WASD/E berdiri)');
+        },
+      },
+      2.8,
+    );
+
+    consider(
+      {
+        id: 'activity_rooftop_vending',
+        kind: 'story_object',
+        label: 'Ambil Kopi Arabica / Cokelat Hangat di Mesin Sky Deck',
+        sublabel: 'Rooftop Menara Nusantara · Minuman Hangat Malam',
+        position: [37.4, 22.02, -27.2],
+        onInteract: () => {
+          sfxEngine.play('switch');
+          sfxEngine.play('coffee');
+          const pickCocoa = Math.floor(Date.now() / 1000) % 2 === 0;
+          store.grantWarmDrink(
+            pickCocoa ? 'cocoa' : 'coffee',
+            pickCocoa ? 'Cokelat Hangat Sky Deck' : 'Kopi Arabica Sky Deck',
+          );
+          if (!store.flags.includes('used_rooftop_vending')) {
+            store.applyEffect({
+              kejujuranDiri: 1,
+              setFlags: ['used_rooftop_vending'],
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_rooftop_vending, 'fw_rooftop_vending');
+          }
+          store.showToast(
+            pickCocoa
+              ? 'Klung! Secangkir Cokelat Hangat Sky Deck siap menghangatkan tangan di atas angin gedung!'
+              : 'Klung! Secangkir Kopi Arabica Sky Deck mengepul hangat menemani malam di puncak gedung!',
+          );
+        },
+      },
+      2.3,
+    );
+
+    consider(
+      {
+        id: 'sit_station_platform_bench',
+        kind: 'story_object',
+        label: 'Duduk di Bangku Peron Menonton Kereta Komuter Lewat',
+        sublabel: 'Peron Stasiun Kereta Tua Senja · Bawah Jam Kolonial',
+        position: [82.2, 0.1, -11.5],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Bangku Tunggu Peron Stasiun Senja',
+            seatPos: [83.35, 0.24, -11.5],
+            lookAt: [94.3, 1.6, -11.5],
+            standPos: [82.05, 0.1, -11.5],
+            seatYaw: Math.PI / 2,
+          };
+          store.setSitting(true);
+          if (!store.flags.includes('sat_station_platform_bench')) {
+            store.applyEffect({
+              kejujuranDiri: 1,
+              setFlags: ['sat_station_platform_bench'],
+              journalEntry: {
+                id: 'je_station_platform_bench',
+                title: 'Menunggu Kereta Tanpa Harus Pergi Jauh',
+                body: 'Duduk di bangku kayu besi tempa di bawah jam besar kolonial Stasiun Senja sambil melihat kereta komuter datang dan pergi memberiku perspektif baru: tidak semua keberangkatan adalah jawaban, kadang kelegaan justru ada pada kereta yang mengantar kita pulang.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_station_bench, 'fw_station_bench');
+          }
+          store.showToast('Duduk santai di bangku peron Stasiun Senja menghadap jalur KRL... (WASD/E berdiri)');
+        },
+      },
+      2.5,
+    );
+
     if (store.sideQuests.sq_pak_darman?.status === 'active' && store.sideQuests.sq_pak_darman.stage === 1) {
       consider(
         {
@@ -5175,6 +5291,18 @@ export const WorldInteractables: React.FC = () => {
       <mesh position={[-83.0, 1.92, 62.5]}>
         <sphereGeometry args={[0.075, 8, 8]} />
         <meshBasicMaterial color="#fbbf24" />
+      </mesh>
+      <mesh position={[34.5, 22.95, -35.25]}>
+        <sphereGeometry args={[0.085, 8, 8]} />
+        <meshBasicMaterial color="#fb923c" />
+      </mesh>
+      <mesh position={[37.95, 23.65, -27.2]}>
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial color="#fde047" />
+      </mesh>
+      <mesh position={[83.2, 1.12, -11.5]}>
+        <sphereGeometry args={[0.075, 8, 8]} />
+        <meshBasicMaterial color="#fcd34d" />
       </mesh>
       <mesh position={[-23.6, 1.35, 11.4]}>
         <sphereGeometry args={[0.065, 8, 8]} />
