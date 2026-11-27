@@ -1845,7 +1845,7 @@ export const MapJournalModal: React.FC = () => {
                           Gulungan Kilas Balik Memori ({flashbacksSeenCount}/{JOURNAL_FLASHBACK_REELS.length})
                         </h3>
                         <p className="text-xs text-warm-200/65">
-                          Hidupkan atau putar ulang 4 malam penting yang membentuk siapa Damar hari ini.
+                          Hidupkan atau putar ulang 5 momen penting yang membentuk siapa Damar hari ini.
                         </p>
                       </div>
                     </div>

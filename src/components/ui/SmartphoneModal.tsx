@@ -332,6 +332,7 @@ export const SmartphoneModal: React.FC = () => {
 
   const flashbacksCompletedCount = [
     'flashback_2018_done',
+    'flashback_bridge_2019_done',
     'flashback_melati_2019_done',
     'flashback_2020_done',
     'flashback_dinner_done',
@@ -384,7 +385,7 @@ export const SmartphoneModal: React.FC = () => {
       done: Object.keys(repliedPhonePrompts).length > 0,
     },
     {
-      label: `Hidupkan Kilas Balik Memori Sinematik di Galeri HP atau Album Rumah (${flashbacksCompletedCount}/4)`,
+      label: `Hidupkan Kilas Balik Memori Sinematik di Galeri HP atau Album Rumah (${flashbacksCompletedCount}/5)`,
       done: flashbacksCompletedCount > 0,
     },
   ];

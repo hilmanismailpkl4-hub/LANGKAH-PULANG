@@ -247,6 +247,19 @@ export const CHAPTER_2_DIALOGUES: Record<string, DialogueScript> = {
         text: 'Air hujan menetes dari ujung rambutku ke layar ponsel. Suara Nadia bergetar pelan, seperti orang yang sudah terlalu lama berusaha terlihat kuat demi semua orang.',
         choices: [
           {
+            id: 'ch2_jb_c_padlock_2019',
+            requiredFlag: 'flashback_bridge_2019_done',
+            echoBadge: 'Terbuka dari Kilas Balik 22 Mei 2019',
+            text: 'Sentuh gembok kuningan basah "D & N — 2019" di pagar jembatan: "Nad... aku lagi berdiri tepat di sebelah gembok lamaran kita. Aku ingat pesanmu enam tahun lalu—maafin aku, malam ini aku pulang ke kamu."',
+            subtext: 'Menjawab tangis Nadia dengan janji 22 Mei 2019 di tempat kalian memulai',
+            nextNodeId: 'ch2_jb_r_padlock',
+            effects: {
+              kejujuranDiri: 4,
+              kehadiranKeluarga: 4,
+              setFlags: ['ch2_touched_padlock_in_rain'],
+            },
+          },
+          {
             id: 'ch2_jb_c1',
             text: '"Maafin aku, Nad... Aku terlalu takut gagal sampai lupa kalau aku lagi nyakitin orang yang paling kusayang."',
             subtext: 'Mengakui kesalahan tanpa pembelaan diri',
@@ -268,6 +281,14 @@ export const CHAPTER_2_DIALOGUES: Record<string, DialogueScript> = {
             effects: { ambisiPelarian: 3 },
           },
         ],
+      },
+      ch2_jb_r_padlock: {
+        id: 'ch2_jb_r_padlock',
+        speaker: 'nadia',
+        emotion: 'haru',
+        echoTag: 'Gema 22 Mei 2019 · Gembok di Tengah Hujan',
+        text: 'Terdengar isak tertahan Nadia di seberang telepon sebelum suaranya melembut hangat. "Mas... kamu masih ingat kalimatku sore itu...? Kuncinya memang udah lama di dasar sungai, Mas. Cepat berteduh ke kedai Bima dulu biar nggak sakit, habis itu pulang ke aku ya."',
+        nextNodeId: 'ch2_jb_end',
       },
       ch2_jb_r1: {
         id: 'ch2_jb_r1',

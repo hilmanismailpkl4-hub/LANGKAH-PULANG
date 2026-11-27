@@ -53,6 +53,17 @@ export const JOURNAL_FLASHBACK_REELS: FlashbackReelInfo[] = [
     worldHint: 'Juga dapat dihidupkan dari Poster 2018 di Kedai Kopi Bima & Galeri HP.',
   },
   {
+    id: 'reel_bridge_2019',
+    dialogueId: 'flashback_jembatan_2019',
+    flag: 'flashback_bridge_2019_done',
+    yearLabel: '22 MEI 2019',
+    title: 'Dua Gelas Teh Hangat & Gembok Kuningan',
+    locationLabel: 'Jembatan Tepi Sungai · Pukul 17.35',
+    epigraph: 'Sore ketika Damar melamar Nadia dengan cincin perak tipis hasil mengajar les gitar dan melempar kunci gembok "D & N — 2019" ke sungai.',
+    mood: 'warm_sepia',
+    worldHint: 'Juga dapat dihidupkan dari Gembok Kuningan di Jembatan Sungai, Galeri HP & Album Rumah.',
+  },
+  {
     id: 'reel_melati_2019',
     dialogueId: 'flashback_malam_pertama_melati',
     flag: 'flashback_melati_2019_done',
@@ -462,6 +473,14 @@ export function buildStoryTimeline(params: {
       title: 'Pesan Maaf Meja Makan Terkirim',
       detail: 'Nadia menyimpan pesan maafmu dan menyinggungnya di telepon hujan & meja makan malam ini.',
       tone: 'rose',
+    });
+  }
+  if (flags.includes('flashback_bridge_2019_done')) {
+    echoBadges.push({
+      id: 'eb_fb_bridge_2019',
+      title: 'Janji Gembok Kuningan 22 Mei 2019',
+      detail: 'Membuka opsi menyentuh gembok "D & N — 2019" saat Telepon Hujan Bab 2 di Jembatan Sungai serta obrolan Nadia.',
+      tone: 'gold',
     });
   }
   if (flags.includes('flashback_melati_2019_done')) {

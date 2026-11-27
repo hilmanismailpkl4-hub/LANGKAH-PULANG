@@ -1377,6 +1377,23 @@ export const WorldInteractables: React.FC = () => {
 
     consider(
       {
+        id: 'memory_flashback_bridge_2019',
+        kind: 'story_object',
+        label: store.flags.includes('flashback_bridge_2019_done')
+          ? 'Putar Ulang Kilas Balik: Lamaran Senja 22 Mei 2019'
+          : 'Sentuh Gembok Kuningan "D & N — 2019" (Kilas Balik)',
+        sublabel: 'Jembatan Tepi Sungai · Dua Gelas Teh Hangat & Cincin Perak',
+        position: [-48.0, 0.24, 3.35],
+        onInteract: () => {
+          sfxEngine.play('chime');
+          store.startDialogue('flashback_jembatan_2019');
+        },
+      },
+      2.1,
+    );
+
+    consider(
+      {
         id: 'activity_river_angler_karno',
         kind: 'story_object',
         label: 'Sapa Pak Karno yang Memancing di Bantaran Sungai',
@@ -5383,6 +5400,28 @@ export const WorldInteractables: React.FC = () => {
         <mesh position={[0, 0.82, 0]}>
           <sphereGeometry args={[0.064, 10, 10]} />
           <meshBasicMaterial color={flags.includes('opened_mother_sewing_tin_2016') ? '#86efac' : '#93c5fd'} />
+        </mesh>
+      </group>
+
+      {/* Gembok Kuningan Khusus "D & N — 22 Mei 2019" & Pita Merah di Pagar Jembatan Sungai */}
+      <group position={[-48.0, 1.12, 3.58]}>
+        <mesh position={[0, 0.08, 0]}>
+          <torusGeometry args={[0.045, 0.01, 8, 16, Math.PI]} />
+          <meshStandardMaterial color="#e2e8f0" metalness={0.8} roughness={0.25} />
+        </mesh>
+        <mesh castShadow>
+          <boxGeometry args={[0.11, 0.12, 0.04]} />
+          <meshStandardMaterial
+            color="#eab308"
+            emissive="#f59e0b"
+            emissiveIntensity={flags.includes('flashback_bridge_2019_done') ? 0.22 : 0.68}
+            metalness={0.75}
+            roughness={0.3}
+          />
+        </mesh>
+        <mesh position={[0, 0.32, 0]}>
+          <sphereGeometry args={[0.072, 10, 10]} />
+          <meshBasicMaterial color={flags.includes('flashback_bridge_2019_done') ? '#86efac' : '#fde047'} />
         </mesh>
       </group>
 

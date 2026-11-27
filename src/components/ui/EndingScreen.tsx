@@ -360,7 +360,7 @@ export const EndingScreen: React.FC = () => {
                   <div className="flex items-center gap-3 text-[11px] text-warm-200/75">
                     <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-black/25 px-2.5 py-1">
                       <Film className="h-3.5 w-3.5 text-amber-300" />
-                      {recap.flashbacksSeen}/4 Kilas Balik
+                      {recap.flashbacksSeen}/5 Kilas Balik
                     </span>
                     <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-black/25 px-2.5 py-1">
                       <MessageCircle className="h-3.5 w-3.5 text-emerald-300" />

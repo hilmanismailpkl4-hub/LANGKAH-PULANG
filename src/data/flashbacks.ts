@@ -651,4 +651,150 @@ export const FLASHBACK_DIALOGUES: Record<string, DialogueScript> = {
       },
     },
   },
+
+  // =========================================================================
+  // KILAS BALIK 5 — 22 MEI 2019 · LAMARAN DI JEMBATAN TEPI SUNGAI
+  // =========================================================================
+  flashback_jembatan_2019: {
+    id: 'flashback_jembatan_2019',
+    startNodeId: 'fb5_1',
+    flashback: {
+      yearLabel: '22 MEI 2019',
+      title: 'Dua Gelas Teh Hangat & Gembok Kuningan',
+      locationLabel: 'Jembatan Tepi Sungai · Pukul 17.35',
+      mood: 'warm_sepia',
+      epigraph: 'Sore ketika jari kita masih gemetar mengunci dua inisial di pagar besi—tanpa takut sedikit pun pada masa depan.',
+    },
+    nodes: {
+      fb5_1: {
+        id: 'fb5_1',
+        speaker: 'narator',
+        emotion: 'hangat',
+        text: 'Langit bulan Mei 2019 di atas Sungai Kota berwarna jingga tembaga. Angin sore berembus membawa wangi teh melati dari dua gelas kertas hangat yang diletakkan di atas besi pagar jembatan.',
+        onEnter: { playSfx: 'chime' },
+        nextNodeId: 'fb5_2',
+      },
+      fb5_2: {
+        id: 'fb5_2',
+        speaker: 'damar_batin',
+        emotion: 'ragu',
+        text: 'Umurku baru dua puluh empat tahun waktu itu. Di saku kemeja flanelku yang sudah agak pudar kerahnya, ada kotak beludru kecil yang kubeli dari hasil tiga bulan mengajar les gitar privat sepulang magang.',
+        nextNodeId: 'fb5_3',
+      },
+      fb5_3: {
+        id: 'fb5_3',
+        speaker: 'damar',
+        emotion: 'haru',
+        text: 'Nad... maaf ya cincinnya masih perak tipis, belum emas. Tabunganku juga baru cukup buat cicilan awal rumah kecil yang belum ada perabotnya di Jl. Melati... Tapi kamu mau nggak jalan pulang ke rumah itu sama aku seumur hidup?',
+        onEnter: { playSfx: 'guitar' },
+        nextNodeId: 'fb5_4',
+      },
+      fb5_4: {
+        id: 'fb5_4',
+        speaker: 'nadia',
+        emotion: 'haru',
+        text: 'Nadia terdiam menatap kotak kecil di telapak tangan Damar yang gemetar, lalu tertawa jernih sambil menyeka sudut matanya yang basah. "Mas Damar... kamu pikir aku jatuh cinta sama toko perhiasan?"',
+        nextNodeId: 'fb5_5',
+      },
+      fb5_5: {
+        id: 'fb5_5',
+        speaker: 'nadia',
+        emotion: 'hangat',
+        text: '"Aku jatuh cinta sama laki-laki yang rela jalan kaki dua kilometer sehabis ngajar gitar cuma buat beliin aku teh melati hangat. Mau perak, mau benang sekalipun, jawabanku tetap iya, Mas."',
+        nextNodeId: 'fb5_6',
+      },
+      fb5_6: {
+        id: 'fb5_6',
+        speaker: 'narator',
+        emotion: 'tenang',
+        text: 'Damar mengeluarkan sebuah gembok kuningan kecil yang digrafir miring memakai ujung paku semalam: "D & N — 22 Mei 2019". Klik! Mereka menguncinya bersama di terali besi tengah jembatan.',
+        onEnter: { playSfx: 'switch' },
+        nextNodeId: 'fb5_7',
+      },
+      fb5_7: {
+        id: 'fb5_7',
+        speaker: 'nadia',
+        emotion: 'tenang',
+        text: 'Nadia menyentuh gembok kuningan yang berkilau tertimpa matahari senja itu. "Janji satu hal sama aku di depan sungai ini ya, Mas. Kalau suatu tahun nanti kita kecapekan jadi orang dewasa atau mulai lupa cara ngobrol... kita balik berdiri di tengah jembatan ini, biar sungai ini yang ingetin kenapa kita mulai."',
+        choices: [
+          {
+            id: 'fb5_c_vow_listen',
+            text: '"Aku janji, Nad. Sesibuk apa pun kota ini nanti, suaramu akan selalu jadi tempat pertamaku berhenti."',
+            subtext: 'Mengikat janji setia mendengarkan di atas Sungai Kota',
+            nextNodeId: 'fb5_res_listen',
+            effects: {
+              kehadiranKeluarga: 3,
+              kejujuranDiri: 2,
+            },
+          },
+          {
+            id: 'fb5_c_throw_key',
+            text: 'Genggam tangan Nadia bersama-sama memegang kunci kecilnya: "Hitungan ketiga kita lempar ke sungai ya—nggak ada jalan putar balik!"',
+            subtext: 'Melempar kunci gembok ke arus keemasan Sungai Kota berdua',
+            nextNodeId: 'fb5_res_throw',
+            effects: {
+              kehadiranKeluarga: 3,
+              kejujuranDiri: 1,
+            },
+          },
+          {
+            id: 'fb5_c_honest_tremble',
+            text: '"Lihat deh tanganku masih gemetar, Nad... kalau suatu hari aku mulai lupa janji ini karena ketakutan, tolong tegur aku keras-keras ya."',
+            subtext: 'Kejujuran polos yang seolah meramal badai beberapa tahun kemudian',
+            nextNodeId: 'fb5_res_tremble',
+            effects: {
+              kejujuranDiri: 3,
+              kehadiranKeluarga: 2,
+            },
+          },
+        ],
+      },
+      fb5_res_listen: {
+        id: 'fb5_res_listen',
+        speaker: 'nadia',
+        emotion: 'hangat',
+        text: 'Nadia mengaitkan jari kelingkingnya ke jari Damar sambil tersenyum paling teduh. "Aku pegang janjinya sampai kita kakek-nenek ya, Mas Damar."',
+        nextNodeId: 'fb5_8',
+      },
+      fb5_res_throw: {
+        id: 'fb5_res_throw',
+        speaker: 'narator',
+        emotion: 'ceria',
+        text: '"Satu... dua... tiga!" Kunci mungil itu melambung membelah cahaya senja lalu jatuh menimbulkan riak kecil di tengah Sungai Kota, disusul tawa lepas mereka berdua.',
+        onEnter: { playSfx: 'chime' },
+        nextNodeId: 'fb5_8',
+      },
+      fb5_res_tremble: {
+        id: 'fb5_res_tremble',
+        speaker: 'nadia',
+        emotion: 'haru',
+        text: 'Nadia menangkup tangan Damar yang gemetar di antara kedua telapak tangannya yang hangat. "Aku nggak akan biarkan kamu tersesat jauh-jauh, Mas. Aku pasti panggil kamu pulang."',
+        nextNodeId: 'fb5_8',
+      },
+      fb5_8: {
+        id: 'fb5_8',
+        speaker: 'damar_batin',
+        emotion: 'haru',
+        text: 'Cahaya tembaga bulan Mei 2019 itu perlahan surut kembali ke hari ini. Di pagar besi jembatan tepat di depanku, gembok kuningan "D & N — 2019" itu masih tergantung kokoh meski warnanya telah menua oleh ratusan hujan. Sungainya masih mengalir tenang—dan janjiku pada Nadia masih menungguku menepatinya.',
+        onEnd: {
+          playSfx: 'guitar',
+          setFlags: ['flashback_bridge_2019_done'],
+          journalEntry: {
+            id: 'je_flashback_bridge_2019',
+            title: 'Kilas Balik · 22 Mei 2019 (Gembok Kuningan di Jembatan Sungai)',
+            body: 'Aku mengenang sore ketika melamar Nadia di Jembatan Tepi Sungai bermodalkan dua gelas teh melati hangat dan cincin perak tipis hasil mengajar gitar. Pesan Nadia sore itu menembus waktu: jika suatu hari kami lelah menjadi dewasa, kembalilah ke jembatan ini untuk mengingat alasan kami memulai.',
+            chapter: 1,
+          },
+          phoneMessage: {
+            id: 'msg_nadia_fb_bridge2019',
+            sender: 'Nadia ❤️',
+            preview: 'Mas, cincin perak tipis dari sore jembatan bulan Mei 2019 itu masih nggak pernah kulepas sehari pun lho sampai hari ini ❤️',
+            timeLabel: 'Baru saja',
+            threadId: 'nadia',
+          },
+          toast: 'Kilas Balik 22 Mei 2019 tersimpan di Jurnal & membuka gema baru di Jembatan Bab 2!',
+        },
+      },
+    },
+  },
 };

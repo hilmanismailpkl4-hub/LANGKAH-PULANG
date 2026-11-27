@@ -479,6 +479,7 @@ export function buildEndingJourneyRecap(params: {
   const completedSide = Object.values(sideQuests).filter((s) => s.status === 'completed').length;
   const flashbacksSeen = [
     'flashback_2018_done',
+    'flashback_bridge_2019_done',
     'flashback_melati_2019_done',
     'flashback_2020_done',
     'flashback_dinner_done',
@@ -593,6 +594,15 @@ export function buildEndingJourneyRecap(params: {
         ? 'Kamu tidak hanya mengingat malam sup dingin 6 bulan lalu, tapi juga berani mengirim pesan maaf yang tulus kepada Nadia.'
         : 'Kamu berani menatap kembali pertengkaran sunyi di meja makan dan memilih tidak lagi menjadi tamu di rumah sendiri.',
       tone: 'rose',
+    });
+  }
+  if (flags.includes('flashback_bridge_2019_done')) {
+    echoCards.push({
+      id: 'ec_fb_bridge_2019',
+      label: 'Lamaran Senja Jembatan Sungai (2019)',
+      summary:
+        'Kamu mengenang sore 22 Mei 2019 saat mengunci gembok "D & N" bersama Nadia dan mengingat pesannya untuk kembali ke jembatan bila lelah menjadi dewasa.',
+      tone: 'gold',
     });
   }
   if (flags.includes('flashback_2018_done')) {
