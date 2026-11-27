@@ -1971,6 +1971,25 @@ export const WorldInteractables: React.FC = () => {
 
     consider(
       {
+        id: 'interior_kira_secret_pillow',
+        kind: 'story_object',
+        label: store.flags.includes('found_kira_secret_drawings')
+          ? 'Lihat Kembali Tiga Gambar Rahasia di Bawah Bantal Kira'
+          : 'Periksa Kertas Krayon yang Menyembul di Bawah Bantal Bintang Kira',
+        sublabel: store.flags.includes('found_kira_secret_drawings')
+          ? 'Kenangan Tersimpan · Pelangi Enam Senar'
+          : 'Sudut Karpet Kira · "Jangan Tempel di Kulkas"',
+        position: [-20.95, 0.08, 70.95],
+        onInteract: () => {
+          playerRuntime.activeSpeakerPos = [-20.95, 0.35, 71.2];
+          store.startDialogue('story_kira_secret_drawings');
+        },
+      },
+      1.65,
+    );
+
+    consider(
+      {
         id: 'interior_kira_toy_train',
         kind: 'story_object',
         label: store.kiraToyTrainOn
@@ -5282,6 +5301,29 @@ export const WorldInteractables: React.FC = () => {
         <mesh position={[0.05, 1.52, 0.08]}>
           <sphereGeometry args={[0.072, 10, 10]} />
           <meshBasicMaterial color={flags.includes('heard_bagas_rama_story') ? '#86efac' : '#fbbf24'} />
+        </mesh>
+      </group>
+
+      {/* Bantal Bintang Kuning & 3 Lembar Gambar Rahasia Kira di Tepi Karpet Sudut Bermain */}
+      <group position={[-20.95, 0.09, 71.18]} rotation={[0, 0.35, 0]}>
+        {/* Kertas gambar HVS yang menyembul di bawah bantal */}
+        <mesh position={[0.1, 0.015, 0.06]} rotation={[0, -0.32, 0]}>
+          <boxGeometry args={[0.24, 0.01, 0.18]} />
+          <meshStandardMaterial color="#fffbeb" emissive="#fde047" emissiveIntensity={0.35} roughness={0.7} />
+        </mesh>
+        {/* Bantal empuk warna kuning bintang */}
+        <mesh position={[0, 0.065, 0]} rotation={[0, 0.25, 0]} castShadow>
+          <cylinderGeometry args={[0.22, 0.24, 0.09, 5]} />
+          <meshStandardMaterial
+            color="#facc15"
+            emissive="#f59e0b"
+            emissiveIntensity={flags.includes('found_kira_secret_drawings') ? 0.12 : 0.38}
+            roughness={0.78}
+          />
+        </mesh>
+        <mesh position={[0, 0.36, 0]}>
+          <sphereGeometry args={[0.062, 10, 10]} />
+          <meshBasicMaterial color={flags.includes('found_kira_secret_drawings') ? '#86efac' : '#fde047'} />
         </mesh>
       </group>
 

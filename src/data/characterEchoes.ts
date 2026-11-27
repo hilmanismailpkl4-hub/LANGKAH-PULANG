@@ -132,6 +132,19 @@ export const CHARACTER_ECHO_DIALOGUES: Record<string, DialogueScript> = {
   },
 
   // === KIRA ===
+  echo_kira_secret_drawings: {
+    id: 'echo_kira_secret_drawings',
+    startNodeId: 'ek_sk_1',
+    nodes: {
+      ek_sk_1: {
+        id: 'ek_sk_1',
+        speaker: 'kira',
+        emotion: 'ceria',
+        echoTag: 'Ingatan Kira · Tiga Gambar di Bawah Bantal',
+        text: 'Hehe, Ayah udah tahu rahasia bawah bantal Kira! Nanti kalau Ayah main gitar, Kira mau duduk paling dekat biar kelihatan pelangi enam senarnya!',
+      },
+    },
+  },
   echo_kira_star_drawing: {
     id: 'echo_kira_star_drawing',
     startNodeId: 'ek_sd_1',
@@ -376,6 +389,9 @@ export function resolveDynamicNpcAmbient(
   }
 
   if (npcId === 'kira') {
+    if (flags.includes('found_kira_secret_drawings')) {
+      return { dialogueId: 'echo_kira_secret_drawings', sublabel: 'Ingatan Kira · Pelangi Gitar' };
+    }
     if (flags.includes('drew_with_kira_corner')) {
       return { dialogueId: 'echo_kira_star_drawing', sublabel: 'Ingatan Kira · Bintang' };
     }
@@ -490,6 +506,16 @@ export function buildEndingJourneyRecap(params: {
 
   const echoCards: JourneyEchoCard[] = [];
 
+  if (flags.includes('found_kira_secret_drawings')) {
+    echoCards.push({
+      id: 'ec_kira_secret_drawings',
+      label: 'Tiga Gambar di Bawah Bantal Kira',
+      summary: flags.includes('signed_kira_rainbow_drawing')
+        ? 'Kamu menemukan tiga gambar yang disembunyikan Kira karena takut membuatmu sedih—dan menandatangani janji matahari jingga di sudut pelangi enam senarnya.'
+        : 'Lewat tiga gambar krayon di bawah bantal bintangnya, kamu melihat betapa pekanya Kira merindukan tawa Ayah dan Bundanya.',
+      tone: 'rose',
+    });
+  }
   if (flags.includes('heard_bagas_rama_story')) {
     echoCards.push({
       id: 'ec_bagas_rama_2014',

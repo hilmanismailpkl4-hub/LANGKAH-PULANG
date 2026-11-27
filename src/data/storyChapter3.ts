@@ -275,10 +275,19 @@ export const CHAPTER_3_DIALOGUES: Record<string, DialogueScript> = {
         emotion: 'haru',
         text: 'Sini, Nak... Peluk Ayah sebentar. Jadi Ayahnya Kira itu hal terbaik yang pernah terjadi di hidup Ayah. Maafin Ayah ya, belakangan Ayah terlalu sibuk mikirin hal-hal rumit sampai lupa ketawa bareng Kira.',
         conditionalNext: [
+          { requiredFlag: 'found_kira_secret_drawings', nextNodeId: 'ch3_fin_kira_secret_drawings' },
           { requiredFlag: 'drew_with_kira_corner', nextNodeId: 'ch3_fin_kira_star' },
           { requiredFlag: 'gave_gift_kira', nextNodeId: 'ch3_fin_kira_paint' },
           { requiredAnyFlags: ['bought_balloon_kira', 'launched_paper_boat'], nextNodeId: 'ch3_fin_kira_play' },
         ],
+        nextNodeId: 'ch3_fin_7',
+      },
+      ch3_fin_kira_secret_drawings: {
+        id: 'ch3_fin_kira_secret_drawings',
+        speaker: 'kira',
+        emotion: 'haru',
+        echoTag: 'Ingatan Kira · Gambar Pelangi Enam Senar di Bawah Bantal',
+        text: 'Ayah... berarti Ayah udah lihat gambar pelangi gitar di bawah bantal bintang Kira ya? Kira nggak takut Ayah sedih lagi sekarang—besok pagi kita tempel di kulkas bareng-bareng ya, Yah!!',
         nextNodeId: 'ch3_fin_7',
       },
       ch3_fin_kira_star: {

@@ -87,6 +87,20 @@ export const EPILOGUE_DIALOGUES: Record<string, DialogueScript> = {
         emotion: 'ceria',
         text: 'Ayaaah!! Akhirnya Ayah bangun! Bunda bilang hari ini Ayah nggak buru-buru ke kantor! Ayah beneran mau mainin gitar coklat besar itu lagi buat Kira sama Bunda kan?!',
         onEnter: { playSfx: 'chime' },
+        conditionalNext: [
+          {
+            requiredFlag: 'signed_kira_rainbow_drawing',
+            nextNodeId: 'ep_sec_f1_rainbow',
+          },
+        ],
+        nextNodeId: 'ep_sec_f2',
+      },
+      ep_sec_f1_rainbow: {
+        id: 'ep_sec_f1_rainbow',
+        speaker: 'kira',
+        emotion: 'ceria',
+        echoTag: 'Janji Krayon Terpenuhi · Gambar di Pintu Kulkas',
+        text: 'Kira menunjuk pintu kulkas dapur dengan bangga. "Lihat tuh Yah!! Gambar pelangi enam senar yang ada matahari oranye buatan Ayah udah Kira tempel paling tengah di kulkas!!"',
         nextNodeId: 'ep_sec_f2',
       },
       ep_sec_f2: {

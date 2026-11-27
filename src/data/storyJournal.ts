@@ -480,6 +480,14 @@ export function buildStoryTimeline(params: {
       tone: 'gold',
     });
   }
+  if (flags.includes('found_kira_secret_drawings')) {
+    echoBadges.push({
+      id: 'eb_kira_secret_drawings',
+      title: 'Tiga Gambar Rahasia di Bawah Bantal Kira',
+      detail: 'Membuka bait spesial di Dongeng Malam Bab 3, dialog pelukan Kira sebelum tidur, dan kejutan kulkas di Epilog.',
+      tone: 'rose',
+    });
+  }
   if (flags.includes('heard_bagas_rama_story')) {
     echoBadges.push({
       id: 'eb_bagas_rama_2014',

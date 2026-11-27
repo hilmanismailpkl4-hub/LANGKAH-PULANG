@@ -46,6 +46,10 @@ export const KIRA_BEDTIME_DIALOGUES: Record<string, DialogueScript> = {
         text: '"Baiklah... Pada suatu pagi, ada seorang Nakhoda yang punya perahu kertas warna biru langit. Dulunya dia suka sekali bernyanyi mengikuti arah angin. Tapi karena takut keluarganya di pantai kekurangan bekal, dia berlayar makin jauh mengejar Pulau Emas—sampai tak sadar langit sudah gelap."',
         conditionalNext: [
           {
+            requiredFlag: 'found_kira_secret_drawings',
+            nextNodeId: 'kbd_5_echo_secret_drawings',
+          },
+          {
             requiredAnyFlags: ['flashback_2020_done', 'kept_guitar_pick'],
             nextNodeId: 'kbd_5_echo_guitar',
           },
@@ -55,6 +59,15 @@ export const KIRA_BEDTIME_DIALOGUES: Record<string, DialogueScript> = {
           },
         ],
         nextNodeId: 'kbd_5_echo_rain',
+      },
+      kbd_5_echo_secret_drawings: {
+        id: 'kbd_5_echo_secret_drawings',
+        speaker: 'damar',
+        emotion: 'haru',
+        echoTag: 'Cerminan Perjalanan · Tiga Gambar di Bawah Bantal Kira',
+        text: '"Tiba-tiba di atas awan mendung muncul enam garis pelangi yang keluar dari gitar kayu tua sang Nakhoda—persis seperti gambar rahasia yang disembunyikan Tuan Putri Kecil di bawah bantal bintangnya." Kira langsung menahan napas takjub dengan mata berbinar!',
+        onEnter: { playSfx: 'guitar' },
+        nextNodeId: 'kbd_6',
       },
       kbd_5_echo_guitar: {
         id: 'kbd_5_echo_guitar',

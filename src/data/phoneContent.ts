@@ -523,6 +523,14 @@ export const PHONE_THREADS: PhoneContactThread[] = [
         chapterMin: 1,
       },
       {
+        id: 'kr_secret_drawings',
+        from: 'them',
+        text: 'ayaaaah kok bantal bintang kira geser dikit?? ayah liat gambar pelangi enam senar kira ya?? ayah gak sedih kaaan?? 🥺🌈',
+        time: 'Baru saja',
+        chapterMin: 1,
+        requiredFlag: 'found_kira_secret_drawings',
+      },
+      {
         id: 'kr_2',
         from: 'them',
         text: 'ayah hujan di luar gede bgt... perahu kertas kira nanti basah gak yah?? ayah bawa payung gak??',
@@ -566,6 +574,38 @@ export const PHONE_THREADS: PhoneContactThread[] = [
             replyFromThem: 'siap ayaaah! nanti sore pulang cepet yaaa!',
             replyTime: '08:05',
             effects: { kehadiranKeluarga: 1 },
+          },
+        ],
+      },
+      {
+        id: 'prompt_kira_secret_drawings',
+        chapterMin: 1,
+        requiredFlag: 'found_kira_secret_drawings',
+        contextHint: 'Kira bertanya dengan polos tentang tiga gambar di bawah bantal bintangnya',
+        options: [
+          {
+            id: 'rep_kr_sd_rainbow',
+            toneLabel: 'Hangat',
+            text: 'Ayah nggak sedih kok Sayang, justru Ayah terharu banget! Gambar pelangi enam senarnya paling indah sedunia—nanti kita tempel di kulkas bareng ya! 🌈🎸',
+            replyFromThem: 'HOREAAA!! kira kira tadi ayah bakal marah!! makasih ayaaah sayang ayah banyak-banyaaak!! 💕☀️',
+            replyTime: 'Baru saja',
+            effects: {
+              kehadiranKeluarga: 3,
+              kejujuranDiri: 1,
+              setFlags: ['replied_kira_secret_drawings_chat'],
+            },
+          },
+          {
+            id: 'rep_kr_sd_apology',
+            toneLabel: 'Jujur',
+            text: 'Maafin Ayah ya Nak kalau selama ini Kira sering nunggu suara motor Ayah malam-malam. Mulai hari ini Ayah mau sering pulang terang!',
+            replyFromThem: 'iya ayaaah gpp!! yg penting nanti malam ayah peluk kira sama bunda lamaaa bgt yaaa!! 🤗💛',
+            replyTime: 'Baru saja',
+            effects: {
+              kejujuranDiri: 2,
+              kehadiranKeluarga: 3,
+              setFlags: ['replied_kira_secret_drawings_chat'],
+            },
           },
         ],
       },
@@ -1088,6 +1128,17 @@ export const PHONE_THREADS: PhoneContactThread[] = [
 ];
 
 export const VOICE_NOTES: VoiceNoteItem[] = [
+  {
+    id: 'vn_kira_rainbow_drawings',
+    speakerId: 'kira',
+    senderName: 'Kira (Pesan Suara Rahasia)',
+    title: 'Gambar Pelangi Enam Senar di Bawah Bantal',
+    duration: '0:18',
+    chapterMin: 1,
+    requiredFlag: 'found_kira_secret_drawings',
+    transcript:
+      'Ayah, maaf ya Kira umpetin gambarnya di bawah bantal bintang... habisnya Kira takut Ayah capek. Tapi Kira beneran doa tiap malam biar tangan Ayah pegang gitar pelangi lagi sama Bunda!',
+  },
   {
     id: 'vn_bagas_rama_2014',
     speakerId: 'mas_bagas',

@@ -9,6 +9,7 @@ import { FATHER_CASSETTE_DIALOGUES } from './fatherCassetteStory';
 import { FLASHBACK_DIALOGUES } from './flashbacks';
 import { HENDRA_NIGHT_DIALOGUES } from './hendraNightStory';
 import { KIRA_BEDTIME_DIALOGUES } from './kiraBedtimeStory';
+import { KIRA_SKETCHBOOK_DIALOGUES } from './kiraSecretSketchbook';
 import { MIDNIGHT_DRAFT_DIALOGUES } from './midnightDraftStory';
 import { NADIA_DIARY_DIALOGUES } from './nadiaPregnancyDiary';
 import { PROLOGUE_DIALOGUES } from './prologueAndChapters';
@@ -584,6 +585,7 @@ const AMBIENT_DIALOGUES: Record<string, DialogueScript> = {
 export const ALL_DIALOGUES: Record<string, DialogueScript> = {
   ...PROLOGUE_DIALOGUES,
   ...KIRA_BEDTIME_DIALOGUES,
+  ...KIRA_SKETCHBOOK_DIALOGUES,
   ...CHAPTER_1_DIALOGUES,
   ...CHAPTER_2_DIALOGUES,
   ...CHAPTER_3_DIALOGUES,
