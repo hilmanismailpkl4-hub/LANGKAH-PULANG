@@ -128,6 +128,17 @@ const ItemArtwork: React.FC<{ iconType: BagItemDef['iconType']; size?: 'sm' | 'm
           <ellipse cx="47" cy="54" rx="5" ry="2.6" fill="#16a34a" transform="rotate(-20 47 54)" />
         </svg>
       );
+    case 'crayon_boat':
+      return (
+        <svg viewBox="0 0 80 80" className={cls}>
+          <rect x="12" y="14" width="56" height="52" rx="3" fill="#fffbeb" stroke="#94a3b8" strokeWidth="2" />
+          <path d="M14 50 Q26 44 40 50 T66 50 L66 64 L14 64 Z" fill="#86efac" opacity="0.85" />
+          <path d="M24 46 L56 46 L50 54 L30 54 Z" fill="#3b82f6" stroke="#1d4ed8" strokeWidth="1.5" />
+          <line x1="40" y1="46" x2="40" y2="24" stroke="#1e293b" strokeWidth="2" />
+          <path d="M41 25 L54 42 L41 42 Z" fill="#fde047" stroke="#ca8a04" strokeWidth="1.2" />
+          <circle cx="58" cy="24" r="5" fill="#fb923c" />
+        </svg>
+      );
     case 'icecream':
       return (
         <svg viewBox="0 0 80 80" className={cls}>
@@ -223,6 +234,9 @@ export const InventoryBagModal: React.FC = () => {
     }
     if (flags.includes('kept_turmeric_recipe_card')) {
       has('item_turmeric_recipe_card');
+    }
+    if (flags.includes('kept_naya_crayon_boat') && !flags.includes('sent_naya_crayon_boat')) {
+      has('item_naya_crayon_boat');
     }
 
     // Hadiah kejutan untuk keluarga (hilang dari tas setelah diberikan)
@@ -619,6 +633,31 @@ export const InventoryBagModal: React.FC = () => {
                   )}
 
                   {/* Aksi Khusus Kartu Resep Noda Kunyit Ibu & Nadia */}
+                  {selected.id === 'item_naya_crayon_boat' && (
+                    <div className={`rounded-xl border border-sky-300/30 bg-sky-950/25 ${compact ? 'p-2.5' : 'p-4'}`}>
+                      <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                        <span className="text-warm-200/85">
+                          Bawa ke bis surat oranye Kantor Pos & Filateli Senja Selatan untuk dikirim ke Naya di Melbourne.
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            sfxEngine.play('chime');
+                            setCustomWaypoint({
+                              label: 'Kantor Pos Selatan (Kirim Perahu Krayon Naya)',
+                              position: [51.0, 0, 54.0],
+                            });
+                            setBagOpen(false);
+                          }}
+                          className="flex items-center gap-1.5 rounded-lg bg-sky-400 px-3 py-1.5 font-semibold text-dusk-950 hover:bg-sky-300"
+                        >
+                          <Navigation className="h-3 w-3" /> Pasang GPS Kantor Pos
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Aksi Khusus Kartu Resep Noda Kunyit Ibu & Nadia (asli) */}
                   {selected.id === 'item_turmeric_recipe_card' && (
                     <div className={`rounded-xl border border-amber-300/30 bg-amber-950/25 ${compact ? 'p-2.5' : 'p-4'}`}>
                       {!flags.includes('shared_recipe_book_with_nadia') && distNadia <= 5.5 ? (

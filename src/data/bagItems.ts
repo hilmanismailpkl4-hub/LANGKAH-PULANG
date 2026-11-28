@@ -7,7 +7,7 @@ export interface BagItemDef {
   subtitle: string;
   description: string;
   monologue: string;
-  iconType: 'wallet' | 'keys' | 'pick' | 'notebook' | 'cassette_1997' | 'draft_letter' | 'sewing_letter' | 'paddy_seed' | 'tabebuya_petal' | 'recipe_card' | 'icecream' | 'flower' | 'bookmark' | 'tea' | 'coffee' | 'archive_key' | 'sketchbook' | 'ginger' | 'capo';
+  iconType: 'wallet' | 'keys' | 'pick' | 'notebook' | 'cassette_1997' | 'draft_letter' | 'sewing_letter' | 'paddy_seed' | 'tabebuya_petal' | 'recipe_card' | 'crayon_boat' | 'icecream' | 'flower' | 'bookmark' | 'tea' | 'coffee' | 'archive_key' | 'sketchbook' | 'ginger' | 'capo';
   giftTarget?: 'kira' | 'nadia';
   giftDialogueId?: string;
 }
@@ -102,6 +102,15 @@ export const ALL_BAG_ITEMS: BagItemDef[] = [
     description: 'Kartu pembatas takaran Wedang Serai Pandan & Nasi Goreng Kemangi tulisan tangan almarhumah Ibu tahun 2015 dengan catatan pensil Nadia tentang kebun bumbu belakang rumah.',
     monologue: 'Setiap batang serai dan pucuk kemangi di belakang rumah ternyata ditanam Nadia supaya aku tidak pernah kehilangan rasa pelukan Ibu.',
     iconType: 'recipe_card',
+  },
+  {
+    id: 'item_naya_crayon_boat',
+    name: 'Gambar Perahu Krayon Naya (2010)',
+    category: 'misi',
+    subtitle: 'Kotak Barang Temuan Lobi Menara Nusantara',
+    description: 'Kertas gambar yang pernah diremas lalu diratakan kembali: perahu krayon biru bertuliskan "UNTUK AYAH — PULANG JAM 8 YA. NAYA 6 THN." Dipungut satpam dari lantai lift pada 14 Maret 2010.',
+    monologue: 'Lima belas tahun perahu kecil ini menunggu di kotak barang temuan. Kantor Pos Selatan dekat stasiun bisa mengantarkannya pulang ke Melbourne.',
+    iconType: 'crayon_boat',
   },
   {
     id: 'item_gift_kira',

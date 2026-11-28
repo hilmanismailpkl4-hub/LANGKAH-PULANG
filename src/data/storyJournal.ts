@@ -680,6 +680,16 @@ export function buildStoryTimeline(params: {
       tone: 'sky',
     });
   }
+  if (flags.includes('found_naya_crayon_boat')) {
+    echoBadges.push({
+      id: 'eb_naya_crayon',
+      title: 'Perahu Krayon Naya (2010)',
+      detail: flags.includes('sent_naya_crayon_boat')
+        ? 'Gambar perahu Naya sudah dikirim lewat Kantor Pos Selatan—Pak Hendra akan mengingatnya saat bicara empat mata di lobi malam Bab 3.'
+        : 'Gambar perahu krayon Naya dari kotak barang temuan lobi masih di tasmu—kirim lewat bis surat oranye Kantor Pos Selatan.',
+      tone: 'sky',
+    });
+  }
   if (flags.includes('played_bima_25_song')) {
     echoBadges.push({
       id: 'eb_bima_25_song',

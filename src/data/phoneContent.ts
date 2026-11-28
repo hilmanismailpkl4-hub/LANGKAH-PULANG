@@ -1152,6 +1152,30 @@ export const PHONE_THREADS: PhoneContactThread[] = [
         chapterMin: 3,
         requiredFlag: 'ch3_hendra_night_talk_done',
       },
+      {
+        id: 'ph_crayon_dm',
+        from: 'damar',
+        text: 'Pak, maaf mengganggu. Saya menemukan gambar ini di kotak barang temuan lobi, tertanggal 14 Maret 2010. Sepertinya ini milik Naya. [📷 Foto: Perahu krayon biru — "Untuk Ayah, pulang jam 8 ya"]',
+        time: 'Baru saja',
+        chapterMin: 1,
+        requiredFlag: 'found_naya_crayon_boat',
+      },
+      {
+        id: 'ph_crayon_reply',
+        from: 'them',
+        text: 'Damar... itu perahu Naya. Saya kira sudah hilang lima belas tahun. Kalau tidak keberatan, tolong kirimkan lewat Kantor Pos Selatan dekat stasiun. Saya kirim alamatnya.',
+        time: 'Baru saja',
+        chapterMin: 1,
+        requiredFlag: 'found_naya_crayon_boat',
+      },
+      {
+        id: 'ph_crayon_sent',
+        from: 'them',
+        text: 'Petugas pos bilang suratnya sampai di Melbourne lima hari lagi. Hari ini saya pulang jam delapan, Damar. Untuk pertama kalinya sejak 2010.',
+        time: 'Baru saja',
+        chapterMin: 1,
+        requiredFlag: 'sent_naya_crayon_boat',
+      },
     ],
     prompts: [
       {

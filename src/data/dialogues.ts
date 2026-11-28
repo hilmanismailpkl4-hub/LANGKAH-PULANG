@@ -20,6 +20,7 @@ import { MIDNIGHT_DRAFT_DIALOGUES } from './midnightDraftStory';
 import { MOTHER_PADDY_DIALOGUES } from './motherPaddyStory';
 import { MOTHER_SEWING_TIN_DIALOGUES } from './motherSewingTinStory';
 import { NADIA_DIARY_DIALOGUES } from './nadiaPregnancyDiary';
+import { NAYA_CRAYON_DIALOGUES } from './nayaCrayonBoatStory';
 import { NENEK_SARI_DEEP_DIALOGUES } from './nenekSariDeepStory';
 import { PROLOGUE_DIALOGUES } from './prologueAndChapters';
 import { SIDE_QUEST_DIALOGUES } from './sideQuests';
@@ -617,6 +618,7 @@ export const ALL_DIALOGUES: Record<string, DialogueScript> = {
   ...MOTHER_PADDY_DIALOGUES,
   ...MOTHER_SEWING_TIN_DIALOGUES,
   ...NADIA_DIARY_DIALOGUES,
+  ...NAYA_CRAYON_DIALOGUES,
   ...NENEK_SARI_DEEP_DIALOGUES,
   ...SLAMET_BUDI_DEEP_DIALOGUES,
   ...TURMERIC_RECIPE_DIALOGUES,

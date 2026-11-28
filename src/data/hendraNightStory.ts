@@ -96,6 +96,20 @@ export const HENDRA_NIGHT_DIALOGUES: Record<string, DialogueScript> = {
         speaker: 'pak_hendra',
         emotion: 'haru',
         text: 'Waktu Naya umur enam tahun—persis seumuran Kira anakmu sekarang—dia pernah menempelkan gambar krayon perahu kecil di tas kerja kulit saya supaya saya pulang sebelum jam delapan malam. Saya kelupas gambar itu di lift karena gengsi dilihat direktur utama. Dalam hati saya selalu bilang: nanti saja kalau jabatan saya sudah aman, saya tebus semuanya.',
+        conditionalNext: [
+          {
+            requiredFlag: 'sent_naya_crayon_boat',
+            nextNodeId: 'hnd_8_echo_crayon',
+          },
+        ],
+        nextNodeId: 'hnd_9',
+      },
+      hnd_8_echo_crayon: {
+        id: 'hnd_8_echo_crayon',
+        speaker: 'pak_hendra',
+        emotion: 'haru',
+        echoTag: 'Ingatan Pak Hendra · Perahu Krayon & Prangko Pinisi',
+        text: 'Tapi gambar itu... ternyata satpam lobi menyimpannya lima belas tahun, dan kamu yang mengirimnya pulang ke Melbourne siang tadi. Naya baru membalas, Mar. Bukan tiga kata. Dia kirim pesan suara sambil menangis: "Ayah masih ingat perahuku?"',
         nextNodeId: 'hnd_9',
       },
       hnd_9: {

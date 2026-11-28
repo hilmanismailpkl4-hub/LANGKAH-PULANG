@@ -5376,6 +5376,36 @@ export const WorldInteractables: React.FC = () => {
       2.2,
     );
 
+    if (!store.flags.includes('sent_naya_crayon_boat')) {
+      consider(
+        {
+          id: 'story_lobby_lost_found_naya',
+          kind: 'story_object',
+          label: store.flags.includes('kept_naya_crayon_boat')
+            ? 'Perahu Krayon Naya Ada di Tas (Kirim lewat Kantor Pos Selatan)'
+            : 'Periksa Kotak Kayu "Barang Temuan" di Meja Resepsionis',
+          sublabel: store.flags.includes('kept_naya_crayon_boat')
+            ? 'Bis Surat Oranye · Dekat Jl. Stasiun Timur Selatan'
+            : 'Lobi Menara Nusantara · Pos Satpam Sejak 2009',
+          position: [33.9, 0.08, -22.15],
+          onInteract: () => {
+            if (store.flags.includes('kept_naya_crayon_boat')) {
+              sfxEngine.play('chime');
+              store.setCustomWaypoint({
+                label: 'Kantor Pos Selatan (Kirim Perahu Krayon Naya)',
+                position: [51.0, 0, 54.0],
+              });
+              store.showToast('Penanda GPS dipasang ke bis surat oranye Kantor Pos & Filateli Senja Selatan!');
+              return;
+            }
+            playerRuntime.activeSpeakerPos = [33.6, 1.0, -23.4];
+            store.startDialogue('story_lobby_lost_found_naya');
+          },
+        },
+        1.9,
+      );
+    }
+
     consider(
       {
         id: 'activity_lobby_scale_model',
@@ -5684,10 +5714,21 @@ export const WorldInteractables: React.FC = () => {
       {
         id: 'activity_south_post_mailbox',
         kind: 'story_object',
-        label: 'Periksa Bis Surat Oranye & Etalase Kantor Pos Selatan',
-        sublabel: 'Kantor Pos & Filateli Senja · Jl. Stasiun Timur Selatan',
+        label:
+          store.flags.includes('kept_naya_crayon_boat') && !store.flags.includes('sent_naya_crayon_boat')
+            ? 'Kirim Perahu Krayon Naya ke Melbourne lewat Bis Surat Oranye'
+            : 'Periksa Bis Surat Oranye & Etalase Kantor Pos Selatan',
+        sublabel:
+          store.flags.includes('kept_naya_crayon_boat') && !store.flags.includes('sent_naya_crayon_boat')
+            ? 'Kantor Pos Selatan · Titipan Pak Hendra untuk Naya'
+            : 'Kantor Pos & Filateli Senja · Jl. Stasiun Timur Selatan',
         position: [51.0, 0, 54.0],
         onInteract: () => {
+          if (store.flags.includes('kept_naya_crayon_boat') && !store.flags.includes('sent_naya_crayon_boat')) {
+            playerRuntime.activeSpeakerPos = [51.85, 1.2, 54.0];
+            store.startDialogue('story_post_naya_crayon');
+            return;
+          }
           sfxEngine.play('page');
           if (!store.flags.includes('checked_south_post_office')) {
             store.applyEffect({
@@ -6547,6 +6588,26 @@ export const WorldInteractables: React.FC = () => {
           <meshBasicMaterial color={flags.includes('read_turmeric_recipe_book') ? '#86efac' : '#fbbf24'} />
         </mesh>
       </group>
+
+      {/* Kotak Kayu "Barang Temuan" & Map Perahu Krayon Naya di Meja Resepsionis Lobi */}
+      {!flags.includes('sent_naya_crayon_boat') && (
+        <group position={[33.55, 0.89, -23.35]} rotation={[0, 0.18, 0]}>
+          <mesh castShadow>
+            <boxGeometry args={[0.42, 0.18, 0.3]} />
+            <meshStandardMaterial color="#6b4a2e" roughness={0.75} />
+          </mesh>
+          {!flags.includes('kept_naya_crayon_boat') && (
+            <mesh position={[0.02, 0.1, 0]} rotation={[0, -0.2, 0]}>
+              <boxGeometry args={[0.24, 0.012, 0.18]} />
+              <meshStandardMaterial color="#e0f2fe" emissive="#38bdf8" emissiveIntensity={0.5} roughness={0.4} />
+            </mesh>
+          )}
+          <mesh position={[0, 0.36, 0]}>
+            <sphereGeometry args={[0.062, 10, 10]} />
+            <meshBasicMaterial color={flags.includes('kept_naya_crayon_boat') ? '#86efac' : '#7dd3fc'} />
+          </mesh>
+        </group>
+      )}
 
       {/* Kotak Mika & Kaset Pita C-60 Bapak (1997) di Samping Radio Kayu Dapur Rumah Jl. Melati */}
       <group position={[-17.45, 0.91, 72.18]} rotation={[0, -0.22, 0]}>

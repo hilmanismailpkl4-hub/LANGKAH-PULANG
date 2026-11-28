@@ -266,6 +266,19 @@ export const CHARACTER_ECHO_DIALOGUES: Record<string, DialogueScript> = {
   },
 
   // === PAK HENDRA ===
+  echo_hendra_crayon_boat: {
+    id: 'echo_hendra_crayon_boat',
+    startNodeId: 'eh_cb_1',
+    nodes: {
+      eh_cb_1: {
+        id: 'eh_cb_1',
+        speaker: 'pak_hendra',
+        emotion: 'haru',
+        echoTag: 'Ingatan Pak Hendra · Perahu Krayon Naya',
+        text: 'Damar... saya tadi turun ke pos satpam dan menyalami Pak Wiryo yang menyimpan gambar Naya lima belas tahun. Orang yang tidak mengenal anak saya ternyata lebih setia menjaga perahunya daripada ayahnya sendiri. Terima kasih sudah mengirimnya pulang.',
+      },
+    },
+  },
   echo_hendra_after_night_talk: {
     id: 'echo_hendra_after_night_talk',
     startNodeId: 'eh_nt_1',
@@ -438,6 +451,9 @@ export function resolveDynamicNpcAmbient(
   }
 
   if (npcId === 'pak_hendra') {
+    if (flags.includes('sent_naya_crayon_boat') && !flags.includes('ch3_hendra_night_talk_done')) {
+      return { dialogueId: 'echo_hendra_crayon_boat', sublabel: 'Ingatan Pak Hendra · Perahu Naya' };
+    }
     if (flags.includes('ch3_hendra_night_talk_done')) {
       return { dialogueId: 'echo_hendra_after_night_talk', sublabel: 'Ingatan Pak Hendra · Naya' };
     }
@@ -754,6 +770,14 @@ export function buildEndingJourneyRecap(params: {
         ? 'Di antara kursi terbalik Kedai Kopi Sudut malam hari, kamu mendengar rahasia pengorbanan Bima dan menyanyikan kembali harmoni yang terputus enam tahun lalu.'
         : 'Di Kedai Kopi Sudut yang telah tutup, kamu mengetahui bahwa Bima menjaga gitar di sudut dinding selama enam tahun demi menunggumu pulang.',
       tone: 'gold',
+    });
+  }
+  if (flags.includes('sent_naya_crayon_boat')) {
+    echoCards.push({
+      id: 'ec_naya_crayon',
+      label: 'Perahu Krayon Naya Pulang ke Melbourne (Pak Hendra)',
+      summary: 'Gambar "Untuk Ayah — pulang jam 8 ya" yang tersimpan lima belas tahun di kotak barang temuan lobi kamu kirim lewat Kantor Pos Selatan—dan Pak Hendra akhirnya pulang tepat waktu.',
+      tone: 'sky',
     });
   }
   if (flags.includes('ch3_hendra_night_talk_done')) {
