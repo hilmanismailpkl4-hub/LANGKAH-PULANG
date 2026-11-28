@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Heart, MailOpen, Music, Pause, Play, RotateCcw, Sparkles, X } from 'lucide-react';
 import { sfxEngine } from '../../audio/sfxEngine';
 import { EVENT_FAMILY_BANTERS } from '../../data/familyWalkBanter';
-import { CONCERT_CHORDS, TRACK4_CONCERT_BARS } from '../../data/pulangSongAndLetter';
+import { BIMA25_BARS, CONCERT_CHORDS, TRACK4_CONCERT_BARS } from '../../data/pulangSongAndLetter';
 import { useGameStore } from '../../store/useGameStore';
 import { useMobileViewport } from '../../utils/mobileUtils';
 import { Portal } from './Portal';
@@ -28,7 +28,7 @@ export const GuitarMinigameModal: React.FC = () => {
           ? 'Gitar Mahoni Toko Musik "Nada Lama"'
           : 'Konser Akustik Kedai Kopi Sudut';
 
-  const [mode, setMode] = useState<'concert' | 'free'>('concert');
+  const [mode, setMode] = useState<'concert' | 'bima' | 'free'>('concert');
   const [stepIdx, setStepIdx] = useState(0);
   const [completedSong, setCompletedSong] = useState(false);
   const [autoPlay, setAutoPlay] = useState(false);
@@ -37,6 +37,8 @@ export const GuitarMinigameModal: React.FC = () => {
   const [notePulseId, setNotePulseId] = useState(0);
   const [activeReaction, setActiveReaction] = useState<{ speaker: string; text: string } | null>(null);
   const autoTimerRef = useRef<number | null>(null);
+  const songBars = mode === 'bima' ? BIMA25_BARS : TRACK4_CONCERT_BARS;
+  const songTitle = mode === 'bima' ? 'Umur Dua Puluh Lima' : 'Track 4 — Pulang';
 
   const { isMobile, isCompactLandscape } = useMobileViewport();
   const compact = isMobile || isCompactLandscape;
@@ -67,6 +69,30 @@ export const GuitarMinigameModal: React.FC = () => {
     sfxEngine.playTrack4Finale();
 
     const store = useGameStore.getState();
+
+    // Lagu Bonus Persahabatan "Umur Dua Puluh Lima" bersama Bima
+    if (mode === 'bima') {
+      if (!store.flags.includes('played_bima_25_song')) {
+        applyEffect({
+          kejujuranDiri: 2,
+          kehadiranKeluarga: 1,
+          setFlags: ['played_bima_25_song'],
+          journalEntry: {
+            id: 'je_bima_25_song_complete',
+            title: 'Lagu "Umur Dua Puluh Lima" Akhirnya Utuh',
+            body: 'Delapan baris lagu lama yang kutulis bersama Bima di kosan sempit tahun 2017 akhirnya kumainkan sampai bridge terakhir: "nyalakan satu lampu, tunggu aku di beranda." Ternyata yang ditunggu lampu itu bukan panggung besar, melainkan kami berdua yang mau pulang dengan jujur.',
+            chapter: store.chapter,
+          },
+        });
+      }
+      showToast(
+        isAtHome
+          ? 'Nadia & Kira bertepuk tangan: lagu persahabatan "Umur Dua Puluh Lima" selesai dimainkan!'
+          : 'Bima: "Enam tahun, Mar... akhirnya bridge lagu kita utuh lagi!"',
+      );
+      return;
+    }
+
     const isNewConcert = !store.flags.includes('played_track4_concert');
 
     if (isAtHome) {
@@ -118,8 +144,8 @@ export const GuitarMinigameModal: React.FC = () => {
     setNotePulseId((n) => n + 1);
     window.setTimeout(() => setVibrating(false), 360);
 
-    if (mode === 'concert' && !completedSong) {
-      const currentBar = TRACK4_CONCERT_BARS[stepIdx];
+    if (mode !== 'free' && !completedSong) {
+      const currentBar = songBars[stepIdx];
       if (currentBar && chordIdx === currentBar.chordIdx) {
         // Munculkan reaksi hangat Nadia / Kira / Bima / Mas Bagas pada bar kunci!
         const react = isAtHome ? currentBar.homeReaction : currentBar.awayReaction;
@@ -133,7 +159,7 @@ export const GuitarMinigameModal: React.FC = () => {
           setActiveReaction({ speaker: speakerNames[react.speaker] ?? react.speaker, text: react.text });
         }
 
-        if (stepIdx + 1 >= TRACK4_CONCERT_BARS.length) {
+        if (stepIdx + 1 >= songBars.length) {
           finishConcert();
         } else {
           setStepIdx((prev) => prev + 1);
@@ -145,7 +171,7 @@ export const GuitarMinigameModal: React.FC = () => {
   // Mode Putar Otomatis (Dengarkan Konser Baris demi Baris dengan Tempo Hangat)
   useEffect(() => {
     if (!isOpen || !autoPlay || mode !== 'concert' || completedSong) return;
-    const bar = TRACK4_CONCERT_BARS[stepIdx];
+    const bar = songBars[stepIdx];
     if (!bar) return;
 
     autoTimerRef.current = window.setTimeout(() => {
@@ -174,22 +200,23 @@ export const GuitarMinigameModal: React.FC = () => {
 
   if (!isOpen) return null;
 
-  const targetBar = mode === 'concert' && !completedSong ? TRACK4_CONCERT_BARS[stepIdx] : null;
+  const targetBar = mode !== 'free' && !completedSong ? songBars[stepIdx] : null;
   const targetChordIdx = targetBar ? targetBar.chordIdx : null;
   const sungBar =
     completedSong
-      ? TRACK4_CONCERT_BARS[TRACK4_CONCERT_BARS.length - 1]
+      ? songBars[songBars.length - 1]
       : stepIdx > 0
-        ? TRACK4_CONCERT_BARS[stepIdx - 1]
+        ? songBars[stepIdx - 1]
         : null;
   const prevBar =
     completedSong
-      ? TRACK4_CONCERT_BARS[TRACK4_CONCERT_BARS.length - 2]
+      ? songBars[songBars.length - 2]
       : stepIdx > 1
-        ? TRACK4_CONCERT_BARS[stepIdx - 2]
+        ? songBars[stepIdx - 2]
         : null;
 
   const hasDeepMemory = flags.includes('flashback_2020_done') || flags.includes('flashback_2018_done');
+  const bimaSongUnlocked = flags.includes('ch3_bima_night_talk_done') || flags.includes('flashback_2018_done');
 
   const resetConcert = () => {
     stopAutoPlay();
@@ -239,7 +266,7 @@ export const GuitarMinigameModal: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-1.5">
-              {mode === 'concert' && !completedSong && (
+              {mode !== 'free' && !completedSong && (
                 <button
                   type="button"
                   onClick={() => setAutoPlay((v) => !v)}
@@ -267,6 +294,28 @@ export const GuitarMinigameModal: React.FC = () => {
                   }`}
                 >
                   Track 4
+                </button>
+                <button
+                  type="button"
+                  disabled={!bimaSongUnlocked}
+                  onClick={() => {
+                    setMode('bima');
+                    resetConcert();
+                  }}
+                  title={
+                    bimaSongUnlocked
+                      ? 'Lagu bonus persahabatan Damar & Bima (2017)'
+                      : 'Terbuka setelah Kilas Balik Panggung 2018 atau obrolan malam bersama Bima'
+                  }
+                  className={`rounded-lg px-2.5 py-1 transition ${
+                    mode === 'bima'
+                      ? 'bg-amber-400 font-semibold text-dusk-950'
+                      : bimaSongUnlocked
+                        ? 'text-warm-200/70'
+                        : 'cursor-not-allowed text-warm-200/30'
+                  }`}
+                >
+                  {bimaSongUnlocked ? 'Umur 25' : '🔒 Umur 25'}
                 </button>
                 <button
                   type="button"
@@ -340,22 +389,22 @@ export const GuitarMinigameModal: React.FC = () => {
                   compact ? 'col-span-7 px-3.5 py-2.5' : 'px-5 py-4'
                 }`}
               >
-                {mode === 'concert' && (
+                {mode !== 'free' && (
                   <>
                     <div className="mb-1.5 flex items-center justify-between gap-2 text-[10px]">
                       <span className="font-semibold uppercase tracking-[0.16em] text-amber-300/85">
                         {completedSong
-                          ? 'Track 4 — Pulang (Selesai Ditulis)'
-                          : targetBar?.section ?? 'Track 4 — Pulang'}
+                          ? `${songTitle} (Selesai)`
+                          : targetBar?.section ?? songTitle}
                       </span>
                       <span className="font-mono text-warm-200/60">
-                        {completedSong ? 12 : stepIdx}/{TRACK4_CONCERT_BARS.length}
+                        {completedSong ? songBars.length : stepIdx}/{songBars.length}
                       </span>
                     </div>
 
                     {/* Bar Progres 12 Ketukan */}
                     <div className="mb-2.5 flex items-center justify-center gap-1">
-                      {TRACK4_CONCERT_BARS.map((b, idx) => (
+                      {songBars.map((b, idx) => (
                         <span
                           key={b.id}
                           className={`h-1.5 flex-1 rounded-full transition-all ${
@@ -371,7 +420,7 @@ export const GuitarMinigameModal: React.FC = () => {
                   </>
                 )}
 
-                {mode === 'concert' ? (
+                {mode !== 'free' ? (
                   <div className="space-y-1.5">
                     {prevBar && !compact && (
                       <p className="font-serif text-xs italic text-warm-200/40">“{prevBar.lyric}”</p>
@@ -383,7 +432,7 @@ export const GuitarMinigameModal: React.FC = () => {
                     >
                       {sungBar
                         ? `“${sungBar.lyric}”`
-                        : 'Petik akor yang menyala [1–6] atau tekan [Auto] untuk menghidupkan lagu "Track 4 — Pulang"...'}
+                        : `Petik akor yang menyala [1–6] atau tekan [Auto] untuk menghidupkan lagu "${songTitle}"...`}
                     </p>
                     {!completedSong && targetBar && (
                       <p className="text-[11px] text-amber-200/65">
@@ -403,7 +452,7 @@ export const GuitarMinigameModal: React.FC = () => {
                 )}
 
                 {/* Reaksi Live Nadia / Kira / Bima di Bawah Lirik */}
-                {activeReaction && mode === 'concert' && (
+                {activeReaction && mode !== 'free' && (
                   <div className="mt-2.5 rounded-xl border border-rose-300/25 bg-rose-500/10 px-3 py-1.5 text-left text-[11px] text-rose-100/95 animate-fadeIn">
                     <span className="mr-1.5 inline-flex items-center gap-1 font-semibold text-rose-200">
                       <Heart className="h-3 w-3 fill-rose-300 text-rose-300" />
@@ -414,7 +463,7 @@ export const GuitarMinigameModal: React.FC = () => {
                 )}
 
                 {/* Panel Penutup Setelah Konser Selesai */}
-                {completedSong && mode === 'concert' && (
+                {completedSong && mode !== 'free' && (
                   <div className="mt-3 space-y-2 border-t border-amber-200/15 pt-2.5 animate-fadeIn">
                     {hasDeepMemory && (
                       <p className="font-serif text-[11px] italic text-amber-200/85">
@@ -422,18 +471,20 @@ export const GuitarMinigameModal: React.FC = () => {
                       </p>
                     )}
                     <div className="flex flex-wrap items-center justify-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          stopAutoPlay();
-                          setOpen(false);
-                          setNadiaLetterOpen(true);
-                        }}
-                        className="inline-flex items-center gap-1.5 rounded-full bg-amber-400 px-3.5 py-1.5 text-[11px] font-semibold text-dusk-950 shadow transition hover:bg-amber-300"
-                      >
-                        <MailOpen className="h-3.5 w-3.5" />
-                        <span>Baca Surat Nadia di Meja Makan</span>
-                      </button>
+                      {mode === 'concert' && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            stopAutoPlay();
+                            setOpen(false);
+                            setNadiaLetterOpen(true);
+                          }}
+                          className="inline-flex items-center gap-1.5 rounded-full bg-amber-400 px-3.5 py-1.5 text-[11px] font-semibold text-dusk-950 shadow transition hover:bg-amber-300"
+                        >
+                          <MailOpen className="h-3.5 w-3.5" />
+                          <span>Baca Surat Nadia di Meja Makan</span>
+                        </button>
+                      )}
                       <button
                         type="button"
                         onClick={resetConcert}

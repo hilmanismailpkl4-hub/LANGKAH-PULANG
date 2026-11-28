@@ -680,6 +680,14 @@ export function buildStoryTimeline(params: {
       tone: 'sky',
     });
   }
+  if (flags.includes('played_bima_25_song')) {
+    echoBadges.push({
+      id: 'eb_bima_25_song',
+      title: 'Lagu "Umur Dua Puluh Lima" Utuh Kembali',
+      detail: 'Delapan baris lagu kosan 2017 bersama Bima akhirnya kamu petik sampai bridge "Lampu di Beranda"—Bima akan mengingatnya saat kalian bertemu lagi.',
+      tone: 'gold',
+    });
+  }
   if (flags.includes('read_turmeric_recipe_book')) {
     echoBadges.push({
       id: 'eb_turmeric_recipe',

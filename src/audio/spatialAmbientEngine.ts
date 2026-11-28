@@ -16,6 +16,7 @@ class SpatialAmbientEngine {
   private cafeGain: GainNode | null = null;
   private rooftopGain: GainNode | null = null;
   private trainGain: GainNode | null = null;
+  private bambooGain: GainNode | null = null;
   private natureTimer: number | null = null;
   private lastNaturePos: [number, number, number] = [0, 0, 0];
   private lastTimeOfDay: TimeOfDay = 'morning';
@@ -76,6 +77,8 @@ class SpatialAmbientEngine {
     this.rooftopGain = createLayer('lowpass', 420, 1.2);
     // 4. Dengung rendah kereta komuter lewat di rel Stasiun Senja
     this.trainGain = createLayer('lowpass', 180, 2.2);
+    // 4b. Desir daun & batang bambu bergesekan di Rimba Bambu Utara Danau Senja
+    this.bambooGain = createLayer('highpass', 2600, 0.6);
 
     // 5. Kicau burung pagi / jangkrik malam lembut di area taman & perumahan
     this.natureTimer = window.setInterval(() => {
@@ -94,10 +97,29 @@ class SpatialAmbientEngine {
     // Cek kedekatan dengan Taman Kota, Lembah Sawah Barat Daya, atau Perumahan
     const inPark = px < -56;
     const inNeighborhood = pz > 46 && px > -36 && px < 46;
-    if (!inPark && !inNeighborhood) return;
+    const inHeritage = Math.hypot(px - 79.5, pz - 35.5) < 18;
+    if (!inPark && !inNeighborhood && !inHeritage) return;
     if (Math.random() > 0.58) return;
 
     const now = ctx.currentTime;
+    if (inHeritage && (this.lastTimeOfDay === 'morning' || this.lastTimeOfDay === 'sunset')) {
+      // Dekut lembut merpati Taman Heritage Lokomotif 1928 ("kruu—kuuk")
+      [0, 0.32].forEach((off, idx) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        const f = idx === 0 ? 380 : 440;
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(f, now + off);
+        osc.frequency.linearRampToValueAtTime(f * 0.86, now + off + 0.26);
+        g.gain.setValueAtTime(0.0004, now + off);
+        g.gain.linearRampToValueAtTime(0.022 * this.masterVolume, now + off + 0.06);
+        g.gain.exponentialRampToValueAtTime(0.0004, now + off + 0.3);
+        osc.connect(g).connect(this.masterGain!);
+        osc.start(now + off);
+        osc.stop(now + off + 0.32);
+      });
+      return;
+    }
     if (this.lastTimeOfDay === 'morning' || this.lastTimeOfDay === 'sunset') {
       // Kicau burung kota halus (dua nada lembut tinggi)
       const base = 2400 + Math.random() * 900;
@@ -196,6 +218,11 @@ class SpatialAmbientEngine {
     const speedFactor = Math.max(0.08, Math.min(1, playerRuntime.trainSpeed / 12.5));
     const trainLevel = Math.max(0.0001, (1 - Math.min(1, distTrain / 46)) * 0.36 * speedFactor);
     this.trainGain?.gain.setTargetAtTime(trainLevel, now, 0.25);
+
+    // 5. Rimba Bambu Utara: desir halus memuncak di dekat Paviliun Teh Teduh Utara (-77.5, -51.5)
+    const distBamboo = py > 10 ? 99 : Math.hypot(px - -77.5, pz - -51.5);
+    const bambooLevel = Math.max(0.0001, (1 - Math.min(1, distBamboo / 20)) * 0.12);
+    this.bambooGain?.gain.setTargetAtTime(bambooLevel, now, 0.5);
   }
 
   public dispose() {

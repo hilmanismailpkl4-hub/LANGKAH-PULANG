@@ -132,6 +132,85 @@ export const TRACK4_CONCERT_BARS: ConcertBar[] = [
   },
 ];
 
+/**
+ * Lagu Bonus "Umur Dua Puluh Lima" — lagu lama Damar & Bima dari kosan 2017
+ * yang bridge-nya terputus enam tahun. Terbuka setelah kilas balik 2018 atau obrolan malam bersama Bima.
+ */
+export const BIMA25_BARS: ConcertBar[] = [
+  {
+    id: 'b25_1',
+    section: 'Bait I · Kosan Sempit 2017',
+    chordIdx: 4,
+    lyric: 'Dua gelas kopi sachet, satu gitar pinjaman di kosan sempit...',
+  },
+  {
+    id: 'b25_2',
+    section: 'Bait I · Kosan Sempit 2017',
+    chordIdx: 2,
+    lyric: 'Kita bersumpah takkan pernah menjual lagu demi gedung tinggi...',
+  },
+  {
+    id: 'b25_3',
+    section: 'Bait I · Kosan Sempit 2017',
+    chordIdx: 1,
+    lyric: 'Lalu kota menelan pagi kita satu per satu tanpa permisi...',
+    homeReaction: {
+      speaker: 'nadia',
+      text: 'Nadia tersenyum kecil: "Ini lagu yang dulu kalian latih tiap Sabtu di teras kosan, kan?"',
+    },
+    awayReaction: {
+      speaker: 'bima',
+      text: 'Bima memejamkan mata, jarinya mengetuk meja bar: "Bait ini dulu lo yang nulis, Mar."',
+    },
+  },
+  {
+    id: 'b25_4',
+    section: 'Bait I · Kosan Sempit 2017',
+    chordIdx: 3,
+    lyric: 'Dan kau menitipkan suaramu di sudut kedai yang sepi...',
+  },
+  {
+    id: 'b25_5',
+    section: 'Bridge · Lampu di Beranda',
+    chordIdx: 0,
+    lyric: 'Jika jalan kota terlalu bising untuk kaki kita...',
+  },
+  {
+    id: 'b25_6',
+    section: 'Bridge · Lampu di Beranda',
+    chordIdx: 4,
+    lyric: 'Nyalakan satu lampu, tunggu aku di beranda...',
+    homeReaction: {
+      speaker: 'kira',
+      text: 'Kira bertepuk tangan: "Ayah! Lampu berandanya kayak lampu teras rumah kita!"',
+    },
+    awayReaction: {
+      speaker: 'bima',
+      text: 'Bima ikut menyanyikan suara dua dengan serak: "...tunggu aku di berandaaa!"',
+    },
+  },
+  {
+    id: 'b25_7',
+    section: 'Reff · Jalan Pulang Sahabat',
+    chordIdx: 2,
+    lyric: 'Umur dua puluh lima boleh pergi tanpa pamit...',
+  },
+  {
+    id: 'b25_8',
+    section: 'Reff · Jalan Pulang Sahabat',
+    chordIdx: 5,
+    lyric: 'Tapi persahabatan kita selalu tahu jalan pulang.',
+    homeReaction: {
+      speaker: 'nadia',
+      text: 'Nadia berbisik: "Sabtu sore nanti, nyanyikan ini bareng Bima di kedai ya, Mas."',
+    },
+    awayReaction: {
+      speaker: 'bima',
+      text: 'Bima tertawa sambil menyeka mata: "Enam tahun, Mar. Akhirnya lagu kita utuh lagi."',
+    },
+  },
+];
+
 export interface NadiaLetterContent {
   dateLine: string;
   salutation: string;

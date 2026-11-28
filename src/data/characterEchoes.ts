@@ -212,6 +212,19 @@ export const CHARACTER_ECHO_DIALOGUES: Record<string, DialogueScript> = {
       },
     },
   },
+  echo_bima_song_25: {
+    id: 'echo_bima_song_25',
+    startNodeId: 'eb_s25_1',
+    nodes: {
+      eb_s25_1: {
+        id: 'eb_s25_1',
+        speaker: 'bima',
+        emotion: 'haru',
+        echoTag: 'Ingatan Bima · Bridge "Lampu di Beranda"',
+        text: 'Mar... dari tadi gue senyum-senyum sendiri sambil ngelap cangkir. Bridge "nyalakan satu lampu, tunggu aku di beranda" itu akhirnya lo petik sampai habis. Lampunya udah nyala, bro—tinggal kita jaga biar nggak padam lagi.',
+      },
+    },
+  },
   echo_bima_flashback_2018: {
     id: 'echo_bima_flashback_2018',
     startNodeId: 'eb_18_1',
@@ -407,6 +420,9 @@ export function resolveDynamicNpcAmbient(
   }
 
   if (npcId === 'bima') {
+    if (flags.includes('played_bima_25_song')) {
+      return { dialogueId: 'echo_bima_song_25', sublabel: 'Ingatan Bima · Lagu Umur 25' };
+    }
     if (flags.includes('ch3_bima_night_talk_done')) {
       return { dialogueId: 'echo_bima_after_night_talk', sublabel: 'Ingatan Bima · Umur 25' };
     }

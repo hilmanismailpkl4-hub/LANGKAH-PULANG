@@ -279,6 +279,8 @@ export const InventoryBagModal: React.FC = () => {
       activeSoundTags.push('Gemericik Air Sungai & Danau');
     }
     if (Math.hypot(px - -20, pz - 20.5) < 16) activeSoundTags.push('Uap Espresso Kedai Bima');
+    if (Math.hypot(px - -77.5, pz - -51.5) < 20) activeSoundTags.push('Desir Rimba Bambu Utara');
+    if (Math.hypot(px - 79.5, pz - 35.5) < 18) activeSoundTags.push('Dekut Merpati Taman Lokomotif');
     if (Math.hypot(px - 94.3, pz - playerRuntime.trainZ) < 44) activeSoundTags.push('Dengung Kereta Komuter');
     if (px < -56 || (pz > 46 && px > -36 && px < 46)) activeSoundTags.push('Suasana Alam & Lingkungan');
   }
