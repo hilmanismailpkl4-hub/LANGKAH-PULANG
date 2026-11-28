@@ -451,6 +451,44 @@ export const MapJournalModal: React.FC = () => {
                         );
                       })()}
 
+                      {/* Zona Taman Heritage Lokomotif 1928 di Tenggara Stasiun (Klik untuk Pasang GPS!) */}
+                      {(() => {
+                        const hz = toSvg(79.5, 35.5);
+                        return (
+                          <g
+                            className="cursor-pointer"
+                            onClick={() => {
+                              sfxEngine.play('interact');
+                              setCustomWaypoint({
+                                label: 'Taman Heritage Lokomotif 1928',
+                                position: [75.8, 0, 35.5],
+                              });
+                            }}
+                          >
+                            <circle
+                              cx={hz.sx}
+                              cy={hz.sy}
+                              r="15"
+                              fill="#2b211a"
+                              stroke="#fbbf24"
+                              strokeOpacity="0.55"
+                              strokeWidth="1.2"
+                            />
+                            <circle cx={hz.sx} cy={hz.sy} r="4" fill="#d97706" />
+                            <text
+                              x={hz.sx}
+                              y={hz.sy + 23}
+                              fill="rgba(253,230,138,0.9)"
+                              fontSize="6.5"
+                              fontWeight="600"
+                              textAnchor="middle"
+                            >
+                              TAMAN LOKOMOTIF 1928
+                            </text>
+                          </g>
+                        );
+                      })()}
+
                       {/* Zona Lembah Sawah Senja & Saung Bambu Barat Daya (Klik untuk Pasang GPS!) */}
                       {(() => {
                         const sw1 = toSvg(-93, 49);

@@ -646,6 +646,10 @@ export const GROUND_COLLIDERS: ColliderBox[] = [
   // === 51. Halaman Belakang Rumah Damar & Kebun TOGA PKK RT 04 Melati ===
   { id: 'backyard_herb_bed', minX: -18.55, maxX: -15.85, minZ: 75.68, maxZ: 76.72 },
   { id: 'melati_toga_bale', minX: 3.98, maxX: 6.42, minZ: 79.2, maxZ: 80.4 },
+  // === 52. Taman Heritage Roda Lokomotif 1928 & Bis Surat Kantor Pos Selatan ===
+  { id: 'heritage_loco_monument', minX: 78.15, maxX: 80.85, minZ: 34.65, maxZ: 36.35 },
+  { id: 'heritage_west_bench', minX: 75.45, maxX: 76.15, minZ: 34.4, maxZ: 36.6 },
+  { id: 'heritage_east_bench', minX: 82.85, maxX: 83.55, minZ: 34.4, maxZ: 36.6 },
 ];
 
 /**
@@ -872,9 +876,12 @@ export const STATIC_CIRCLE_COLLIDERS: { x: number; z: number; r: number }[] = [
   { x: -75.55, z: -53.05, r: 0.16 },
   { x: -79.45, z: -49.95, r: 0.16 },
   { x: -75.55, z: -49.95, r: 0.16 },
-  // Gentong Terakota Belakang Rumah & Papan Kebun TOGA RT 04
+  // Gentong Terakota Belakang Rumah & Papan Kebun TOGA RT 04 + Bis Surat Pos Selatan & Lampu Taman Lokomotif
   { x: -14.2, z: 77.6, r: 0.5 },
   { x: 2.6, z: 79.4, r: 0.45 },
+  { x: 51.85, z: 54.0, r: 0.36 },
+  { x: 79.5, z: 31.3, r: 0.22 },
+  { x: 79.5, z: 39.7, r: 0.22 },
   ...([
     [-39.75, 9.5], [-39.75, 19.5], [-39.75, 29.5], [-39.75, 39.5],
     [-39.75, -9.5], [-39.75, -19.5], [-39.75, -29.5],

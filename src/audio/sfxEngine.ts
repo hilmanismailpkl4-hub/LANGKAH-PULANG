@@ -1876,6 +1876,23 @@ class SfxEngine {
     });
   }
 
+  /**
+   * Dentang lonceng perunggu peron tua Stasiun Senja 1928 ("TANG—TANG!").
+   */
+  public playBrassStationBell() {
+    if (this.volume <= 0.01) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const v = this.volume;
+
+    [0.0, 0.42].forEach((off) => {
+      this.softTone(ctx, 784, now + off, 1.15, 0.082 * v, 'sine');
+      this.softTone(ctx, 1568, now + off + 0.005, 0.68, 0.042 * v, 'triangle');
+      this.softTone(ctx, 2140, now + off + 0.01, 0.34, 0.024 * v, 'sine');
+    });
+  }
+
   private softTone(
     ctx: AudioContext,
     freq: number,

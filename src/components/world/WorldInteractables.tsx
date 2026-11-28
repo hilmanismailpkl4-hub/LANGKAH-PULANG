@@ -5576,6 +5576,134 @@ export const WorldInteractables: React.FC = () => {
       2.4,
     );
 
+    // === DISTRIK TENGGARA: TAMAN HERITAGE LOKOMOTIF 1928, GALERI BATIK & KANTOR POS ===
+    consider(
+      {
+        id: 'activity_heritage_station_bell',
+        kind: 'story_object',
+        label: 'Bunyikan Lonceng Perunggu & Baca Monumen Lokomotif 1928',
+        sublabel: 'Taman Heritage Stasiun Selatan · Roda Seri C-28',
+        position: [77.9, 0, 35.5],
+        onInteract: () => {
+          playerRuntime.stationBellTimer = 4.2;
+          sfxEngine.playBrassStationBell();
+          if (!store.flags.includes('rang_heritage_station_bell')) {
+            store.applyEffect({
+              kejujuranDiri: 1,
+              setFlags: ['rang_heritage_station_bell'],
+              journalEntry: {
+                id: 'je_heritage_locomotive_1928',
+                title: 'Dentang Lonceng Peron 1928 di Taman Selatan',
+                body: 'Di seberang pohon-pohon Tabebuya Jl. Stasiun Timur, sepasang roda besi lokomotif uap tahun 1928 berdiri tenang di tengah kawanan burung merpati. Dentang lonceng perunggunya mengingatkan berapa banyak generasi yang pernah berangkat dan pulang lewat rel ini.',
+                chapter: store.chapter,
+              },
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_heritage_bell, 'fw_heritage_bell');
+          }
+          store.showToast('TANG—TANG! Dentang lonceng perunggu 1928 bergema jernih sementara merpati taman mengepak naik.');
+        },
+      },
+      2.6,
+    );
+
+    consider(
+      {
+        id: 'sit_heritage_rail_plaza',
+        kind: 'story_object',
+        label: 'Duduk di Bangku Taman Lokomotif (Menghadap Bunga Tabebuya)',
+        sublabel: 'Taman Heritage Stasiun Selatan',
+        position: [75.1, 0, 35.5],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Bangku Barat Taman Lokomotif 1928',
+            seatPos: [75.8, 0.14, 35.5],
+            lookAt: [64.0, 1.8, 33.5],
+            standPos: [74.7, 0, 35.5],
+            seatYaw: -Math.PI / 2,
+          };
+          store.setSitting(true);
+          store.showToast('Duduk tenang menatap guguran bunga Tabebuya di Jl. Stasiun Timur... (WASD/E berdiri)');
+        },
+      },
+      2.3,
+    );
+
+    consider(
+      {
+        id: 'sit_train_spotting_deck',
+        kind: 'story_object',
+        label: 'Duduk di Bangku Pengamat Kereta KRL Lewat',
+        sublabel: 'Taman Heritage Stasiun Selatan · Sisi Rel Komuter',
+        position: [83.9, 0, 35.5],
+        onInteract: () => {
+          sfxEngine.play('interact');
+          playerRuntime.sitState = {
+            active: true,
+            label: 'Bangku Pengamat Rel Komuter',
+            seatPos: [83.2, 0.14, 35.5],
+            lookAt: [94.3, 1.8, 35.5],
+            standPos: [84.3, 0, 35.5],
+            seatYaw: Math.PI / 2,
+          };
+          store.setSitting(true);
+          store.showToast('Duduk santai di sisi timur taman menanti rangkaian KRL melintas... (WASD/E berdiri)');
+        },
+      },
+      2.3,
+    );
+
+    consider(
+      {
+        id: 'activity_batik_gallery_window',
+        kind: 'story_object',
+        label: 'Amati Etalase Kain Tulis di "Galeri Batik & Tenun Senja"',
+        sublabel: 'Ruko Tenggara · Motif Parang, Mega Mendung & Kawung',
+        position: [46.0, 0, 15.1],
+        onInteract: () => {
+          sfxEngine.play('chime');
+          if (!store.flags.includes('admired_batik_gallery')) {
+            store.applyEffect({
+              kehadiranKeluarga: 1,
+              setFlags: ['admired_batik_gallery'],
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_batik_gallery, 'fw_batik_gallery');
+          }
+          store.showToast('Tiga helai kain batik tulis berkilau hangat di balik kaca etalase Galeri Batik & Tenun Senja.');
+        },
+      },
+      2.6,
+    );
+
+    consider(
+      {
+        id: 'activity_south_post_mailbox',
+        kind: 'story_object',
+        label: 'Periksa Bis Surat Oranye & Etalase Kantor Pos Selatan',
+        sublabel: 'Kantor Pos & Filateli Senja · Jl. Stasiun Timur Selatan',
+        position: [51.0, 0, 54.0],
+        onInteract: () => {
+          sfxEngine.play('page');
+          if (!store.flags.includes('checked_south_post_office')) {
+            store.applyEffect({
+              kejujuranDiri: 1,
+              setFlags: ['checked_south_post_office'],
+            });
+          }
+          if (store.isFamilyWalkActive) {
+            store.playFamilyBanter(EVENT_FAMILY_BANTERS.activity_south_post, 'fw_south_post');
+          }
+          store.showToast('Jadwal angkut pos sore tertera rapi di tabung oranye Kantor Pos & Filateli Senja Selatan.');
+        },
+      },
+      2.4,
+    );
+
     // === CERITA SASTRA LEMBAH SAWAH & TERAS RUMAH: BESEK GABAH PANDANWANGI IBU (2015) ===
     consider(
       {

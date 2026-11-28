@@ -654,4 +654,16 @@ export const EVENT_FAMILY_BANTERS: Record<string, FamilyBanterLine[]> = {
     { speaker: 'nadia', text: 'Lihat deh Mas, daun pandan sama cabai rawit di bedeng belakang dapur sudah rimbun banget—nanti malam tinggal petik segar!' },
     { speaker: 'kira', text: 'Bunda!! Daun kemanginya wangi banget pas kesentuh tangan Kira!!' },
   ],
+  activity_heritage_bell: [
+    { speaker: 'kira', text: 'TANG-TANG!! Lonceng kereta tahun 1928-nya nyaring banget, Ayah!! Burung merpatinya langsung terbang kaget hihihi!' },
+    { speaker: 'nadia', text: 'Keren banget ya Mas monumen roda lokomotif uap di selatan stasiun ini—terasa sekali sejarah panjang Kota Senja.' },
+  ],
+  activity_batik_gallery: [
+    { speaker: 'nadia', text: 'Motif Batik Mega Mendung sama Parang di etalase Galeri Senja ini halus banget tulisannya ya, Mas.' },
+    { speaker: 'kira', text: 'Bunda!! Kain warna birunya ada gambar awan-awan lucu kayak di buku gambar Kira!!' },
+  ],
+  activity_south_post: [
+    { speaker: 'kira', text: 'Ayah!! Tabung oranye depan Kantor Pos ini tempat masukin surat buat dikirim jauh ya?!' },
+    { speaker: 'nadia', text: 'Klasik banget ya bis surat oranye sama etalase prangko filateli di Kantor Pos Selatan ini, Mas.' },
+  ],
 };

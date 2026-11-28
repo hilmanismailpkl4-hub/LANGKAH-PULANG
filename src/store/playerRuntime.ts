@@ -224,6 +224,7 @@ export const playerRuntime = {
   listeningBoothTimer: 0,
   saronRippleTimer: 0,
   herbRustleTimer: 0,
+  stationBellTimer: 0,
   gardenSwingTimer: 0,
   swingBoostTimer: 0,
   kiteHeight: 0,
@@ -375,6 +376,7 @@ export function resetScooterToHome() {
   playerRuntime.listeningBoothTimer = 0;
   playerRuntime.saronRippleTimer = 0;
   playerRuntime.herbRustleTimer = 0;
+  playerRuntime.stationBellTimer = 0;
   playerRuntime.gardenSwingTimer = 0;
   playerRuntime.swingBoostTimer = 0;
   playerRuntime.kiteHeight = 0;

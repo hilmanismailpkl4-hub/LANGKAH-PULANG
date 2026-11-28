@@ -55,6 +55,7 @@ import { RiversideNightMarket } from './RiversideNightMarket';
 import { RooftopLakeAndRtBoard } from './RooftopLakeAndRtBoard';
 import { ScooterEntity } from './ScooterEntity';
 import { SerabiHistoryAndButterflyGarden } from './SerabiHistoryAndButterflyGarden';
+import { SoutheastHeritageSquareAndRuko } from './SoutheastHeritageSquareAndRuko';
 import { StationAndBuskerLife } from './StationAndBuskerLife';
 import { StationWarkopBirdsAndMusicBench } from './StationWarkopBirdsAndMusicBench';
 import { StreetRealismAndSate } from './StreetRealismAndSate';
@@ -166,6 +167,7 @@ export const GameCanvas: React.FC = () => {
               <InteriorArchitecturalLife timeOfDay={effectiveTime} settings={settings} />
               <NorthwestRiverPocketPark timeOfDay={effectiveTime} settings={settings} />
               <MelatiBackyardAndCommunityLife timeOfDay={effectiveTime} settings={settings} />
+              <SoutheastHeritageSquareAndRuko timeOfDay={effectiveTime} settings={settings} />
             </group>
 
             <CityLife timeOfDay={effectiveTime} settings={settings} />

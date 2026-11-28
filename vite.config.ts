@@ -91,6 +91,8 @@ export default defineConfig({
           if (norm.includes('/node_modules/@react-three/')) return 'r3f';
           if (norm.includes('/node_modules/@supabase/')) return 'supabase';
           if (norm.includes('/src/data/')) return 'story-data';
+          if (norm.includes('/src/components/world/')) return 'world-3d';
+          if (norm.includes('/src/components/ui/')) return 'game-ui';
           return undefined;
         },
       },
